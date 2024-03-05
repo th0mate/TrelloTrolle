@@ -324,8 +324,9 @@ class ControleurUtilisateur extends ControleurGenerique
         }
 
         ConnexionUtilisateur::connecter($utilisateur->getLogin());
-        Cookie::enregistrer("login", $_REQUEST["login"]);
-        Cookie::enregistrer("mdp", $_REQUEST["mdp"]);
+        //CAUSE DES CRASH POUR LES UTILISATEURS DE MAMP / NE PAS DE-COMMENTER
+        //Cookie::enregistrer("login", $_REQUEST["login"]);
+        //Cookie::enregistrer("mdp", $_REQUEST["mdp"]);
         MessageFlash::ajouter("success", "Connexion effectuée.");
         ControleurUtilisateur::redirection("tableau", "afficherListeMesTableaux");
     }
