@@ -2,15 +2,10 @@
 
 namespace App\Trellotrolle\Controleur;
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
-use App\Trellotrolle\Modele\DataObject\Carte;
-use App\Trellotrolle\Modele\DataObject\Colonne;
-use App\Trellotrolle\Modele\DataObject\Utilisateur;
-use App\Trellotrolle\Modele\Repository\CarteRepository;
-use App\Trellotrolle\Modele\Repository\ColonneRepository;
-use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
+use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\MiseAJourCarteException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceCarte;
@@ -41,10 +36,9 @@ class ControleurCarte extends ControleurGenerique
                 ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
             }
         } catch (ConnexionException $e) {
-            MessageFlash::ajouter("info", $e->getMessage());
-            self::redirection("utilisateur", 'afficherFormulaireConnexion');
+            self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
-            MessageFlash::ajouter("warning", $e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
@@ -54,10 +48,11 @@ class ControleurCarte extends ControleurGenerique
 
     public static function afficherFormulaireCreationCarte(): void
     {
+        $idColonne = $_REQUEST['idColonne'] ?? null;
         try {
             (new ServiceConnexion())->connecter();
-            $colonne=(new ServiceColonne())->recupererColonne();
-            $tableau=$colonne->getTableau();
+            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
             ControleurTableau::afficherVue('vueGenerale.php', [
@@ -67,96 +62,64 @@ class ControleurCarte extends ControleurGenerique
                 "colonnes" => $colonnes
             ]);
         } catch (ConnexionException $e) {
-            MessageFlash::ajouter("info", $e->getMessage());
-            self::redirection("utilisateur", 'afficherFormulaireConnexion');
+            self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage() );
-            self::redirection("base","accueil");
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirection("base", "accueil");
         } catch (TableauException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
-            self::redirection("tableau","afficherTableau",["codeTableau"=>$e->getTableau()->getCodeTableau()]);
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         }
     }
 
     public static function creerCarte(): void
     {
+        $affectationsCarte = $_REQUEST["affectationsCarte"] ?? null;
+        $idColonne = $_REQUEST["idColonne"] ?? null;
+        $titreCarte=$_REQUEST['titreCarte'] ??null;
+        $descCarte=$_REQUEST["descriptifCarte"] ?? null;
+        $couleurCarte=$_REQUEST["couleurCarte"] ??null;
         try {
             (new ServiceConnexion())->connecter();
-            $colonne=(new ServiceColonne())->recupererColonne();
-            if (!ControleurCarte::issetAndNotNull(["titreCarte", "descriptifCarte", "couleurCarte"])) {
-                MessageFlash::ajouter("danger", "Attributs manquants");
-                ControleurColonne::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
-            }
+            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            (new ServiceCarte())->recupererAttributs([$titreCarte,$descCarte,$couleurCarte]);
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
+            $affectations=(new ServiceCarte())->creerCarte($tableau,$affectationsCarte);
+            (new ServiceCarte())->newCarte($colonne,$titreCarte,$descCarte,$couleurCarte,$affectations);
+            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
-            MessageFlash::ajouter("info", $e->getMessage());
-            self::redirection("utilisateur","afficherFormluaireConnexion");
+            self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
-            self::redirection("base",'accueil');
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirection("base", 'accueil');
         } catch (TableauException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
-            self::redirection("tableau","afficherTableau",["codeTableau"=>$e->getTableau()->getCodeTableau()]);
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (CreationCarteException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
         }
-
-        $affectations = [];
-        $utilisateurRepository = new UtilisateurRepository();
-        if (ControleurCarte::issetAndNotNull(["affectationsCarte"])) {
-            foreach ($_REQUEST["affectationsCarte"] as $affectation) {
-                /**
-                 * @var Utilisateur $utilisateur
-                 */
-                $utilisateur = $utilisateurRepository->recupererParClePrimaire($affectation);
-                if (!$utilisateur) {
-                    MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'existe pas");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
-                }
-                if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'est pas affecté au tableau.");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
-                }
-                $affectations[] = $utilisateur;
-            }
-        }
-        $carteRepository = new CarteRepository();
-        $carte = new Carte(
-            $colonne,
-            $carteRepository->getNextIdCarte(),
-            $_REQUEST["titreCarte"],
-            $_REQUEST["descriptifCarte"],
-            $_REQUEST["couleurCarte"],
-            $affectations
-        );
-        $carteRepository->ajouter($carte);
-        ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
     public static function afficherFormulaireMiseAJourCarte(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+        $idCarte = $_REQUEST['idCarte'] ?? null;
+        try {
+            (new ServiceConnexion())->connecter();
+            $carte = (new ServiceCarte())->recupererCarte($idCarte);
+            $tableau = $carte->getColonne()->getTableau();
+            (new ServiceUtilisateur())->estParticipant($tableau);
+            $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirection("base", "accueil");
+        } catch (TableauException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         }
-        if (!ControleurCarte::issetAndNotNull(["idCarte"])) {
-            MessageFlash::ajouter("warning", "Identifiant de la carte manquant");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        $carteRepository = new CarteRepository();
-        /**
-         * @var Carte $carte
-         */
-        $carte = $carteRepository->recupererParClePrimaire($_REQUEST["idCarte"]);
-        if (!$carte) {
-            MessageFlash::ajouter("warning", "Carte inexistante");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        $tableau = $carte->getColonne()->getTableau();
-        if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
-        }
-        $colonneRepository = new ColonneRepository();
-        $colonnes = $colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
         ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Modification d'une carte",
             "cheminVueBody" => "carte/formulaireMiseAJourCarte.php",
@@ -167,77 +130,45 @@ class ControleurCarte extends ControleurGenerique
 
     public static function mettreAJourCarte(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+        $idColonne = $_REQUEST["idColonne"] ?? null;
+        $idCarte = $_REQUEST["idCarte"] ?? null;
+        $attributs=[
+            "titreCarte"=>$_REQUEST["titreCarte"]??null,
+            "descriptifCarte"=>$_REQUEST["descriptifCarte"] ?? null,
+            "couleurCarte"=>$_REQUEST["couleurCarte"] ??null,
+            "affectationsCarte"=>$_REQUEST["affectationsCarte"] ??null,
+        ];
+        try {
+            (new ServiceConnexion())->connecter();
+            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            $carte = (new ServiceCarte())->recupererCarte($idCarte);
+            (new ServiceCarte())->recupererAttributs($attributs);
+            (new ServiceCarte())->verifs($carte,$colonne);
+            $tableau=$colonne->getTableau();
+            (new ServiceUtilisateur())->estParticipant($tableau);
+            $attributs["affectationsCarte"]=(new ServiceCarte())->miseAJourCarte($tableau,$attributs["affectationsCarte"]);
+            (new ServiceCarte())->carteUpdate($carte,$colonne,$attributs);
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirection("base", "accueil");
+        } catch (CreationCarteException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("carte","afficherFormulaireMiseAJourCarte",['idCarte'=>$idCarte]);
+        } catch (TableauException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("tableau","afficherTableau",["codeTableau"=>$e->getTableau()->getCodeTableau()]);
+        } catch (MiseAJourCarteException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("carte",'afficherFormulaireCreationCarte',["idColonne"=>$colonne->getIdColonne()]);
         }
-        if (!ControleurCarte::issetAndNotNull(["idCarte"])) {
-            MessageFlash::ajouter("warning", "Identifiant de la carte manquant");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        if (!ControleurCarte::issetAndNotNull(["idColonne"])) {
-            MessageFlash::ajouter("warning", "Identifiant de colonne manquant");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        $carteRepository = new CarteRepository();
-        /**
-         * @var Carte $carte
-         */
-        $carte = $carteRepository->recupererParClePrimaire($_REQUEST["idCarte"]);
-
-        $colonnesRepository = new ColonneRepository();
-        /**
-         * @var Colonne $colonne
-         */
-        $colonne = $colonnesRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
-        if (!$carte) {
-            MessageFlash::ajouter("warning", "Carte inexistante");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        if (!$colonne) {
-            MessageFlash::ajouter("warning", "Colonne inexistante");
-            ControleurCarte::redirection("base", "accueil");
-        }
-        if (!ControleurCarte::issetAndNotNull(["titreCarte", "descriptifCarte", "couleurCarte"])) {
-            MessageFlash::ajouter("danger", "Attributs manquants");
-            ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
-        }
-
-        $originalColonne = $carte->getColonne();
-        if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
-            MessageFlash::ajouter("danger", "Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
-            ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
-        }
-        $tableau = $colonne->getTableau();
-        if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
-        }
-
-        $carte->setColonne($colonne);
-        $carte->setTitreCarte($_REQUEST["titreCarte"]);
-        $carte->setDescriptifCarte($_REQUEST["descriptifCarte"]);
-        $carte->setCouleurCarte($_REQUEST["couleurCarte"]);
-        $affectations = [];
-        $utilisateurRepository = new UtilisateurRepository();
-        if (ControleurCarte::issetAndNotNull(["affectationsCarte"])) {
-            foreach ($_REQUEST["affectationsCarte"] as $affectation) {
-                /**
-                 * @var Utilisateur $utilisateur
-                 */
-                $utilisateur = $utilisateurRepository->recupererParClePrimaire($affectation);
-                if (!$utilisateur) {
-                    MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'existe pas");
-                    ControleurCarte::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
-                }
-                if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'est pas affecté au tableau.");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
-                }
-                $affectations[] = $utilisateur;
-            }
-        }
-        $carte->setAffectationsCarte($affectations);
-        $carteRepository->mettreAJour($carte);
         ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+    }
+
+    private static function redirectionConnectionFlash(ConnexionException $e): void
+    {
+        MessageFlash::ajouter("info", $e->getMessage());
+        self::redirection("utilisateur", "afficherFormulaireConnexion");
     }
 }

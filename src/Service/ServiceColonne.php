@@ -21,9 +21,9 @@ class ServiceColonne
     /**
      * @throws ServiceException
      */
-    public function recupererColonne(): Colonne
+    public function recupererColonne($idColonne): Colonne
     {
-        if (!ControleurCarte::issetAndNotNull(["idColonne"])) {
+        if (is_null($idColonne)) {
             throw new ServiceException("Identifiant de colonne manquant");
         }
         $colonneRepository = new ColonneRepository();
