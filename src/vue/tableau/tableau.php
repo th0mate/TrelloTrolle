@@ -97,7 +97,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                     </div>
                     <div class="corps">
                         <?php foreach ($data[$i] as $carte) {?>
-                        <div class="carte" style="background-color: <?= $carte->getCouleurCarte() ?>">
+                        <div id="c<?=$carte->getIdCarte()?>" class="carte" style="background-color: <?= $carte->getCouleurCarte() ?>">
                             <div class="titre icons_menu">
                                 <span><?= htmlspecialchars($carte->getTitreCarte()) ?></span>
                                 <?php
@@ -106,6 +106,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                                 <span class="actions">
                                     <a href="controleurFrontal.php?action=afficherFormulaireMiseAJourCarte&controleur=carte&idCarte=<?=$carte->getIdCarte()?>"><img class="icon" src="../ressources/img/editer.png" alt="Éditer la carte"></a>
                                     <a href="controleurFrontal.php?action=supprimerCarte&controleur=carte&idCarte=<?= $carte->getIdCarte()?>"><img class="icon" src="../ressources/img/x.png" alt="Supprimer la carte"></a>
+                                    <span data-onclick="tableauxDatas.supprimerCarte(<?= $carte->getIdCarte() ?>)"><img class="icon" src="../ressources/img/x.png" alt="Supprimer la carte"></span>
                                 </span>
                                 <?php } ?>
                             </div>

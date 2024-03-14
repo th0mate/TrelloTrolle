@@ -16,6 +16,7 @@ let objetDependencies = new Map();
  */
 function applyAndRegister(effect) {
     registeringEffect = effect;
+    console.log(effect);
     effect();
     registeringEffect = null;
 }
@@ -79,11 +80,12 @@ function registerEffect(target, key) {
 /**
  * Démarre le reactiveDom en ajoutant les écouteurs d'événements et en appliquant les effets
  */
-function startReactiveDom() {
+function startReactiveDom(subDom = document) {
     for (let elementClickable of document.querySelectorAll("[data-onclick]")) {
         const [nomObjet, methode, argument] = elementClickable.dataset.onclick.split(/[.()]+/);
         elementClickable.addEventListener('click', (event) => {
             const objet = objectByName.get(nomObjet);
+            console.log(objet, methode, argument);
             objet[methode](argument);
         })
     }
