@@ -1,0 +1,228 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway:300,800');
+
+
+html {
+    min-height: 100vh;
+    font-family: 'Raleway', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    background: linear-gradient(to right bottom, #8100ff, #da2eff);
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .all {
+        height: 99vh;
+        width: 98%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    h1 {
+        text-align: center;
+        color: white;
+        font-size: 50px;
+        font-weight: normal;
+    }
+
+    .adder {
+        position: relative;
+        width: 250px;
+        display: block;
+
+        ::-webkit-input-placeholder {
+            color: #cecece;
+        }
+
+        .input {
+            outline: none;
+            border: 2px solid white;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            height: 50px;
+            width: 250px;
+            padding-left: 10px;
+            font-weight: 650;
+            font-size: 16px;
+            margin: 0 5px 0 5px;
+        }
+
+        span {
+            position: absolute;
+            right: 0;
+            top: 0;
+            font-size: 15px;
+            height: 100%;
+            font-weight: 650;
+            cursor: pointer;
+            transition: all 200ms;
+            color: white;
+            will-change: transform;
+            margin: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+
+            &:hover {
+                color: black;
+            }
+        }
+    }
+
+    .ul {
+
+        h5 {
+            width: 98%;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding-left: 50px;
+        }
+
+        margin-top: 30px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: flex-start;
+        width: 98%;
+        padding-top: 35px;
+        height: 90%;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        .draggable {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            margin: 0 5px 0 5px;
+            will-change: transform;
+            font-weight: 800;
+            min-height: 50px;
+            max-height: 93%;
+            border-radius: 10px;
+            list-style-type: none;
+            background-color: #101204;
+            color: white;
+            width: 250px;
+            flex-shrink: 0;
+            line-height: 3.2;
+            padding: 1%;
+            transition: all 200ms;
+            user-select: none;
+            position: relative;
+
+
+            .stockage {
+                padding-top: 5px;
+                width: 98%;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                overflow-y: auto;
+                margin-top: 10px;
+
+                .card {
+                    width: 90%;
+                    min-height: 30px;
+                    border-radius: 10px;
+                    background-color: #23272b;
+                    color: white;
+                    border: 2px solid transparent;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    padding: 5px;
+                    margin-bottom: 10px;
+                    font-size: 13px;
+                    font-weight: normal;
+                    text-align: left;
+                    flex-shrink: 0;
+                    cursor: pointer;
+
+
+                    &:after {
+                        cursor: pointer;
+                        transition-timing-function: cubic-bezier(0.48, 0.72, 0.62, 1.50);
+                        transform: translateX(120%);
+                        opacity: 0;
+                    }
+
+                    &:hover {
+                        &:after {
+                            opacity: 1;
+                            transform: translate(0);
+                        }
+                    }
+
+                }
+
+                .card:hover {
+                    border: 2px solid #4792ff;
+                }
+
+                span {
+                    width: 40px;
+                    border: 5px solid #ff55c4;
+                    border-radius: 5px;
+                }
+
+                &::-webkit-scrollbar {
+                    width: 7px;
+                    background-color: #282828;
+                    border-radius: 5px;
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: #8100ff;
+                    border-radius: 5px;
+                }
+
+            }
+
+
+
+
+            &:after {
+                cursor: pointer;
+                transition-timing-function: cubic-bezier(0.48, 0.72, 0.62, 1.50);
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            &:hover {
+                &:after {
+                    opacity: 1;
+                    transform: translate(0);
+                }
+            }
+        }
+    }
+}
+
+.over {
+    transform: scale(1.04);
+    z-index: 1;
+    box-shadow: 0 0 10px 5px #8100ff;
+}

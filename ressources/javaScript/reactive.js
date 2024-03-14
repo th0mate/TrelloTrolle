@@ -1,6 +1,14 @@
+/**
+ * Enregistre les objets réactifs par leur nom et applique leurs effets, en utilisant un Proxy et des écouteurs d'événements
+ * @type {Map<any, any>} objectByName un Map qui associe un nom à un objet réactif
+ * @type {null} registeringEffect l'effet en cours d'enregistrement
+ * @type {Map<any, any>} objetDependencies un Map qui associe un objet à un Map qui associe une clé à un Set d'effets
+ *
+ */
 let objectByName = new Map();
 let registeringEffect = null;
 let objetDependencies = new Map();
+
 
 /**
  * Applique l'effet et l'enregistre pour le reactiveDom
@@ -46,7 +54,11 @@ function reactive(passiveObject, name) {
 function trigger(target, key) {
     if (objetDependencies.get(target).has(key)) {
         for (let effect of objetDependencies.get(target).get(key)) {
-            effect();
+            if (effect !== null && effect !== undefined) {
+                effect();
+            } else {
+                console.error("Aucun effet pour " + target + " et " + key);
+            }
         }
     }
 }
