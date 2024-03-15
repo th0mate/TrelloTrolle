@@ -57,7 +57,7 @@ class ControleurColonne extends ControleurGenerique
         $idTableau=$_REQUEST["idTableau"] ??null;
         try {
             (new ServiceConnexion())->connecter();
-            $tableau=(new ServiceTableau())->recupererTableau($idTableau);
+            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->estParticipant($tableau);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
@@ -81,7 +81,7 @@ class ControleurColonne extends ControleurGenerique
         $nomColonne=$_REQUEST["nomColonne"] ??null;
         try {
             (new ServiceConnexion())->connecter();
-            $tableau=(new ServiceTableau())->recupererTableau($idTableau);
+            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceColonne())->isSetNomColonne($nomColonne);
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne=(new ServiceColonne())->creerColonne($tableau,$nomColonne);

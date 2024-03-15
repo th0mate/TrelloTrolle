@@ -12,6 +12,8 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Service\Exception\ServiceException;
+use App\Trellotrolle\Service\ServiceTableau;
 
 class ControleurTableau extends ControleurGenerique
 {
@@ -21,58 +23,24 @@ class ControleurTableau extends ControleurGenerique
     }
 
     public static function afficherTableau() : void {
-        if(!ControleurTableau::issetAndNotNull(["codeTableau"])) {
-            MessageFlash::ajouter("warning", "Code de tableau manquant");
-            ControleurTableau::redirection("base", "accueil");
-        }
-        $code = $_REQUEST["codeTableau"];
-        $tableauRepository = new TableauRepository();
-
-        /**
-         * @var Tableau $tableau
-         */
-        $tableau = $tableauRepository->recupererParCodeTableau($code);
-        if(!$tableau) {
-            MessageFlash::ajouter("warning", "Tableau inexistant");
-            ControleurTableau::redirection("base", "accueil");
-        }
-        $colonneRepository = new ColonneRepository();
-
-        /**
-         * @var Colonne[] $colonnes
-         */
-        $colonnes = $colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
-        $data = [];
-        $participants = [];
-
-        $carteRepository = new CarteRepository();
-        foreach ($colonnes as $colonne) {
-            /**
-             * @var Carte[] $cartes
-             */
-            $cartes = $carteRepository->recupererCartesColonne($colonne->getIdColonne());
-            foreach ($cartes as $carte) {
-                foreach ($carte->getAffectationsCarte() as $utilisateur) {
-                    if(!isset($participants[$utilisateur->getLogin()])) {
-                        $participants[$utilisateur->getLogin()] = ["infos" => $utilisateur, "colonnes" => []];
-                    }
-                    if(!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
-                        $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()] = [$colonne->getTitreColonne(), 0];
-                    }
-                    $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()][1]++;
-                }
-            }
-            $data[] = $cartes;
+        $codeTableau=$_REQUEST["codeTableau"] ??null;
+        try {
+            $tableau=(new ServiceTableau())->recupererTableauParCode($codeTableau);
+            $donnes=(new ServiceTableau())->recupererCartesColonnes($tableau);
+            ControleurTableau::afficherVue('vueGenerale.php', [
+                "pagetitle" => "{$tableau->getTitreTableau()}",
+                "cheminVueBody" => "tableau/tableau.php",
+                "tableau" => $tableau,
+                "colonnes" => $donnes["colonnes"],
+                "participants" => $donnes["participants"],
+                "data" => $donnes["data"],
+            ]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning",$e->getMessage());
+            self::redirection("base",'accueil');
         }
 
-        ControleurTableau::afficherVue('vueGenerale.php', [
-            "pagetitle" => "{$tableau->getTitreTableau()}",
-            "cheminVueBody" => "tableau/tableau.php",
-            "tableau" => $tableau,
-            "colonnes" => $colonnes,
-            "participants" => $participants,
-            "data" => $data,
-        ]);
+
     }
 
     public static function afficherFormulaireMiseAJourTableau(): void {
