@@ -1,8 +1,24 @@
-<?php /** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+<?php
 
-/** @var string $pagetitle */
+
+
+
 
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @noinspection PhpUnnecessaryCurlyVarSyntaxInspection */
+
+/** @var string $pagetitle
+ * @var string $cheminVueBody
+ * @var array $messagesFlash
+ */
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
 
 ?>
 <!DOCTYPE html>
@@ -11,8 +27,8 @@ use App\Trellotrolle\Lib\ConnexionUtilisateur;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= $pagetitle ?></title>
-    <link rel="stylesheet" href="../ressources/css/navstyle.css">
-    <link rel="stylesheet" href="../ressources/css/trellostyle.css">
+    <link rel="stylesheet" href="<?=$assistantUrl->getAbsoluteUrl('../ressources/css/navstyle.css');?>">
+    <link rel="stylesheet" href="<?=$assistantUrl->getAbsoluteUrl('../ressources/css/trellostyle.css');?>">
 
 </head>
 <body>
@@ -20,7 +36,7 @@ use App\Trellotrolle\Lib\ConnexionUtilisateur;
     <nav>
         <ul>
             <li>
-                <a href="controleurFrontal.php?action=accueil&controleur=base">Accueil</a>
+                <a href="<?=$generateurUrl->generate("accueil");?>">Accueil</a>
             </li>
             <?php
             if (!ConnexionUtilisateur::estConnecte()) {

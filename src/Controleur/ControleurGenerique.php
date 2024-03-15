@@ -2,39 +2,35 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use App\Trellotrolle\Lib\MessageFlash;
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+
 
 class ControleurGenerique {
 
-    protected static function afficherVue(string $cheminVue, array $parametres = []): void
+    protected static function afficherVue(string $cheminVue, array $parametres = []): Response
     {
         extract($parametres);
-//        $messagesFlash = $_REQUEST["messagesFlash"] ?? [];
         $messagesFlash = MessageFlash::lireTousMessages();
+        ob_start();
         require __DIR__ . "/../vue/$cheminVue";
+        $corpsReponse = ob_get_clean();
+        return new Response($corpsReponse);
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
-    protected static function redirection(string $controleur = "", string $action = "", array $query = []) : void
+    public function redirection(string $nomRoute ,  array $params = []) : RedirectResponse
     {
-        $queryString = [];
-        if ($action != "") {
-            $queryString[] = "action=$action";
-        }
-        if ($controleur != "") {
-            $queryString[] = "controleur=$controleur";
-        }
-        foreach ($query as $name => $value) {
-            $name = rawurlencode($name);
-            $value = rawurlencode($value);
-            $queryString[] = "$name=$value";
-        }
-        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
+
+        $url = Conteneur::recupererService($nomRoute). join("&", $params);
         header($url);
-        exit();
+        return new RedirectResponse($url);
     }
 
-    public static function afficherErreur($messageErreur = "", $controleur = ""): void
+    public static function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         $messageErreurVue = "Problème";
         if ($controleur !== "")
@@ -42,11 +38,13 @@ class ControleurGenerique {
         if ($messageErreur !== "")
             $messageErreurVue .= " : $messageErreur";
 
-        ControleurGenerique::afficherVue('vueGenerale.php', [
+        $reponse = ControleurGenerique::afficherVue('vueGenerale.php', [
             "pagetitle" => "Problème",
             "cheminVueBody" => "erreur.php",
             "messageErreur" => $messageErreurVue
         ]);
+        $reponse->setStatusCode(400);
+        return $reponse;
     }
 
     public static function issetAndNotNull(array $requestParams) : bool {

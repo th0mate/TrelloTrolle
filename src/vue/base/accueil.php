@@ -2,6 +2,8 @@
 
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 
+
+
 ?>
 
 <div><p>Bienvenue sur <strong>Trello-Trollé</strong>!</p></div>
