@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Controleur;
 
 use App\Trellotrolle\Lib\MessageFlash;
+use App\Trellotrolle\Service\Exception\ConnexionException;
 
 class ControleurGenerique {
 
@@ -56,5 +57,11 @@ class ControleurGenerique {
             }
         }
         return true;
+    }
+
+    protected static function redirectionConnectionFlash(ConnexionException $e): void
+    {
+        MessageFlash::ajouter("info", $e->getMessage());
+        self::redirection("utilisateur", "afficherFormulaireConnexion");
     }
 }
