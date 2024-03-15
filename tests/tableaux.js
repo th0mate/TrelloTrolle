@@ -131,17 +131,29 @@ function updateDraggables() {
  */
 function addNewItem() {
     //AJAX ICI
+
+    //temporaire - prend le premier id disponible non présent dans la page
+    let id = 1;
+    let ids = [];
+    document.querySelectorAll('.stockage').forEach(stockage => {
+        ids.push(parseInt(stockage.getAttribute('data-columns')));
+    });
+    while (ids.includes(id)) {
+        id++;
+    }
     let input = document.getElementsByClassName('input')[0];
     let newElement = document.createElement('div');
     newElement.classList.add('draggable');
     newElement.setAttribute('draggable', 'true');
+    newElement.setAttribute('data-columns', id);
     if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div class="stockage"></div>`;
+        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div>`;
         let ul = document.querySelector('.ul');
         ul.insertBefore(newElement, ul.lastElementChild);
         input.value = '';
         updateDraggables();
         addEventsBullets();
+        addEnventsAdd();
     }
 }
 
@@ -157,7 +169,6 @@ btn.addEventListener('click', addNewItem);
 updateDraggables();
 
 
-
 /**
  * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP DES CARTES
@@ -168,7 +179,7 @@ updateDraggables();
 /**
  * Met à jour les éléments `.card` pour qu'ils soient "draggable"
  */
- function updateCards() {
+function updateCards() {
     let cards = document.querySelectorAll('.card');
     let stockages = document.querySelectorAll('.stockage');
 
@@ -298,6 +309,54 @@ function addEventsBullets() {
 }
 
 addEventsBullets();
+
+function addEnventsAdd() {
+    document.querySelectorAll('.add').forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            if (!document.querySelector('.ajoutSystem')) {
+                const id = this.getAttribute('data-columns');
+                ajouterInputCarte('top', id);
+            } else {
+                document.querySelector('.ajoutSystem').remove();
+            }
+        });
+    });
+
+}
+
+addEnventsAdd();
+
+function ajouterInputCarte(position, id) {
+    let input = document.createElement('input');
+    input.setAttribute('type', 'text');
+    input.setAttribute('placeholder', 'Nouvelle carte');
+    let button = document.createElement('div');
+    button.classList.add('ajoutCarte');
+    button.innerHTML = 'Ajouter';
+    let card = document.createElement('div');
+    card.classList.add('ajoutSystem');
+    card.appendChild(input);
+    card.appendChild(button);
+
+    let stockageParent = null;
+
+    for (let stockage of document.querySelectorAll('.stockage')) {
+        if (stockage.getAttribute('data-columns') === id) {
+            stockageParent = stockage;
+            break;
+        }
+    }
+    if (stockageParent) {
+        if (position === 'top') {
+            stockageParent.insertBefore(card, this.firstElementChild);
+            //on scrolle pour que l'input soit visible
+            card.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        } else {
+            stockageParent.appendChild(card);
+            card.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
+        }
+    }
+}
 
 
 
