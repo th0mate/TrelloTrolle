@@ -1,10 +1,11 @@
 /**
+ * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP SUR LES COLONNES
- * @type {null}
+ * ---------------------------------------------------------------------------------------------------------------------
  */
 
 let dragSrcEl = null;
-let btn = document.querySelector('.add');
+let btn = document.querySelector('.addCard');
 
 let sourceIsMainOrDraggable = false;
 
@@ -135,11 +136,12 @@ function addNewItem() {
     newElement.classList.add('draggable');
     newElement.setAttribute('draggable', 'true');
     if (input.value !== '') {
-        newElement.innerHTML = `<h5 draggable="true" class="main">${input.value}</h5>`;
+        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div class="stockage"></div>`;
         let ul = document.querySelector('.ul');
         ul.insertBefore(newElement, ul.lastElementChild);
         input.value = '';
         updateDraggables();
+        addEventsBullets();
     }
 }
 
@@ -148,13 +150,18 @@ document.addEventListener('keydown', function (e) {
         addNewItem();
     }
 });
+
 btn.addEventListener('click', addNewItem);
 
 
 updateDraggables();
 
+
+
 /**
+ * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP DES CARTES
+ * ---------------------------------------------------------------------------------------------------------------------
  */
 
 
@@ -182,6 +189,11 @@ updateDraggables();
         stockage.addEventListener('dragenter', cardDragEnter);
         stockage.addEventListener('dragleave', cardDragLeave);
         stockage.addEventListener('drop', cardDrop);
+        if (stockage.children.length > 0) {
+            stockage.classList.add('isVoid');
+        } else {
+            stockage.classList.remove('isVoid');
+        }
     });
 }
 
@@ -214,7 +226,7 @@ function cardDragEnd() {
  * @param e
  */
 function cardDragOver(e) {
-    if (this.classList.contains('card')) {
+    if (this.classList.contains('card') && !sourceIsMainOrDraggable) {
         e.preventDefault();
         this.classList.add('cardOver');
     }
@@ -261,7 +273,6 @@ function cardDrop(e) {
                     this.appendChild(draggedCard);
                 }
             } else {
-                console.log('coucou');
                 this.appendChild(draggedCard);
             }
             draggedCard = null;
@@ -271,6 +282,23 @@ function cardDrop(e) {
 }
 
 updateCards();
+
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * PARTIE GESTION DES EVENEMENTS
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+function addEventsBullets() {
+    document.querySelectorAll('.bullets').forEach(bullet => {
+        bullet.addEventListener('click', function (e) {
+            console.log('click');
+        });
+    });
+}
+
+addEventsBullets();
+
 
 
 

@@ -13,7 +13,7 @@ h1, h2, h3, h4, h5, h6 {
 
 
 body {
-    background: linear-gradient(to right bottom, #8100ff, #da2eff);
+    background: linear-gradient(to right bottom, #54438b, #9a5284);
     margin: 0;
     width: 100%;
     height: 100%;
@@ -86,17 +86,6 @@ body {
 
     .ul {
 
-        h5 {
-            width: 98%;
-            height: 30px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-            padding-left: 50px;
-        }
-
         margin-top: 30px;
         display: flex;
         flex-direction: row;
@@ -131,21 +120,62 @@ body {
             user-select: none;
             position: relative;
 
+            .entete {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+
+
+                h5 {
+                    width: 85%;
+                    height: 30px;
+                    cursor: pointer;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: flex-start;
+                    padding-left: 10%;
+                }
+
+                .bullets {
+                    width: 10%;
+                    height: 30px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    padding-left: 3px;
+                    padding-right: 3px;
+                    transition: background-color 0.2s ease-in-out;
+
+                    img {
+                        width: 90%;
+                    }
+                }
+
+                .bullets:hover {
+                    background-color: #23272b;
+                }
+
+            }
+
 
             .stockage {
                 padding-top: 5px;
-                width: 98%;
+                width: 100%;
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
                 align-items: center;
                 overflow-y: auto;
+                overflow-x: hidden;
                 margin-top: 10px;
                 min-height: 10px;
 
                 .card {
                     width: 90%;
-                    min-height: 30px;
+                    min-height: 50px;
                     border-radius: 10px;
                     background-color: #23272b;
                     color: white;
@@ -161,6 +191,7 @@ body {
                     text-align: left;
                     flex-shrink: 0;
                     cursor: pointer;
+                    line-height: 1.5em;
 
 
                     &:after {
@@ -177,9 +208,13 @@ body {
                         }
                     }
 
-                    &cardOver {
-                        animation: shake 0.5s;
+                    .features {
+                        width: 98%;
+                        display: flex;
+                        justify-content: flex-end;
+                        min-height: 5px;
                     }
+
 
                 }
 
@@ -206,7 +241,30 @@ body {
 
             }
 
+            .add {
+                width: 92%;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                color: white;
+                font-size: 16px;
+                font-weight: normal;
+                padding-left: 10px;
+                cursor: pointer;
+                transition: background-color 200ms;
+                border-radius: 10px;
+                max-height: 35px;
+                margin-top: 5px;
 
+                img {
+                    height: 20px;
+                    margin-right: 10px;
+                }
+            }
+
+            .add:hover {
+                background-color: #23272b;
+            }
 
 
             &:after {
@@ -232,12 +290,16 @@ body {
     }
 
     .cardOver {
-        border: 2px solid #8100ff!important;
+        border: 2px solid #8100ff !important;
+        animation: shake 1s infinite !important;
         border-radius: 10px;
     }
 
-}
+    isVoid {
+        background-color: #23272b;
+    }
 
+}
 
 
 /*animation de tremblement comme les IPhone */
