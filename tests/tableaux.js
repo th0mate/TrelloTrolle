@@ -296,7 +296,7 @@ updateCards();
 
 /**
  * ---------------------------------------------------------------------------------------------------------------------
- * PARTIE GESTION DES EVENEMENTS
+ * PARTIE GESTION DES EVENEMENTS SUR LE CRUD DES CARTES
  * ---------------------------------------------------------------------------------------------------------------------
  */
 
@@ -313,12 +313,8 @@ addEventsBullets();
 function addEnventsAdd() {
     document.querySelectorAll('.add').forEach(btn => {
         btn.addEventListener('click', function (e) {
-            if (!document.querySelector('.ajoutSystem')) {
-                const id = this.getAttribute('data-columns');
-                ajouterInputCarte('top', id);
-            } else {
-                document.querySelector('.ajoutSystem').remove();
-            }
+            const id = this.getAttribute('data-columns');
+            console.log('click ' + id);
         });
     });
 
@@ -326,18 +322,8 @@ function addEnventsAdd() {
 
 addEnventsAdd();
 
-function ajouterInputCarte(position, id) {
-    let input = document.createElement('input');
-    input.setAttribute('type', 'text');
-    input.setAttribute('placeholder', 'Nouvelle carte');
-    let button = document.createElement('div');
-    button.classList.add('ajoutCarte');
-    button.innerHTML = 'Ajouter';
-    let card = document.createElement('div');
-    card.classList.add('ajoutSystem');
-    card.appendChild(input);
-    card.appendChild(button);
 
+function ajouterCarte(id, value) {
     let stockageParent = null;
 
     for (let stockage of document.querySelectorAll('.stockage')) {
@@ -347,14 +333,13 @@ function ajouterInputCarte(position, id) {
         }
     }
     if (stockageParent) {
-        if (position === 'top') {
-            stockageParent.insertBefore(card, this.firstElementChild);
-            //on scrolle pour que l'input soit visible
-            card.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-        } else {
-            stockageParent.appendChild(card);
-            card.scrollIntoView({behavior: "smooth", block: "start", inline: "nearest"});
-        }
+        let card = document.createElement('div');
+        card.classList.add('card');
+        card.setAttribute('draggable', 'true');
+        card.setAttribute('data-colmuns', id);
+        card.innerHTML = `<span></span>${value}<div class="features"></div>`;
+        stockageParent.appendChild(card);
+        updateCards();
     }
 }
 
