@@ -147,7 +147,10 @@ function addNewItem() {
     newElement.setAttribute('draggable', 'true');
     newElement.setAttribute('data-columns', id);
     if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div>`;
+        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
+                <img src="plus.png" alt="">
+                Ajouter une carte
+            </div>`;
         let ul = document.querySelector('.ul');
         ul.insertBefore(newElement, ul.lastElementChild);
         input.value = '';
@@ -300,6 +303,10 @@ updateCards();
  * ---------------------------------------------------------------------------------------------------------------------
  */
 
+
+/**
+ * Ajoute les événements sur les éléments `.bullets`
+ */
 function addEventsBullets() {
     document.querySelectorAll('.bullets').forEach(bullet => {
         bullet.addEventListener('click', function (e) {
@@ -310,11 +317,14 @@ function addEventsBullets() {
 
 addEventsBullets();
 
+/**
+ * Ajoute les événements sur les éléments `.add` pour affiche le formulaire de création de carte
+ */
 function addEnventsAdd() {
     document.querySelectorAll('.add').forEach(btn => {
         btn.addEventListener('click', function (e) {
             const id = this.getAttribute('data-columns');
-            console.log('click ' + id);
+            afficherFormulaireCreationCarte(id);
         });
     });
 
@@ -323,7 +333,14 @@ function addEnventsAdd() {
 addEnventsAdd();
 
 
-function ajouterCarte(id, value) {
+/**
+ * Ajoute une carte dans la colonne avec l'id `id` et la valeur `value`
+ * @param id {string} L'id de la colonne
+ * @param value {string} Le titre de la carte
+ * @param color {string} La couleur de la carte
+ */
+function ajouterCarte(id, value, color = 'white') {
+    console.log(color);
     let stockageParent = null;
 
     for (let stockage of document.querySelectorAll('.stockage')) {
@@ -337,10 +354,61 @@ function ajouterCarte(id, value) {
         card.classList.add('card');
         card.setAttribute('draggable', 'true');
         card.setAttribute('data-colmuns', id);
-        card.innerHTML = `<span></span>${value}<div class="features"></div>`;
+        card.innerHTML = `<span style="border: 5px solid ${color}"></span>${value}<div class="features"></div>`;
         stockageParent.appendChild(card);
+
+        let rect = card.getBoundingClientRect();
+        let x = rect.left + rect.width / 2;
+        let y = rect.top + rect.height / 2;
+        let evt = new MouseEvent('mousemove', {
+            clientX: x,
+            clientY: y
+        });
+        document.dispatchEvent(evt);
         updateCards();
     }
+}
+
+/**
+ * Affiche le formulaire de création de carte pour la colonne avec l'id `id`
+ * @param id {string} L'id de la colonne
+ */
+function afficherFormulaireCreationCarte(id) {
+    console.log(id);
+    const html = '<div class="formulaireCreationCarte">' +
+        '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="close.png" alt=""></div>' +
+        '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
+        '<div class="content"><h4>Description de la carte :</h4><textarea maxlength="255" class="desc" placeholder="Description de la carte..." ></textarea></div>' +
+        '<div class="content"><h4>Couleur de la carte :</h4><input required type="color"></div>' +
+        '<div class="content"><h4>Membres affectés :</h4><input type="text"></div>' +
+        '<div class="boutonCreation">Créer</div>' +
+        '</div>';
+
+    document.body.insertAdjacentHTML('beforeend', html);
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '0.5';
+    });
+
+    document.querySelector('.closeCard').addEventListener('click', function () {
+        document.querySelector('.formulaireCreationCarte').remove();
+        document.querySelectorAll('.all').forEach(el => {
+            el.style.opacity = '1';
+        });
+    });
+
+    document.querySelector('.boutonCreation').addEventListener('click', function () {
+        const titre = document.querySelector('.inputCreationCarte').value;
+        const description = document.querySelector('.desc').value;
+        const couleur = document.querySelector('input[type="color"]').value;
+        //AJAX ICI
+        document.querySelector('.formulaireCreationCarte').remove();
+        document.querySelectorAll('.all').forEach(el => {
+            el.style.opacity = '1';
+        });
+        if (titre !== '') {
+            ajouterCarte(id, titre, couleur);
+        }
+    });
 }
 
 
