@@ -12,6 +12,7 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
+use App\Trellotrolle\Service\Exception\TableauException;
 
 class ServiceTableau
 {
@@ -91,5 +92,25 @@ class ServiceTableau
             $data[] = $cartes;
         }
         return ["data"=>$data,"colonnes"=>$colonnes,"participants"=>$participants];
+    }
+
+    public function recupererTableauEstMembre($login)
+    {
+        return $this->tableauRepository->recupererTableauxOuUtilisateurEstMembre($login);
+    }
+
+    /**
+     * @throws TableauException
+     */
+    public function isNotNullNomTableau($nomTableau, $tableau)
+    {
+        if (is_null($nomTableau)){
+            throw new TableauException("Nom de tableau manquant",$tableau);
+        }
+    }
+
+    public function mettreAJourTableau($tableau)
+    {
+        $this->tableauRepository->mettreAJour($tableau);
     }
 }

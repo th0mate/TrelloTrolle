@@ -56,6 +56,8 @@ class ServiceColonne
      */
     public function supprimerColonne($tableau, $idColonne): int
     {
+        //TODO supprimer Vérif après refonte BD
+
         if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
             throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau);
         }
@@ -71,6 +73,17 @@ class ServiceColonne
         if (is_null($nomColonne)) {
             throw new CreationCarteException("Nom de colonne manquant");
         }
+    }
+
+    /**
+     * @throws CreationCarteException
+     * @throws ServiceException
+     */
+    public function recupererColonneAndNomColonne($idColonne, $nomColonne)
+    {
+        $colonne=$this->recupererColonne($idColonne);
+        $this->isSetNomColonne($nomColonne);
+        return $colonne;
     }
 
     public function creerColonne($tableau,$nomColonne): Colonne

@@ -14,6 +14,9 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Service\Exception\ConnexionException;
+use App\Trellotrolle\Service\ServiceConnexion;
+use App\Trellotrolle\Service\ServiceUtilisateur;
 
 class ControleurUtilisateur extends ControleurGenerique
 {
@@ -24,31 +27,35 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function afficherDetail(): void
     {
-        if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+        try {
+            (new ServiceConnexion())->connecter();
+            $utilisateur = (new ServiceUtilisateur())->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "utilisateur" => $utilisateur,
+                "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
+                "cheminVueBody" => "utilisateur/detail.php"
+            ]);
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
         }
-        $utilisateur = (new UtilisateurRepository())->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "utilisateur" => $utilisateur,
-            "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
-            "cheminVueBody" => "utilisateur/detail.php"
-        ]);
     }
 
     public static function afficherFormulaireCreation(): void
     {
-        if(ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
+        try {
+            (new ServiceConnexion())->connecter();
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Création d'un utilisateur",
+                "cheminVueBody" => "utilisateur/formulaireCreation.php"
+            ]);
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
         }
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Création d'un utilisateur",
-            "cheminVueBody" => "utilisateur/formulaireCreation.php"
-        ]);
     }
 
     public static function creerDepuisFormulaire(): void
     {
-        if(ConnexionUtilisateur::estConnecte()) {
+        if (ConnexionUtilisateur::estConnecte()) {
             ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
         }
         if (ControleurUtilisateur::issetAndNotNull(["login", "prenom", "nom", "mdp", "mdp2", "email"])) {
@@ -65,7 +72,7 @@ class ControleurUtilisateur extends ControleurGenerique
             $utilisateurRepository = new UtilisateurRepository();
 
             $checkUtilisateur = $utilisateurRepository->recupererParClePrimaire($_REQUEST["login"]);
-            if($checkUtilisateur) {
+            if ($checkUtilisateur) {
                 MessageFlash::ajouter("warning", "Le login est déjà pris.");
                 ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireCreation");
             }
@@ -76,7 +83,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
             $mdpHache = MotDePasse::hacher($_REQUEST["mdp"]);
             $idTableau = $tableauRepository->getNextIdTableau();
-            $codeTableau = hash("sha256", $_REQUEST["login"].$idTableau);
+            $codeTableau = hash("sha256", $_REQUEST["login"] . $idTableau);
             $tableauInitial = "Mon tableau";
 
             $idColonne1 = $colonneRepository->getNextIdColonne();
@@ -154,8 +161,7 @@ class ControleurUtilisateur extends ControleurGenerique
                 Cookie::enregistrer("mdp", $_REQUEST["mdp"]);
                 MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
                 ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
-            }
-            else {
+            } else {
                 MessageFlash::ajouter("warning", "Une erreur est survenue lors de la création de l'utilisateur.");
                 ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireCreation");
             }
@@ -167,22 +173,22 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function afficherFormulaireMiseAJour(): void
     {
-        if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+        try{
+            (new ServiceConnexion())->connecter();
+            $utilisateur= (new ServiceUtilisateur())->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Mise à jour du profil",
+                "cheminVueBody" => "utilisateur/formulaireMiseAJour.php",
+                "utilisateur" => $utilisateur,
+            ]);
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
         }
-        $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-        $repository = new UtilisateurRepository();
-        $utilisateur = $repository->recupererParClePrimaire($login);
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Mise à jour du profil",
-            "cheminVueBody" => "utilisateur/formulaireMiseAJour.php",
-            "utilisateur" => $utilisateur,
-        ]);
     }
 
     public static function mettreAJour(): void
     {
-        if(!ConnexionUtilisateur::estConnecte()) {
+        if (!ConnexionUtilisateur::estConnecte()) {
             ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
         }
         if (ControleurUtilisateur::issetAndNotNull(["login", "prenom", "nom", "mdp", "mdp2", "email"])) {
@@ -194,7 +200,7 @@ class ControleurUtilisateur extends ControleurGenerique
              */
             $utilisateur = $repository->recupererParClePrimaire($login);
 
-            if(!$utilisateur) {
+            if (!$utilisateur) {
                 MessageFlash::ajouter("danger", "L'utilisateur n'existe pas");
                 ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireMiseAJour");
             }
@@ -226,7 +232,9 @@ class ControleurUtilisateur extends ControleurGenerique
             $cartes = $carteRepository->recupererCartesUtilisateur($login);
             foreach ($cartes as $carte) {
                 $participants = $carte->getAffectationsCarte();
-                $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
+                $participants = array_filter($participants, function ($u) use ($login) {
+                    return $u->getLogin() !== $login;
+                });
                 $participants[] = $utilisateur;
                 $carte->setAffectationsCarte($participants);
                 $carteRepository->mettreAJour($carte);
@@ -236,7 +244,9 @@ class ControleurUtilisateur extends ControleurGenerique
             $tableaux = $tableauRepository->recupererTableauxParticipeUtilisateur($login);
             foreach ($tableaux as $tableau) {
                 $participants = $tableau->getParticipants();
-                $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
+                $participants = array_filter($participants, function ($u) use ($login) {
+                    return $u->getLogin() !== $login;
+                });
                 $participants[] = $utilisateur;
                 $tableau->setParticipants($participants);
                 $tableauRepository->mettreAJour($tableau);
@@ -254,7 +264,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function supprimer(): void
     {
-        if(!ConnexionUtilisateur::estConnecte()) {
+        if (!ConnexionUtilisateur::estConnecte()) {
             ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
         }
         if (!ControleurUtilisateur::issetAndNotNull(["login"])) {
@@ -267,7 +277,9 @@ class ControleurUtilisateur extends ControleurGenerique
         $cartes = $carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
             $participants = $carte->getAffectationsCarte();
-            $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
             $carte->setAffectationsCarte($participants);
             $carteRepository->mettreAJour($carte);
         }
@@ -276,7 +288,9 @@ class ControleurUtilisateur extends ControleurGenerique
         $tableaux = $tableauRepository->recupererTableauxParticipeUtilisateur($login);
         foreach ($tableaux as $tableau) {
             $participants = $tableau->getParticipants();
-            $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
             $tableau->setParticipants($participants);
             $tableauRepository->mettreAJour($tableau);
         }
@@ -291,18 +305,21 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function afficherFormulaireConnexion(): void
     {
-        if(ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
+        try{
+            (new ServiceConnexion())->dejaConnecter();
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Formulaire de connexion",
+                "cheminVueBody" => "utilisateur/formulaireConnexion.php"
+            ]);
+        } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info",$e->getMessage());
+            self::redirection("utilisateur","afficherListeMesTableaux");
         }
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Formulaire de connexion",
-            "cheminVueBody" => "utilisateur/formulaireConnexion.php"
-        ]);
     }
 
     public static function connecter(): void
     {
-        if(ConnexionUtilisateur::estConnecte()) {
+        if (ConnexionUtilisateur::estConnecte()) {
             ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
         }
         if (!ControleurUtilisateur::issetAndNotNull(["login", "mdp"])) {
@@ -341,18 +358,23 @@ class ControleurUtilisateur extends ControleurGenerique
         ControleurUtilisateur::redirection("base", "accueil");
     }
 
-    public static function afficherFormulaireRecuperationCompte(): void {
-        if(ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
+    public static function afficherFormulaireRecuperationCompte(): void
+    {
+        try{
+            (new ServiceConnexion())->dejaConnecter();
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Récupérer mon compte",
+                "cheminVueBody" => "utilisateur/resetCompte.php"
+            ]);
+        } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info",$e->getMessage());
+            self::redirection("utilisateur","afficherListeMesTableaux");
         }
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Récupérer mon compte",
-            "cheminVueBody" => "utilisateur/resetCompte.php"
-        ]);
     }
 
-    public static function recupererCompte(): void {
-        if(ConnexionUtilisateur::estConnecte()) {
+    public static function recupererCompte(): void
+    {
+        if (ConnexionUtilisateur::estConnecte()) {
             ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
         }
         if (!ControleurUtilisateur::issetAndNotNull(["email"])) {
@@ -361,7 +383,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
         $repository = new UtilisateurRepository();
         $utilisateurs = $repository->recupererUtilisateursParEmail($_REQUEST["email"]);
-        if(empty($utilisateurs)) {
+        if (empty($utilisateurs)) {
             MessageFlash::ajouter("warning", "Aucun compte associé à cette adresse email");
             ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
         }

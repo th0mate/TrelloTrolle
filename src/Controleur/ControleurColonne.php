@@ -85,7 +85,7 @@ class ControleurColonne extends ControleurGenerique
             (new ServiceColonne())->isSetNomColonne($nomColonne);
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne=(new ServiceColonne())->creerColonne($tableau,$nomColonne);
-            (new ServiceCarte())->newCarte($colonne,"Exemple","Exemple de carte","#FFFFFF",[]);
+            //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
@@ -134,8 +134,7 @@ class ControleurColonne extends ControleurGenerique
         $nomColonne=$_REQUEST["nomColonne"] ??null;
         try {
             (new ServiceConnexion())->connecter();
-            $colonne=(new ServiceColonne())->recupererColonne($idColonne);
-            (new ServiceColonne())->isSetNomColonne($nomColonne);
+            $colonne=(new ServiceColonne())->recupererColonneAndNomColonne($idColonne,$nomColonne);
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne->setTitreColonne($nomColonne);

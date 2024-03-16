@@ -56,6 +56,7 @@ class ServiceCarte
      */
     public function supprimerCarte($tableau, $idCarte): array
     {
+        //TODO supprimer Vérif après refonte BD
         if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
             throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau);
         }
@@ -66,9 +67,9 @@ class ServiceCarte
     /**
      * @throws CreationCarteException
      */
-    public function creerCarte($tableau, $affectationsCarte): array
+    public function creerCarte($tableau, $attributs,$colonne)
     {
-
+        $affectationsCarte=$attributs["affectationsCarte"];
         $affectations = [];
         if (!is_null($affectationsCarte)) {
             foreach ($affectationsCarte as $affectation) {
@@ -85,18 +86,19 @@ class ServiceCarte
                 $affectations[] = $utilisateur;
             }
         }
-        return $affectations;
+        $attributs["affectationsCarte"]=$affectations;
+        $this->newCarte($colonne,$attributs);
     }
 
-    public function newCarte($colonne,$titreCarte,$descCarte,$couleurCarte,$affectations):void
+    public function newCarte($colonne,$attributs):void
     {
         $carte=new Carte(
             $colonne,
             $this->carteRepository->getNextIdCarte(),
-            $titreCarte,
-            $descCarte,
-            $couleurCarte,
-            $affectations
+            $attributs["titreCarte"],
+            $attributs["descriptifCarte"],
+            $attributs["couleurCarte"],
+            $attributs["affectationsCarte"]
         );
         $this->carteRepository->ajouter($carte);
 
@@ -114,8 +116,13 @@ class ServiceCarte
         }
     }
 
-    public function miseAJourCarte($tableau,$affectationsCarte):array
+    /**
+     * @throws CreationCarteException
+     * @throws MiseAJourCarteException
+     */
+    public function miseAJourCarte($tableau, $attributs, $carte, $colonne)
     {
+        $affectationsCarte=$attributs["affectationsCarte"];
         $affectations=[];
         if (!is_null($affectationsCarte)) {
             foreach ($affectationsCarte as $affectation) {
@@ -132,7 +139,8 @@ class ServiceCarte
                 $affectations[] = $utilisateur;
             }
         }
-        return $affectations;
+        $attributs["affectationsCarte"]=$affectations;
+        $this->carteUpdate($carte,$colonne,$attributs);
     }
 
     public function carteUpdate(Carte $carte,$colonne,$attributs): void
@@ -147,12 +155,29 @@ class ServiceCarte
 
     /**
      * @throws CreationCarteException
+     * @throws ServiceException
      */
-    public function verifs($carte, $colonne): void
+    public function verificationsMiseAJourCarte($idCarte, $colonne,$attributs)
     {
+        $carte=$this->recupererCarte($idCarte);
+        $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
             throw new CreationCarteException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
+        }
+
+        return $carte;
+    }
+
+    public function miseAJourCarteMembre($tableau,$utilisateur)
+    {
+        $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
+        foreach ($cartes as $carte) {
+            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
+                return $u->getLogin() != $utilisateur->getLogin();
+            });
+            $carte->setAffectationsCarte($affectations);
+            $this->carteRepository->mettreAJour($carte);
         }
     }
 }

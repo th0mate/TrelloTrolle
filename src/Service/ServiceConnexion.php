@@ -4,6 +4,7 @@ namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Service\Exception\ConnexionException;
+use App\Trellotrolle\Service\Exception\ServiceException;
 
 class ServiceConnexion
 {
@@ -14,6 +15,16 @@ class ServiceConnexion
     {
         if(!ConnexionUtilisateur::estConnecte()) {
             throw new ConnexionException("Veuillez vous connecter");
+        }
+    }
+
+    /**
+     * @throws ConnexionException
+     */
+    public function dejaConnecter()
+    {
+        if (ConnexionUtilisateur::estConnecte()){
+            throw new ConnexionException("Vous êtes déjà connecter");
         }
     }
 }
