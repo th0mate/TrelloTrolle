@@ -130,7 +130,7 @@ function updateDraggables() {
  * Permet d'ajouter un nouvel élément `.draggable` dans la page
  */
 function addNewItem() {
-    //AJAX ICI
+    //TODO : AJAX ICI
 
     //temporaire - prend le premier id disponible non présent dans la page
     let id = 1;
@@ -156,7 +156,7 @@ function addNewItem() {
         input.value = '';
         updateDraggables();
         addEventsBullets();
-        addEnventsAdd();
+        addEventsAdd();
     }
 }
 
@@ -291,6 +291,7 @@ function cardDrop(e) {
             }
             draggedCard = null;
             updateCards();
+            //TODO : AJAX ICI
         }
     }
 }
@@ -318,20 +319,25 @@ function addEventsBullets() {
 addEventsBullets();
 
 /**
- * Ajoute les événements sur les éléments `.add` pour affiche le formulaire de création de carte
+ * Ajoute les écouteurs d'événements sur les éléments créés dynamiquement
  */
-function addEnventsAdd() {
+function addEventListeners() {
+    addEventsAdd();
+}
+
+function addEventsAdd() {
+    document.querySelectorAll('.add').forEach(btn => {
+        let newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+    });
+
     document.querySelectorAll('.add').forEach(btn => {
         btn.addEventListener('click', function (e) {
             const id = this.getAttribute('data-columns');
             afficherFormulaireCreationCarte(id);
         });
     });
-
 }
-
-addEnventsAdd();
-
 
 /**
  * Ajoute une carte dans la colonne avec l'id `id` et la valeur `value`
@@ -340,7 +346,6 @@ addEnventsAdd();
  * @param color {string} La couleur de la carte
  */
 function ajouterCarte(id, value, color = 'white') {
-    console.log(color);
     let stockageParent = null;
 
     for (let stockage of document.querySelectorAll('.stockage')) {
@@ -366,6 +371,10 @@ function ajouterCarte(id, value, color = 'white') {
         });
         document.dispatchEvent(evt);
         updateCards();
+        addEventListeners();
+        addListenersAjoutCard();
+    } else {
+        console.error('Aucune colonne avec l\'id ' + id + ' n\'a été trouvée');
     }
 }
 
@@ -389,28 +398,46 @@ function afficherFormulaireCreationCarte(id) {
         el.style.opacity = '0.5';
     });
 
-    document.querySelector('.closeCard').addEventListener('click', function () {
-        document.querySelector('.formulaireCreationCarte').remove();
-        document.querySelectorAll('.all').forEach(el => {
-            el.style.opacity = '1';
-        });
-    });
-
-    document.querySelector('.boutonCreation').addEventListener('click', function () {
-        const titre = document.querySelector('.inputCreationCarte').value;
-        const description = document.querySelector('.desc').value;
-        const couleur = document.querySelector('input[type="color"]').value;
-        //AJAX ICI
-        document.querySelector('.formulaireCreationCarte').remove();
-        document.querySelectorAll('.all').forEach(el => {
-            el.style.opacity = '1';
-        });
-        if (titre !== '') {
-            ajouterCarte(id, titre, couleur);
-        }
-    });
+    addListenersAjoutCard(id);
 }
 
+/**
+ * Ajoute les écouteurs d'événements sur les éléments pour le formulaire d'ajout des cartes
+ * @param id {string} L'id de la colonne
+ */
+function addListenersAjoutCard(id) {
+    document.querySelectorAll('.closeCard').forEach(function(closeCard) {
+        let newCloseCard = closeCard.cloneNode(true);
+        closeCard.parentNode.replaceChild(newCloseCard, closeCard);
 
+        newCloseCard.addEventListener('click', function () {
+            document.querySelector('.formulaireCreationCarte').remove();
+            document.querySelectorAll('.all').forEach(el => {
+                el.style.opacity = '1';
+            });
+        });
+    });
 
+    document.querySelectorAll('.boutonCreation').forEach(function(boutonCreation) {
+        let newBoutonCreation = boutonCreation.cloneNode(true);
+        boutonCreation.parentNode.replaceChild(newBoutonCreation, boutonCreation);
+
+        newBoutonCreation.addEventListener('click', function () {
+            const titre = document.querySelector('.inputCreationCarte').value;
+            const description = document.querySelector('.desc').value;
+            const couleur = document.querySelector('input[type="color"]').value;
+            //TODO : AJAX ICI
+            if (titre !== '') {
+                ajouterCarte(id, titre, couleur);
+            }
+
+            if (document.querySelector('.formulaireCreationCarte')) {
+                document.querySelector('.formulaireCreationCarte').remove();
+            }
+            document.querySelectorAll('.all').forEach(el => {
+                el.style.opacity = '1';
+            });
+        });
+    });
+}
 

@@ -446,6 +446,9 @@ body {
             background-color: #23272b;
             color: white;
             transition: background-color 200ms ease-in-out;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
 
         }
 
