@@ -83,6 +83,8 @@ function handleDrop(e) {
             targetDraggable.innerHTML = draggedHTML;
             sourceIsMainOrDraggable = false;
             updateDraggables();
+            addEventsBullets(dragSrcEl);
+            addEventsBullets(targetDraggable);
         }
     }
 }
