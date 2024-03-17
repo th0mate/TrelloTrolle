@@ -332,6 +332,21 @@ document.querySelector('.close').addEventListener('click', function () {
     document.querySelector('.menuColonnes').style.display = "none";
 });
 
+
+document.querySelector('.deleteColumn').addEventListener('click', function () {
+    const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
+    document.querySelector('.menuColonnes').style.display = "none";
+    document.querySelector(`[data-columns="${id}"]`).remove();
+    //TODO : AJAX ICI
+});
+
+document.querySelector('.updateColumn').addEventListener('click', function () {
+    const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
+    document.querySelector('.menuColonnes').style.display = "none";
+    afficherFormulaireModificationColonne();
+    //TODO : AJAX ICI
+});
+
 addEventsBullets();
 
 /**
@@ -397,8 +412,9 @@ function ajouterCarte(id, value, color = 'white') {
 /**
  * Affiche le formulaire de création de carte pour la colonne avec l'id `id`
  * @param id {string} L'id de la colonne
+ * @param pourModifier {boolean} Si le formulaire est affiché pour modifier une carte
  */
-function afficherFormulaireCreationCarte(id) {
+function afficherFormulaireCreationCarte(id, pourModifier = false) {
     console.log(id);
     const html = '<div class="formulaireCreationCarte">' +
         '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="close.png" alt=""></div>' +
@@ -453,6 +469,63 @@ function addListenersAjoutCard(id) {
             document.querySelectorAll('.all').forEach(el => {
                 el.style.opacity = '1';
             });
+        });
+    });
+}
+
+
+/**
+ * Affiche un formulaire de modification de colonne
+ */
+function afficherFormulaireModificationColonne() {
+    const valeurActuelle = document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText;
+    const html = '<div class="formulaireModificationColonne">' +
+        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="close.png" alt=""></div>' +
+        '<div class="content"><h4>Nouveau titre :</h4><input maxlength="50" required type="text" value="' + valeurActuelle + '" class="inputModificationColonne" placeholder="Entrez le nouveau titre"></div>' +
+        '<div class="boutonModification">Modifier</div>' +
+        '</div>';
+
+    document.body.insertAdjacentHTML('beforeend', html);
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '0.5';
+    });
+    addListenersModificationColonne();
+}
+
+/**
+ * Ajoute les écouteurs d'événements sur les éléments pour le formulaire de modification de colonne
+ */
+function addListenersModificationColonne() {
+    document.querySelectorAll('.closeColumn').forEach(function (closeColumn) {
+        let newCloseColumn = closeColumn.cloneNode(true);
+        closeColumn.parentNode.replaceChild(newCloseColumn, closeColumn);
+
+        newCloseColumn.addEventListener('click', function () {
+            document.querySelector('.formulaireModificationColonne').remove();
+            document.querySelectorAll('.all').forEach(el => {
+                el.style.opacity = '1';
+            });
+        });
+    });
+
+    document.querySelectorAll('.boutonModification').forEach(function (boutonModification) {
+        let newBoutonModification = boutonModification.cloneNode(true);
+        boutonModification.parentNode.replaceChild(newBoutonModification, boutonModification);
+
+        newBoutonModification.addEventListener('click', function () {
+            const titre = document.querySelector('.inputModificationColonne').value;
+            //TODO : AJAX ICI
+            if (titre !== '') {
+                document.querySelector('.formulaireModificationColonne').remove();
+                document.querySelectorAll('.all').forEach(el => {
+                    el.style.opacity = '1';
+                });
+
+                //le .main dans le .draggable avec le bon data-columns est mis à jour
+                document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = titre;
+                updateCards();
+                addEventsAdd();
+            }
         });
     });
 }
