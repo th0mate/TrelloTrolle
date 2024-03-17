@@ -3,12 +3,14 @@
 namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Controleur\ControleurCarte;
+use App\Trellotrolle\Controleur\ControleurUtilisateur;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
 class ServiceUtilisateur
@@ -110,5 +112,20 @@ class ServiceUtilisateur
         $tableau->setParticipants($participants);
         $this->tableauRepository->mettreAJour($tableau);
         return $utilisateur;
+    }
+
+    /**
+     * @throws ServiceException
+     */
+    public function recupererCompte($mail)
+    {
+        if (is_null($mail)) {
+            throw new ServiceException("Adresse email manquante");
+        }
+        $utilisateurs = $this->utilisateurRepository->recupererUtilisateursParEmail($mail);
+        if (empty($utilisateurs)) {
+            throw new ServiceException("Aucun compte associé à cette adresse email");
+        }
+        return $utilisateurs;
     }
 }

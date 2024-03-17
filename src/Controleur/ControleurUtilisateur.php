@@ -15,6 +15,7 @@ use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
+use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 
@@ -349,13 +350,14 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function deconnecter(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            MessageFlash::ajouter("danger", "Utilisateur non connecté.");
+        try{
+            (new ServiceConnexion())->deconnecter();
+            MessageFlash::ajouter("success", "L'utilisateur a bien été déconnecté.");
             ControleurUtilisateur::redirection("base", "accueil");
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("base","accueil");
         }
-        ConnexionUtilisateur::deconnecter();
-        MessageFlash::ajouter("success", "L'utilisateur a bien été déconnecté.");
-        ControleurUtilisateur::redirection("base", "accueil");
     }
 
     public static function afficherFormulaireRecuperationCompte(): void
@@ -374,23 +376,21 @@ class ControleurUtilisateur extends ControleurGenerique
 
     public static function recupererCompte(): void
     {
-        if (ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherListeMesTableaux");
+        $mail=$_REQUEST["email"] ??null;
+        try{
+            (new ServiceConnexion())->dejaConnecter();
+            $utilisateurs=(new ServiceUtilisateur())->recupererCompte($mail);
+            ControleurUtilisateur::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Récupérer mon compte",
+                "cheminVueBody" => "utilisateur/resultatResetCompte.php",
+                "utilisateurs" => $utilisateurs
+            ]);
+        } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info",$e->getMessage());
+            self::redirection("utilisateur","afficherListeMesTableaux");
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning",$e->getMessage());
+            self::redirection("utilisateur","afficherFormulaireConnexion");
         }
-        if (!ControleurUtilisateur::issetAndNotNull(["email"])) {
-            MessageFlash::ajouter("warning", "Adresse email manquante");
-            ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
-        }
-        $repository = new UtilisateurRepository();
-        $utilisateurs = $repository->recupererUtilisateursParEmail($_REQUEST["email"]);
-        if (empty($utilisateurs)) {
-            MessageFlash::ajouter("warning", "Aucun compte associé à cette adresse email");
-            ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
-        }
-        ControleurUtilisateur::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Récupérer mon compte",
-            "cheminVueBody" => "utilisateur/resultatResetCompte.php",
-            "utilisateurs" => $utilisateurs
-        ]);
     }
 }
