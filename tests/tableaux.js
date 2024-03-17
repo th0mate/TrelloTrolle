@@ -155,7 +155,7 @@ function addNewItem() {
         ul.insertBefore(newElement, ul.lastElementChild);
         input.value = '';
         updateDraggables();
-        addEventsBullets();
+        addEventsBullets(newElement);
         addEventsAdd();
     }
 }
@@ -308,13 +308,27 @@ updateCards();
 /**
  * Ajoute les événements sur les éléments `.bullets`
  */
-function addEventsBullets() {
-    document.querySelectorAll('.bullets').forEach(bullet => {
-        bullet.addEventListener('click', function (e) {
-            console.log('click');
-        });
+function addEventsBullets(element) {
+    element.querySelector('.bullets').addEventListener('click', function (e) {
+        console.log(this.closest('.draggable').getAttribute('data-columns'));
+        const menu = document.querySelector(".menuColonnes");
+        if (menu) {
+            if (menu.style.display === "flex") {
+                menu.style.display = "none";
+            } else {
+                menu.style.top = e.clientY + "px";
+                menu.style.left = e.clientX + "px";
+                menu.style.display = "flex";
+                const id = this.closest('.draggable').getAttribute('data-columns');
+                menu.setAttribute('data-columns', id);
+            }
+        }
     });
 }
+
+document.querySelector('.close').addEventListener('click', function () {
+    document.querySelector('.menuColonnes').style.display = "none";
+});
 
 addEventsBullets();
 
@@ -406,7 +420,7 @@ function afficherFormulaireCreationCarte(id) {
  * @param id {string} L'id de la colonne
  */
 function addListenersAjoutCard(id) {
-    document.querySelectorAll('.closeCard').forEach(function(closeCard) {
+    document.querySelectorAll('.closeCard').forEach(function (closeCard) {
         let newCloseCard = closeCard.cloneNode(true);
         closeCard.parentNode.replaceChild(newCloseCard, closeCard);
 
@@ -418,7 +432,7 @@ function addListenersAjoutCard(id) {
         });
     });
 
-    document.querySelectorAll('.boutonCreation').forEach(function(boutonCreation) {
+    document.querySelectorAll('.boutonCreation').forEach(function (boutonCreation) {
         let newBoutonCreation = boutonCreation.cloneNode(true);
         boutonCreation.parentNode.replaceChild(newBoutonCreation, boutonCreation);
 
