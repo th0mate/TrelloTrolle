@@ -5,6 +5,7 @@ namespace App\Trellotrolle\Service;
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Controleur\ControleurTableau;
+use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
@@ -21,17 +22,18 @@ class ServiceTableau
     private TableauRepository $tableauRepository;
     private ColonneRepository $colonneRepository;
     private CarteRepository $carteRepository;
+
     public function __construct()
     {
-        $this->tableauRepository=new TableauRepository();
-        $this->colonneRepository=new ColonneRepository();
+        $this->tableauRepository = new TableauRepository();
+        $this->colonneRepository = new ColonneRepository();
         $this->carteRepository = new CarteRepository();
     }
 
     /**
      * @throws ServiceException
      */
-    public function recupererTableauParId($idTableau):Tableau
+    public function recupererTableauParId($idTableau): Tableau
     {
         if (is_null($idTableau)) {
             throw new ServiceException("Identifiant du tableau manquant");
@@ -51,14 +53,14 @@ class ServiceTableau
      */
     public function recupererTableauParCode($codeTableau): Tableau
     {
-        if(is_null($codeTableau)) {
+        if (is_null($codeTableau)) {
             throw new ServiceException("Code de tableau manquant");
         }
         /**
          * @var Tableau $tableau
          */
         $tableau = $this->tableauRepository->recupererParCodeTableau($codeTableau);
-        if(!$tableau) {
+        if (!$tableau) {
             throw new ServiceException("Tableau inexistant");
         }
         return $tableau;
@@ -81,10 +83,10 @@ class ServiceTableau
             $cartes = $this->carteRepository->recupererCartesColonne($colonne->getIdColonne());
             foreach ($cartes as $carte) {
                 foreach ($carte->getAffectationsCarte() as $utilisateur) {
-                    if(!isset($participants[$utilisateur->getLogin()])) {
+                    if (!isset($participants[$utilisateur->getLogin()])) {
                         $participants[$utilisateur->getLogin()] = ["infos" => $utilisateur, "colonnes" => []];
                     }
-                    if(!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
+                    if (!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
                         $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()] = [$colonne->getTitreColonne(), 0];
                     }
                     $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()][1]++;
@@ -92,7 +94,7 @@ class ServiceTableau
             }
             $data[] = $cartes;
         }
-        return ["data"=>$data,"colonnes"=>$colonnes,"participants"=>$participants];
+        return ["data" => $data, "colonnes" => $colonnes, "participants" => $participants];
     }
 
     public function recupererTableauEstMembre($login)
@@ -105,14 +107,53 @@ class ServiceTableau
      */
     public function isNotNullNomTableau($nomTableau, $tableau)
     {
-        if (is_null($nomTableau)){
-            throw new TableauException("Nom de tableau manquant",$tableau);
+        if (is_null($nomTableau)) {
+            throw new TableauException("Nom de tableau manquant", $tableau);
         }
     }
 
     public function mettreAJourTableau($tableau)
     {
         $this->tableauRepository->mettreAJour($tableau);
+    }
+
+    /**
+     * @throws ServiceException
+     */
+    public function supprimerTableau($idTableau)
+    {
+        //TODO supprimer Vérif après refonte BD
+        if ($this->tableauRepository->getNombreTableauxTotalUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte()) == 1) {
+            throw new ServiceException("Vous ne pouvez pas supprimer ce tableau car cela entrainera la suppression du compte");
+        }
+        $this->tableauRepository->supprimer($idTableau);
+    }
+
+    /**
+     * @throws ServiceException
+     */
+    public function quitterTableau($tableau,$utilisateur)
+    {
+        if ($tableau->estProprietaire($utilisateur->getLogin())) {
+            throw new ServiceException("Vous ne pouvez pas quitter ce tableau");
+        }
+        if (!$tableau->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+            throw new ServiceException("Vous n'appartenez pas à ce tableau");
+        }
+        $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
+            return $u->getLogin() !== $utilisateur->getLogin();
+        });
+        $tableau->setParticipants($participants);
+        $this->tableauRepository->mettreAJour($tableau);
+
+        $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
+        foreach ($cartes as $carte) {
+            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
+                return $u->getLogin() != $utilisateur->getLogin();
+            });
+            $carte->setAffectationsCarte($affectations);
+            $this->carteRepository->mettreAJour($carte);
+        }
     }
 
 }

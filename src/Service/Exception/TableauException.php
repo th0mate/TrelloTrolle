@@ -4,7 +4,7 @@ namespace App\Trellotrolle\Service\Exception;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use Exception;
 
-class TableauException extends Exception
+class TableauException extends ServiceException
 {
     private Tableau $tableau;
 

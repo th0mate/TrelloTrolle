@@ -53,7 +53,7 @@ class ControleurTableau extends ControleurGenerique
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->estParticipant($tableau);
             ControleurTableau::afficherVue('vueGenerale.php', [
@@ -64,19 +64,19 @@ class ControleurTableau extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("base", "accueil");
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 
     public static function afficherFormulaireCreationTableau(): void
     {
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Ajout d'un tableau",
                 "cheminVueBody" => "tableau/formulaireCreationTableau.php",
@@ -183,7 +183,7 @@ class ControleurTableau extends ControleurGenerique
         $idTableau = $_REQUEST["idTableau"] ?? null;
         $nomTableau = $_REQUEST["nomTableau"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceTableau())->isNotNullNomTableau($nomTableau,$tableau);
             if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
@@ -195,12 +195,12 @@ class ControleurTableau extends ControleurGenerique
             ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
+        }catch (TableauException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            ControleurTableau::redirection("tableau", "afficherFormulaireMiseAJourTableau", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("base", "accueil");
-        } catch (TableauException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            ControleurTableau::redirection("tableau", "afficherFormulaireMiseAJourTableau", ["idTableau" => $_REQUEST["idTableau"]]);
         }
     }
 
@@ -208,7 +208,7 @@ class ControleurTableau extends ControleurGenerique
     {
         $idTableau=$_REQUEST["idTableau"] ??null;
         try{
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
             $filtredUtilisateurs=(new ServiceUtilisateur())->verificationsMembre($tableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
             ControleurTableau::afficherVue('vueGenerale.php', [
@@ -219,12 +219,12 @@ class ControleurTableau extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("base","accueil");
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
             ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        }catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("base","accueil");
         }
     }
 
@@ -233,18 +233,18 @@ class ControleurTableau extends ControleurGenerique
         $idTableau = $_REQUEST["idTableau"] ?? null;
         $login = $_REQUEST["login"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->ajouterMembre($tableau, $login);
             ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("base", "accueil");
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 
@@ -253,7 +253,7 @@ class ControleurTableau extends ControleurGenerique
         $idTableau = $_REQUEST["idTableau"] ?? null;
         $login = $_REQUEST["login"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             $utilisateur = (new ServiceUtilisateur())->supprimerMembre($tableau, $login);
             (new ServiceCarte())->miseAJourCarteMembre($tableau, $utilisateur);
@@ -261,19 +261,19 @@ class ControleurTableau extends ControleurGenerique
 
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("base", "accueil");
-        } catch (TableauException $e) {
+        }  catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("tableau", "afficherTableau", ['codeTableau' => $e->getTableau()->getCodeTableau()]);
+        }catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 
     public static function afficherListeMesTableaux(): void
     {
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
             $tableaux = (new ServiceTableau())->recupererTableauEstMembre($login);
             ControleurTableau::afficherVue('vueGenerale.php', [
@@ -288,87 +288,36 @@ class ControleurTableau extends ControleurGenerique
 
     public static function quitterTableau(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
-        }
-        if (!ControleurCarte::issetAndNotNull(["idTableau"])) {
-            MessageFlash::ajouter("danger", "Identifiant du tableau manquant");
+        $idTableau=$_REQUEST["idTableau"] ??null;
+        try{
+            (new ServiceConnexion())->pasConnecter();
+            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
+            $utilisateur=(new ServiceUtilisateur())->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            (new ServiceTableau())->quitterTableau($tableau,$utilisateur);
             ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
-        $repository = new TableauRepository();
-        /**
-         * @var Tableau $tableau
-         */
-        $tableau = $repository->recupererParClePrimaire($_REQUEST["idTableau"]);
-        if (!$tableau) {
-            MessageFlash::ajouter("danger", "Tableau inexistant");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
 
-        $utilisateurRepository = new UtilisateurRepository();
-
-        /**
-         * @var Utilisateur $utilisateur
-         */
-        $utilisateur = $utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        if ($tableau->estProprietaire($utilisateur->getLogin())) {
-            MessageFlash::ajouter("danger", "Vous ne pouvez pas quitter ce tableau");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("tableau","afficherListeMesTableaux");
         }
-        if (!$tableau->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'appartenez pas à ce tableau");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
-        $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
-            return $u->getLogin() !== $utilisateur->getLogin();
-        });
-        $tableau->setParticipants($participants);
-        $repository->mettreAJour($tableau);
-
-        $carteRepository = new CarteRepository();
-
-        /**
-         * @var Carte[] $cartes
-         */
-        $cartes = $carteRepository->recupererCartesTableau($tableau->getIdTableau());
-        foreach ($cartes as $carte) {
-            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
-                return $u->getLogin() != $utilisateur->getLogin();
-            });
-            $carte->setAffectationsCarte($affectations);
-            $carteRepository->mettreAJour($carte);
-        }
-        ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
     }
 
     public static function supprimerTableau(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
-        }
-        if (!ControleurCarte::issetAndNotNull(["idTableau"])) {
-            MessageFlash::ajouter("danger", "Identifiant de tableau manquant");
+        $idTableau=$_REQUEST["idTableau"] ??null;
+        try{
+            (new ServiceConnexion())->pasConnecter();
+            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
+            (new ServiceUtilisateur())->estProprietaire($tableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            (new ServiceTableau())->supprimerTableau($idTableau);
             ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("tableau","afficherListeMesTableaux");
         }
-        $repository = new TableauRepository();
-        $idTableau = $_REQUEST["idTableau"];
-        /**
-         * @var Tableau $tableau
-         */
-        $tableau = $repository->recupererParClePrimaire($idTableau);
-        if (!$tableau) {
-            MessageFlash::ajouter("danger", "Tableau inexistant");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
-        if (!$tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'êtes pas propriétaire de ce tableau");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
-        if ($repository->getNombreTableauxTotalUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte()) == 1) {
-            MessageFlash::ajouter("danger", "Vous ne pouvez pas supprimer ce tableau car cela entrainera la supression du compte");
-            ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
-        }
-        $repository->supprimer($idTableau);
-        ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
     }
 }

@@ -7,10 +7,14 @@ use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
+use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
+use App\Trellotrolle\Modele\HTTP\Cookie;
+use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
@@ -20,8 +24,11 @@ class ServiceUtilisateur
 
     private TableauRepository $tableauRepository;
 
+    private CarteRepository $carteRepository;
+
     public function __construct()
     {
+        $this->carteRepository = new CarteRepository();
         $this->utilisateurRepository = new UtilisateurRepository();
         $this->tableauRepository = new TableauRepository();
     }
@@ -98,14 +105,14 @@ class ServiceUtilisateur
      */
     public function supprimerMembre(Tableau $tableau, $login)
     {
-        $this->estProprietaire($tableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        $this->isNotNullLogin($login,$tableau,"supprimer");
-        $utilisateur=$this->utilisateurExistant($login,$tableau);
-        if($tableau->estProprietaire($login)){
-            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.",$tableau);
+        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $this->isNotNullLogin($login, $tableau, "supprimer");
+        $utilisateur = $this->utilisateurExistant($login, $tableau);
+        if ($tableau->estProprietaire($login)) {
+            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau);
         }
-        if (!$tableau->estParticipant($utilisateur->getLogin())){
-            throw new TableauException("Cet utilisateur n'est pas membre du tableau",$tableau);
+        if (!$tableau->estParticipant($utilisateur->getLogin())) {
+            throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau);
         }
         $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
@@ -135,7 +142,7 @@ class ServiceUtilisateur
      */
     public function verificationsMembre(Tableau $tableau, $login)
     {
-        $this->estProprietaire($tableau,$login);
+        $this->estProprietaire($tableau, $login);
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
         $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
             return !$tableau->estParticipantOuProprietaire($u->getLogin());
@@ -143,8 +150,104 @@ class ServiceUtilisateur
 
         if (empty($filtredUtilisateurs)) {
             //TODO le message flash est censé était en warning de base mais c'est maintenant un danger
-            throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.",$tableau);
+            throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.", $tableau);
         }
         return $filtredUtilisateurs;
+    }
+
+    /**
+     * @throws MiseAJourException
+     */
+    public function mettreAJourUtilisateur($attributs)
+    {
+        foreach ($attributs as $attribut) {
+            if (is_null($attribut)) {
+                throw new MiseAJourException('Login, nom, prenom, email ou mot de passe manquant.', "danger");
+            }
+        }
+        $login = $attributs['login'];
+
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
+
+        if (!$utilisateur) {
+            throw new MiseAJourException("L'utilisateur n'existe pas", "danger");
+        }
+
+        if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
+            throw new MiseAJourException("Email non valide", "warning");
+        }
+
+        if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
+            throw new MiseAJourException("Ancien mot de passe erroné.", "warning");
+        }
+
+        if ($attributs["mdp"] !== $attributs["mdp2"]) {
+            throw new MiseAJourException("Mots de passe distincts", "warning");
+        }
+
+        $utilisateur->setNom($attributs["nom"]);
+        $utilisateur->setPrenom($attributs["prenom"]);
+        $utilisateur->setEmail($attributs["email"]);
+        $utilisateur->setMdpHache(MotDePasse::hacher($attributs["mdp"]));
+        $utilisateur->setMdp($attributs["mdp"]);
+
+        $this->utilisateurRepository->mettreAJour($utilisateur);
+
+        $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
+        foreach ($cartes as $carte) {
+            $participants = $carte->getAffectationsCarte();
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
+            $participants[] = $utilisateur;
+            $carte->setAffectationsCarte($participants);
+            $this->carteRepository->mettreAJour($carte);
+        }
+
+        $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
+        foreach ($tableaux as $tableau) {
+            $participants = $tableau->getParticipants();
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
+            $participants[] = $utilisateur;
+            $tableau->setParticipants($participants);
+            $this->tableauRepository->mettreAJour($tableau);
+        }
+
+        Cookie::enregistrer("mdp", $attributs["mdp"]);
+    }
+
+    /**
+     * @throws ServiceException
+     */
+    public function supprimerUtilisateur($login)
+    {
+        if (is_null("login")) {
+            throw new ServiceException("Login manquant");
+        }
+        $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
+        foreach ($cartes as $carte) {
+            $participants = $carte->getAffectationsCarte();
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
+            $carte->setAffectationsCarte($participants);
+            $this->carteRepository->mettreAJour($carte);
+        }
+
+        $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
+        foreach ($tableaux as $tableau) {
+            $participants = $tableau->getParticipants();
+            $participants = array_filter($participants, function ($u) use ($login) {
+                return $u->getLogin() !== $login;
+            });
+            $tableau->setParticipants($participants);
+            $this->tableauRepository->mettreAJour($tableau);
+        }
+        $this->utilisateurRepository->supprimer($login);
+        Cookie::supprimer("login");
+        Cookie::supprimer("mdp");
+        ConnexionUtilisateur::deconnecter();
     }
 }

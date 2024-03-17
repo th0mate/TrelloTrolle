@@ -2,7 +2,7 @@
 
 namespace App\Trellotrolle\Service\Exception;
 
-class CreationCarteException extends \Exception
+class CreationCarteException extends ServiceException
 {
 
 }

@@ -11,7 +11,7 @@ use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\CreationCarteException;
-use App\Trellotrolle\Service\Exception\MiseAJourCarteException;
+use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
@@ -118,7 +118,7 @@ class ServiceCarte
 
     /**
      * @throws CreationCarteException
-     * @throws MiseAJourCarteException
+     * @throws MiseAJourException
      */
     public function miseAJourCarte($tableau, $attributs, $carte, $colonne)
     {
@@ -134,7 +134,7 @@ class ServiceCarte
                     throw new CreationCarteException("Un des membres affecté à la tâche n'existe pas");
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new MiseAJourCarteException("Un des membres affecté à la tâche n'est pas affecté au tableau");
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
                 }
                 $affectations[] = $utilisateur;
             }

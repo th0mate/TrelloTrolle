@@ -31,7 +31,7 @@ class ControleurColonne extends ControleurGenerique
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
+            (new ServiceConnexion())->pasConnecter();
             $colonne = (new ServiceColonne())->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
@@ -43,30 +43,30 @@ class ControleurColonne extends ControleurGenerique
             }
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("base", "accueil");
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 
     public static function afficherFormulaireCreationColonne(): void
     {
-        $idTableau=$_REQUEST["idTableau"] ??null;
+        $idTableau = $_REQUEST["idTableau"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
-            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
+            (new ServiceConnexion())->pasConnecter();
+            $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->estParticipant($tableau);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
-            self::redirection("base","accueil");
         } catch (TableauException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("tableau","afficherTableau",["codeTableau"=>$e->getTableau()->getCodeTableau()]);
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
+            self::redirection("base", "accueil");
         }
         ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une colonne",
@@ -77,36 +77,36 @@ class ControleurColonne extends ControleurGenerique
 
     public static function creerColonne(): void
     {
-        $idTableau=$_REQUEST["idTableau"] ??null;
-        $nomColonne=$_REQUEST["nomColonne"] ??null;
+        $idTableau = $_REQUEST["idTableau"] ?? null;
+        $nomColonne = $_REQUEST["nomColonne"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
-            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
+            (new ServiceConnexion())->pasConnecter();
+            $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceColonne())->isSetNomColonne($nomColonne);
             (new ServiceUtilisateur())->estParticipant($tableau);
-            $colonne=(new ServiceColonne())->creerColonne($tableau,$nomColonne);
+            $colonne = (new ServiceColonne())->creerColonne($tableau, $nomColonne);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("base","accueil");
         } catch (CreationCarteException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             ControleurColonne::redirection("colonne", "afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (TableauException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("tableau","afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 
     public static function afficherFormulaireMiseAJourColonne(): void
     {
-        $idColonne=$_REQUEST["idColonne"]??null;
-        try{
-            (new ServiceConnexion())->connecter();
-            $colonne=(new ServiceColonne())->recupererColonne($idColonne);
+        $idColonne = $_REQUEST["idColonne"] ?? null;
+        try {
+            (new ServiceConnexion())->pasConnecter();
+            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             ControleurTableau::afficherVue('vueGenerale.php', [
@@ -117,24 +117,23 @@ class ControleurColonne extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("base","accueil");
         } catch (TableauException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
-
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
 
     }
 
     public static function mettreAJourColonne(): void
     {
-        $idColonne=$_REQUEST["idColonne"] ??null;
-        $nomColonne=$_REQUEST["nomColonne"] ??null;
+        $idColonne = $_REQUEST["idColonne"] ?? null;
+        $nomColonne = $_REQUEST["nomColonne"] ?? null;
         try {
-            (new ServiceConnexion())->connecter();
-            $colonne=(new ServiceColonne())->recupererColonneAndNomColonne($idColonne,$nomColonne);
+            (new ServiceConnexion())->pasConnecter();
+            $colonne = (new ServiceColonne())->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne->setTitreColonne($nomColonne);
@@ -142,16 +141,15 @@ class ControleurColonne extends ControleurGenerique
             ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (ServiceException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
-            self::redirection("base","accueil");
         } catch (CreationCarteException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             ControleurColonne::redirection("colonne", "afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
         } catch (TableauException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
-
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger", $e->getMessage());
+            self::redirection("base", "accueil");
         }
     }
 }
