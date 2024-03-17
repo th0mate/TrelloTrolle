@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Controleur\ControleurCarte;
+use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
@@ -127,5 +128,23 @@ class ServiceUtilisateur
             throw new ServiceException("Aucun compte associé à cette adresse email");
         }
         return $utilisateurs;
+    }
+
+    /**
+     * @throws TableauException
+     */
+    public function verificationsMembre(Tableau $tableau, $login)
+    {
+        $this->estProprietaire($tableau,$login);
+        $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
+        $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
+            return !$tableau->estParticipantOuProprietaire($u->getLogin());
+        });
+
+        if (empty($filtredUtilisateurs)) {
+            //TODO le message flash est censé était en warning de base mais c'est maintenant un danger
+            throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.",$tableau);
+        }
+        return $filtredUtilisateurs;
     }
 }

@@ -206,48 +206,26 @@ class ControleurTableau extends ControleurGenerique
 
     public static function afficherFormulaireAjoutMembre(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+        $idTableau=$_REQUEST["idTableau"] ??null;
+        try{
+            (new ServiceConnexion())->connecter();
+            $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
+            $filtredUtilisateurs=(new ServiceUtilisateur())->verificationsMembre($tableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            ControleurTableau::afficherVue('vueGenerale.php', [
+                "pagetitle" => "Ajout d'un membre",
+                "cheminVueBody" => "tableau/formulaireAjoutMembreTableau.php",
+                "tableau" => $tableau,
+                "utilisateurs" => $filtredUtilisateurs
+            ]);
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("base","accueil");
+        } catch (TableauException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         }
-        if (!ControleurCarte::issetAndNotNull(["idTableau"])) {
-            MessageFlash::ajouter("danger", "Identifiant du tableau manquant");
-            ControleurTableau::redirection("base", "accueil");
-        }
-        $repository = new TableauRepository();
-        /**
-         * @var Tableau $tableau
-         */
-        $tableau = $repository->recupererParClePrimaire($_REQUEST["idTableau"]);
-        if (!$tableau) {
-            MessageFlash::ajouter("danger", "Tableau inexistant");
-            ControleurTableau::redirection("base", "accueil");
-        }
-        if (!$tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            MessageFlash::ajouter("danger", "Vous n'êtes pas propriétaire de ce tableau");
-            ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
-        }
-
-        $utilisateurRepository = new UtilisateurRepository();
-
-        /**
-         * @var Utilisateur[] $utilisateurs
-         */
-        $utilisateurs = $utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
-        $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
-            return !$tableau->estParticipantOuProprietaire($u->getLogin());
-        });
-
-        if (empty($filtredUtilisateurs)) {
-            MessageFlash::ajouter("warning", "Il n'est pas possible d'ajouter plus de membre à ce tableau.");
-            ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
-        }
-
-        ControleurTableau::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Ajout d'un membre",
-            "cheminVueBody" => "tableau/formulaireAjoutMembreTableau.php",
-            "tableau" => $tableau,
-            "utilisateurs" => $filtredUtilisateurs
-        ]);
     }
 
     public static function ajouterMembre(): void

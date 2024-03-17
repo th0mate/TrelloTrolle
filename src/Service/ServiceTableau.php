@@ -4,6 +4,7 @@ namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
+use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
@@ -113,4 +114,5 @@ class ServiceTableau
     {
         $this->tableauRepository->mettreAJour($tableau);
     }
+
 }
