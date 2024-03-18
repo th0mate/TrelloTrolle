@@ -102,4 +102,5 @@ class Tableau extends AbstractDataObject
             ),
         );
     }
+
 }
