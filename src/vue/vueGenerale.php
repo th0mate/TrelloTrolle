@@ -47,7 +47,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                     </a>
                 </li>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherFormulaireInscription", ["controleur" => "utilisateur"]);?>">
+                    <a href="<?=$generateurUrl->generate("afficherFormulaireCreation", ["controleur" => "utilisateur"]);?>">
                         Inscription <img alt="S'inscrire" title="S'inscrire" src="../ressources/img/add-user.png" >
                     </a>
                 </li>

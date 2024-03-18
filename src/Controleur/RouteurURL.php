@@ -4,6 +4,11 @@ namespace App\Trellotrolle\Controleur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Service\ServiceCarte;
+use App\Trellotrolle\Service\ServiceColonne;
+use App\Trellotrolle\Service\ServiceConnexion;
+use App\Trellotrolle\Service\ServiceTableau;
+use App\Trellotrolle\Service\ServiceUtilisateur;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,22 +49,28 @@ class RouteurURL
         $routes = new RouteCollection();
         $conteneur = new ContainerBuilder();
 
-        $conteneur->register('configuration_bdd_postgresql', ConfigurationBaseDeDonnees::class);
+        $conteneur->register('carteRepository', CarteRepository::class)
+            ->setArguments([new Reference('connexionBaseDeDonnees')]);
+        $conteneur->register('colonneRepository', ColonneRepository::class)
+            ->setArguments([new Reference('connexionBaseDeDonnees')]);
+        $conteneur->register('tableauRepository', TableauRepository::class)
+            ->setArguments([new Reference('connexionBaseDeDonnees')]);
+        $conteneur->register('utilisateurRepository', UtilisateurRepository::class)
+            ->setArguments([new Reference('connexionBaseDeDonnees')]);
+        $conteneur->register('tableauRepository', TableauRepository::class)
+            ->setArguments([new Reference('connexionBaseDeDonnees')]);
+        $conteneur->register('serviceUtilisateur', ServiceUtilisateur::class)
+            ->setArguments([new Reference('utilisateurRepository')]);
+        $conteneur->register('serviceConnexion', ServiceConnexion::class)
+            ->setArguments([new Reference('utilisateurRepository')]);
+        $conteneur->register('serviceTableau', ServiceTableau::class)
+            ->setArguments([new Reference('tableauRepository')]);
+        $conteneur->register('serviceColonne', ServiceColonne::class)
+            ->setArguments([new Reference('colonneRepository')]);
+        $conteneur->register('serviceCarte', ServiceCarte::class)
+            ->setArguments([new Reference('carteRepository')]);
 
-        $connexionBaseService = $conteneur->register('connexion_base_de_donnees', ConnexionBaseDeDonnees::class);
-        $connexionBaseService->setArguments([new Reference('configuration_bdd_my_sql')]);
 
-        $cartesRepositoryService = $conteneur->register('carte_repository',CarteRepository::class);
-        $cartesRepositoryService->setArguments([new Reference('connexion_base_de_donnees')]);
-
-        $utilisateurRepositoryService = $conteneur->register('utilisateur_repository',UtilisateurRepository::class);
-        $utilisateurRepositoryService->setArguments([new Reference('connexion_base_de_donnees')]);
-
-        $colonnesRepositoryService = $conteneur->register('colonne_repository',ColonneRepository::class);
-        $colonnesRepositoryService->setArguments([new Reference('connexion_base_de_donnees')]);
-
-        $tableauxRepositoryService = $conteneur->register('tableau_repository',TableauRepository::class);
-        $tableauxRepositoryService->setArguments([new Reference('connexion_base_de_donnees')]);
 
 
 // Route afficherListe

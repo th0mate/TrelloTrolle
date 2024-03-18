@@ -19,6 +19,7 @@ use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceTableau;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ControleurTableau extends ControleurGenerique
 {
@@ -27,6 +28,7 @@ class ControleurTableau extends ControleurGenerique
         parent::afficherErreur($messageErreur, "tableau");
     }
 
+    #[Route('/tableau/afficherTableau', name: 'afficherTableau')]
     public static function afficherTableau(): void
     {
         $codeTableau = $_REQUEST["codeTableau"] ?? null;
@@ -49,6 +51,7 @@ class ControleurTableau extends ControleurGenerique
 
     }
 
+    #[Route('/tableau/afficherFormulaireMiseAJourTableau', name: 'afficherFormulaireMiseAJourTableau')]
     public static function afficherFormulaireMiseAJourTableau(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -73,6 +76,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/afficherFormulaireCreationTableau', name: 'afficherFormulaireCreationTableau')]
     public static function afficherFormulaireCreationTableau(): void
     {
         try {
@@ -86,6 +90,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/creerTableau', name: 'creerTableau')]
     public static function creerTableau(): void
     {
         if (!ConnexionUtilisateur::estConnecte()) {
@@ -178,6 +183,7 @@ class ControleurTableau extends ControleurGenerique
         ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
+    #[Route('/tableau/mettreAJourTableau', name: 'mettreAJourTableau')]
     public static function mettreAJourTableau(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -204,6 +210,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/formulaireAjoutMembreTableau', name: 'afficherFormulaireAjoutMembre')]
     public static function afficherFormulaireAjoutMembre(): void
     {
         $idTableau=$_REQUEST["idTableau"] ??null;
@@ -228,6 +235,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/ajouterMembre', name: 'ajouterMembreTableau')]
     public static function ajouterMembre(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -248,6 +256,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/supprimerMembre', name: 'supprimerMembre')]
     public static function supprimerMembre(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -270,6 +279,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/afficherListeMesTableaux', name: 'afficherListeMesTableaux')]
     public static function afficherListeMesTableaux(): void
     {
         try {
@@ -286,6 +296,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/afficherListeTableaux', name: 'afficherListeTableaux')]
     public static function quitterTableau(): void
     {
         $idTableau=$_REQUEST["idTableau"] ??null;
@@ -304,6 +315,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    #[Route('/tableau/supprimerTableau', name: 'supprimerTableau')]
     public static function supprimerTableau(): void
     {
         $idTableau=$_REQUEST["idTableau"] ??null;

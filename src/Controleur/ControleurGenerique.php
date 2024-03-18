@@ -2,37 +2,47 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\Conteneur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ControleurGenerique {
 
-    protected static function afficherVue(string $cheminVue, array $parametres = []): void
+    protected static function afficherVue(string $cheminVue, array $parametres = []): Response
     {
         extract($parametres);
 //        $messagesFlash = $_REQUEST["messagesFlash"] ?? [];
         $messagesFlash = MessageFlash::lireTousMessages();
+        ob_start();
         require __DIR__ . "/../vue/$cheminVue";
+
+        $corpsReponse = ob_get_clean();
+        return new Response($corpsReponse);
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
-    protected static function redirection(string $controleur = "", string $action = "", array $query = []) : void
+    protected function redirection(string $controleur = "", string $action = "", array $query = []) : RedirectResponse
     {
-        $queryString = [];
-        if ($action != "") {
-            $queryString[] = "action=$action";
-        }
-        if ($controleur != "") {
-            $queryString[] = "controleur=$controleur";
-        }
-        foreach ($query as $name => $value) {
-            $name = rawurlencode($name);
-            $value = rawurlencode($value);
-            $queryString[] = "$name=$value";
-        }
-        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
-        header($url);
-        exit();
+//        $queryString = [];
+//        if ($action != "") {
+//            $queryString[] = "action=$action";
+//        }
+//        if ($controleur != "") {
+//            $queryString[] = "controleur=$controleur";
+//        }
+//        foreach ($query as $name => $value) {
+//            $name = rawurlencode($name);
+//            $value = rawurlencode($value);
+//            $queryString[] = "$name=$value";
+//        }
+//        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
+//        header($url);
+        $generateurUrl = Conteneur::recupererService("generateurUrl");
+        $url = $generateurUrl->generate($action, $query);
+        var_dump($url);
+        return new RedirectResponse($url);
     }
 
     public static function afficherErreur($messageErreur = "", $controleur = ""): void

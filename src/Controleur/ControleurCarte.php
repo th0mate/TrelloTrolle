@@ -12,6 +12,7 @@ use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ControleurCarte extends ControleurGenerique
 {
@@ -21,6 +22,7 @@ class ControleurCarte extends ControleurGenerique
         parent::afficherErreur($messageErreur, "carte");
     }
 
+    #[Route('/carte/supprimerCarte', name: 'supprimerCarte')]
     public static function supprimerCarte(): void
     {
         $idCarte = $_REQUEST["idCarte"] ?? null;
@@ -46,6 +48,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    #[Route('/carte/afficherFormulaireCreationCarte', name: 'afficherFormulaireCreationCarte')]
     public static function afficherFormulaireCreationCarte(): void
     {
         $idColonne = $_REQUEST['idColonne'] ?? null;
@@ -72,6 +75,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    #[Route('/carte/creerCarte', name: 'creerCarte')]
     public static function creerCarte(): void
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -103,6 +107,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    #[Route('/carte/afficherFormulaireMiseAJourCarte', name: 'afficherFormulaireMiseAJourCarte')]
     public static function afficherFormulaireMiseAJourCarte(): void
     {
         $idCarte = $_REQUEST['idCarte'] ?? null;
@@ -129,6 +134,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    #[Route('/carte/mettreAJourCarte', name: 'mettreAJourCarte')]
     public static function mettreAJourCarte(): void
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;

@@ -25,7 +25,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
         <p>
             Pour créer des tableaux, commencez par vous
             <a href="<?=$generateurUrl->generate('afficherFormulaireConnexion', ['controleur' => 'utilisateur'])?>">connecter</a>
-            ou par <a href="<?=$generateurUrl->generate('afficherFormulaireInscription', ['controleur' => 'utilisateur'])?>">créer un compte</a>.
+            ou par <a href="<?=$generateurUrl->generate('afficherFormulaireCreation', ['controleur' => 'utilisateur'])?>">créer un compte</a>.
         </p>
     <?php } ?>
 </div>

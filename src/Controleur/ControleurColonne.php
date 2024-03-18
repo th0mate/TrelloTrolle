@@ -19,6 +19,7 @@ use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceTableau;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\Routing\Annotation\Route;
 
 class ControleurColonne extends ControleurGenerique
 {
@@ -27,6 +28,7 @@ class ControleurColonne extends ControleurGenerique
         parent::afficherErreur($messageErreur, "colonne");
     }
 
+    #[Route('/colonne/supprimerColonne', name: 'supprimerColonne')]
     public static function supprimerColonne(): void
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -52,6 +54,7 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
+    #[Route('/colonne/afficherFormulaireCreationColonne', name: 'afficherFormulaireCreationColonne')]
     public static function afficherFormulaireCreationColonne(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -75,6 +78,7 @@ class ControleurColonne extends ControleurGenerique
         ]);
     }
 
+    #[Route('/colonne/creerColonne', name: 'creerColonne')]
     public static function creerColonne(): void
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -101,6 +105,7 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
+    #[Route('/colonne/afficherFormulaireMiseAJourColonne', name: 'afficherFormulaireMiseAJourColonne')]
     public static function afficherFormulaireMiseAJourColonne(): void
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -127,6 +132,7 @@ class ControleurColonne extends ControleurGenerique
 
     }
 
+    #[Route('/colonne/mettreAJourColonne', name: 'mettreAJourColonne')]
     public static function mettreAJourColonne(): void
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
