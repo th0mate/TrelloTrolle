@@ -504,14 +504,6 @@ body {
     }
 }
 
-/*
-<div class="formulaireModificationColonne">' +
-        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="close.png" alt=""></div>' +
-        '<div class="content"><h4>Nouveau titre :</h4><input maxlength="50" required type="text" class="inputModificationColonne" placeholder="Entrez le nouveau titre"></div>' +
-        '<div class="boutonModification">Modifier</div>' +
-        '</div>';
- */
-
 
 .formulaireModificationColonne {
     position: fixed;

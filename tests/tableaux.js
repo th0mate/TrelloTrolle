@@ -336,8 +336,12 @@ document.querySelector('.close').addEventListener('click', function () {
 
 document.querySelector('.deleteColumn').addEventListener('click', function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
+    const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
+    if (draggableElement) {
+        draggableElement.remove();
+    }
     document.querySelector('.menuColonnes').style.display = "none";
-    document.querySelector(`[data-columns="${id}"]`).remove();
+
     //TODO : AJAX ICI
 });
 
