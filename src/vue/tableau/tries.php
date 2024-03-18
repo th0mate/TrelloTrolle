@@ -22,6 +22,18 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 
 <div class="all">
 
+    <div class="infos">
+        <h3><?= htmlspecialchars($tableau->getTitreTableau()) ?></h3>
+        <div class="allUsers">
+            <h4>Collaborateurs :</h4>
+            <?php
+            foreach ($participants as $user) {
+                echo '<span class="user">' . ($user["infos"]->getPrenom())[0] . ($user["infos"]->getNom())[0] . '</span>';
+            }
+            ?>
+        </div>
+    </div>
+
     <div class="ul">
         <?php
         for ($i = 0;
