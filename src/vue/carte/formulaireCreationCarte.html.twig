@@ -1,0 +1,58 @@
+{# BESOIN DE :  Colonne colonne, Colonne[] colonnes #}
+{% extends "base.html.twig" %}
+
+{% block page_title %}Trollé{% endblock %}
+
+{% block page_content %}
+    {{ set tableau = colonne.tableau }}
+    {{ set proprietaire = tableau.utilisateur }}
+    <div>
+        <form method="post" action="controleurFrontal.php">
+            <fieldset>
+                <h3>Création d'une carte :</h3>
+                <p>
+                    <label for="titreCarte">Titre de la carte&#42;</label> :
+                    <input type="text" placeholder="Ma super tâche" name="titreCarte" id="titreCarte" minlength="1" maxlength="50" required>
+                </p>
+                <p>
+                    <label for="descriptifCarte">Description de la carte&#42;</label> :
+                <div>
+                    <textarea placeholder="Description de la tâche..." name="descriptifCarte" id="descriptifCarte" required></textarea>
+                </div>
+                </p>
+                <p>
+                    <label for="couleurCarte">Couleur de la carte&#42;</label> :
+                    <input type="color" value="#FFFFFF" name="couleurCarte" id="couleurCarte" required>
+                </p>
+                <p>
+                    <label for="idColonne">Colonne de la carte&#42;</label> :
+                    <select name="idColonne" id="idColonne">
+                        {%foreach colonneOption in colonnes  %}
+
+                        <option {% if colonneOption.idColonne === colonne.idColonne %} selected{% endif %} value="{{ colonneOption.idColonne }}" > <!-- TODO check si selected fonctionne bien et si correspond à === où à l'inverse-->
+                        {{ colonneOption.titreColonne }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </p>
+                <p>
+                    <label for="affectationsCarte">Membres affectés :</label>
+                <div>
+                    <select multiple name="affectationsCarte[]" id="affectationsCarte">
+                        <option value="{{ proprietaire.login}}">{{ proprietaire.prenom }} {{ proprietaire.nom }} ( {{ proprietaire.login }})</option>
+                        <?php foreach ($tableau->getParticipants() as $membre) {?>
+                        {%for membre in tableau.getParticipants %}
+                        <option value="{{ membre.login }}">{{ membre.prenom }} {{ membre.nom }} ({{ membre.login }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                </p>
+                <input type='hidden' name='action' value='creerCarte'>
+                <input type='hidden' name='controleur' value='carte'>
+                <p>
+                    <input type="submit" value="Créer la carte">
+                </p>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

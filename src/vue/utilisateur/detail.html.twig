@@ -1,0 +1,26 @@
+{# BESOIN DE : idUtilisateurConnecte #}
+{% extends "base.html.twig" %}
+
+{% block page_title %}Trollé{% endblock %}
+
+{% block page_content %}
+    <p>
+
+    <form>
+        <h3>Détail du compte $loginHTML</h3>
+        <p>
+
+            <label for="">Nom</label>
+            <input type="text" disabled value="$nomHTML">
+            <label for="">Prénom</label>
+            <input type="text" disabled value="$prenomHTML">
+        </p>
+
+    {% if idUtilsateurConnecte %}
+    <div class="btn btn_maj"><a href="controleurFrontal.php?action=afficherFormulaireMiseAJour&controleur=utilisateur">Mettre
+            à jour le compte</a></div>
+    <div class="btn btn_suppr"><a href="controleurFrontal.php?action=supprimer&controleur=utilisateur&login={$loginURL}">Supprimer le compte</a></div>
+    {% endif %}
+    </form>
+    </p>
+{% endblock %}
