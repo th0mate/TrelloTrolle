@@ -97,7 +97,6 @@ function handleDrop(e) {
  */
 function handleDragEnd(e) {
     if (sourceIsMainOrDraggable) {
-        console.log('handleDragEnd');
         document.querySelectorAll('.draggable').forEach(el => {
             el.classList.remove('over');
             el.style.opacity = '1';
@@ -313,7 +312,6 @@ updateCards();
  */
 function addEventsBullets(element) {
     element.querySelector('.bullets').addEventListener('click', function (e) {
-        console.log(this.closest('.draggable').getAttribute('data-columns'));
         const menu = document.querySelector(".menuColonnes");
         if (menu) {
             if (menu.style.display === "flex") {
@@ -334,6 +332,9 @@ document.querySelector('.close').addEventListener('click', function () {
 });
 
 
+/**
+ * Evenement permettant de suppimer une colonne
+ */
 document.querySelector('.deleteColumn').addEventListener('click', function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
     const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
@@ -420,7 +421,7 @@ function ajouterCarte(id, value, color = 'white') {
  * @param pourModifier {boolean} Si le formulaire est affiché pour modifier une carte
  */
 function afficherFormulaireCreationCarte(id, pourModifier = false) {
-    console.log(id);
+
     const html = '<div class="formulaireCreationCarte">' +
         '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="close.png" alt=""></div>' +
         '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
@@ -497,6 +498,7 @@ function afficherFormulaireModificationColonne() {
     addListenersModificationColonne();
 }
 
+
 /**
  * Ajoute les écouteurs d'événements sur les éléments pour le formulaire de modification de colonne
  */
@@ -526,7 +528,6 @@ function addListenersModificationColonne() {
                     el.style.opacity = '1';
                 });
 
-                //le .main dans le .draggable avec le bon data-columns est mis à jour
                 document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = titre;
                 updateCards();
                 addEventsAdd();
