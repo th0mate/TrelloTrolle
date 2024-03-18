@@ -10,7 +10,7 @@ use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -65,7 +65,7 @@ class ServiceCarte
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      */
     public function creerCarte($tableau, $attributs,$colonne)
     {
@@ -78,10 +78,10 @@ class ServiceCarte
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationCarteException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new CreationCarteException("Un des membres affecté à la tâche n'est pas affecté au tableau.");
+                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.");
                 }
                 $affectations[] = $utilisateur;
             }
@@ -105,19 +105,19 @@ class ServiceCarte
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      */
     public function recupererAttributs($attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new CreationCarteException("Attributs manquants");
+                throw new CreationException("Attributs manquants");
             }
         }
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      * @throws MiseAJourException
      */
     public function miseAJourCarte($tableau, $attributs, $carte, $colonne)
@@ -131,7 +131,7 @@ class ServiceCarte
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationCarteException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
                     throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
@@ -154,7 +154,7 @@ class ServiceCarte
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      * @throws ServiceException
      */
     public function verificationsMiseAJourCarte($idCarte, $colonne,$attributs)
@@ -163,7 +163,7 @@ class ServiceCarte
         $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
-            throw new CreationCarteException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
+            throw new CreationException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
         }
 
         return $carte;

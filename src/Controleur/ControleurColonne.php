@@ -11,7 +11,7 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceCarte;
@@ -95,7 +95,7 @@ class ControleurColonne extends ControleurGenerique
             return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
-        } catch (CreationCarteException $e) {
+        } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             return ControleurColonne::redirection("colonne", "afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (TableauException $e) {
@@ -149,7 +149,7 @@ class ControleurColonne extends ControleurGenerique
             return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
-        } catch (CreationCarteException $e) {
+        } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             return ControleurColonne::redirection("colonne", "afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
         } catch (TableauException $e) {

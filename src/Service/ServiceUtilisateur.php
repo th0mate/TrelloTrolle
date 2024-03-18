@@ -14,6 +14,7 @@ use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -250,4 +251,48 @@ class ServiceUtilisateur
         Cookie::supprimer("mdp");
         ConnexionUtilisateur::deconnecter();
     }
+    /**
+     * @throws ServiceException
+     * @throws \Exception
+     */
+    public function creerUtilisateur($attributs)
+    {
+        foreach ($attributs as $attribut) {
+            if (is_null($attribut)) {
+                throw new CreationException("Login, nom, prenom, email ou mot de passe manquant.");
+            }
+        }
+        if ($attributs["mdp"] !== $attributs["mdp2"]) {
+            throw new ServiceException("Mots de passe distincts");
+        }
+
+        if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
+            throw new ServiceException("Email non valide");
+        }
+
+
+        $checkUtilisateur = $this->utilisateurRepository->recupererParClePrimaire($attributs["login"]);
+        if ($checkUtilisateur) {
+            throw new ServiceException("Le login est déjà pris");
+        }
+
+        $mdpHache = MotDePasse::hacher($attributs["mdp"]);
+
+        $utilisateur = new Utilisateur(
+            $attributs["login"],
+            $attributs["nom"],
+            $attributs["prenom"],
+            $attributs["email"],
+            $mdpHache,
+            $attributs["mdp"],
+        );
+        $succesSauvegarde=$this->utilisateurRepository->ajouter($utilisateur);
+        if ($succesSauvegarde) {
+            Cookie::enregistrer("login", $attributs["login"]);
+            Cookie::enregistrer("mdp", $attributs["mdp"]);
+        } else {
+            throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.");
+        }
+    }
+
 }
