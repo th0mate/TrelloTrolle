@@ -47,7 +47,7 @@ class ServiceConnexion
     public function deconnecter()
     {
         if (!ConnexionUtilisateur::estConnecte()) {
-            throw new ServiceException("Utilisateur non connecté");
+            throw new ConnexionException("Utilisateur non connecté");
         }
         ConnexionUtilisateur::deconnecter();
     }

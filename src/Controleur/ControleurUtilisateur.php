@@ -15,7 +15,7 @@ use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceConnexion;
@@ -73,7 +73,7 @@ class ControleurUtilisateur extends ControleurGenerique
             ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
             self::redirection("utilisateur", "afficherListeMesTableaux");
-        } catch (CreationCarteException $e) {
+        } catch (CreationException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
             self::redirection("utilisateur","afficherFormulaireCreation");
         } catch (ServiceException $e) {

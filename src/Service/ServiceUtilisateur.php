@@ -17,7 +17,7 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -42,6 +42,7 @@ class ServiceUtilisateur
      */
     public function estParticipant($tableau)
     {
+
         //TODO fonctions et appels à revoir car message de messageFlash différents
         if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau);
@@ -263,7 +264,7 @@ class ServiceUtilisateur
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new CreationCarteException("Login, nom, prenom, email ou mot de passe manquant.");
+                throw new CreationException("Login, nom, prenom, email ou mot de passe manquant.");
             }
         }
         if ($attributs["mdp"] !== $attributs["mdp2"]) {

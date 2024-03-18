@@ -8,7 +8,7 @@ use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
@@ -66,17 +66,17 @@ class ServiceColonne
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      */
     public function isSetNomColonne($nomColonne): void
     {
         if (is_null($nomColonne)) {
-            throw new CreationCarteException("Nom de colonne manquant");
+            throw new CreationException("Nom de colonne manquant");
         }
     }
 
     /**
-     * @throws CreationCarteException
+     * @throws CreationException
      * @throws ServiceException
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne)

@@ -4,7 +4,7 @@ namespace App\Trellotrolle\Controleur;
 
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
-use App\Trellotrolle\Service\Exception\CreationCarteException;
+use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -94,7 +94,7 @@ class ControleurCarte extends ControleurGenerique
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
-        } catch (CreationCarteException $e) {
+        } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
         } catch (ServiceException $e) {
@@ -149,7 +149,7 @@ class ControleurCarte extends ControleurGenerique
             ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             self::redirectionConnectionFlash($e);
-        } catch (CreationCarteException $e) {
+        } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             self::redirection("carte", "afficherFormulaireMiseAJourCarte", ['idCarte' => $idCarte]);
         } catch (TableauException $e) {
