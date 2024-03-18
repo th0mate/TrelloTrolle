@@ -46,7 +46,7 @@ class ControleurTableau extends ControleurGenerique
             ]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", 'accueil');
+            return self::redirection( 'accueil');
         }
 
 
@@ -70,10 +70,10 @@ class ControleurTableau extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -98,13 +98,13 @@ class ControleurTableau extends ControleurGenerique
         try{
             (new ServiceConnexion())->pasConnecter();
             $tableau=(new ServiceTableau())->creerTableau($nomTableau);
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
 
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("tableau","afficherFormulaireCreationTableau");
+            return self::redirection("afficherFormulaireCreationTableau");
         }
     }
 
@@ -123,15 +123,15 @@ class ControleurTableau extends ControleurGenerique
                 $tableau->setTitreTableau($_REQUEST["nomTableau"]);
                 (new ServiceTableau())->mettreAJourTableau($tableau);
             }
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }catch (TableauException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return ControleurTableau::redirection("tableau", "afficherFormulaireMiseAJourTableau", ["idTableau" => $_REQUEST["idTableau"]]);
+            return ControleurTableau::redirection( "afficherFormulaireMiseAJourTableau", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -153,10 +153,10 @@ class ControleurTableau extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         }catch (ServiceException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("base","accueil");
+            return self::redirection("accueil");
         }
     }
 
@@ -169,15 +169,15 @@ class ControleurTableau extends ControleurGenerique
             (new ServiceConnexion())->pasConnecter();
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->ajouterMembre($tableau, $login);
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection( "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -191,16 +191,16 @@ class ControleurTableau extends ControleurGenerique
             $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
             $utilisateur = (new ServiceUtilisateur())->supprimerMembre($tableau, $login);
             (new ServiceCarte())->miseAJourCarteMembre($tableau, $utilisateur);
-            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurTableau::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
 
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }  catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ['codeTableau' => $e->getTableau()->getCodeTableau()]);
+            return self::redirection( "afficherTableau", ['codeTableau' => $e->getTableau()->getCodeTableau()]);
         }catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -230,13 +230,13 @@ class ControleurTableau extends ControleurGenerique
             $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
             $utilisateur=(new ServiceUtilisateur())->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
             (new ServiceTableau())->quitterTableau($tableau,$utilisateur);
-            return ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
+            return ControleurTableau::redirection( "afficherListeMesTableaux");
 
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("tableau","afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         }
     }
 
@@ -249,12 +249,12 @@ class ControleurTableau extends ControleurGenerique
             $tableau=(new ServiceTableau())->recupererTableauParId($idTableau);
             (new ServiceUtilisateur())->estProprietaire($tableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
             (new ServiceTableau())->supprimerTableau($idTableau);
-            return ControleurTableau::redirection("tableau", "afficherListeMesTableaux");
+            return ControleurTableau::redirection( "afficherListeMesTableaux");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("tableau","afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         }
     }
 }

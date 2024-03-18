@@ -66,7 +66,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                     </a>
                 </li>
                 <li>
-                    <a href="<?=$generateurUrl->generate("deconnexion", ["controleur" => "utilisateur"]);?>">
+                    <a href="<?=$generateurUrl->generate("deconnecter", ["controleur" => "utilisateur"]);?>">
                        Déconnexion <img alt="logout" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/logout.png');?>">
                     </a>
                 </li>

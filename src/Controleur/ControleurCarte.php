@@ -35,18 +35,18 @@ class ControleurCarte extends ControleurGenerique
             (new ServiceUtilisateur())->estParticipant($tableau);
             $cartes = (new ServiceCarte())->supprimerCarte($tableau, $idCarte);
             if (count($cartes) > 0) {
-                return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+                return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
-                return ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
+                return ControleurCarte::redirection(  "afficherListeMesTableaux");
             }
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -70,10 +70,10 @@ class ControleurCarte extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -94,18 +94,18 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             (new ServiceCarte())->creerCarte($tableau, $attributs, $colonne);
-            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+            return ControleurCarte::redirection(   "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", 'accueil');
+            return self::redirection( 'accueil');
         }
     }
 
@@ -129,10 +129,10 @@ class ControleurCarte extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -154,21 +154,21 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             (new ServiceCarte())->miseAJourCarte($tableau, $attributs, $carte, $colonne);
-            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("carte", "afficherFormulaireMiseAJourCarte", ['idCarte' => $idCarte]);
+            return self::redirection(   "afficherFormulaireMiseAJourCarte", ['idCarte' => $idCarte]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (MiseAJourException $e) {
             MessageFlash::ajouter($e->getTypeMessageFlash(), $e->getMessage());
-            return self::redirection("carte", 'afficherFormulaireCreationCarte', ["idColonne" => $colonne->getIdColonne()]);
+            return self::redirection(   'afficherFormulaireCreationCarte', ["idColonne" => $colonne->getIdColonne()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 

@@ -30,7 +30,7 @@ class ControleurUtilisateur extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "utilisateur");
     }
 
-    #[Route('/{login}', name: 'afficherDetail',methods: "GET")]
+    #[Route('/afficherDetail/{login}', name: 'afficherDetail',methods: "GET")]
     public static function afficherDetail(): Response
     {
         try {
@@ -75,15 +75,15 @@ class ControleurUtilisateur extends ControleurGenerique
             (new ServiceConnexion())->dejaConnecter();
             (new ServiceUtilisateur())->creerUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
-            return ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
+            return ControleurUtilisateur::redirection( "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("utilisateur","afficherFormulaireCreation");
+            return self::redirection("afficherFormulaireCreation");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireCreation");
+            return self::redirection( "afficherFormulaireCreation");
         }
     }
 
@@ -119,12 +119,12 @@ class ControleurUtilisateur extends ControleurGenerique
             (new ServiceConnexion())->pasConnecter();
             (new ServiceUtilisateur())->mettreAJourUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été modifié !");
-            return self::redirection("tableau", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (MiseAJourException $e) {
             MessageFlash::ajouter($e->getTypeMessageFlash(),$e->getMessage());
-            return self::redirection("utilisateur","afficherFormulaireMiseAJour");
+            return self::redirection("afficherFormulaireMiseAJour");
         }
     }
 
@@ -136,12 +136,12 @@ class ControleurUtilisateur extends ControleurGenerique
             (new ServiceConnexion())->pasConnecter();
             (new ServiceUtilisateur())->supprimerUtilisateur($login);
             MessageFlash::ajouter("success", "Votre compte a bien été supprimé !");
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            return self::redirection( "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning",$e->getMessage());
-            return self::redirection("utilisateur","afficherDetail");
+            return self::redirection("afficherDetail");
         }
     }
 
@@ -156,7 +156,7 @@ class ControleurUtilisateur extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         }
     }
 
@@ -169,25 +169,25 @@ class ControleurUtilisateur extends ControleurGenerique
             (new ServiceConnexion())->dejaConnecter();
             (new ServiceConnexion())->connecter($login,$mdp);
             MessageFlash::ajouter("success", "Connexion effectuée.");
-          return  self::redirection("tableau", "afficherListeMesTableaux");
+          return  self::redirection( "afficherListeMesTableaux");
         } catch (ConnexionException $e) {
-           return self::redirection("utilisateur","afficherListeMesTableaux");
+           return self::redirection("afficherListeMesTableaux");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning",$e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            return self::redirection( "afficherFormulaireConnexion");
         }
     }
 
-    #[Route('/deconnexion', name: 'deconnexion',methods: "POST")]
+    #[Route('/deconnexion', name: 'deconnecter',methods: "GET")]
     public static function deconnecter(): Response
     {
         try {
             (new ServiceConnexion())->deconnecter();
             MessageFlash::ajouter("success", "L'utilisateur a bien été déconnecté.");
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -202,7 +202,7 @@ class ControleurUtilisateur extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         }
     }
 
@@ -220,10 +220,10 @@ class ControleurUtilisateur extends ControleurGenerique
             ]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            return self::redirection( "afficherFormulaireConnexion");
         }
     }
 }

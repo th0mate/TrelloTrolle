@@ -41,18 +41,18 @@ class ControleurColonne extends ControleurGenerique
             (new ServiceUtilisateur())->estParticipant($tableau);
             $nbColonnes = (new ServiceColonne())->supprimerColonne($tableau, $idColonne);
             if ($nbColonnes > 0) {
-                return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+                return ControleurColonne::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
-                return ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
+                return ControleurCarte::redirection(  "afficherListeMesTableaux");
             }
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -68,10 +68,10 @@ class ControleurColonne extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
         return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une colonne",
@@ -92,18 +92,18 @@ class ControleurColonne extends ControleurGenerique
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne = (new ServiceColonne())->creerColonne($tableau, $nomColonne);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
-            return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection("colonne", "afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
+            return ControleurColonne::redirection( "afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection("accueil");
         }
     }
 
@@ -126,10 +126,10 @@ class ControleurColonne extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
 
     }
@@ -146,18 +146,18 @@ class ControleurColonne extends ControleurGenerique
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonne->setTitreColonne($nomColonne);
             (new ServiceColonne())->miseAJourColonne($colonne);
-            return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection("colonne", "afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
+            return ControleurColonne::redirection( "afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection("accueil");
         }
     }
 }
