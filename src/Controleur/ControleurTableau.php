@@ -67,7 +67,7 @@ class ControleurTableau extends ControleurGenerique
 
         ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "{$tableau->getTitreTableau()}",
-            "cheminVueBody" => "tableau/tableau.php",
+            "cheminVueBody" => "tableau/tries.php",
             "tableau" => $tableau,
             "colonnes" => $colonnes,
             "participants" => $participants,

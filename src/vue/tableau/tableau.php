@@ -4,6 +4,7 @@
 /** @var Carte[][] $data */
 /** @var array $participants */
 
+
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Carte;
