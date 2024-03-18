@@ -17,13 +17,12 @@ class ControleurGenerique {
         $messagesFlash = MessageFlash::lireTousMessages();
         ob_start();
         require __DIR__ . "/../vue/$cheminVue";
-
         $corpsReponse = ob_get_clean();
         return new Response($corpsReponse);
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
-    protected function redirection(string $controleur = "", string $action = "", array $query = []) : RedirectResponse
+    protected static function redirection(string $controleur = "", string $action = "", array $query = []) : RedirectResponse
     {
 //        $queryString = [];
 //        if ($action != "") {
@@ -45,7 +44,7 @@ class ControleurGenerique {
         return new RedirectResponse($url);
     }
 
-    public static function afficherErreur($messageErreur = "", $controleur = ""): void
+    public static function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         $messageErreurVue = "Problème";
         if ($controleur !== "")
@@ -53,7 +52,7 @@ class ControleurGenerique {
         if ($messageErreur !== "")
             $messageErreurVue .= " : $messageErreur";
 
-        ControleurGenerique::afficherVue('vueGenerale.php', [
+        return ControleurGenerique::afficherVue('vueGenerale.php', [
             "pagetitle" => "Problème",
             "cheminVueBody" => "erreur.php",
             "messageErreur" => $messageErreurVue
@@ -69,9 +68,9 @@ class ControleurGenerique {
         return true;
     }
 
-    protected static function redirectionConnectionFlash(ConnexionException $e): void
+    protected static function redirectionConnectionFlash(ConnexionException $e): Response
     {
         MessageFlash::ajouter("info", $e->getMessage());
-        self::redirection("utilisateur", "afficherFormulaireConnexion");
+        return self::redirection("utilisateur", "afficherFormulaireConnexion");
     }
 }

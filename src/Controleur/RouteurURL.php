@@ -12,6 +12,8 @@ use App\Trellotrolle\Service\ServiceUtilisateur;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
@@ -106,25 +108,27 @@ class RouteurURL
 
         try {
             $associateurUrl = new UrlMatcher($routes, $contexteRequete);
+
             $donneesRoute = $associateurUrl->match($requete->getPathInfo());
+
             $requete->attributes->add($donneesRoute);
 
             $resolveurDeControleur = new ContainerControllerResolver($conteneur);
+
             $controleur = $resolveurDeControleur->getController($requete);
 
             $resolveurDArguments = new ArgumentResolver();
             $arguments = $resolveurDArguments->getArguments($requete, $controleur);
-
             $response = call_user_func_array($controleur, $arguments);
         }
-        catch (BadRequestException $exception) {
+        catch (ResourceNotFoundException $exception) {
             // Remplacez xxx par le bon code d'erreur
-            $response = (new ControleurGenerique())->afficherErreur($exception->getMessage(), 400);
-        } catch (NotFoundHttpException $exception) {
+            $response = ControleurGenerique::afficherErreur($exception->getMessage());
+        } catch (MethodNotAllowedException $exception) {
             // Remplacez xxx par le bon code d'erreur
-            $response = (new ControleurGenerique())->afficherErreur($exception->getMessage(), 404);
+            $response = ControleurGenerique::afficherErreur($exception->getMessage());
         } catch (\Exception $exception) {
-            $response = (new ControleurGenerique())->afficherErreur($exception->getMessage()) ;
+            $response = ControleurGenerique::afficherErreur($exception->getMessage()) ;
         }
         $response->send();
 

@@ -12,18 +12,20 @@ use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 
 class ControleurCarte extends ControleurGenerique
 {
 
-    public static function afficherErreur($messageErreur = "", $controleur = ""): void
+    public static function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
-        parent::afficherErreur($messageErreur, "carte");
+        return parent::afficherErreur($messageErreur, "carte");
     }
 
     #[Route('/carte/supprimerCarte', name: 'supprimerCarte')]
-    public static function supprimerCarte(): void
+    public static function supprimerCarte(): Response
     {
         $idCarte = $_REQUEST["idCarte"] ?? null;
         try {
@@ -33,23 +35,23 @@ class ControleurCarte extends ControleurGenerique
             (new ServiceUtilisateur())->estParticipant($tableau);
             $cartes = (new ServiceCarte())->supprimerCarte($tableau, $idCarte);
             if (count($cartes) > 0) {
-                ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+                return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
-                ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
+                return ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
             }
         } catch (ConnexionException $e) {
-            self::redirectionConnectionFlash($e);
+            return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            self::redirection("base", "accueil");
+            return self::redirection("base", "accueil");
         }
     }
 
     #[Route('/carte/afficherFormulaireCreationCarte', name: 'afficherFormulaireCreationCarte')]
-    public static function afficherFormulaireCreationCarte(): void
+    public static function afficherFormulaireCreationCarte(): Response
     {
         $idColonne = $_REQUEST['idColonne'] ?? null;
         try {
@@ -58,25 +60,25 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
-            ControleurTableau::afficherVue('vueGenerale.php', [
+            return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'une carte",
                 "cheminVueBody" => "carte/formulaireCreationCarte.php",
                 "colonne" => $colonne,
                 "colonnes" => $colonnes
             ]);
         } catch (ConnexionException $e) {
-            self::redirectionConnectionFlash($e);
+            return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            self::redirection("base", "accueil");
+            return self::redirection("base", "accueil");
         }
     }
 
     #[Route('/carte/creerCarte', name: 'creerCarte')]
-    public static function creerCarte(): void
+    public static function creerCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         $attributs = [
@@ -92,23 +94,23 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             (new ServiceCarte())->creerCarte($tableau, $attributs, $colonne);
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
-            self::redirectionConnectionFlash($e);
+            return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (CreationCarteException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+            return ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            self::redirection("base", 'accueil');
+            return self::redirection("base", 'accueil');
         }
     }
 
     #[Route('/carte/afficherFormulaireMiseAJourCarte', name: 'afficherFormulaireMiseAJourCarte')]
-    public static function afficherFormulaireMiseAJourCarte(): void
+    public static function afficherFormulaireMiseAJourCarte(): Response
     {
         $idCarte = $_REQUEST['idCarte'] ?? null;
         try {
@@ -117,25 +119,25 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $carte->getColonne()->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
-            ControleurTableau::afficherVue('vueGenerale.php', [
+            return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'une carte",
                 "cheminVueBody" => "carte/formulaireMiseAJourCarte.php",
                 "carte" => $carte,
                 "colonnes" => $colonnes
             ]);
         } catch (ConnexionException $e) {
-            self::redirectionConnectionFlash($e);
+            return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            self::redirection("base", "accueil");
+            return self::redirection("base", "accueil");
         }
     }
 
     #[Route('/carte/mettreAJourCarte', name: 'mettreAJourCarte')]
-    public static function mettreAJourCarte(): void
+    public static function mettreAJourCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         $idCarte = $_REQUEST["idCarte"] ?? null;
@@ -152,21 +154,21 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             (new ServiceUtilisateur())->estParticipant($tableau);
             (new ServiceCarte())->miseAJourCarte($tableau, $attributs, $carte, $colonne);
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
-            self::redirectionConnectionFlash($e);
+            return self::redirectionConnectionFlash($e);
         } catch (CreationCarteException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("carte", "afficherFormulaireMiseAJourCarte", ['idCarte' => $idCarte]);
+            return self::redirection("carte", "afficherFormulaireMiseAJourCarte", ['idCarte' => $idCarte]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("tableau", "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (MiseAJourException $e) {
             MessageFlash::ajouter($e->getTypeMessageFlash(), $e->getMessage());
-            self::redirection("carte", 'afficherFormulaireCreationCarte', ["idColonne" => $colonne->getIdColonne()]);
+            return self::redirection("carte", 'afficherFormulaireCreationCarte', ["idColonne" => $colonne->getIdColonne()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            self::redirection("base", "accueil");
+            return self::redirection("base", "accueil");
         }
     }
 

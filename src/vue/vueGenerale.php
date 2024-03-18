@@ -57,11 +57,11 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 $loginURL = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
                 ?>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherListeMesTableaux", ["controleur" => "tableau"]);?>">
+                    <a href="<?=$generateurUrl->generate("afficherListeMesTableaux");?>">
                         Mes tableaux </a>
                 </li>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherDetails", ["controleur" => "utilisateur", "login" => $loginURL]);?>">
+                    <a href="<?=$generateurUrl->generate("afficherDetails");?>">
                        Mon compte (<span><?= $loginURL ?></span>) <img alt="logout" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/user.png');?>">
                     </a>
                 </li>
