@@ -63,7 +63,7 @@ body {
 
         span {
             position: absolute;
-            right: 0;
+            right: 10px;
             top: 0;
             font-size: 15px;
             height: 100%;
@@ -85,15 +85,13 @@ body {
     }
 
     .ul {
-
-        margin-top: 30px;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         align-items: flex-start;
-        width: 98%;
+        width: 100%;
         padding-top: 35px;
-        height: 90%;
+        height: 95%;
         overflow-x: auto;
         overflow-y: hidden;
 
@@ -112,10 +110,10 @@ body {
             list-style-type: none;
             background-color: #101204;
             color: white;
-            width: 250px;
+            width: 260px;
             flex-shrink: 0;
             line-height: 3.2;
-            padding: 1%;
+            padding: 0.8%;
             transition: all 200ms;
             user-select: none;
             position: relative;
@@ -172,11 +170,11 @@ body {
                 overflow-y: auto;
                 overflow-x: hidden;
                 margin-top: 10px;
-                min-height: 10px;
+                min-height: 30px;
 
                 .card {
-                    width: 90%;
-                    min-height: 50px;
+                    width: 98%;
+                    min-height: 60px;
                     border-radius: 10px;
                     background-color: #23272b;
                     color: white;
@@ -245,7 +243,7 @@ body {
             }
 
             .add {
-                width: 92%;
+                width: 98%;
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
@@ -460,7 +458,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 180px;
     min-height: 130px;
     background-color: #292e33;
     display: none;
@@ -475,7 +473,7 @@ body {
         position: relative;
         width: 15px;
         height: 15px;
-        left: 80px;
+        left: 70px;
         top: 10px;
         cursor: pointer;
         margin-bottom: 15px;

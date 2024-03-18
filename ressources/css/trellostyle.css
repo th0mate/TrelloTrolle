@@ -4,6 +4,7 @@
 
 html {
     height: 100%;
+    overflow-x: hidden;
     /*Image only BG fallback*/
 
     /*background = gradient + image pattern combo*/
@@ -217,13 +218,12 @@ article {
 }
 
 main {
-    width: 90%;
-    margin-left: 5%;
-    min-height: 85vh;
+    width: 100%;
+    min-height: 90vh;
     display: flex;
-
     /*justify-content: center;*/
     flex-direction: column;
+    align-items: center;
 
 }
 

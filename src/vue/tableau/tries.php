@@ -16,7 +16,6 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <script type="text/javascript" src="../tests/tableaux.js" defer></script>
     <link rel="stylesheet" type="text/css" href="../tests/tests.css">
 </head>
 <body>
@@ -41,9 +40,8 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                     <?php
                     foreach ($data[$i] as $carte) {
                         ?>
-                        <div class="card" draggable="true" data-columns="<?= $colonnes[$i]->getIdColonne() ?>"
-                             data-carte="<?= $carte->getIdCarte() ?>">
-                            <span style="border : 2px solid <?= $carte->getCouleurCarte() ?>"></span>
+                        <div class="card">
+                            <span style="border : 5px solid <?= $carte->getCouleurCarte() ?>"></span>
                             <?= htmlspecialchars($carte->getTitreCarte()) ?>
                             <div class="features">
                                 <!-- futurs membres de la carte -->
@@ -52,6 +50,10 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                         <?php
                     }
                     ?>
+                </div>
+                <div class="add" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
+                    <img src="../tests/plus.png" alt="">
+                    Ajouter une carte
                 </div>
             </div>
             <?php
@@ -66,7 +68,6 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
             </label>
             <span class="addCard">OK</span>
         </div>
-
     </div>
 
     <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
@@ -83,6 +84,6 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
     </div>
 
 </div>
-
+<script type="text/javascript" src="../tests/tableaux.js" defer></script>
 </body>
 </html>

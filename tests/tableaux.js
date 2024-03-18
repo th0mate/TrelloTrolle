@@ -353,7 +353,13 @@ document.querySelector('.updateColumn').addEventListener('click', function () {
     //TODO : AJAX ICI
 });
 
-addEventsBullets();
+//une fois que tout le contenu issu du PHP est chargé, on appelle addEventsBullets
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.draggable').forEach(el => {
+        addEventsBullets(el);
+        addEventsAdd();
+    });
+});
 
 /**
  * Ajoute les écouteurs d'événements sur les éléments créés dynamiquement
