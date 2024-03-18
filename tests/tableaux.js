@@ -85,6 +85,7 @@ function handleDrop(e) {
             updateDraggables();
             addEventsBullets(dragSrcEl);
             addEventsBullets(targetDraggable);
+            addEventsAdd();
         }
     }
 }
