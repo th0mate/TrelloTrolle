@@ -390,14 +390,15 @@ class ControleurTableau extends ControleurGenerique
         ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
-    public static function afficherListeMesTableaux() : void {
+    #[Route('/tableau/afficherListeMesTableaux', name: 'afficherListeMesTableaux')]
+    public static function afficherListeMesTableaux() : Response {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+         return  ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
         }
         $repository = new TableauRepository();
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
         $tableaux = $repository->recupererTableauxOuUtilisateurEstMembre($login);
-        ControleurTableau::afficherVue('vueGenerale.php', [
+       return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Liste des tableaux de $login",
             "cheminVueBody" => "tableau/listeTableauxUtilisateur.php",
             "tableaux" => $tableaux

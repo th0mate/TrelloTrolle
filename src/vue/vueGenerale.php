@@ -61,12 +61,12 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 </li>
                 <li>
                     <a href="controleurFrontal.php?action=afficherDetail&controleur=utilisateur&login=<?= rawurlencode($loginURL) ?>">
-                       Mon compte (<span><?= $loginURL ?></span>) <img alt="logout" src="../ressources/img/user.png">
+                       Mon compte (<span><?= $loginURL ?></span>) <img alt="logout" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/user.png');?>">
                     </a>
                 </li>
                 <li>
                     <a href="controleurFrontal.php?action=deconnecter&controleur=utilisateur">
-                       Déconnexion <img alt="logout" src="../ressources/img/logout.png">
+                       Déconnexion <img alt="logout" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/logout.png');?>">
                     </a>
                 </li>
             <?php } ?>
