@@ -19,6 +19,7 @@ use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceTableau;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -29,7 +30,7 @@ class ControleurColonne extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "colonne");
     }
 
-    #[Route('/colonne/supprimerColonne', name: 'supprimerColonne')]
+    #[Route('/colonne/suppression', name: 'supprimerColonne',methods: "GET")]
     public static function supprimerColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -55,7 +56,7 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
-    #[Route('/colonne/afficherFormulaireCreationColonne', name: 'afficherFormulaireCreationColonne')]
+    #[Route('/colonne/nouveau', name: 'afficherFormulaireCreationColonne',methods: "GET")]
     public static function afficherFormulaireCreationColonne(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -79,7 +80,7 @@ class ControleurColonne extends ControleurGenerique
         ]);
     }
 
-    #[Route('/colonne/creerColonne', name: 'creerColonne')]
+    #[Route('/colonne/nouveau', name: 'creerColonne',methods: "POST")]
     public static function creerColonne(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -106,7 +107,7 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
-    #[Route('/colonne/afficherFormulaireMiseAJourColonne', name: 'afficherFormulaireMiseAJourColonne')]
+    #[Route('/colonne/mettreAJour', name: 'afficherFormulaireMiseAJourColonne',methods: "GET")]
     public static function afficherFormulaireMiseAJourColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -133,7 +134,7 @@ class ControleurColonne extends ControleurGenerique
 
     }
 
-    #[Route('/colonne/mettreAJourColonne', name: 'mettreAJourColonne')]
+    #[Route('/colonne/mettreAJour', name: 'mettreAJourColonne',methods: "POST")]
     public static function mettreAJourColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;

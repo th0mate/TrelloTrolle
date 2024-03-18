@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ControleurBase extends ControleurGenerique
 {
-    #[Route('/accueil', name: 'accueil')]
+    #[Route('/', name: 'accueil')]
     public static function accueil():  Response {
        return ControleurBase::afficherVue('vueGenerale.php', [
             "pagetitle" => "Accueil",

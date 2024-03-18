@@ -29,7 +29,7 @@ class ControleurUtilisateur extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "utilisateur");
     }
 
-    #[Route('/utilisateur/detail', name: 'afficherDetails')]
+    #[Route('/{login}', name: 'afficherDetail',methods: "GET")]
     public static function afficherDetail(): Response
     {
         try {
@@ -45,7 +45,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/formulaireCreation', name: 'afficherFormulaireCreation')]
+    #[Route('/inscription', name: 'afficherFormulaireCreation', methods: "GET")]
     public static function afficherFormulaireCreation(): Response
     {
         try {
@@ -59,7 +59,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/creerDepuisFormulaire', name: 'creerDepuisFormulaire')]
+    #[Route('/inscription', name: 'creerDepuisFormulaire',methods: "POST")]
     public static function creerDepuisFormulaire(): Response
     {
         if (ConnexionUtilisateur::estConnecte()) {
@@ -178,7 +178,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/formulaireMiseAJour', name: 'afficherFormulaireMiseAJourUtilisateur')]
+    #[Route('/{login}/miseAJour', name: 'afficherFormulaireMiseAJourUtilisateur',methods: "GET")]
     public static function afficherFormulaireMiseAJour(): Response
     {
         try {
@@ -194,7 +194,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/mettreAJour', name: 'mettreAJour')]
+    #[Route('/{login}/miseAJour', name: 'mettreAJour', methods: "POST")]
     public static function mettreAJour(): Response
     {
         $attributs=[
@@ -219,7 +219,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/supprimer', name: 'supprimer')]
+    #[Route('/{login}/supprimer', name: 'supprimer',methods: "POST")]
     public static function supprimer(): Response
     {
         $login=$_REQUEST["login"] ??null;
@@ -236,7 +236,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/afficherFormulaireConnexion', name: 'afficherFormulaireConnexion')]
+    #[Route('/connexion', name: 'afficherFormulaireConnexion', methods: "GET")]
     public static function afficherFormulaireConnexion(): Response
     {
         try {
@@ -251,7 +251,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/connecter', name: 'connecter')]
+    #[Route('/connexion', name: 'connecter',methods: "POST")]
     public static function connecter(): Response
     {
         $login=$_REQUEST["login"] ??null;
@@ -269,7 +269,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/deconnecter', name: 'deconnexion')]
+    #[Route('/deconnexion', name: 'deconnexion',methods: "POST")]
     public static function deconnecter(): Response
     {
         try {
@@ -282,7 +282,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/resetCompte', name: 'utilisateurResetCompte')]
+    #[Route('/recuperation', name: 'utilisateurResetCompte',methods: "GET")]
     public static function afficherFormulaireRecuperationCompte(): Response
     {
         try {
@@ -297,7 +297,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/utilisateur/recupererCompte', name: 'recupererCompte')]
+    #[Route('/recuperation', name: 'recupererCompte',methods: "POST")]
     public static function recupererCompte(): Response
     {
         $mail = $_REQUEST["email"] ?? null;

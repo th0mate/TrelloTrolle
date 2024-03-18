@@ -13,6 +13,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
@@ -22,12 +23,14 @@ class ServiceTableau
     private TableauRepository $tableauRepository;
     private ColonneRepository $colonneRepository;
     private CarteRepository $carteRepository;
+    private UtilisateurRepository $utilisateurRepository;
 
     public function __construct()
     {
         $this->tableauRepository = new TableauRepository();
         $this->colonneRepository = new ColonneRepository();
         $this->carteRepository = new CarteRepository();
+        $this->utilisateurRepository =new UtilisateurRepository();
     }
 
     /**
@@ -155,5 +158,49 @@ class ServiceTableau
             $this->carteRepository->mettreAJour($carte);
         }
     }
+    /**
+     * @throws ServiceException
+     */
+    public function creerTableau($nomTableau)
+    {
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        if (is_null($nomTableau)) {
+            throw new ServiceException("Nom de tableau manquant");
+        }
+        $idTableau = $this->tableauRepository->getNextIdTableau();
+        $codeTableau = hash("sha256", $utilisateur->getLogin() . $idTableau);
+
+        $idColonne1 = $this->colonneRepository->getNextIdColonne();
+        $nomColonne1 = "TODO";
+
+        $carteInitiale = "Exemple";
+        $descriptifInitial = "Exemple de carte";
+
+        $idCarte1 = $this->carteRepository->getNextIdCarte();
+
+        $tableau = new Tableau(
+            $utilisateur,
+            $idTableau,
+            $codeTableau,
+            $_REQUEST["nomTableau"],
+            []
+        );
+
+        $carte1 = new Carte(
+            new Colonne(
+                $tableau,
+                $idColonne1,
+                $nomColonne1
+            ),
+            $idCarte1,
+            $carteInitiale,
+            $descriptifInitial,
+            "#FFFFFF",
+            []
+        );
+        $this->carteRepository->ajouter($carte1);
+        return $tableau;
+    }
+
 
 }

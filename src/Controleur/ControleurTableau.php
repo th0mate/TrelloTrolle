@@ -29,9 +29,9 @@ class ControleurTableau extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "tableau");
     }
 
-    #[Route('/tableau/afficherTableau', name: 'afficherTableau')]
+    #[Route('/tableau/monTableau', name: 'afficherTableau',methods: "GET")]
     public static function afficherTableau(): Response
-    {
+    {;
         $codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
             $tableau = (new ServiceTableau())->recupererTableauParCode($codeTableau);
@@ -52,7 +52,7 @@ class ControleurTableau extends ControleurGenerique
 
     }
 
-    #[Route('/tableau/afficherFormulaireMiseAJourTableau', name: 'afficherFormulaireMiseAJourTableau')]
+    #[Route('/tableau/mettreAJour', name: 'afficherFormulaireMiseAJourTableau',methods: "GET")]
     public static function afficherFormulaireMiseAJourTableau(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -77,7 +77,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/afficherFormulaireCreationTableau', name: 'afficherFormulaireCreationTableau')]
+    #[Route('/tableau/nouveau', name: 'afficherFormulaireCreationTableau',methods: "GET")]
     public static function afficherFormulaireCreationTableau(): Response
     {
         try {
@@ -91,100 +91,24 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/creerTableau', name: 'creerTableau')]
+    #[Route('/tableau/nouveau', name: 'creerTableau',methods: "POST")]
     public static function creerTableau(): Response
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            return ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+        $nomTableau=$_REQUEST["nomTableau"] ??null;
+        try{
+            (new ServiceConnexion())->pasConnecter();
+            $tableau=(new ServiceTableau())->creerTableau($nomTableau);
+            return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+
+        } catch (ConnexionException $e) {
+            return self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            return self::redirection("tableau","afficherFormulaireCreationTableau");
         }
-        $utilisateurRepository = new UtilisateurRepository();
-
-        /**
-         * @var Utilisateur $utilisateur
-         */
-        $utilisateur = $utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        if (! ControleurCarte::issetAndNotNull(["nomTableau"])) {
-            MessageFlash::ajouter("danger", "Nom de tableau manquant");
-            return ControleurTableau::redirection("tableau", "afficherFormulaireCreationTableau");
-        }
-        $tableauRepository = new TableauRepository();
-        $idTableau = $tableauRepository->getNextIdTableau();
-        $codeTableau = hash("sha256", $utilisateur->getLogin() . $idTableau);
-
-        $colonneRepository = new ColonneRepository();
-        $idColonne1 = $colonneRepository->getNextIdColonne();
-        $nomColonne1 = "TODO";
-
-        $nomColonne2 = "DOING";
-        $idColonne2 = $idColonne1 + 1;
-
-        $nomColonne3 = "DONE";
-        $idColonne3 = $idColonne1 + 2;
-
-        $carteInitiale = "Exemple";
-        $descriptifInitial = "Exemple de carte";
-
-        $carteRepository = new CarteRepository();
-
-        $idCarte1 = $carteRepository->getNextIdCarte();
-        $idCarte2 = $idCarte1 + 1;
-        $idCarte3 = $idCarte1 + 2;
-
-        $tableau = new Tableau(
-            $utilisateur,
-            $idTableau,
-            $codeTableau,
-            $_REQUEST["nomTableau"],
-            []
-        );
-
-        $carte1 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne1,
-                $nomColonne1
-            ),
-            $idCarte1,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carte2 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne2,
-                $nomColonne2
-            ),
-            $idCarte2,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carte3 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne3,
-                $nomColonne3
-            ),
-            $idCarte3,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carteRepository->ajouter($carte1);
-        $carteRepository->ajouter($carte2);
-        $carteRepository->ajouter($carte3);
-
-        return ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
-    #[Route('/tableau/mettreAJourTableau', name: 'mettreAJourTableau')]
+    #[Route('/tableau/mettreAJour', name: 'mettreAJourTableau',methods: "POST")]
     public static function mettreAJourTableau(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -211,7 +135,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/formulaireAjoutMembreTableau', name: 'afficherFormulaireAjoutMembre')]
+    #[Route('/tableau/inviter', name: 'afficherFormulaireAjoutMembre',methods: "GET")]
     public static function afficherFormulaireAjoutMembre(): Response
     {
         $idTableau=$_REQUEST["idTableau"] ??null;
@@ -236,7 +160,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/ajouterMembre', name: 'ajouterMembreTableau')]
+    #[Route('/tableau/inviter', name: 'ajouterMembreTableau',methods: "POST")]
     public static function ajouterMembre(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -257,7 +181,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/supprimerMembre', name: 'supprimerMembre')]
+    #[Route('/tableau/supprimerMembre', name: 'supprimerMembre',methods: "GET")]
     public static function supprimerMembre(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
@@ -280,7 +204,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/afficherListeMesTableaux', name: 'afficherListeMesTableaux')]
+    #[Route('/tableau', name: 'afficherListeMesTableaux',methods: "GET")]
     public static function afficherListeMesTableaux(): Response
     {
         try {
@@ -297,7 +221,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/quitterTableau', name: 'quitterTableau')]
+    #[Route('/tableau/quitter', name: 'quitterTableau',methods: "GET")]
     public static function quitterTableau(): Response
     {
         $idTableau=$_REQUEST["idTableau"] ??null;
@@ -316,7 +240,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/supprimerTableau', name: 'supprimerTableau')]
+    #[Route('/tableau/suppression', name: 'supprimerTableau',methods: "GET")]
     public static function supprimerTableau(): Response
     {
         $idTableau=$_REQUEST["idTableau"] ??null;

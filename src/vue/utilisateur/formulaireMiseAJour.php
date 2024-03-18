@@ -21,7 +21,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
 
 ?>
 <div>
-    <form method="post" action="<?= $generateurUrl->generate('mettreAJour', ['controleur' => 'utilisateur'])?>">
+    <form method="post" action="<?= $generateurUrl->generate('mettreAJour', ["login"=>$loginHTML])?>">
         <fieldset>
             <h3>Mise à jour du profil</h3>
             <p >

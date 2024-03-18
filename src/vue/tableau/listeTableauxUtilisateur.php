@@ -29,7 +29,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                     <?php
                     if ($tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                         ?>
-                        <a href="<?=$generateurUrl->generate('afficherFormulaireMiseAJourTableau', ['idTableau' => $tableau->getIdTableau()])?>">Modifier
+                        <a href="<?=$generateurUrl->generate('supprimerTableau', ['idTableau' => $tableau->getIdTableau()])?>">Supprimer
                             le tableau</a>
                     <?php } else { ?>
                         <a href="<?=$generateurUrl->generate('quitterTableau', ['idTableau' => $tableau->getIdTableau()])?>">Quitter

@@ -24,7 +24,7 @@ class ControleurCarte extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "carte");
     }
 
-    #[Route('/carte/supprimerCarte', name: 'supprimerCarte')]
+    #[Route('/carte/suprression', name: 'supprimerCarte',methods: "GET")]
     public static function supprimerCarte(): Response
     {
         $idCarte = $_REQUEST["idCarte"] ?? null;
@@ -50,7 +50,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/afficherFormulaireCreationCarte', name: 'afficherFormulaireCreationCarte')]
+    #[Route('/carte/nouveau', name: 'afficherFormulaireCreationCarte',methods: "GET")]
     public static function afficherFormulaireCreationCarte(): Response
     {
         $idColonne = $_REQUEST['idColonne'] ?? null;
@@ -77,7 +77,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/creerCarte', name: 'creerCarte')]
+    #[Route('/carte/nouveau', name: 'creerCarte',methods: "POST")]
     public static function creerCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
@@ -109,7 +109,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/afficherFormulaireMiseAJourCarte', name: 'afficherFormulaireMiseAJourCarte')]
+    #[Route('/carte/mettreAJour', name: 'afficherFormulaireMiseAJourCarte',methods: "GET")]
     public static function afficherFormulaireMiseAJourCarte(): Response
     {
         $idCarte = $_REQUEST['idCarte'] ?? null;
@@ -136,7 +136,7 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/mettreAJourCarte', name: 'mettreAJourCarte')]
+    #[Route('/carte/mettreAJour', name: 'mettreAJourCarte',methods: "POST")]
     public static function mettreAJourCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;

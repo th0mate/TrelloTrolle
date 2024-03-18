@@ -42,12 +42,12 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
             if (!ConnexionUtilisateur::estConnecte()) {
                 ?>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherFormulaireConnexion", ["controleur" => "utilisateur"]);?>">
+                    <a href="<?=$generateurUrl->generate("afficherFormulaireConnexion");?>">
                        Connexion <img alt="login" src="../ressources/img/enter.png" >
                     </a>
                 </li>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherFormulaireCreation", ["controleur" => "utilisateur"]);?>">
+                    <a href="<?=$generateurUrl->generate("afficherFormulaireCreation");?>">
                         Inscription <img alt="S'inscrire" title="S'inscrire" src="../ressources/img/add-user.png" >
                     </a>
                 </li>
@@ -61,7 +61,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                         Mes tableaux </a>
                 </li>
                 <li>
-                    <a href="<?=$generateurUrl->generate("afficherDetails");?>">
+                    <a href="<?=$generateurUrl->generate("afficherDetail",["login"=>$loginURL]);?>">
                        Mon compte (<span><?= $loginURL ?></span>) <img alt="logout" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/user.png');?>">
                     </a>
                 </li>
