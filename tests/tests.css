@@ -66,6 +66,31 @@ body {
                     margin-bottom: 0;
                 }
 
+                .invite {
+                    width: 100px;
+                    height: 100%;
+                    border-radius: 5px;
+                    color: #8100ff;
+                    background-color: white;
+                    margin-left: 15px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    transition: all 200ms ease-in-out;
+                    cursor: pointer;
+                    padding: 5px;
+
+                    img {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+
+                .invite:hover {
+                    color: white;
+                    background-color: #8100ff;
+                }
+
             }
         }
 

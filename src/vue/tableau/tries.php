@@ -31,6 +31,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 echo '<span class="user">' . ($user["infos"]->getPrenom())[0] . ($user["infos"]->getNom())[0] . '</span>';
             }
             ?>
+            <div class="invite">Partager <img src="../tests/inviter.png" alt=""> </div>
         </div>
     </div>
 
