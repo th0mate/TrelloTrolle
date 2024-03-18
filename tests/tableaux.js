@@ -149,8 +149,8 @@ function addNewItem() {
     newElement.setAttribute('draggable', 'true');
     newElement.setAttribute('data-columns', id);
     if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
-                <img src="plus.png" alt="">
+        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="../tests/bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
+                <img src="../tests/plus.png" alt="">
                 Ajouter une carte
             </div>`;
         let ul = document.querySelector('.ul');
@@ -423,7 +423,7 @@ function ajouterCarte(id, value, color = 'white') {
 function afficherFormulaireCreationCarte(id, pourModifier = false) {
 
     const html = '<div class="formulaireCreationCarte">' +
-        '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="close.png" alt=""></div>' +
+        '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="../tests/close.png" alt=""></div>' +
         '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
         '<div class="content"><h4>Description de la carte :</h4><textarea maxlength="255" class="desc" placeholder="Description de la carte..." ></textarea></div>' +
         '<div class="content"><h4>Couleur de la carte :</h4><input required type="color"></div>' +
@@ -486,7 +486,7 @@ function addListenersAjoutCard(id) {
 function afficherFormulaireModificationColonne() {
     const valeurActuelle = document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText;
     const html = '<div class="formulaireModificationColonne">' +
-        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="close.png" alt=""></div>' +
+        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="../tests/close.png" alt=""></div>' +
         '<div class="content"><h4>Nouveau titre :</h4><input maxlength="50" required type="text" value="' + valeurActuelle + '" class="inputModificationColonne" placeholder="Entrez le nouveau titre"></div>' +
         '<div class="boutonModification">Modifier</div>' +
         '</div>';
