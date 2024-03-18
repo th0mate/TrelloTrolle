@@ -11,6 +11,7 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 
 class ControleurCarte extends ControleurGenerique
@@ -20,13 +21,14 @@ class ControleurCarte extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "carte");
     }
 
+    #[Route('../carte/supprimerCarte', name: 'supprimerCarte')]
     public static function supprimerCarte(): void {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+            (new ControleurCarte)->redirection("utilisateur", ["action"=>"afficherFormulaireConnexion"]);
         }
         if(!ControleurCarte::issetAndNotNull(["idCarte"])) {
             MessageFlash::ajouter("warning", "Code de carte manquant");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $carteRepository = new CarteRepository();
         $idCarte = $_REQUEST["idCarte"];
@@ -36,36 +38,38 @@ class ControleurCarte extends ControleurGenerique
         $carte = $carteRepository->recupererParClePrimaire($idCarte);
         if(!$carte) {
             MessageFlash::ajouter("danger", "Carte inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
 
         $tableau = $carte->getColonne()->getTableau();
 
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         if($carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
             MessageFlash::ajouter("danger", "Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $carteRepository->supprimer($idCarte);
         $cartes = $carteRepository->recupererCartesTableau($tableau->getIdTableau());
         if(count($cartes) > 0) {
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         else {
-            ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
+            (new ControleurCarte)->redirection("tableau", ["action"=>"afficherListeMesTableaux"]);
         }
     }
 
-    public static function afficherFormulaireCreationCarte(): void {
+
+    #[Route('carte/formulaireCreationCarte', name: 'afficherFormulaireCreationCarte')]
+    public static function afficherFormulaireCreationCarte(): Response {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+            (new ControleurCarte)->redirection("utilisateur", ["action"=>"afficherFormulaireConnexion"]);
         }
         if(!ControleurCarte::issetAndNotNull(["idColonne"])) {
             MessageFlash::ajouter("warning", "Identifiant de colonne manquant");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $colonneRepository = new ColonneRepository();
         /**
@@ -74,15 +78,15 @@ class ControleurCarte extends ControleurGenerique
         $colonne = $colonneRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
         if(!$colonne) {
             MessageFlash::ajouter("warning", "Colonne inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $tableau = $colonne->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $colonnes = $colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
-        ControleurTableau::afficherVue('vueGenerale.php', [
+        return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une carte",
             "cheminVueBody" => "carte/formulaireCreationCarte.php",
             "colonne" => $colonne,
@@ -90,13 +94,15 @@ class ControleurCarte extends ControleurGenerique
         ]);
     }
 
+
+    #[Route('../carte/creerCarte', name: 'creerCarte')]
     public static function creerCarte(): void {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+            (new ControleurCarte)->redirection("utilisateur", [["action"=>"afficherFormulaireConnexion"]]);
         }
         if(!ControleurCarte::issetAndNotNull(["idColonne"])) {
             MessageFlash::ajouter("warning", "Identifiant de colonne manquant");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action" => ["action"=>"accueil"]]);
         }
         $colonneRepository = new ColonneRepository();
         /**
@@ -105,16 +111,16 @@ class ControleurCarte extends ControleurGenerique
         $colonne = $colonneRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
         if(!$colonne) {
             MessageFlash::ajouter("warning", "Colonne inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         if(!ControleurCarte::issetAndNotNull(["titreCarte", "descriptifCarte", "couleurCarte"])) {
             MessageFlash::ajouter("danger", "Attributs manquants");
-            ControleurColonne::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+            (new ControleurColonne)->redirection("carte", ["action"=>"afficherFormulaireCreationCarte"], ["idColonne" => $_REQUEST["idColonne"]]);
         }
         $tableau = $colonne->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $affectations = [];
         $utilisateurRepository = new UtilisateurRepository();
@@ -126,11 +132,11 @@ class ControleurCarte extends ControleurGenerique
                 $utilisateur = $utilisateurRepository->recupererParClePrimaire($affectation);
                 if(!$utilisateur) {
                     MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'existe pas");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+                    (new ControleurCarte)->redirection("carte", ["action"=>"afficherFormulaireCreationCarte"], ["idColonne" => $_REQUEST["idColonne"]]);
                 }
                 if(!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
                     MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'est pas affecté au tableau.");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+                    (new ControleurCarte)->redirection("carte", ["action"=>"afficherFormulaireCreationCarte"], ["idColonne" => $_REQUEST["idColonne"]]);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -145,16 +151,17 @@ class ControleurCarte extends ControleurGenerique
             $affectations
         );
         $carteRepository->ajouter($carte);
-        ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+        (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
-    public static function afficherFormulaireMiseAJourCarte(): void {
+    #[Route('carte/formulaireMiseAJourCarte', name: 'afficherFormulaireMiseAJourCarte')]
+    public static function afficherFormulaireMiseAJourCarte(): Response {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+            (new ControleurCarte)->redirection("utilisateur", ["action"=>"afficherFormulaireConnexion"]);
         }
         if(!ControleurCarte::issetAndNotNull(["idCarte"])) {
             MessageFlash::ajouter("warning", "Identifiant de la carte manquant");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $carteRepository = new CarteRepository();
         /**
@@ -163,16 +170,16 @@ class ControleurCarte extends ControleurGenerique
         $carte = $carteRepository->recupererParClePrimaire($_REQUEST["idCarte"]);
         if(!$carte) {
             MessageFlash::ajouter("warning", "Carte inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $tableau = $carte->getColonne()->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $colonneRepository = new ColonneRepository();
         $colonnes = $colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
-        ControleurTableau::afficherVue('vueGenerale.php', [
+       return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Modification d'une carte",
             "cheminVueBody" => "carte/formulaireMiseAJourCarte.php",
             "carte" => $carte,
@@ -180,17 +187,18 @@ class ControleurCarte extends ControleurGenerique
         ]);
     }
 
-    public static function mettreAJourCarte(): void {
+    #[Route('../carte/mettreAJourCarte', name: 'mettreAJourCarte')]
+    public static function mettreAJourCarte(): Response {
         if(!ConnexionUtilisateur::estConnecte()) {
-            ControleurCarte::redirection("utilisateur", "afficherFormulaireConnexion");
+          return  (new ControleurCarte)->redirection("utilisateur", ["action"=>"afficherFormulaireConnexion"]);
         }
         if(!ControleurCarte::issetAndNotNull(["idCarte"])) {
             MessageFlash::ajouter("warning", "Identifiant de la carte manquant");
-            ControleurCarte::redirection("base", "accueil");
+            return (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         if(!ControleurCarte::issetAndNotNull(["idColonne"])) {
             MessageFlash::ajouter("warning", "Identifiant de colonne manquant");
-            ControleurCarte::redirection("base", "accueil");
+            return  (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         $carteRepository = new CarteRepository();
         /**
@@ -205,26 +213,26 @@ class ControleurCarte extends ControleurGenerique
         $colonne = $colonnesRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
         if(!$carte) {
             MessageFlash::ajouter("warning", "Carte inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            return  (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         if(!$colonne) {
             MessageFlash::ajouter("warning", "Colonne inexistante");
-            ControleurCarte::redirection("base", "accueil");
+            return  (new ControleurCarte)->redirection("base", ["action"=>"accueil"]);
         }
         if(!ControleurCarte::issetAndNotNull(["titreCarte", "descriptifCarte", "couleurCarte"])) {
             MessageFlash::ajouter("danger", "Attributs manquants");
-            ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
+            return  (new ControleurColonne)->redirection("carte", ["action"=>"afficherFormulaireMiseAJourCarte"], ["idCarte" => $_REQUEST["idCarte"]]);
         }
 
         $originalColonne = $carte->getColonne();
         if($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
             MessageFlash::ajouter("danger", "Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
-            ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
+            return   (new ControleurColonne)->redirection("carte", ["action"=>"afficherFormulaireMiseAJourCarte"], ["idCarte" => $_REQUEST["idCarte"]]);
         }
         $tableau = $colonne->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return  (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
         }
 
         $carte->setColonne($colonne);
@@ -241,17 +249,17 @@ class ControleurCarte extends ControleurGenerique
                 $utilisateur = $utilisateurRepository->recupererParClePrimaire($affectation);
                 if(!$utilisateur) {
                     MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'existe pas");
-                    ControleurCarte::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
+                    return (new ControleurCarte)->redirection("carte", ["action"=>"afficherFormulaireMiseAJourCarte"], ["idCarte" => $_REQUEST["idCarte"]]);
                 }
                 if(!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
                     MessageFlash::ajouter("danger", "Un des membres affecté à la tâche n'est pas affecté au tableau.");
-                    ControleurCarte::redirection("carte", "afficherFormulaireCreationCarte", ["idColonne" => $_REQUEST["idColonne"]]);
+                    return  (new ControleurCarte)->redirection("carte", ["action"=>"afficherFormulaireCreationCarte"], ["idColonne" => $_REQUEST["idColonne"]]);
                 }
                 $affectations[] = $utilisateur;
             }
         }
         $carte->setAffectationsCarte($affectations);
         $carteRepository->mettreAJour($carte);
-        ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+        return   (new ControleurCarte)->redirection("tableau", ["action"=>"tableau"], ["codeTableau" => $tableau->getCodeTableau()]);
     }
 }

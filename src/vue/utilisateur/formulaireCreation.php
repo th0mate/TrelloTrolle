@@ -1,5 +1,16 @@
+<?php
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
+?>
+
 <div>
-    <form method="post" action="controleurFrontal.php">
+    <form method="post" action="<?= $generateurUrl->generate('creerDepuisFormulaire', ['controleur' => 'utilisateur'])?>">
         <fieldset>
             <h3>Inscription</h3>
             <p >

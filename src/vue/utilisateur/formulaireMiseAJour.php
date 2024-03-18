@@ -9,9 +9,19 @@ $prenomHTML = htmlspecialchars($utilisateur->getPrenom());
 $nomHTML = htmlspecialchars($utilisateur->getNom());
 $emailHTML = htmlspecialchars($utilisateur->getEmail());
 $passwordHTML = htmlspecialchars($utilisateur->getMdp());
+
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
+
 ?>
 <div>
-    <form method="post" action="controleurFrontal.php">
+    <form method="post" action="<?= $generateurUrl->generate('mettreAJour', ['controleur' => 'utilisateur'])?>">
         <fieldset>
             <h3>Mise à jour du profil</h3>
             <p >

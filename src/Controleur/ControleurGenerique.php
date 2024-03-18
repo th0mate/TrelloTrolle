@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class ControleurGenerique {
 
+
+
     protected static function afficherVue(string $cheminVue, array $parametres = []): Response
     {
         extract($parametres);

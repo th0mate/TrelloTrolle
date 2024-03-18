@@ -11,6 +11,7 @@ use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 class ControleurColonne extends ControleurGenerique
 {
@@ -19,6 +20,7 @@ class ControleurColonne extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "colonne");
     }
 
+    #[Route('/colonne/supprimerColonne', name: 'supprimerColonne')]
     public static function supprimerColonne(): void {
         if(!ConnexionUtilisateur::estConnecte()) {
             ControleurColonne::redirection("utilisateur", "afficherFormulaireConnexion");
@@ -41,25 +43,28 @@ class ControleurColonne extends ControleurGenerique
 
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $carteRepository = new CarteRepository();
 
         if($carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
             MessageFlash::ajouter("danger", "Vous ne pouvez pas supprimer cette colonne car cela entrainera la supression du compte du propriétaire du tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
 
         $colonneRepository->supprimer($idColonne);
         $colonneRepository = new ColonneRepository();
         if($colonneRepository->getNombreColonnesTotalTableau($tableau->getIdTableau()) > 0) {
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
 
-        ControleurCarte::redirection("tableau", "afficherListeMesTableaux");
+        ControleurCarte::redirection("afficherTableau", "afficherListeMesTableaux");
     }
 
-    public static function afficherFormulaireCreationColonne(): void {
+    #[
+        Route('/colonne/formulaireCreationColonne', name: 'afficherFormulaireCreationColonne')
+    ]
+    public static function afficherFormulaireCreationColonne(): Response {
         if(!ConnexionUtilisateur::estConnecte()) {
             ControleurColonne::redirection("utilisateur", "afficherFormulaireConnexion");
         }
@@ -78,9 +83,9 @@ class ControleurColonne extends ControleurGenerique
         }
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
-        ControleurTableau::afficherVue('vueGenerale.php', [
+      return  ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une colonne",
             "cheminVueBody" => "colonne/formulaireCreationColonne.php",
             "idTableau" => $_REQUEST["idTableau"],
@@ -110,7 +115,7 @@ class ControleurColonne extends ControleurGenerique
         }
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $colonneRepository = new ColonneRepository();
         $carteRepository = new CarteRepository();
@@ -128,10 +133,11 @@ class ControleurColonne extends ControleurGenerique
             []
         );
         $carteRepository->ajouter($carte);
-        ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+        ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
-    public static function afficherFormulaireMiseAJourColonne(): void {
+    #[Route('/colonne/formulaireMiseAJourColonne', name: 'afficherFormulaireMiseAJourColonne')]
+    public static function afficherFormulaireMiseAJourColonne(): Response {
         if(!ConnexionUtilisateur::estConnecte()) {
             ControleurColonne::redirection("utilisateur", "afficherFormulaireConnexion");
         }
@@ -151,9 +157,9 @@ class ControleurColonne extends ControleurGenerique
         $tableau = $colonne->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
-        ControleurTableau::afficherVue('vueGenerale.php', [
+      return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Modification d'une colonne",
             "cheminVueBody" => "colonne/formulaireMiseAJourColonne.php",
             "idColonne" => $_REQUEST["idColonne"],
@@ -161,6 +167,7 @@ class ControleurColonne extends ControleurGenerique
         ]);
     }
 
+    #[Route('/colonne/mettreAJourColonne', name: 'mettreAJourColonne')]
     public static function mettreAJourColonne(): void {
         if(!ConnexionUtilisateur::estConnecte()) {
             ControleurColonne::redirection("utilisateur", "afficherFormulaireConnexion");
@@ -185,10 +192,10 @@ class ControleurColonne extends ControleurGenerique
         $tableau = $colonne->getTableau();
         if(!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
-            ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         }
         $colonne->setTitreColonne($_REQUEST["nomColonne"]);
         $colonneRepository->mettreAJour($colonne);
-        ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+        ControleurColonne::redirection("afficherTableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 }
