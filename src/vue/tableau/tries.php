@@ -41,10 +41,14 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                     foreach ($data[$i] as $carte) {
                         ?>
                         <div class="card">
-                            <span style="border : 5px solid <?= $carte->getCouleurCarte() ?>"></span>
+                            <span class="color" style="border : 5px solid <?= $carte->getCouleurCarte() ?>"></span>
                             <?= htmlspecialchars($carte->getTitreCarte()) ?>
                             <div class="features">
-                                <!-- futurs membres de la carte -->
+                                <?php
+                                foreach ($carte->getAffectationsCarte() as $utilisateur) {
+                                    echo '<span class="user">' . ($utilisateur->getPrenom())[0] . ($utilisateur->getNom())[0] . '</span>';
+                                }
+                                ?>
                             </div>
                         </div>
                         <?php

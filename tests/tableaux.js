@@ -302,7 +302,7 @@ updateCards();
 
 /**
  * ---------------------------------------------------------------------------------------------------------------------
- * PARTIE GESTION DES EVENEMENTS SUR LE CRUD DES CARTES
+ * PARTIE GESTION DES EVENEMENTS SUR LE CRUD DES CARTES ET DES COLONNES
  * ---------------------------------------------------------------------------------------------------------------------
  */
 
@@ -353,7 +353,7 @@ document.querySelector('.updateColumn').addEventListener('click', function () {
     //TODO : AJAX ICI
 });
 
-//une fois que tout le contenu issu du PHP est chargé, on appelle addEventsBullets
+
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.draggable').forEach(el => {
         addEventsBullets(el);
@@ -402,7 +402,7 @@ function ajouterCarte(id, value, color = 'white') {
         card.classList.add('card');
         card.setAttribute('draggable', 'true');
         card.setAttribute('data-colmuns', id);
-        card.innerHTML = `<span style="border: 5px solid ${color}"></span>${value}<div class="features"></div>`;
+        card.innerHTML = `<span class="color" style="border: 5px solid ${color}"></span>${value}<div class="features"></div>`;
         stockageParent.appendChild(card);
 
         let rect = card.getBoundingClientRect();
@@ -542,3 +542,15 @@ function addListenersModificationColonne() {
     });
 }
 
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * PARTIE GESTION DES EVENEMENTS ET DES ELEMENTS SUR LES UTILISATEURS
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+
+/**
+ * Retourne une couleur aléatoire
+ */
+function randomColor() {
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
+}
