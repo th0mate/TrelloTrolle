@@ -88,94 +88,18 @@ class ControleurTableau extends ControleurGenerique
 
     public static function creerTableau(): void
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            ControleurTableau::redirection("utilisateur", "afficherFormulaireConnexion");
+        $nomTableau=$_REQUEST["nomTableau"] ??null;
+        try{
+            (new ServiceConnexion())->pasConnecter();
+            $tableau=(new ServiceTableau())->creerTableau($nomTableau);
+            ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+
+        } catch (ConnexionException $e) {
+            self::redirectionConnectionFlash($e);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("danger",$e->getMessage());
+            self::redirection("tableau","afficherFormulaireCreationTableau");
         }
-        $utilisateurRepository = new UtilisateurRepository();
-
-        /**
-         * @var Utilisateur $utilisateur
-         */
-        $utilisateur = $utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        if (!ControleurCarte::issetAndNotNull(["nomTableau"])) {
-            MessageFlash::ajouter("danger", "Nom de tableau manquant");
-            ControleurTableau::redirection("tableau", "afficherFormulaireCreationTableau");
-        }
-        $tableauRepository = new TableauRepository();
-        $idTableau = $tableauRepository->getNextIdTableau();
-        $codeTableau = hash("sha256", $utilisateur->getLogin() . $idTableau);
-
-        $colonneRepository = new ColonneRepository();
-        $idColonne1 = $colonneRepository->getNextIdColonne();
-        $nomColonne1 = "TODO";
-
-        $nomColonne2 = "DOING";
-        $idColonne2 = $idColonne1 + 1;
-
-        $nomColonne3 = "DONE";
-        $idColonne3 = $idColonne1 + 2;
-
-        $carteInitiale = "Exemple";
-        $descriptifInitial = "Exemple de carte";
-
-        $carteRepository = new CarteRepository();
-
-        $idCarte1 = $carteRepository->getNextIdCarte();
-        $idCarte2 = $idCarte1 + 1;
-        $idCarte3 = $idCarte1 + 2;
-
-        $tableau = new Tableau(
-            $utilisateur,
-            $idTableau,
-            $codeTableau,
-            $_REQUEST["nomTableau"],
-            []
-        );
-
-        $carte1 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne1,
-                $nomColonne1
-            ),
-            $idCarte1,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carte2 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne2,
-                $nomColonne2
-            ),
-            $idCarte2,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carte3 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne3,
-                $nomColonne3
-            ),
-            $idCarte3,
-            $carteInitiale,
-            $descriptifInitial,
-            "#FFFFFF",
-            []
-        );
-
-        $carteRepository->ajouter($carte1);
-        $carteRepository->ajouter($carte2);
-        $carteRepository->ajouter($carte3);
-
-        ControleurTableau::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
     }
 
     public static function mettreAJourTableau(): void
