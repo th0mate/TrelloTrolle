@@ -45,12 +45,14 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($login);
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "utilisateur" => $utilisateur,
                 "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
                 "cheminVueBody" => "utilisateur/detail.php"
-            ]);
+            ]);*/
+            return $this->afficherTwig('utilisateur/detail.html.twig',["idUtilisateurConnecte" => $login]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -61,10 +63,11 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecter();
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'un utilisateur",
                 "cheminVueBody" => "utilisateur/formulaireCreation.php"
-            ]);
+            ]);*/
+            return $this->afficherTwig('utilisateur/formulaireCreatopn.html.twig');
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -103,11 +106,12 @@ class ControleurUtilisateur extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Mise à jour du profil",
                 "cheminVueBody" => "utilisateur/formulaireMiseAJour.php",
                 "utilisateur" => $utilisateur,
-            ]);
+            ]);*/
+            return $this->afficherTwig('utilisateur/formulaireMiseAjour.html.twig',["utilisateur" => $utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -206,10 +210,11 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecter();
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
                 "cheminVueBody" => "utilisateur/resetCompte.php"
-            ]);
+            ]);*/
+            return $this->afficherTwig('utilisateur/resetCompte.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("utilisateur", "afficherListeMesTableaux");
@@ -223,11 +228,12 @@ class ControleurUtilisateur extends ControleurGenerique
         try {
             $this->serviceConnexion->dejaConnecter();
             $utilisateurs = $this->serviceUtilisateur->recupererCompte($mail);
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
                 "cheminVueBody" => "utilisateur/resultatResetCompte.php",
                 "utilisateurs" => $utilisateurs
-            ]);
+            ]);*/
+            return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig',["utilisateurs" => $utilisateurs]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("utilisateur", "afficherListeMesTableaux");
