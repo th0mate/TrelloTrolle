@@ -3,9 +3,11 @@
 /** @var Colonne[] $colonnes */
 
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
 
-$tableau = $colonne->getTableau();
-$proprietaire = $tableau->getUtilisateur();
+$tableau = ColonneRepository::getTableau($colonne);
+$proprietaire = TableauRepository::getUtilisateur($tableau);
 ?>
 <div>
     <form method="post" action="controleurFrontal.php">

@@ -3,6 +3,7 @@
 
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
 
 ?>
 
@@ -19,7 +20,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 </div>
                 <div>
                     <?php
-                    if ($tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+                    if (TableauRepository::estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
                             le tableau</a>

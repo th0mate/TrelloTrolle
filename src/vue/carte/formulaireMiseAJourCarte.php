@@ -4,11 +4,14 @@
 
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
 
-$loginsAffectes = array_map(function($u) {return $u->getLogin();}, $carte->getAffectationsCarte());
-$colonneCarte = $carte->getColonne();
-$tableau = $colonneCarte->getTableau();
-$proprietaire = $tableau->getUtilisateur();
+$loginsAffectes = array_map(function($u) {return $u->getLogin();}, CarteRepository::getAffectationsCarte($carte));
+$colonneCarte = CarteRepository::getColonne($carte);
+$tableau = ColonneRepository::getTableau($colonneCarte);
+$proprietaire = TableauRepository::getUtilisateur($tableau);
 
 ?>
 <div>
