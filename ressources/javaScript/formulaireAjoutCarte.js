@@ -3,7 +3,6 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 
 let formulaireAjoutCarte = reactive({
-    test: "",
     titre: "",
     description: "",
     couleur: "",

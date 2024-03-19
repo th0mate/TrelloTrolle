@@ -49,10 +49,9 @@ body {
                 justify-content: flex-end;
                 align-items: center;
                 align-content: center;
-                flex-wrap: wrap;
                 min-width: 100px;
                 height: 100%;
-                max-width: 80%;
+                max-width: 70%;
 
                 overflow: hidden;
                 text-overflow: ellipsis;

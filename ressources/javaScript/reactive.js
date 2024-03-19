@@ -3,7 +3,6 @@
  * @type {Map<any, any>} objectByName un Map qui associe un nom à un objet réactif
  * @type {null} registeringEffect l'effet en cours d'enregistrement
  * @type {Map<any, any>} objetDependencies un Map qui associe un objet à un Map qui associe une clé à un Set d'effets
- *
  */
 let objectByName = new Map();
 let registeringEffect = null;
