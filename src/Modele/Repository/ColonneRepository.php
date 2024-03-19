@@ -58,14 +58,14 @@ class ColonneRepository extends AbstractRepository
         throw new Exception("Impossible d'ajouter seulement une colonne...");
     }
 
-    public function getTableau(): Tableau
+    public function getTableau(Colonne  $idcle): Tableau
     {
         $formatNomsColonnes=(new TableauRepository())->formatNomsColonnes();
         $query = "SELECT $formatNomsColonnes
         FROM {$this->getNomTable()} t JOIN tableau ta
-        ON u.idtableau=ta.idtableau WHERE idcolonne = {$this->getNomCle()}";
+        ON u.idtableau=ta.idtableau WHERE idcolonne =: idcolonne";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
-        $pdoStatement->execute();
+        $pdoStatement->execute(["idcolonne" => $idcle->getIdColonne()]);
         $obj = $pdoStatement->fetch();
         return Tableau::construireDepuisTableau($obj);
     }
