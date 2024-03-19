@@ -5,7 +5,7 @@
 
 {% block page_content %}
     <div>
-        <form method="post" action="controleurFrontal.php">
+        <form method="post" action="{{ route('creerColonne') }}">
             <fieldset>
                 <h3>Création d'une colonne :</h3>
                 <p>
@@ -13,8 +13,6 @@
                     <input type="text" placeholder="KO" name="nomColonne" id="nomColonne" minlength="1" maxlength="50" required>
                 </p>
                 <input type='hidden' name='idTableau' value='{{ idTableau }}'>
-                <input type='hidden' name='action' value='creerColonne'>
-                <input type='hidden' name='controleur' value='colonne'>
                 <p>
                     <input type="submit" value="Créer la colonne">
                 </p>

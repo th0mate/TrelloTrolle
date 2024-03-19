@@ -20,6 +20,6 @@ class ControleurBase extends ControleurGenerique
             "pagetitle" => "Accueil",
             "cheminVueBody" => "base/accueil.php"
         ]);*/
-        return $this->afficherTwig('base/accueil.php');
+        return $this->afficherTwig('base/accueil.html.twig');
     }
 }

@@ -73,7 +73,7 @@ class RouteurURL
         $assistantUrl = $conteneur->get("url_helper");
         $generateurUrl = $conteneur->get("url_generator");
 
-        $twigLoader = new FilesystemLoader(__DIR__ . '/../vue/');
+        //$twigLoader = new FilesystemLoader(__DIR__ . '/../vue/');
         $twig = $conteneur->get('twig');
         $twig->addFunction(new TwigFunction("route",function ($name,$parameters=[]) use ($generateurUrl){
             return $generateurUrl->generate($name,$parameters);
@@ -81,7 +81,7 @@ class RouteurURL
         $twig->addFunction(new TwigFunction("asset",function ($path) use ($assistantUrl){
             return $assistantUrl->getAbsoluteUrl($path);
         }));
-
+        $twig->addGlobal('idUtilisateurConnecte', ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $twig->addGlobal("messagesFlash",new MessageFlash());
 
 

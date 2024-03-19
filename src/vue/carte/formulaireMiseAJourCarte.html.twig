@@ -9,7 +9,7 @@
     {{ set tableau = colonneCarte.tableau }}
     {{ set proprietaire = tableau.utilisateur }}
     <div>
-        <form method="post" action="controleurFrontal.php">
+        <form method="post" action="{{ route('mettreAJourCarte') }}">
             <fieldset>
                 <h3>Modification d'une carte :</h3>
                 <p>
@@ -30,7 +30,7 @@
                     <label for="idColonne">Colonne de la carte&#42;</label> :
                     <select name="idColonne" id="idColonne">
                         {% for colonne in colonnes %}
-                        <option {% if colonne.idColonne === colonneCarte.idColonne %} selected{% endif %} value="{{ colonne.idColonne }}" > <!-- TODO check si selected fonctionne bien et si correspond à === où à l'inverse-->
+                        <option {% if colonne.idColonne === colonneCarte.idColonne %} selected{% endif %} value="{{ colonne.idColonne }}" > {#  TODO check si selected fonctionne bien et si correspond à === où à l'inverse #}
                             {{ colonne.titreColonne }}
                         </option>
                         {% endfor %}
@@ -48,8 +48,6 @@
                     </select>
                 </div>
                 </p>
-                <input type='hidden' name='idCarte' value='<?= htmlspecialchars($carte->getIdCarte()) ?>'>
-                <input type='hidden' name='action' value='mettreAJourCarte'>
                 <input type='hidden' name='controleur' value='carte'>
                 <p>
                     <input type="submit" value="Mettre à jour la carte">

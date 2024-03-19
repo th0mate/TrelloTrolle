@@ -11,17 +11,15 @@
             <div class="ligne_tableau">
                 <div>{{ tableau.titreTableau }}</div>
                 <div>
-                    <a href="controleurFrontal.php?action=afficherTableau&controleur=tableau&codeTableau=<?= rawurlencode($tableau->getCodeTableau()) ?>">
+                    <a href="{{ route('afficherTableau') }}">{# TODO A MODIFIER SUREMENT #}
                         Modifier
                     </a>
                 </div>
                 <div>
                     {% if tableau.estProprietaire(loginUtilisateurConnecte) %}
-                    <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
-                        le tableau</a>
+                    <a href="{{ route('supprimerTableau') }}">Supprimer le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% else %}
-                    <a href="controleurFrontal.php?action=quitterTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Quitter
-                        le tableau</a>
+                    <a href="{{ route('mettreAJourTableau') }}">Quitter le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% endif %}
                 </div>
             </div>
@@ -30,7 +28,7 @@
 
         </div>
         <div>
-            <a href='?action=afficherFormulaireCreationTableau&controleur=tableau'>Ajouter un tableau</a>
+            <a href='{{route('creerTableau')}}'>Ajouter un tableau</a>
         </div>
     </div>
 

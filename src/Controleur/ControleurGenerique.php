@@ -45,7 +45,7 @@ class ControleurGenerique {
 //        }
 //        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
 //        header($url);
-        $generateurUrl= $this->container->get("generateurUrl");
+        $generateurUrl= $this->container->get("url_generator");
         $url = $generateurUrl->generate($action, $query);
         var_dump($url);
         return new RedirectResponse($url);

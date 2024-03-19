@@ -7,7 +7,7 @@
     {{ set tableau = colonne.tableau }}
     {{ set proprietaire = tableau.utilisateur }}
     <div>
-        <form method="post" action="controleurFrontal.php">
+        <form method="post" action="{{ route('creerCarte') }}">
             <fieldset>
                 <h3>Création d'une carte :</h3>
                 <p>
@@ -29,7 +29,7 @@
                     <select name="idColonne" id="idColonne">
                         {%foreach colonneOption in colonnes  %}
 
-                        <option {% if colonneOption.idColonne === colonne.idColonne %} selected{% endif %} value="{{ colonneOption.idColonne }}" > <!-- TODO check si selected fonctionne bien et si correspond à === où à l'inverse-->
+                        <option {% if colonneOption.idColonne === colonne.idColonne %} selected{% endif %} value="{{ colonneOption.idColonne }}" > {# TODO check si selected fonctionne bien et si correspond à === où à l'inverse #}
                         {{ colonneOption.titreColonne }}
                         </option>
                         {% endfor %}
@@ -47,8 +47,6 @@
                     </select>
                 </div>
                 </p>
-                <input type='hidden' name='action' value='creerCarte'>
-                <input type='hidden' name='controleur' value='carte'>
                 <p>
                     <input type="submit" value="Créer la carte">
                 </p>

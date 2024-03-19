@@ -164,10 +164,11 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecter();
-            return ControleurUtilisateur::afficherVue('vueGenerale.php', [
+            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Formulaire de connexion",
                 "cheminVueBody" => "utilisateur/formulaireConnexion.php"
-            ]);
+            ]);*/
+            return $this->afficherTwig("utilisateur/formulaireConnexion.html.twig");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("utilisateur", "afficherListeMesTableaux");
@@ -192,7 +193,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/deconnexion', name: 'deconnexion', methods: "POST")]
+    #[Route('/deconnexion', name: 'deconnexion', methods: "GET")]
     public function deconnecter(): Response
     {
         try {

@@ -44,7 +44,7 @@ class ControleurTableau extends ControleurGenerique
     #[Route('/tableau/monTableau', name: 'afficherTableau', methods: "GET")]
     public function afficherTableau(): Response
     {
-        ;
+
         $codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
@@ -81,7 +81,6 @@ class ControleurTableau extends ControleurGenerique
                 "nomTableau" => $tableau->getTitreTableau()
             ]);*/
             return $this->afficherTwig('tableau/formulaireMiseAJourTableau.html.twig',[
-                "idTableau" => $_REQUEST["idTableau"],
                 "nomTableau" => $tableau->getTitreTableau()
             ]);
         } catch (ConnexionException $e) {
@@ -169,7 +168,6 @@ class ControleurTableau extends ControleurGenerique
                 "utilisateurs" => $filtredUtilisateurs
             ]);*/
             return $this->afficherTwig('tableau/formulaireAjoutMembreTableau.html.twig',[
-                "tableau" => $tableau,
                 "utilisateurs" => $filtredUtilisateurs
             ]);
         } catch (ConnexionException $e) {

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block page_title %}Trollé{% endblock %}</title>
-    <link rel="stylesheet" href="../ressources/css/navstyle.css"> <!--TODO into asset-->
-    <link rel="stylesheet" href="../ressources/css/trellostyle.css">  <!--TODO into asset-->
+    <link rel="stylesheet" href="{{ asset("../ressources/css/navstyle.css") }}"> <!--TODO into asset-->
+    <link rel="stylesheet" href="{{ asset("../ressources/css/trellostyle.css") }}">  <!--TODO into asset-->
 
 </head>
 
@@ -14,35 +14,33 @@
     <nav>
         <ul>
             <li>
-                <a href="controleurFrontal.php?action=accueil&controleur=base">Accueil</a>  <!--TODO into route-->
+                <a href="{{ route('accueil') }}">Accueil</a>  <!--TODO into route-->
             </li>
-            {% if idUtilisateurConnecte is not null %}
-            <?php
-            if (!ConnexionUtilisateur::estConnecte()) {
-                ?>
+            {% if idUtilisateurConnecte is null %}
+
             <li>
-                <a href="controleurFrontal.php?action=afficherFormulaireConnexion&controleur=utilisateur">  <!--TODO into asset-->
-                    Connexion <img alt="login" src="../ressources/img/enter.png" >
+                <a href="{{route("afficherFormulaireConnexion")}}">  <!--TODO into asset-->
+                    Connexion <img alt="login" src="{{ asset("../ressources/img/enter.png") }}" >
                 </a>
             </li>
             <li>
-                <a href="controleurFrontal.php?action=afficherFormulaireCreation&controleur=utilisateur">  <!--TODO into route-->
-                    Inscription <img alt="S'inscrire" title="S'inscrire" src="../ressources/img/add-user.png" >  <!--TODO into asset-->
+                <a href="{{ route('afficherFormulaireCreation') }}">  <!--TODO into route-->
+                    Inscription <img alt="S'inscrire" title="S'inscrire" src="{{ asset("../ressources/img/add-user.png") }}" >  <!--TODO into asset-->
                 </a>
             </li>
             {% else %}
 
             <li>
-                <a href="controleurFrontal.php?action=afficherListeMesTableaux&controleur=tableau">Mes tableaux</a>
+                <a href="{{ route('afficherListeMesTableaux')}}">Mes tableaux</a>
             </li>
             <li>
-                <a href="controleurFrontal.php?action=afficherDetail&controleur=utilisateur&login=">  <!--TODO into route-->
-                    Mon compte (<span>{{ loginUrl }}</span>) <img alt="logout" src="../ressources/img/user.png">  <!--TODO into asset-->
+                <a href="{{ route('afficherDetail',{"login" : idUtilisateurConnecte}) }}">  <!--TODO into route-->
+                    Mon compte (<span>{{ idUtilisateurConnecte }}</span>) <img alt="logout" src="{{ asset("../ressources/img/user.png") }}">  <!--TODO into asset-->
                 </a>
             </li>
             <li>
-                <a href="controleurFrontal.php?action=deconnecter&controleur=utilisateur"> <!--TODO into route-->
-                    Déconnexion <img alt="logout" src="../ressources/img/logout.png"> <!--TODO into asset-->
+                <a href="{{ route('deconnexion') }}"> <!--TODO into route-->
+                    Déconnexion <img alt="logout" src="{{ asset("../ressources/img/logout.png") }}"> <!--TODO into asset-->
                 </a>
             </li>
             {% endif %}
