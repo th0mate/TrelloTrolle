@@ -85,11 +85,12 @@ class ControleurColonne extends ControleurGenerique
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection("base", "accueil");
         }
-        return ControleurTableau::afficherVue('vueGenerale.php', [
+        /*return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une colonne",
             "cheminVueBody" => "colonne/formulaireCreationColonne.php",
             "idTableau" => $_REQUEST["idTableau"],
-        ]);
+        ]);*/
+        return $this->afficherTwig('colonne/formulaireCreationColonne.html.twig',["idTableau" => $_REQUEST["idTableau"]]);
     }
 
     #[Route('/colonne/nouveau', name: 'creerColonne', methods: "POST")]
@@ -128,9 +129,13 @@ class ControleurColonne extends ControleurGenerique
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
             $this->serviceUtilisateur->estParticipant($tableau);
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'une colonne",
                 "cheminVueBody" => "colonne/formulaireMiseAJourColonne.php",
+                "idColonne" => $idColonne,
+                "nomColonne" => $colonne->getTitreColonne()
+            ]);*/
+            return $this->afficherTwig('colonne/formulaireMiseAJourColonne.html.twig',[
                 "idColonne" => $idColonne,
                 "nomColonne" => $colonne->getTitreColonne()
             ]);
