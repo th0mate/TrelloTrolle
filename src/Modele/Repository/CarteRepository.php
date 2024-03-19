@@ -48,7 +48,7 @@ class CarteRepository extends AbstractRepository
     public function recupererCartesUtilisateur(string $login): array
     {
         $sql = "SELECT {$this->formatNomsColonnes()} from app_db WHERE affectationscarte @> :json";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $values = array(
             "json" => json_encode(["utilisateurs" => [["login" => $login]]])
         );
@@ -62,7 +62,7 @@ class CarteRepository extends AbstractRepository
 
     public function getNombreCartesTotalUtilisateur(string $login) : int {
         $query = "SELECT COUNT(*) FROM app_db WHERE login=:login";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["login" => $login]);
         $obj = $pdoStatement->fetch();
         return $obj[0];

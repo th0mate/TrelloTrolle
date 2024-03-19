@@ -1,9 +1,18 @@
 <?php
 /** @var int $idTableau */
 /** @var string $nomTableau */
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
+
 ?>
 <div>
-    <form method="post" action="controleurFrontal.php">
+    <form method="post" action="<?= $generateurUrl->generate('mettreAJourTableau', ['controleur' => 'tableau'])?>">
         <fieldset>
             <h3>Modification d'un tableau :</h3>
             <p>

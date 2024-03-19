@@ -1,0 +1,94 @@
+parameters:
+
+services:
+  #Configurations
+  configuration_base_de_donnees:
+    class: App\Trellotrolle\Configuration\ConfigurationBaseDeDonnees
+
+  connexion_base_de_donnees:
+    class: App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonnees
+    arguments: ['@configuration_base_de_donnees']
+
+  #Repository
+  carte_repository:
+    class: App\Trellotrolle\Modele\Repository\CarteRepository
+    arguments: ['@connexino_base_de_donnees']
+
+  colonne_repository:
+    class: App\Trellotrolle\Modele\Repository\ColonneRepository
+    arguments: ['@connexino_base_de_donnees']
+
+  tableau_repository:
+    class: App\Trellotrolle\Modele\Repository\TableauRepository
+    arguments: [ '@connexino_base_de_donnees' ]
+
+  utilisateur_repository:
+    class: App\Trellotrolle\Modele\Repository\UtilisateurRepository
+    arguments: [ '@connexino_base_de_donnees' ]
+
+  #Services
+  service_carte:
+    class: App\Trellotrolle\Service\ServiceCarte
+    arguments: ['@carte_repository','@utilisateur_repository']
+
+  service_colonne:
+    class: App\Trellotrolle\Service\ServiceColonne
+    arguments: ['@colonne_repository','@carte_repository']
+
+  service_tableau:
+    class: App\Trellotrolle\Service\ServiceTableau
+    arguments: ['@tableau_repository','@colonne_repository','@carte_repository','@utilisateur_repository']
+
+  service_utilisateur:
+    class: App\Trellotrolle\Service\ServiceUtilisateur
+    arguments: ['@utilisateur_repository','@tableau_repository','@carte_repository']
+
+  service_connexion:
+    class: App\Trellotrolle\Service\ServiceConnexion
+    arguments: ['@utilisateur_repository']
+
+  #Controleurs
+  controleur_carte:
+    class: App\Trellotrolle\Controleur\ControleurCarte
+    arguments: ['@container','@service_connexion','@service_carte','@service_utilisateur','@service_colonne']
+
+  controleur_colonne:
+    class: App\Trellotrolle\Controleur\ControleurColonne
+    arguments: ['@container','@service_connexion','@service_colonne','@service_utilisateur','@service_tableau']
+
+  controleur_tableau:
+    class: App\Trellotrolle\Controleur\ControleurTableau
+    arguments: ['@container','@service_tableau','@service_connexion','@service_utilisateur','@service_carte']
+
+  controleur_utilisateur:
+    class: App\Trellotrolle\Controleur\ControleurUtilisateur
+    arguments: ['@container','@service_connexion','@service_utilisateur']
+
+  controleur_base:
+    class: App\Trellotrolle\Controleur\ControleurBase
+    arguments: ['@container',]
+
+
+  #Twig
+  twig_loader:
+    class: Twig\Loader\FilesystemLoader
+    arguments: [ '%project_root%/src/vue/' ]
+  twig:
+    class: Twig\Environment
+    arguments:
+      $loader: '@twig_loader'
+      $options:
+        autoescape: 'html'
+
+  #Sevrices
+  request_stack:
+    class: Symfony\Component\HttpFoundation\RequestStack
+  url_helper:
+    class: Symfony\Component\HttpFoundation\UrlHelper
+    arguments: [ '@request_stack','@request_context' ]
+  url_generator:
+    class: Symfony\Component\Routing\Generator\UrlGenerator
+    arguments: [ '@routes','@request_context' ]
+  controleur_generique:
+    class: App\Trellotrolle\Controleur\ControleurGenerique
+    arguments: [ "@container" ]

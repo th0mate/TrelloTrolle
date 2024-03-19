@@ -18,14 +18,10 @@ use App\Trellotrolle\Service\Exception\TableauException;
 class ServiceCarte
 {
 
-    private CarteRepository $carteRepository;
-    private UtilisateurRepository $utilisateurRepository;
 
-    public function __construct()
-    {
-        $this->carteRepository = new CarteRepository();
-        $this->utilisateurRepository = new UtilisateurRepository();
-    }
+    public function __construct(private CarteRepository $carteRepository,
+                                private UtilisateurRepository $utilisateurRepository)
+    {}
 
     /**
      * @throws ServiceException

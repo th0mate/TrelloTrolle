@@ -3,6 +3,14 @@
 
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
 
 ?>
 
@@ -13,7 +21,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
             <div class="ligne_tableau">
                 <div><?= htmlspecialchars($tableau->getTitreTableau()) ?></div>
                 <div>
-                    <a href="controleurFrontal.php?action=afficherTableau&controleur=tableau&codeTableau=<?= rawurlencode($tableau->getCodeTableau()) ?>">
+                    <a href="<?=$generateurUrl->generate('afficherTableau', ['codeTableau' => $tableau->getCodeTableau()])?>">
                         Modifier
                     </a>
                 </div>
@@ -21,10 +29,10 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                     <?php
                     if ($tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                         ?>
-                        <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
+                        <a href="<?=$generateurUrl->generate('supprimerTableau', ['idTableau' => $tableau->getIdTableau()])?>">Supprimer
                             le tableau</a>
                     <?php } else { ?>
-                        <a href="controleurFrontal.php?action=quitterTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Quitter
+                        <a href="<?=$generateurUrl->generate('quitterTableau', ['idTableau' => $tableau->getIdTableau()])?>">Quitter
                             le tableau</a>
                     <?php } ?>
                 </div>
@@ -35,6 +43,6 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 
     </div>
     <div>
-        <a href='?action=afficherFormulaireCreationTableau&controleur=tableau'>Ajouter un tableau</a>
+        <a href='<?=$generateurUrl->generate('afficherFormulaireCreationTableau')?>'>Ajouter un tableau</a>
     </div>
 </div>

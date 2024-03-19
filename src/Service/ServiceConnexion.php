@@ -15,18 +15,17 @@ use App\Trellotrolle\Service\Exception\ServiceException;
 class ServiceConnexion
 {
 
-    private UtilisateurRepository $utilisateurRepository;
 
-    public function __construct()
+    public function __construct(private UtilisateurRepository $utilisateurRepository)
     {
-        $this->utilisateurRepository=new UtilisateurRepository();
     }
 
     /**
-     * @throws ConnexionException     */
+     * @throws ConnexionException
+     */
     public function pasConnecter()
     {
-        if(!ConnexionUtilisateur::estConnecte()) {
+        if (!ConnexionUtilisateur::estConnecte()) {
             throw new ConnexionException("Veuillez vous connecter");
         }
     }
@@ -36,7 +35,7 @@ class ServiceConnexion
      */
     public function dejaConnecter()
     {
-        if (ConnexionUtilisateur::estConnecte()){
+        if (ConnexionUtilisateur::estConnecte()) {
             throw new ConnexionException("Vous êtes déjà connecter");
         }
     }
@@ -57,7 +56,7 @@ class ServiceConnexion
      */
     public function connecter($login, $mdp)
     {
-        if (is_null($login) || is_null($mdp)){
+        if (is_null($login) || is_null($mdp)) {
             //TODO ce messageFlash était en "danger", c'est maintenant un "warning"
             throw new ServiceException("Login ou mot de passe manquant");
         }
@@ -73,7 +72,7 @@ class ServiceConnexion
         }
 
         ConnexionUtilisateur::connecter($utilisateur->getLogin());
-        Cookie::enregistrer("login",$login);
+        Cookie::enregistrer("login", $login);
         Cookie::enregistrer("mdp", $mdp);
     }
 }

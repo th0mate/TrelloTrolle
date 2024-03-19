@@ -8,6 +8,14 @@ use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Lib\Conteneur;
+use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\HttpFoundation\UrlHelper;
+
+/** @var UrlGenerator $generateurUrl */
+$generateurUrl = Conteneur::recupererService("generateurUrl");
+/** @var UrlHelper $assistantUrl */
+$assistantUrl = Conteneur::recupererService("assistantUrl");
 
 ?>
 <div class="trello-main">
@@ -17,7 +25,8 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
             <?php
                 if(ConnexionUtilisateur::estConnecte() && $tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
             ?>
-            <span><a href="controleurFrontal.php?action=afficherFormulaireMiseAJour&controleur=utilisateur"><img class="icon" src="../ressources/img/editer.png" alt="Modifier l'utilisateur"></span></a>
+            <span><a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourTableau', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">
+                    <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer le tableau">
             <?php } ?>
         </div>
         <div class="tableau">
@@ -36,7 +45,8 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                                 if(ConnexionUtilisateur::estConnecte() && $tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                                 ?>
                                 <span class="actions">
-                                    <a href="controleurFrontal.php?action=supprimerMembre&controleur=tableau&idTableau=<?=$tableau->getIdTableau()?>&login=<?=rawurlencode($participant->getLogin())?>"><img class="icon" src="../ressources/img/x.png" alt="Retirer le membre"></a>
+                                    <a href="<?= $generateurUrl->generate('supprimerMembre', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau(), 'login' => $participant->getLogin()])?>">
+                                        <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/x.png');?>" alt="Supprimer le membre">
                                 </span>
                                 <?php } ?>
                             </div>
@@ -45,7 +55,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                     <?php
                     if(ConnexionUtilisateur::estConnecte() && $tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                     ?>
-                    <li><a href="controleurFrontal.php?action=afficherFormulaireAjoutMembre&controleur=tableau&idTableau=<?=$tableau->getIdTableau()?>">Ajouter un membre</a></li>
+                    <li><a href="<?= $generateurUrl->generate('afficherFormulaireAjoutMembre', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">Ajouter un membre</a></li>
                     <?php } ?>
                 </ul>
             </div>
@@ -77,7 +87,9 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 if(ConnexionUtilisateur::estConnecte() && $tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                     ?>
                     <span class="actions">
-                            <a href="controleurFrontal.php?action=afficherFormulaireMiseAJourTableau&controleur=tableau&idTableau=<?=$tableau->getIdTableau()?>"><img class="icon" src="../ressources/img/editer.png" alt="Éditer le tableau"></a>
+                            <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourTableau', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">
+                                <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer le tableau">
+                            </a>
                     </span>
                 <?php } ?>
             </div>
@@ -90,8 +102,10 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                             if(ConnexionUtilisateur::estConnecte() && $tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                         ?>
                         <span class="actions">
-                            <a href="controleurFrontal.php?action=afficherFormulaireMiseAJourColonne&controleur=colonne&idColonne=<?=$colonnes[$i]->getIdColonne()?>"><img class="icon" src="../ressources/img/editer.png" alt="Éditer la colonne"></a>
-                            <a href="controleurFrontal.php?action=supprimerColonne&controleur=colonne&idColonne=<?= $colonnes[$i]->getIdColonne()?>"><img class="icon" src="../ressources/img/x.png" alt="Supprimer la colonne"></a>
+                            <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourColonne', ['controleur' => 'colonne', 'idColonne' => $colonnes[$i]->getIdColonne()])?>">
+                                <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer la colonne">  </a>
+                            <a href="<?= $generateurUrl->generate('supprimerColonne', ['controleur' => 'colonne', 'idColonne' => $colonnes[$i]->getIdColonne()])?>">
+                                <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/x.png');?>" alt="Supprimer la colonne"> </a>
                         </span>
                         <?php } ?>
                     </div>
@@ -104,8 +118,10 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                                     if(ConnexionUtilisateur::estConnecte() && $tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                                 ?>
                                 <span class="actions">
-                                    <a href="controleurFrontal.php?action=afficherFormulaireMiseAJourCarte&controleur=carte&idCarte=<?=$carte->getIdCarte()?>"><img class="icon" src="../ressources/img/editer.png" alt="Éditer la carte"></a>
-                                    <a href="controleurFrontal.php?action=supprimerCarte&controleur=carte&idCarte=<?= $carte->getIdCarte()?>"><img class="icon" src="../ressources/img/x.png" alt="Supprimer la carte"></a>
+                                    <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourCarte', ['controleur' => 'carte', 'idCarte' => $carte->getIdCarte()])?>">
+                                        <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer la carte"> </a>
+                                    <a href="<?= $generateurUrl->generate('supprimerCarte', ['controleur' => 'carte', 'idCarte' => $carte->getIdCarte()])?>">
+                                        <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/x.png');?>" alt="Supprimer la carte"> </a>
                                 </span>
                                 <?php } ?>
                             </div>
@@ -122,7 +138,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                         <?php
                             if(ConnexionUtilisateur::estConnecte() && $tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                         ?>
-                        <a class="ajout-tableau" href="controleurFrontal.php?action=afficherFormulaireCreationCarte&controleur=carte&idColonne=<?=$colonnes[$i]->getIdColonne()?>">
+                        <a class="ajout-tableau" href="<?= $generateurUrl->generate('afficherFormulaireCreationCarte', ['controleur' => 'carte', 'idColonne' => $colonnes[$i]->getIdColonne()])?>">
                             <div>
                                 <div class="titre icons_menu btn-ajout">
                                     <span>Ajouter une carte</span>
@@ -136,7 +152,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 <?php
                     if(ConnexionUtilisateur::estConnecte() && $tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
                 ?>
-                    <a class="ajout-tableau" href="controleurFrontal.php?action=afficherFormulaireCreationColonne&controleur=colonne&idTableau=<?=$tableau->getIdTableau()?>">
+                    <a class="ajout-tableau" href="<?= $generateurUrl->generate('afficherFormulaireCreationColonne', ['controleur' => 'colonne', 'idTableau' => $tableau->getIdTableau()])?>">
                         <div class="colonne">
                             <div class="titre icons_menu btn-ajout">
                                 <span>Ajouter une colonne</span>

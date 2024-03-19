@@ -53,7 +53,7 @@ class TableauRepository extends AbstractRepository
         $sql = "SELECT DISTINCT {$this->formatNomsColonnes()}
                 from app_db 
                 WHERE login='$login' OR participants @> :json";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $values = array(
             "json" => json_encode(["utilisateurs" => [["login" => $login]]])
         );
@@ -73,7 +73,7 @@ class TableauRepository extends AbstractRepository
         $sql = "SELECT DISTINCT {$this->formatNomsColonnes()}
                 from app_db 
                 WHERE participants @> :json";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $values = array(
             "json" => json_encode(["utilisateurs" => [["login" => $login]]])
         );
@@ -91,7 +91,7 @@ class TableauRepository extends AbstractRepository
 
     public function getNombreTableauxTotalUtilisateur(string $login) : int {
         $query = "SELECT COUNT(DISTINCT idtableau) FROM app_db WHERE login=:login";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["login" => $login]);
         $obj = $pdoStatement->fetch();
         return $obj[0];

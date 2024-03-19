@@ -43,7 +43,7 @@ class ColonneRepository extends AbstractRepository
 
     public function getNombreColonnesTotalTableau(int $idTableau) : int {
         $query = "SELECT COUNT(DISTINCT idcolonne) FROM app_db WHERE idtableau=:idTableau";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
         $obj = $pdoStatement->fetch();
         return $obj[0];
