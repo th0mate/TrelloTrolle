@@ -225,10 +225,10 @@ class ControleurUtilisateur extends ControleurGenerique
             $carteRepository = new CarteRepository();
             $cartes = $carteRepository->recupererCartesUtilisateur($login);
             foreach ($cartes as $carte) {
-                $participants = $carte->getAffectationsCarte();
+                $participants = CarteRepository::getAffectationsCarte($carte);
                 $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
                 $participants[] = $utilisateur;
-                $carte->setAffectationsCarte($participants);
+                CarteRepository::setAffectationsCarte($participants, $carte);
                 $carteRepository->mettreAJour($carte);
             }
 
@@ -266,9 +266,9 @@ class ControleurUtilisateur extends ControleurGenerique
         $carteRepository = new CarteRepository();
         $cartes = $carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
-            $participants = $carte->getAffectationsCarte();
+            $participants = CarteRepository::getAffectationsCarte($carte);
             $participants = array_filter($participants, function ($u) use ($login) {return $u->getLogin() !== $login;});
-            $carte->setAffectationsCarte($participants);
+            CarteRepository::setAffectationsCarte($participants, $carte);
             $carteRepository->mettreAJour($carte);
         }
 

@@ -23,18 +23,6 @@ class Utilisateur extends AbstractDataObject
         );
     }
 
-    public static function construireUtilisateursDepuisJson(?string $jsonList) : array {
-        $users = [];
-        if($jsonList != null) {
-            $aff = json_decode($jsonList, true);
-            $utilisateurs = $aff["utilisateurs"] ?? [];
-            foreach ($utilisateurs as $utilisateur) {
-                $users[] = Utilisateur::construireDepuisTableau($utilisateur);
-            }
-        }
-        return $users;
-    }
-
     public function getLogin(): string
     {
         return $this->login;
@@ -83,14 +71,6 @@ class Utilisateur extends AbstractDataObject
     public function setEmail(string $email): void
     {
         $this->email = $email;
-    }
-
-    public static function formatJsonListeUtilisateurs($utilisateurs) : string {
-        $utilisateursToJson = [];
-        foreach ($utilisateurs as $utilisateur) {
-            $utilisateursToJson[] = $utilisateur->formatTablleauUtilisateurPourJson();
-        };
-        return json_encode(["utilisateurs" => $utilisateursToJson]);
     }
 
     public function formatTableau(): array
