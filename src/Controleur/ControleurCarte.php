@@ -70,12 +70,14 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $colonne->getTableau();
             $this->serviceUtilisateur->estParticipant($tableau);
             $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'une carte",
                 "cheminVueBody" => "carte/formulaireCreationCarte.php",
                 "colonne" => $colonne,
                 "colonnes" => $colonnes
-            ]);
+            ]);*/
+            return $this->afficherTwig('carte/formulaireCreationCarte.html.twig',["colonne" => $colonne,
+                "colonnes" => $colonnes]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
@@ -129,12 +131,8 @@ class ControleurCarte extends ControleurGenerique
             $tableau = $carte->getColonne()->getTableau();
             $this->serviceUtilisateur->estParticipant($tableau);
             $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
-            return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Modification d'une carte",
-                "cheminVueBody" => "carte/formulaireMiseAJourCarte.php",
-                "carte" => $carte,
-                "colonnes" => $colonnes
-            ]);
+            return $this->afficherTwig('carte/formulaireMiseAJourCarte.html.twig',[ "carte" => $carte,
+                "colonnes" => $colonnes]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {

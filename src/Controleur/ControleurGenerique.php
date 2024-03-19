@@ -58,11 +58,12 @@ class ControleurGenerique {
         if ($messageErreur !== "")
             $messageErreurVue .= " : $messageErreur";
 
-        return ControleurGenerique::afficherVue('vueGenerale.php', [
+        /*return ControleurGenerique::afficherVue('vueGenerale.php', [
             "pagetitle" => "Problème",
             "cheminVueBody" => "erreur.php",
             "messageErreur" => $messageErreurVue
-        ]);
+        ]);*/
+        return $this->afficherTwig('error.html.twig',["errorMessage" => $messageErreurVue]);
     }
 
     public function issetAndNotNull(array $requestParams) : bool {
