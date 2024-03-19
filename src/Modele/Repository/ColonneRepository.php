@@ -50,14 +50,6 @@ class ColonneRepository extends AbstractRepository
         return $obj[0];
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ajouter(AbstractDataObject $object): bool
-    {
-        throw new Exception("Impossible d'ajouter seulement une colonne...");
-    }
-
     public function getTableau(Colonne  $idcle): Tableau
     {
         $formatNomsColonnes=(new TableauRepository())->formatNomsColonnes();

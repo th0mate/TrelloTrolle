@@ -41,20 +41,13 @@ class TableauRepository extends AbstractRepository
         return $this->recupererPar("codetableau", $codeTableau);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ajouter(AbstractDataObject $object): bool
-    {
-        throw new Exception("Impossible d'ajouter seulement un tableau...");
-    }
 
     /**
      * @return Tableau[]
      */
     public function recupererTableauxOuUtilisateurEstMembre(string $login): array
     {
-        $sql = "SELECT DISTINCT {$this->formatNomsColonnes()}
+        $sql = "SELECT DISTINCT t.idtableau, codetableau, titretableau, t.login
                 from {$this->getNomTable()} t JOIN participant p ON t.idtableau = p.idtableau
                 WHERE p.login=:login OR t.login=:login";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);

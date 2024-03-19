@@ -72,10 +72,10 @@ class CarteRepository extends AbstractRepository
 
     public function getAffectationsCarte(Carte  $idcle): ?array
     {
-        $formatNomsColonnes=(new UtilisateurRepository())->formatNomsColonnes();
-        $query = "SELECT $formatNomsColonnes
+        $query = "SELECT u.login,nom,prenom,email,mdphache
         FROM {$this->getNomTable()} c JOIN affectationcarte a
-        ON c.idcarte=a.idcarte WHERE {$this->getNomCle()} =: idcle";
+        ON c.idcarte=a.idcarte
+        JOIN utilisateur u ON u.login=a.login WHERE a.{$this->getNomCle()} =:idcle";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
         $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
         $obj = [];

@@ -29,13 +29,6 @@ class UtilisateurRepository extends AbstractRepository
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ajouter(AbstractDataObject $object): bool
-    {
-        throw new Exception("Impossible d'ajouter seulement un utilisateur...");
-    }
 
     public function recupererUtilisateursParEmail(string $email): array {
         return $this->recupererPlusieursPar("email", $email);
