@@ -97,7 +97,7 @@ class TableauRepository extends AbstractRepository
         return $obj[0];
     }
 
-    public function participant()
+    public function participant(): array
     {
         $query = "SELECT login FROM particpant WHERE 
         idtableau = {$this->getNomCle()}";
@@ -137,14 +137,14 @@ class TableauRepository extends AbstractRepository
         return $this->estProprietaire($login) || $this->estParticipant($login);
     }
 
-    public function getUtilisateur(): Utilisateur
+    public function getUtilisateur(Tableau  $idcle): Utilisateur
     {
         $formatNomsColonnes=(new UtilisateurRepository())->formatNomsColonnes();
         $query = "SELECT $formatNomsColonnes
         FROM {$this->getNomTable()} t JOIN utilisateur u
-        ON u.idlogin=t.idlogin WHERE idtableau = {$this->getNomCle()}";
+        ON u.idlogin=t.idlogin WHERE idtableau =: idcle";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
-        $pdoStatement->execute();
+        $pdoStatement->execute(["idcle" => $idcle->getIdTableau()]);
         $obj = $pdoStatement->fetch();
         return Utilisateur::construireDepuisTableau($obj);
     }

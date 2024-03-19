@@ -52,7 +52,7 @@ class ControleurTableau extends ControleurGenerique
              */
             $cartes = $carteRepository->recupererCartesColonne($colonne->getIdColonne());
             foreach ($cartes as $carte) {
-                foreach ($carte->getAffectationsCarte() as $utilisateur) {
+                foreach (CarteRepository::getAffectationsCarte($carte) as $utilisateur) {
                     if(!isset($participants[$utilisateur->getLogin()])) {
                         $participants[$utilisateur->getLogin()] = ["infos" => $utilisateur, "colonnes" => []];
                     }
@@ -443,8 +443,8 @@ class ControleurTableau extends ControleurGenerique
          */
         $cartes = $carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
-            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {return $u->getLogin() != $utilisateur->getLogin();});
-            $carte->setAffectationsCarte($affectations);
+            $affectations = array_filter(CarteRepository::getAffectationsCarte($carte), function ($u) use ($utilisateur) {return $u->getLogin() != $utilisateur->getLogin();});
+            CarteRepository::setAffectationsCarte($affectations, $carte);
             $carteRepository->mettreAJour($carte);
         }
         ControleurTableau::redirection("tableau", "afficherListeMesTableaux");

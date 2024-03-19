@@ -8,6 +8,7 @@ use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 
 ?>
@@ -114,7 +115,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
                                 <?= htmlspecialchars($carte->getDescriptifCarte()) ?>
                             </div>
                             <div class="pied">
-                                <?php foreach ($carte->getAffectationsCarte() as $utilisateur) {?>
+                                <?php foreach (CarteRepository::getAffectationsCarte($carte) as $utilisateur) {?>
                                     <span><?= ($utilisateur->getPrenom())[0] ?><?= ($utilisateur->getNom())[0] ?></span>
                                 <?php }?>
                             </div>
