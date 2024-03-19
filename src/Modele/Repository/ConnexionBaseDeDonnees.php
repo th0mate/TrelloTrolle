@@ -8,22 +8,20 @@ use PDO;
 
 class ConnexionBaseDeDonnees
 {
-    private static ?ConnexionBaseDeDonnees $instance = null;
-
     private PDO $pdo;
 
-    public static function getPdo(): PDO
+    public function getPdo(): PDO
     {
-        return ConnexionBaseDeDonnees::getInstance()->pdo;
+        return $this->pdo;
     }
 
-    private function __construct()
+    private function __construct(ConfigurationBaseDeDonnees $configurationBaseDeDonnees)
     {
-        $nomHote = ConfigurationBaseDeDonnees::getNomHote();
-        $port = ConfigurationBaseDeDonnees::getPort();
-        $login = ConfigurationBaseDeDonnees::getLogin();
-        $motDePasse = ConfigurationBaseDeDonnees::getMotDePasse();
-        $nomBaseDeDonnees = ConfigurationBaseDeDonnees::getNomBaseDeDonnees();
+        $nomHote = $configurationBaseDeDonnees->getNomHote();
+        $port = $configurationBaseDeDonnees->getPort();
+        $login = $configurationBaseDeDonnees->getLogin();
+        $motDePasse = $configurationBaseDeDonnees->getMotDePasse();
+        $nomBaseDeDonnees = $configurationBaseDeDonnees->getNomBaseDeDonnees();
 
         $this->pdo = new PDO(
             "pgsql:host=$nomHote;port=$port;dbname=$nomBaseDeDonnees",
@@ -35,10 +33,4 @@ class ConnexionBaseDeDonnees
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
-    private static function getInstance(): ConnexionBaseDeDonnees
-    {
-        if (is_null(ConnexionBaseDeDonnees::$instance))
-            ConnexionBaseDeDonnees::$instance = new ConnexionBaseDeDonnees();
-        return ConnexionBaseDeDonnees::$instance;
-    }
 }

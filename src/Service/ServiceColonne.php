@@ -15,14 +15,10 @@ use App\Trellotrolle\Service\Exception\TableauException;
 class ServiceColonne
 {
 
-    private ColonneRepository $colonneRepository;
-    private CarteRepository $carteRepository;
 
-    public function __construct()
+    public function __construct(private ColonneRepository $colonneRepository,
+                                private CarteRepository   $carteRepository)
     {
-        $this->colonneRepository = new ColonneRepository();
-        $this->carteRepository = new CarteRepository();
-
     }
 
     /**
@@ -81,19 +77,20 @@ class ServiceColonne
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne)
     {
-        $colonne=$this->recupererColonne($idColonne);
+        $colonne = $this->recupererColonne($idColonne);
         $this->isSetNomColonne($nomColonne);
         return $colonne;
     }
 
-    public function creerColonne($tableau,$nomColonne): Colonne
+    public function creerColonne($tableau, $nomColonne): Colonne
     {
-         return new Colonne(
+        return new Colonne(
             $tableau,
             $this->colonneRepository->getNextIdColonne(),
             $nomColonne
         );
     }
+
     public function miseAJourColonne($colonne): void
     {
         $this->colonneRepository->mettreAJour($colonne);

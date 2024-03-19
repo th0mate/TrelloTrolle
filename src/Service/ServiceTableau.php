@@ -20,17 +20,12 @@ use App\Trellotrolle\Service\Exception\TableauException;
 class ServiceTableau
 {
 
-    private TableauRepository $tableauRepository;
-    private ColonneRepository $colonneRepository;
-    private CarteRepository $carteRepository;
-    private UtilisateurRepository $utilisateurRepository;
 
-    public function __construct()
+    public function __construct(private TableauRepository     $tableauRepository,
+                                private ColonneRepository     $colonneRepository,
+                                private CarteRepository       $carteRepository,
+                                private UtilisateurRepository $utilisateurRepository)
     {
-        $this->tableauRepository = new TableauRepository();
-        $this->colonneRepository = new ColonneRepository();
-        $this->carteRepository = new CarteRepository();
-        $this->utilisateurRepository =new UtilisateurRepository();
     }
 
     /**
@@ -135,7 +130,7 @@ class ServiceTableau
     /**
      * @throws ServiceException
      */
-    public function quitterTableau($tableau,$utilisateur)
+    public function quitterTableau($tableau, $utilisateur)
     {
         if ($tableau->estProprietaire($utilisateur->getLogin())) {
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau");
@@ -158,6 +153,7 @@ class ServiceTableau
             $this->carteRepository->mettreAJour($carte);
         }
     }
+
     /**
      * @throws ServiceException
      */

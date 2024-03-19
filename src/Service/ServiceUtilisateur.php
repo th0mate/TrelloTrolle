@@ -20,17 +20,11 @@ use App\Trellotrolle\Service\Exception\TableauException;
 
 class ServiceUtilisateur
 {
-    private UtilisateurRepository $utilisateurRepository;
 
-    private TableauRepository $tableauRepository;
-
-    private CarteRepository $carteRepository;
-
-    public function __construct()
+    public function __construct(private UtilisateurRepository $utilisateurRepository,
+                                private TableauRepository     $tableauRepository,
+                                private CarteRepository       $carteRepository)
     {
-        $this->carteRepository = new CarteRepository();
-        $this->utilisateurRepository = new UtilisateurRepository();
-        $this->tableauRepository = new TableauRepository();
     }
 
     /**

@@ -12,6 +12,7 @@ use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,21 +20,30 @@ use Symfony\Component\HttpFoundation\Request;
 class ControleurCarte extends ControleurGenerique
 {
 
-    public static function afficherErreur($messageErreur = "", $controleur = ""): Response
+    public function __construct(ContainerInterface         $container,
+                                private ServiceConnexion   $serviceConnexion,
+                                private ServiceCarte       $serviceCarte,
+                                private ServiceUtilisateur $serviceUtilisateur,
+                                private ServiceColonne     $serviceColonne)
+    {
+        parent::__construct($container);
+    }
+
+    public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         return parent::afficherErreur($messageErreur, "carte");
     }
 
-    #[Route('/carte/suprression', name: 'supprimerCarte',methods: "GET")]
-    public static function supprimerCarte(): Response
+    #[Route('/carte/suprression', name: 'supprimerCarte', methods: "GET")]
+    public function supprimerCarte(): Response
     {
         $idCarte = $_REQUEST["idCarte"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $carte = (new ServiceCarte())->recupererCarte($idCarte);
+            $this->serviceConnexion->pasConnecter();
+            $carte = $this->serviceCarte->recupererCarte($idCarte);
             $tableau = $carte->getColonne()->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            $cartes = (new ServiceCarte())->supprimerCarte($tableau, $idCarte);
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $cartes = $this->serviceCarte->supprimerCarte($tableau, $idCarte);
             if (count($cartes) > 0) {
                 return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
@@ -50,16 +60,16 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/nouveau', name: 'afficherFormulaireCreationCarte',methods: "GET")]
-    public static function afficherFormulaireCreationCarte(): Response
+    #[Route('/carte/nouveau', name: 'afficherFormulaireCreationCarte', methods: "GET")]
+    public function afficherFormulaireCreationCarte(): Response
     {
         $idColonne = $_REQUEST['idColonne'] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
             return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'une carte",
                 "cheminVueBody" => "carte/formulaireCreationCarte.php",
@@ -77,8 +87,8 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/nouveau', name: 'creerCarte',methods: "POST")]
-    public static function creerCarte(): Response
+    #[Route('/carte/nouveau', name: 'creerCarte', methods: "POST")]
+    public function creerCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         $attributs = [
@@ -88,12 +98,12 @@ class ControleurCarte extends ControleurGenerique
             "affectationsCarte" => $_REQUEST["affectationsCarte"] ?? null,
         ];
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
-            (new ServiceCarte())->recupererAttributs($attributs);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonne($idColonne);
+            $this->serviceCarte->recupererAttributs($attributs);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            (new ServiceCarte())->creerCarte($tableau, $attributs, $colonne);
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceCarte->creerCarte($tableau, $attributs, $colonne);
             return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -109,16 +119,16 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/mettreAJour', name: 'afficherFormulaireMiseAJourCarte',methods: "GET")]
-    public static function afficherFormulaireMiseAJourCarte(): Response
+    #[Route('/carte/mettreAJour', name: 'afficherFormulaireMiseAJourCarte', methods: "GET")]
+    public function afficherFormulaireMiseAJourCarte(): Response
     {
         $idCarte = $_REQUEST['idCarte'] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $carte = (new ServiceCarte())->recupererCarte($idCarte);
+            $this->serviceConnexion->pasConnecter();
+            $carte = $this->serviceCarte->recupererCarte($idCarte);
             $tableau = $carte->getColonne()->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            $colonnes = (new ServiceColonne())->recupererColonnesTableau($tableau->getIdTableau());
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
             return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'une carte",
                 "cheminVueBody" => "carte/formulaireMiseAJourCarte.php",
@@ -136,8 +146,8 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
-    #[Route('/carte/mettreAJour', name: 'mettreAJourCarte',methods: "POST")]
-    public static function mettreAJourCarte(): Response
+    #[Route('/carte/mettreAJour', name: 'mettreAJourCarte', methods: "POST")]
+    public function mettreAJourCarte(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         $idCarte = $_REQUEST["idCarte"] ?? null;
@@ -148,12 +158,12 @@ class ControleurCarte extends ControleurGenerique
             "affectationsCarte" => $_REQUEST["affectationsCarte"] ?? null,
         ];
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
-            $carte = (new ServiceCarte())->verificationsMiseAJourCarte($idCarte, $colonne, $attributs);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonne($idColonne);
+            $carte = $this->serviceCarte->verificationsMiseAJourCarte($idCarte, $colonne, $attributs);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            (new ServiceCarte())->miseAJourCarte($tableau, $attributs, $carte, $colonne);
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceCarte->miseAJourCarte($tableau, $attributs, $carte, $colonne);
             return ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);

@@ -19,27 +19,39 @@ use App\Trellotrolle\Service\ServiceColonne;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceTableau;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControleurColonne extends ControleurGenerique
 {
-    public static function afficherErreur($messageErreur = "", $controleur = ""): \Symfony\Component\HttpFoundation\Response
+
+    public function __construct(ContainerInterface         $container,
+                                private ServiceConnexion   $serviceConnexion,
+                                private ServiceColonne     $serviceColonne,
+                                private ServiceUtilisateur $serviceUtilisateur,
+                                private ServiceTableau     $serviceTableau)
+    {
+        parent::__construct($container);
+
+    }
+
+    public function afficherErreur($messageErreur = "", $controleur = ""): \Symfony\Component\HttpFoundation\Response
     {
         return parent::afficherErreur($messageErreur, "colonne");
     }
 
-    #[Route('/colonne/suppression', name: 'supprimerColonne',methods: "GET")]
-    public static function supprimerColonne(): Response
+    #[Route('/colonne/suppression', name: 'supprimerColonne', methods: "GET")]
+    public function supprimerColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            $nbColonnes = (new ServiceColonne())->supprimerColonne($tableau, $idColonne);
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $nbColonnes = $this->serviceColonne->supprimerColonne($tableau, $idColonne);
             if ($nbColonnes > 0) {
                 return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
@@ -56,14 +68,14 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
-    #[Route('/colonne/nouveau', name: 'afficherFormulaireCreationColonne',methods: "GET")]
-    public static function afficherFormulaireCreationColonne(): Response
+    #[Route('/colonne/nouveau', name: 'afficherFormulaireCreationColonne', methods: "GET")]
+    public function afficherFormulaireCreationColonne(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
-            (new ServiceUtilisateur())->estParticipant($tableau);
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $this->serviceUtilisateur->estParticipant($tableau);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
@@ -80,17 +92,17 @@ class ControleurColonne extends ControleurGenerique
         ]);
     }
 
-    #[Route('/colonne/nouveau', name: 'creerColonne',methods: "POST")]
-    public static function creerColonne(): Response
+    #[Route('/colonne/nouveau', name: 'creerColonne', methods: "POST")]
+    public function creerColonne(): Response
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
         $nomColonne = $_REQUEST["nomColonne"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $tableau = (new ServiceTableau())->recupererTableauParId($idTableau);
-            (new ServiceColonne())->isSetNomColonne($nomColonne);
-            (new ServiceUtilisateur())->estParticipant($tableau);
-            $colonne = (new ServiceColonne())->creerColonne($tableau, $nomColonne);
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $this->serviceColonne->isSetNomColonne($nomColonne);
+            $this->serviceUtilisateur->estParticipant($tableau);
+            $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
@@ -107,15 +119,15 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
-    #[Route('/colonne/mettreAJour', name: 'afficherFormulaireMiseAJourColonne',methods: "GET")]
-    public static function afficherFormulaireMiseAJourColonne(): Response
+    #[Route('/colonne/mettreAJour', name: 'afficherFormulaireMiseAJourColonne', methods: "GET")]
+    public function afficherFormulaireMiseAJourColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonne($idColonne);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau);
             return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'une colonne",
                 "cheminVueBody" => "colonne/formulaireMiseAJourColonne.php",
@@ -134,18 +146,18 @@ class ControleurColonne extends ControleurGenerique
 
     }
 
-    #[Route('/colonne/mettreAJour', name: 'mettreAJourColonne',methods: "POST")]
-    public static function mettreAJourColonne(): Response
+    #[Route('/colonne/mettreAJour', name: 'mettreAJourColonne', methods: "POST")]
+    public function mettreAJourColonne(): Response
     {
         $idColonne = $_REQUEST["idColonne"] ?? null;
         $nomColonne = $_REQUEST["nomColonne"] ?? null;
         try {
-            (new ServiceConnexion())->pasConnecter();
-            $colonne = (new ServiceColonne())->recupererColonneAndNomColonne($idColonne, $nomColonne);
+            $this->serviceConnexion->pasConnecter();
+            $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
-            (new ServiceUtilisateur())->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau);
             $colonne->setTitreColonne($nomColonne);
-            (new ServiceColonne())->miseAJourColonne($colonne);
+            $this->serviceColonne->miseAJourColonne($colonne);
             return ControleurColonne::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);

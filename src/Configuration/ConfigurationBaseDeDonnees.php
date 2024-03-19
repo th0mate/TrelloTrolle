@@ -5,7 +5,7 @@ namespace App\Trellotrolle\Configuration;
 class ConfigurationBaseDeDonnees {
 
 	//Informations de connexion pour le serveur PostgreSQL SAE de l'IUT
-    static private array $configurationBaseDeDonnees = array(
+    private array $configurationBaseDeDonnees = array(
         'nomHote' => '162.38.222.142',
         'nomBaseDeDonnees' => 'iut',
         'port' => '5673',
@@ -13,24 +13,24 @@ class ConfigurationBaseDeDonnees {
         'motDePasse' => 'marine2022'
     );
 
-    static public function getLogin() : string {
-        return ConfigurationBaseDeDonnees::$configurationBaseDeDonnees['login'];
+    public function getLogin() : string {
+        return $this->configurationBaseDeDonnees['login'];
     }
 
-    static public function getNomBaseDeDonnees() : string {
-        return ConfigurationBaseDeDonnees::$configurationBaseDeDonnees['nomBaseDeDonnees'];
+    public function getNomBaseDeDonnees() : string {
+        return $this->configurationBaseDeDonnees['nomBaseDeDonnees'];
     }
 
-    static public function getPort() : string {
-        return ConfigurationBaseDeDonnees::$configurationBaseDeDonnees['port'];
+    public function getPort() : string {
+        return $this->configurationBaseDeDonnees['port'];
     }
 
-    static public function getNomHote() : string {
-        return ConfigurationBaseDeDonnees::$configurationBaseDeDonnees['nomHote'];
+    public function getNomHote() : string {
+        return $this->configurationBaseDeDonnees['nomHote'];
     }
 
-    static public function getMotDePasse() : string {
-        return ConfigurationBaseDeDonnees::$configurationBaseDeDonnees['motDePasse'];
+    public function getMotDePasse() : string {
+        return $this->configurationBaseDeDonnees['motDePasse'];
     }
 
 }
