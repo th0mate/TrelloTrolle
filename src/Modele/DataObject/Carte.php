@@ -23,26 +23,14 @@ class Carte extends AbstractDataObject
         );
     }
 
-    public function getIdColonne(): int
+    public function getColonne(): int
     {
         return $this->idColonne;
     }
 
-    public function setIdColonne(int $idColonne): void
-    {
-        $this->idColonne = $idColonne;
-    }
-
-
-
-    public function getColonne(): Colonne
-    {
-        return $this->colonne;
-    }
-
     public function setColonne(Colonne $colonne): void
     {
-        $this->colonne = $colonne;
+        $this->idColonne = $colonne->getIdColonne();
     }
 
 

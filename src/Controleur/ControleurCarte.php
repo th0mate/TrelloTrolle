@@ -38,7 +38,7 @@ class ControleurCarte extends ControleurGenerique
             ControleurCarte::redirection("base", "accueil");
         }
 
-        $tableau = ColonneRepository::getTableau($carte->getColonne());
+        $tableau = ColonneRepository::getTableau(CarteRepository::getColonne($carte));
 
         if(!TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
@@ -164,7 +164,7 @@ class ControleurCarte extends ControleurGenerique
             MessageFlash::ajouter("warning", "Carte inexistante");
             ControleurCarte::redirection("base", "accueil");
         }
-        $tableau = ColonneRepository::getTableau($carte->getColonne());
+        $tableau = ColonneRepository::getTableau(CarteRepository::getColonne($carte));
         if(!TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
             MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
             ControleurCarte::redirection("tableau", "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
@@ -215,7 +215,7 @@ class ControleurCarte extends ControleurGenerique
             ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
         }
 
-        $originalColonne = $carte->getColonne();
+        $originalColonne = CarteRepository::getColonne($carte);
         if(ColonneRepository::getTableau($originalColonne)->getIdTableau() !== ColonneRepository::getTableau($colonne)->getIdTableau()) {
             MessageFlash::ajouter("danger", "Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
             ControleurColonne::redirection("carte", "afficherFormulaireMiseAJourCarte", ["idCarte" => $_REQUEST["idCarte"]]);
