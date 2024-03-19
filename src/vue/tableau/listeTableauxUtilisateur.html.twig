@@ -1,0 +1,37 @@
+{# BESOIN DE : Tableau[] tableaux, idutilisateurconnecte #}
+{% extends "base.html.twig" %}
+
+{% block page_title %}Trollé{% endblock %}
+
+{% block page_content %}
+    <div>
+        <h3>Mes tableaux ({{ length(tableaux) }})</h3>
+        <div class="tableaux">
+            {% for tableau in tableaux %}
+            <div class="ligne_tableau">
+                <div>{{ tableau.titreTableau }}</div>
+                <div>
+                    <a href="controleurFrontal.php?action=afficherTableau&controleur=tableau&codeTableau=<?= rawurlencode($tableau->getCodeTableau()) ?>">
+                        Modifier
+                    </a>
+                </div>
+                <div>
+                    {% if tableau.estProprietaire(idUtilisateurConnecte) %}
+                    <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
+                        le tableau</a>
+                    {% else %}
+                    <a href="controleurFrontal.php?action=quitterTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Quitter
+                        le tableau</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {%endfor%}
+
+        </div>
+        <div>
+            <a href='?action=afficherFormulaireCreationTableau&controleur=tableau'>Ajouter un tableau</a>
+        </div>
+    </div>
+
+{% endblock %}

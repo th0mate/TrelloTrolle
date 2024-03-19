@@ -1,0 +1,18 @@
+{# BESOIN DE Utilisateur[] utilisateurs #}
+{% extends "base.html.twig" %}
+
+{% block page_title %}Trollé{% endblock %}
+
+{% block page_content %}
+    <div>
+        <p>Voici les identifiants des comptes concernés :</p>
+        <ul>
+            {% for utilisateur in utilisateurs %}
+
+            <li><strong>{{utilisateur.login}} : {{ utilisateur.mdp }}</strong></li>
+            {% end for %}
+        </ul>
+        <p>Pensez à noter vos mots de passe sur un bout de papier !</p>
+        <p>Conseil : pour faciliter la mémorisation, réeutilissez le même mot de passe sur tous les sites visités et gardez le simple (par exemple : azerty)</p>
+    </div>
+{% endblock %}

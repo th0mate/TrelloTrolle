@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block page_title %}Trollé{% endblock %}</title>
+    <link rel="stylesheet" href="../ressources/css/navstyle.css"> <!--TODO into asset-->
+    <link rel="stylesheet" href="../ressources/css/trellostyle.css">  <!--TODO into asset-->
+
+</head>
+
+<body>
+<header>
+    <nav>
+        <ul>
+            <li>
+                <a href="controleurFrontal.php?action=accueil&controleur=base">Accueil</a>  <!--TODO into route-->
+            </li>
+            {% if idUtilisateurConnecte is not null %}
+            <?php
+            if (!ConnexionUtilisateur::estConnecte()) {
+                ?>
+            <li>
+                <a href="controleurFrontal.php?action=afficherFormulaireConnexion&controleur=utilisateur">  <!--TODO into asset-->
+                    Connexion <img alt="login" src="../ressources/img/enter.png" >
+                </a>
+            </li>
+            <li>
+                <a href="controleurFrontal.php?action=afficherFormulaireCreation&controleur=utilisateur">  <!--TODO into route-->
+                    Inscription <img alt="S'inscrire" title="S'inscrire" src="../ressources/img/add-user.png" >  <!--TODO into asset-->
+                </a>
+            </li>
+            {% else %}
+
+            <li>
+                <a href="controleurFrontal.php?action=afficherListeMesTableaux&controleur=tableau">Mes tableaux</a>
+            </li>
+            <li>
+                <a href="controleurFrontal.php?action=afficherDetail&controleur=utilisateur&login=">  <!--TODO into route-->
+                    Mon compte (<span>{{ loginUrl }}</span>) <img alt="logout" src="../ressources/img/user.png">  <!--TODO into asset-->
+                </a>
+            </li>
+            <li>
+                <a href="controleurFrontal.php?action=deconnecter&controleur=utilisateur"> <!--TODO into route-->
+                    Déconnexion <img alt="logout" src="../ressources/img/logout.png"> <!--TODO into asset-->
+                </a>
+            </li>
+            {% endif %}
+            <?php %} ?>
+        </ul>
+    </nav>
+    <div>
+        {% for type in ['success','info', 'warning', 'danger'] %}
+            {% for messageFlash in messageFlash.lireMessages(type) %}
+            <div class="alert alert-{{ type }}">{{ messageFlash }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</header>
+<main>
+    {% block page_content %}
+    {% endblock %}
+</main>
+
+<footer>
+    <p>
+        Copyright Trello-Trollé Company
+    </p>
+</footer>
+</body>
+</html>

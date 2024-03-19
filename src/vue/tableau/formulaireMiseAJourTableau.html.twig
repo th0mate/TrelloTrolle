@@ -1,0 +1,24 @@
+{# BESOIN DE idTableau, nomTableau #}
+{% extends "base.html.twig" %}
+
+{% block page_title %}Trollé{% endblock %}
+
+{% block page_content %}
+    <div>
+        <form method="post" action="controleurFrontal.php">
+            <fieldset>
+                <h3>Modification d'un tableau :</h3>
+                <p>
+                    <label for="nomTableau">Nom du tableau&#42;</label> :
+                    <input type="text" placeholder="Mon super tableau" name="nomTableau" id="nomTableau" minlength="3" maxlength="50" value='{{ nomTableau }}' required>
+                </p>
+                <input type='hidden' name='idTableau' value='{{ idTableau }}'>
+                <input type='hidden' name='action' value='mettreAJourTableau'>
+                <input type='hidden' name='controleur' value='tableau'>
+                <p>
+                    <input type="submit" value="Modifier le tableau">
+                </p>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}
