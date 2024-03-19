@@ -5,25 +5,35 @@ namespace App\Trellotrolle\Modele\DataObject;
 class Carte extends AbstractDataObject
 {
     public function __construct(
-        private Colonne $colonne,
         private int $idCarte,
         private string $titreCarte,
         private string $descriptifCarte,
         private string $couleurCarte,
-        private array $affectationsCarte,
+        private int $idColonne,
     )
     {}
 
     public static function construireDepuisTableau(array $objetFormatTableau) : Carte {
         return new Carte(
-            Colonne::construireDepuisTableau($objetFormatTableau),
             $objetFormatTableau["idcarte"],
             $objetFormatTableau["titrecarte"],
             $objetFormatTableau["descriptifcarte"],
             $objetFormatTableau["couleurcarte"],
-            Utilisateur::construireUtilisateursDepuisJson($objetFormatTableau["affectationscarte"])
+            $objetFormatTableau["idcolonne"],
         );
     }
+
+    public function getIdColonne(): int
+    {
+        return $this->idColonne;
+    }
+
+    public function setIdColonne(int $idColonne): void
+    {
+        $this->idColonne = $idColonne;
+    }
+
+
 
     public function getColonne(): Colonne
     {
@@ -34,6 +44,7 @@ class Carte extends AbstractDataObject
     {
         $this->colonne = $colonne;
     }
+
 
     public function getIdCarte(): ?int
     {
@@ -75,27 +86,14 @@ class Carte extends AbstractDataObject
         $this->couleurCarte = $couleurCarte;
     }
 
-    public function getAffectationsCarte(): ?array
-    {
-        return $this->affectationsCarte;
-    }
-
-    public function setAffectationsCarte(?array $affectationsCarte): void
-    {
-        $this->affectationsCarte = $affectationsCarte;
-    }
-
     public function formatTableau(): array
     {
-        return array_merge(
-            $this->colonne->formatTableau(),
-            array(
+        return array(
                 "idcarteTag" => $this->idCarte,
                 "titrecarteTag" => $this->titreCarte,
                 "descriptifcarteTag" => $this->descriptifCarte,
                 "couleurcarteTag" => $this->couleurCarte,
-                "affectationscarteTag" => Utilisateur::formatJsonListeUtilisateurs($this->affectationsCarte)
-            ),
+                "idcolonneTag" => $this->idColonne,
         );
     }
 
