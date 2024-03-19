@@ -49,6 +49,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);
+            /** TODO TWIG */
             return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "{$tableau->getTitreTableau()}",
                 "cheminVueBody" => "tableau/tableau.php",
@@ -73,9 +74,13 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceUtilisateur->estParticipant($tableau);
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'un tableau",
                 "cheminVueBody" => "tableau/formulaireMiseAJourTableau.php",
+                "idTableau" => $_REQUEST["idTableau"],
+                "nomTableau" => $tableau->getTitreTableau()
+            ]);*/
+            return $this->afficherTwig('tableau/formulaireMiseAJourTableau.html.twig',[
                 "idTableau" => $_REQUEST["idTableau"],
                 "nomTableau" => $tableau->getTitreTableau()
             ]);
@@ -95,10 +100,11 @@ class ControleurTableau extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Ajout d'un tableau",
                 "cheminVueBody" => "tableau/formulaireCreationTableau.php",
-            ]);
+            ]);*/
+            return $this->afficherTwig('tableau/formulaireCreationTableau.html.twig');
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -156,9 +162,13 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $filtredUtilisateurs = $this->serviceUtilisateur->verificationsMembre($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Ajout d'un membre",
                 "cheminVueBody" => "tableau/formulaireAjoutMembreTableau.php",
+                "tableau" => $tableau,
+                "utilisateurs" => $filtredUtilisateurs
+            ]);*/
+            return $this->afficherTwig('tableau/formulaireAjoutMembreTableau.html.twig',[
                 "tableau" => $tableau,
                 "utilisateurs" => $filtredUtilisateurs
             ]);
@@ -224,11 +234,12 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
             $tableaux = $this->serviceTableau->recupererTableauEstMembre($login);
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Liste des tableaux de $login",
                 "cheminVueBody" => "tableau/listeTableauxUtilisateur.php",
                 "tableaux" => $tableaux
-            ]);
+            ]);*/
+            return $this->afficherTwig('tableau/listeTableauxUtilisateur.html.twig',["tableaux" => $tableaux, "loginUtilisateurConnecte" => $login]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }

@@ -1,4 +1,4 @@
-{# BESOIN DE : Tableau[] tableaux, idutilisateurconnecte #}
+{# BESOIN DE : Tableau[] tableaux, loginUtilisateurconnecte #}
 {% extends "base.html.twig" %}
 
 {% block page_title %}Trollé{% endblock %}
@@ -16,7 +16,7 @@
                     </a>
                 </div>
                 <div>
-                    {% if tableau.estProprietaire(idUtilisateurConnecte) %}
+                    {% if tableau.estProprietaire(loginUtilisateurConnecte) %}
                     <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
                         le tableau</a>
                     {% else %}

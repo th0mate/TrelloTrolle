@@ -79,4 +79,12 @@ class ControleurGenerique {
         MessageFlash::ajouter("info", $e->getMessage());
         return self::redirection("utilisateur", "afficherFormulaireConnexion");
     }
+    protected function afficherTwig(string $cheminVue, array $parametres = []): Response
+    {
+        /** @var Environment $twig */
+        $twig = $this->container->get("twig");
+        $corpsReponse = $twig->render($cheminVue, $parametres);
+        return new Response($corpsReponse);
+    }
+
 }
