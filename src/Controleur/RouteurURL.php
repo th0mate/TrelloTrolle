@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\UrlHelper;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\Conteneur;
 use App\Trellotrolle\Lib\MessageFlash;
+use TheFeed\Lib\ConnexionUtilisateurSession;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
@@ -68,6 +69,20 @@ class RouteurURL
 
         $contexteRequete = $conteneur->get('request_context');
         $conteneur->set("container",$conteneur);
+
+        $assistantUrl = $conteneur->get("url_helper");
+        $generateurUrl = $conteneur->get("url_generator");
+
+        $twigLoader = new FilesystemLoader(__DIR__ . '/../vue/');
+        $twig = $conteneur->get('twig');
+        $twig->addFunction(new TwigFunction("route",function ($name,$parameters=[]) use ($generateurUrl){
+            return $generateurUrl->generate($name,$parameters);
+        }));
+        $twig->addFunction(new TwigFunction("asset",function ($path) use ($assistantUrl){
+            return $assistantUrl->getAbsoluteUrl($path);
+        }));
+
+        $twig->addGlobal("messagesFlash",new MessageFlash());
 
 
         $controleurGenerique=$conteneur->get("controleur_generique");
