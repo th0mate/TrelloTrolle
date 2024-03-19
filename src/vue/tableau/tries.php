@@ -51,7 +51,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 </div>
 
                 <!-- Stockage des cartes -->
-                <div class="stockage" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
+                <div class="stockage" data-htmlfun="formulaireAjoutCarte.afficherCarte()" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
                     <?php
                     foreach ($data[$i] as $carte) {
                         ?>

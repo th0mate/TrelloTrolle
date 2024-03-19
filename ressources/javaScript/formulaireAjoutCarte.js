@@ -8,16 +8,22 @@ let formulaireAjoutCarte = reactive({
 
     envoyerFormulaire: function () {
         this.idColonne = document.querySelector('.idColonne').value;
-        console.log('idColonne :' + this.idColonne);
-        console.log("Titre : " + this.titre);
-        console.log("Description : " + this.description);
-        console.log("Couleur : " + this.couleur);
-
+        /*
         if (this.titre !== '') {
             //TODO : AJAX
         }
+        */
+        //this.ajouterCarte();
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
         document.querySelector('.all').style.opacity = 1;
+    },
+
+    ajouterCarte: function () {
+        return `<div class="card" draggable="true" data-colmuns="${this.idColonne}">
+            <span class="color" style="border: 5px solid ${this.couleur}"></span>
+            ${this.titre}
+            <div class="features"></div>
+        </div>`;
     }
 
 }, "formulaireAjoutCarte");
