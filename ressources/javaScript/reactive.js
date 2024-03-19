@@ -108,6 +108,17 @@ function startReactiveDom(subDom = document) {
             }
         });
     }
+    for (let rel of document.querySelectorAll("[data-reactiveInput]")) {
+        const [obj, prop] = rel.dataset.reactiveinput.split('.');
+        rel.addEventListener('input', (event) => {
+            objectByName.get(obj)[prop] = event.target.value;
+        });
+        applyAndRegister(() => {
+            rel.value = objectByName.get(obj)[prop];
+        });
+
+
+    }
 }
 
 export {applyAndRegister, reactive, startReactiveDom};

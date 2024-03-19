@@ -23,7 +23,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 
 <div class="all">
 
-    <div class="infos">
+    <div class="infos" data-onclick="formulaireAjoutCarte.envoyerFormulaire">
         <h3><?= htmlspecialchars($tableau->getTitreTableau()) ?></h3>
         <div class="allUsers">
             <h4>Collaborateurs :</h4>
@@ -103,7 +103,33 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 
 </div>
 
+<div class="formulaireCreationCarte">
+    <div class="wrap"><h2>Création d'une carte</h2><img class="closeCard" src="../tests/close.png" alt=""></div>
+    <input type="hidden" class="idColonne" data-reactiveInput="formulaireAjoutCarte.idColonne">
+    <div class="content"><h4>Titre de la carte :</h4>
+        <input maxlength="50" required
+               data-reactiveInput="formulaireAjoutCarte.titre" type="text"
+               class="inputCreationCarte"
+               placeholder="Entrez le titre de la carte">
+    </div>
+    <div class="content"><h4>Description de la carte :</h4>
+        <textarea maxlength="255"
+                  data-reactiveInput="formulaireAjoutCarte.description"
+                  class="desc"
+                  placeholder="Description de la carte...">
+        </textarea>
+    </div>
+    <div class="content"><h4>Couleur de la carte :</h4>
+        <input required type="color"
+               data-reactiveInput="formulaireAjoutCarte.couleur">
+        </div>
+        <div class="content"><h4>Membres affectés :</h4>
+            <input type="text">
+        </div>
+        <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
+    </div>
 
-<script type="text/javascript" src="../tests/tableaux.js" defer></script>
+
+    <script type="text/javascript" src="../tests/tableaux.js" defer></script>
 </body>
 </html>

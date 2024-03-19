@@ -428,20 +428,12 @@ function ajouterCarte(id, value, color = 'white') {
  */
 function afficherFormulaireCreationCarte(id, pourModifier = false) {
 
-    const html = '<div class="formulaireCreationCarte">' +
-        '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="../tests/close.png" alt=""></div>' +
-        '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required data-textvar="formulaireAjoutCarte.titre" type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
-        '<div class="content"><h4>Description de la carte :</h4><textarea maxlength="255" data-textvar="formulaireAjoutCarte.description" class="desc" placeholder="Description de la carte..." ></textarea></div>' +
-        '<div class="content"><h4>Couleur de la carte :</h4><input required type="color" data-textvar="formulaireAjoutCarte.couleur"></div>' +
-        '<div class="content"><h4>Membres affectés :</h4><input type="text"></div>' +
-        '<div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire()">Créer</div>' +
-        '</div>';
-
-    document.body.insertAdjacentHTML('beforeend', html);
+    document.querySelector('.formulaireCreationCarte').style.display = "flex";
+    //TODO : passer en paramètre l'id de la colonne ciblée et l'id de la carte
+    document.querySelector('.idColonne').value = id;
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';
     });
-
     addListenersAjoutCard(id);
 }
 
@@ -455,33 +447,30 @@ function addListenersAjoutCard(id) {
         closeCard.parentNode.replaceChild(newCloseCard, closeCard);
 
         newCloseCard.addEventListener('click', function () {
-            document.querySelector('.formulaireCreationCarte').remove();
+            document.querySelector('.formulaireCreationCarte').style.display = "none";
+
+            document.querySelector('.inputCreationCarte').value = '';
+            document.querySelector('.desc').value = '';
+            document.querySelector('input[type="color"]').value = '#ffffff';
             document.querySelectorAll('.all').forEach(el => {
                 el.style.opacity = '1';
             });
         });
     });
+}
 
-    document.querySelectorAll('.boutonCreation').forEach(function (boutonCreation) {
-        let newBoutonCreation = boutonCreation.cloneNode(true);
-        boutonCreation.parentNode.replaceChild(newBoutonCreation, boutonCreation);
+function fermeFormulaireEtAjouteCarte(id) {
+    const titre = document.querySelector('.inputCreationCarte').value;
+    const description = document.querySelector('.desc').value;
+    const couleur = document.querySelector('input[type="color"]').value;
 
-        newBoutonCreation.addEventListener('click', function () {
-            const titre = document.querySelector('.inputCreationCarte').value;
-            const description = document.querySelector('.desc').value;
-            const couleur = document.querySelector('input[type="color"]').value;
-            //TODO : AJAX ICI
-            if (titre !== '') {
-                ajouterCarte(id, titre, couleur);
-            }
+    if (titre !== '') {
+        ajouterCarte(id, titre, couleur);
+    }
 
-            if (document.querySelector('.formulaireCreationCarte')) {
-                document.querySelector('.formulaireCreationCarte').remove();
-            }
-            document.querySelectorAll('.all').forEach(el => {
-                el.style.opacity = '1';
-            });
-        });
+    document.querySelector('.formulaireCreationCarte').style.display = "none";
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '1';
     });
 }
 
