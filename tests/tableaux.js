@@ -1,3 +1,5 @@
+
+
 /**
  * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP SUR LES COLONNES
@@ -430,11 +432,11 @@ function afficherFormulaireCreationCarte(id, pourModifier = false) {
 
     const html = '<div class="formulaireCreationCarte">' +
         '<div class="wrap"><h2>Création d\'une carte</h2><img class="closeCard" src="../tests/close.png" alt=""></div>' +
-        '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required data-textvar="TableauxDatas.titre" type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
-        '<div class="content"><h4>Description de la carte :</h4><textarea maxlength="255" data-textvar="TableauxDatas.description" class="desc" placeholder="Description de la carte..." ></textarea></div>' +
-        '<div class="content"><h4>Couleur de la carte :</h4><input required type="color" data-textvar="TableauxDatas.couleur"></div>' +
+        '<div class="content"><h4>Titre de la carte :</h4><input maxlength="50" required data-textvar="formulaireAjoutCarte.titre" type="text" class="inputCreationCarte" placeholder="Entrez le titre de la carte"></div>' +
+        '<div class="content"><h4>Description de la carte :</h4><textarea maxlength="255" data-textvar="formulaireAjoutCarte.description" class="desc" placeholder="Description de la carte..." ></textarea></div>' +
+        '<div class="content"><h4>Couleur de la carte :</h4><input required type="color" data-textvar="formulaireAjoutCarte.couleur"></div>' +
         '<div class="content"><h4>Membres affectés :</h4><input type="text"></div>' +
-        '<div class="boutonCreation" data-onclick="TableauxDatas.creerNouvelleCarte()">Créer</div>' +
+        '<div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire()">Créer</div>' +
         '</div>';
 
     document.body.insertAdjacentHTML('beforeend', html);

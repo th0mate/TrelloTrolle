@@ -17,6 +17,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="../tests/tests.css">
+    <script type="module" src="../ressources/javaScript/formulaireAjoutCarte.js" defer></script>
 </head>
 <body>
 
@@ -31,7 +32,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 echo '<span class="user">' . ($user["infos"]->getPrenom())[0] . ($user["infos"]->getNom())[0] . '</span>';
             }
             ?>
-            <div class="invite">Partager <img src="../tests/inviter.png" alt=""> </div>
+            <div class="invite">Partager <img src="../tests/inviter.png" alt=""></div>
         </div>
     </div>
 
@@ -101,6 +102,8 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
     </div>
 
 </div>
+
+
 <script type="text/javascript" src="../tests/tableaux.js" defer></script>
 </body>
 </html>
