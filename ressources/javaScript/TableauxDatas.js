@@ -1,12 +1,12 @@
-import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {applyAndRegister, reactive, startReactiveDom} from './reactive.js';
 
-let tableauxDatas = reactive({
+let TableauxDatas = reactive({
+    titreTableau: '',
+    colonnes: [],
+    cartes: [],
+    participants: [],
 
-    supprimerCarte: function (idCarte) {
-        return document.getElementById('c' + idCarte).remove();
-    }
-
-}, "tableauxDatas");
+}, 'tableau');
 
 applyAndRegister(() => {
 });
