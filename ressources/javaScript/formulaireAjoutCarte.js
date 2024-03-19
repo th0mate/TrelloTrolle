@@ -1,5 +1,3 @@
-
-
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 
 let formulaireAjoutCarte = reactive({
@@ -15,10 +13,16 @@ let formulaireAjoutCarte = reactive({
         console.log("Description : " + this.description);
         console.log("Couleur : " + this.couleur);
 
+        if (this.titre !== '') {
+            //TODO : AJAX
+        }
+        document.querySelector('.formulaireCreationCarte').style.display = 'none';
+        document.querySelector('.all').style.opacity = 1;
     }
 
 }, "formulaireAjoutCarte");
 
-applyAndRegister(() => {});
+applyAndRegister(() => {
+});
 
 startReactiveDom();
