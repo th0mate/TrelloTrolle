@@ -139,8 +139,9 @@ class TableauRepository extends AbstractRepository
 
     public function getUtilisateur(): Utilisateur
     {
-        $query = "SELECT {$this->formatNomsColonnes()} FROM {$this->getNomTable()} WHERE
-        idtableau = {$this->getNomCle()}";
+        $query = "SELECT (new UtilisateurRepository())->formatNomsColonnes()
+        FROM {$this->getNomTable()} t JOIN utilisateur u
+        ON u.idlogin=t.idlogin WHERE idtableau = {$this->getNomCle()}";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
         $pdoStatement->execute();
         $obj = $pdoStatement->fetch();
