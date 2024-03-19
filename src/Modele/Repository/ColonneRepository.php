@@ -4,14 +4,17 @@ namespace App\Trellotrolle\Modele\Repository;
 
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use Exception;
 
 class ColonneRepository extends AbstractRepository
 {
 
+
     protected function getNomTable(): string
     {
-        return "app_db";
+        return "colonne";
     }
 
     protected function getNomCle(): string
@@ -22,9 +25,7 @@ class ColonneRepository extends AbstractRepository
     protected function getNomsColonnes(): array
     {
         return [
-            "login", "nom", "prenom", "email", "mdphache",
-            "mdp", "idtableau", "codetableau", "titretableau",
-            "participants", "idcolonne", "titrecolonne"
+            "idcolonne", "titrecolonne", "idtableau"
         ];
     }
 
@@ -42,7 +43,7 @@ class ColonneRepository extends AbstractRepository
     }
 
     public function getNombreColonnesTotalTableau(int $idTableau) : int {
-        $query = "SELECT COUNT(DISTINCT idcolonne) FROM app_db WHERE idtableau=:idTableau";
+        $query = "SELECT COUNT(DISTINCT idcolonne) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
         $obj = $pdoStatement->fetch();
@@ -55,6 +56,18 @@ class ColonneRepository extends AbstractRepository
     public function ajouter(AbstractDataObject $object): bool
     {
         throw new Exception("Impossible d'ajouter seulement une colonne...");
+    }
+
+    public function getTableau(): Tableau
+    {
+        $formatNomsColonnes=(new TableauRepository())->formatNomsColonnes();
+        $query = "SELECT $formatNomsColonnes
+        FROM {$this->getNomTable()} t JOIN tableau ta
+        ON u.idtableau=ta.idtableau WHERE idcolonne = {$this->getNomCle()}";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement->execute();
+        $obj = $pdoStatement->fetch();
+        return Tableau::construireDepuisTableau($obj);
     }
 
 
