@@ -9,6 +9,7 @@ use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
+use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceTableau;
 use PHPUnit\Framework\TestCase;
 class ServiceTableauTest extends TestCase
@@ -43,7 +44,7 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererCartesColonnes()
     {
-
+        //TODO Pas fini
         $fakeColonne=new Colonne($this->creerTableauEtUtilisateurFake(),"-1","fake",);
         $this->colonneRepository->method("recupererColonnesTableau")->willReturn($fakeColonne);
 
@@ -51,9 +52,28 @@ class ServiceTableauTest extends TestCase
 
     /** recupererTableauEstMembre */
 
+    public function testRecupererTableauEstMembre()
+    {
+        //TODO sans doute à revoir
+        $utilisateur=new Utilisateur("test","test","test","test@test.fr","test","test");
+        $fakesTableaux=[$this->creerTableauEtUtilisateurFake($utilisateur),$this->creerTableauEtUtilisateurFake($utilisateur,2)];
+        $this->tableauRepository->method("recupererTableauxOuUtilisateurEstMembre")->willReturn($fakesTableaux);
+        self::assertCount(2,$this->serviceTableau->recupererTableauEstMembre("kk"));
+    }
+
     /** isNotNullNomTableau */
 
-
+    public function testIsNotNullNomTableauNull()
+    {
+        $this->expectException(TableauException::class);
+        $this->expectExceptionMessage("Nom de tableau manquant");
+        $nomTableau=null;
+        $this->serviceTableau->isNotNullNomTableau($nomTableau,$this->creerTableauEtUtilisateurFake());
+    }
+    public function testIsNotNullNomTableauValide()
+    {
+        $this->serviceTableau->isNotNullNomTableau("Bonjour",$this->creerTableauEtUtilisateurFake());
+    }
 
     /** recupererTableauParCode */
 
@@ -104,7 +124,8 @@ class ServiceTableauTest extends TestCase
     }
 
 
-    private function creerTableauEtUtilisateurFake($utilisateur = ""): Tableau
+    /** Fonctions utilitaires */
+    private function creerTableauEtUtilisateurFake($utilisateur = "",$id=1): Tableau
     {
         if ($utilisateur==""){
             $utilisateur=new Utilisateur(
@@ -118,8 +139,8 @@ class ServiceTableauTest extends TestCase
         }
         return new Tableau(
             $utilisateur,
-            "1",
-            "1",
+            $id,
+            $id,
             "titre",
             []
         );
