@@ -19,20 +19,12 @@ let formulaireAjoutCarte = reactive({
     },
 
     ajouterCarte: function (idColonne) {
-        /*
-        return document.querySelector(`[data-colmuns="${this.idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${this.idColonne}">
-            <span class="color" style="border: 5px solid ${this.couleur}"></span>
-            ${this.titre}
-            <div class="features"></div>
-        </div>`;
-         */
-        console.log(this);
         if (this) {
             return document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>
-        </div>`;
+            </div>`;
         } else {
             return document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML;
         }
