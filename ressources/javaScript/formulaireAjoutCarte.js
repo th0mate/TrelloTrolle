@@ -13,7 +13,7 @@ let formulaireAjoutCarte = reactive({
             //TODO : AJAX
         }
         */
-        //this.ajouterCarte();
+        this.ajouterCarte(this.idColonne);
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
         document.querySelector('.all').style.opacity = 1;
     },
@@ -25,11 +25,10 @@ let formulaireAjoutCarte = reactive({
             ${this.titre}
             <div class="features"></div>
         </div>`;
-
          */
-
+        console.log(this);
         if (this) {
-            return document.querySelector(`[data-colmuns="${this.idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${this.idColonne}">
+            return document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>
