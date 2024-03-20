@@ -52,7 +52,7 @@ class ControleurUtilisateur extends ControleurGenerique
                 "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
                 "cheminVueBody" => "utilisateur/detail.php"
             ]);*/
-            return $this->afficherTwig('utilisateur/detail.html.twig',["idUtilisateurConnecte" => $login]);
+            return $this->afficherTwig('utilisateur/detail.html.twig',[ "utilisateur"=>$utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }

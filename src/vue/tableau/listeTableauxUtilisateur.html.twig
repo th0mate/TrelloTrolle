@@ -1,4 +1,4 @@
-{# BESOIN DE : Tableau[] tableaux, loginUtilisateurconnecte #}
+{# BESOIN DE : Tableau[] tableaux, idUtilisateurconnecte #}
 {% extends "base.html.twig" %}
 
 {% block page_title %}Trollé{% endblock %}
@@ -16,7 +16,7 @@
                     </a>
                 </div>
                 <div>
-                    {% if tableau.estProprietaire(loginUtilisateurConnecte) %}
+                    {% if tableau.estProprietaire(idUtilisateurConnecte) %}
                     <a href="{{ route('supprimerTableau') }}">Supprimer le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% else %}
                     <a href="{{ route('mettreAJourTableau') }}">Quitter le tableau</a> {# TODO A MODIFIER SUREMENT #}

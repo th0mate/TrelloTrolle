@@ -230,14 +230,14 @@ class ControleurTableau extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
-            $tableaux = $this->serviceTableau->recupererTableauEstMembre($login);
+
+            $tableaux = $this->serviceTableau->recupererTableauEstMembre(ConnexionUtilisateur::getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Liste des tableaux de $login",
                 "cheminVueBody" => "tableau/listeTableauxUtilisateur.php",
                 "tableaux" => $tableaux
             ]);*/
-            return $this->afficherTwig('tableau/listeTableauxUtilisateur.html.twig',["tableaux" => $tableaux, "loginUtilisateurConnecte" => $login]);
+            return $this->afficherTwig('tableau/listeTableauxUtilisateur.html.twig',["tableaux" => $tableaux]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }

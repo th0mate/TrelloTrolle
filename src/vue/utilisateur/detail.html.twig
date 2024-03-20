@@ -11,15 +11,15 @@
         <p>
 
             <label for="">Nom</label>
-            <input type="text" disabled value="$nomHTML">
+            <input type="text" disabled value="{{ utilisateur.nom }}">
             <label for="">Prénom</label>
-            <input type="text" disabled value="$prenomHTML">
+            <input type="text" disabled value="{{ utilisteur.prenom }}">
         </p>
 
     {% if idUtilsateurConnecte %}
-    <div class="btn btn_maj"><a href="controleurFrontal.php?action=afficherFormulaireMiseAJour&controleur=utilisateur">Mettre
+    <div class="btn btn_maj"><a href="{{ route('afficherFormulaireMiseAJourUtilisateur',{"login" : idUtilisateurConnecte}) }}">Mettre
             à jour le compte</a></div>
-    <div class="btn btn_suppr"><a href="controleurFrontal.php?action=supprimer&controleur=utilisateur&login={$loginURL}">Supprimer le compte</a></div>
+    <div class="btn btn_suppr"><a href="{{ route('supprimer',{"login" : idUtilisateurConnecte}) }}">Supprimer le compte</a></div>
     {% endif %}
     </form>
     </p>
