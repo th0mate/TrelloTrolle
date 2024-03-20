@@ -49,15 +49,19 @@ class ControleurTableau extends ControleurGenerique
         try {
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);
-            /** TODO TWIG */
-            return ControleurTableau::afficherVue('vueGenerale.php', [
+
+            /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "{$tableau->getTitreTableau()}",
                 "cheminVueBody" => "tableau/tableau.php",
                 "tableau" => $tableau,
                 "colonnes" => $donnes["colonnes"],
                 "participants" => $donnes["participants"],
                 "data" => $donnes["data"],
-            ]);
+            ]);*/
+            return $this->afficherTwig('tableau/tableau.html.twig',["tableau" => $tableau,
+                "colonnes" => $donnes["colonnes"],
+                "participants" => $donnes["participants"],
+                "data" => $donnes["data"]]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection("base", 'accueil');

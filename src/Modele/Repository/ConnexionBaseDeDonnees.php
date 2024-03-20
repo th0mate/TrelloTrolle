@@ -15,7 +15,7 @@ class ConnexionBaseDeDonnees
         return $this->pdo;
     }
 
-    private function __construct(ConfigurationBaseDeDonnees $configurationBaseDeDonnees)
+    public function __construct(ConfigurationBaseDeDonnees $configurationBaseDeDonnees)
     {
         $nomHote = $configurationBaseDeDonnees->getNomHote();
         $port = $configurationBaseDeDonnees->getPort();

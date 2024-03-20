@@ -12,19 +12,19 @@ services:
   #Repository
   carte_repository:
     class: App\Trellotrolle\Modele\Repository\CarteRepository
-    arguments: ['@connexino_base_de_donnees']
+    arguments: ['@connexion_base_de_donnees']
 
   colonne_repository:
     class: App\Trellotrolle\Modele\Repository\ColonneRepository
-    arguments: ['@connexino_base_de_donnees']
+    arguments: ['@connexion_base_de_donnees']
 
   tableau_repository:
     class: App\Trellotrolle\Modele\Repository\TableauRepository
-    arguments: [ '@connexino_base_de_donnees' ]
+    arguments: [ '@connexion_base_de_donnees' ]
 
   utilisateur_repository:
     class: App\Trellotrolle\Modele\Repository\UtilisateurRepository
-    arguments: [ '@connexino_base_de_donnees' ]
+    arguments: [ '@connexion_base_de_donnees' ]
 
   #Services
   service_carte:
