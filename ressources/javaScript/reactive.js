@@ -118,10 +118,21 @@ function startReactiveDom(subDom = document) {
         });
     }
 
-    for (let rel of document.querySelectorAll("[data-htmlfun]")) {
+    for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
+        const object = objectByName.get(obj);
+        if (!object) {
+            console.error(`Object ${obj} not found`);
+            continue;
+        }
+        const method = object[fun];
+        if (typeof method !== 'function') {
+            console.error(`Method ${fun} is not a function on object ${obj}`);
+            continue;
+        }
         applyAndRegister(() => {
-            rel.innerHTML = objectByName.get(obj)[fun](arg);
+            rel.innerHTML = method(arg);
+            startReactiveDom(rel)
         });
     }
 }

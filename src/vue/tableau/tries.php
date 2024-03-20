@@ -29,7 +29,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
         <div class="allUsers">
             <h4>Collaborateurs :</h4>
             <?php
-            '<span class="user">' . ($tableau->getUtilisateur()->getPrenom())[0] . ($tableau->getUtilisateur()->getNom())[0] . '</span>';
+            echo'<span class="user">' . ($tableau->getUtilisateur()->getPrenom())[0] . ($tableau->getUtilisateur()->getNom())[0] . '</span>';
             foreach ($tableau->getParticipants() as $participant) {
                 echo '<span class="user">' . ($participant->getPrenom())[0] . ($participant->getNom())[0] . '</span>';
             }
@@ -52,7 +52,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 </div>
 
                 <!-- Stockage des cartes -->
-                <div class="stockage" data-htmlfun="formulaireAjoutCarte.afficherCarte()" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
+                <div class="stockage" data-htmlfun="formulaireAjoutCarte.ajouterCarte(<?= $colonnes[$i]->getIdColonne() ?>)" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
                     <?php
                     foreach ($data[$i] as $carte) {
                         ?>

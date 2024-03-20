@@ -13,17 +13,30 @@ let formulaireAjoutCarte = reactive({
             //TODO : AJAX
         }
         */
-        this.ajouterCarte();
+        //this.ajouterCarte();
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
         document.querySelector('.all').style.opacity = 1;
     },
 
-    ajouterCarte: function () {
-        return(`<div class="card" draggable="true" data-colmuns="${this.idColonne}">
+    ajouterCarte: function (idColonne) {
+        /*
+        return document.querySelector(`[data-colmuns="${this.idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${this.idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>
-        </div>`);
+        </div>`;
+
+         */
+
+        if (this) {
+            return document.querySelector(`[data-colmuns="${this.idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${this.idColonne}">
+            <span class="color" style="border: 5px solid ${this.couleur}"></span>
+            ${this.titre}
+            <div class="features"></div>
+        </div>`;
+        } else {
+            return document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML;
+        }
     }
 
 }, "formulaireAjoutCarte");
