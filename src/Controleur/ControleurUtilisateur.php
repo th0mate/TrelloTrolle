@@ -90,6 +90,7 @@ class ControleurUtilisateur extends ControleurGenerique
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
             return ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info",$e->getMessage());
             return self::redirection("utilisateur", "afficherListeMesTableaux");
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
