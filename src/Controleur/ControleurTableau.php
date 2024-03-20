@@ -266,10 +266,9 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/suppression', name: 'supprimerTableau', methods: "GET")]
+    #[Route('/{idTableau}/suppression', name: 'supprimerTableau', methods: "GET")]
     public function supprimerTableau($idTableau): Response
     {
-        //$idTableau = $_REQUEST["idTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
