@@ -40,7 +40,7 @@ class ControleurUtilisateur extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "utilisateur");
     }
 
-    #[Route('/{login}', name: 'afficherDetail', methods: "GET")]
+    #[Route('/profile', name: 'afficherDetail', methods: "GET")]
     public function afficherDetail(): Response
     {
         try {
