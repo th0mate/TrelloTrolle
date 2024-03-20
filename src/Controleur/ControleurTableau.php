@@ -41,11 +41,11 @@ class ControleurTableau extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "tableau");
     }
 
-    #[Route('/tableau/monTableau', name: 'afficherTableau', methods: "GET")]
-    public function afficherTableau(): Response
+    #[Route('/tableau/{codeTableau}', name: 'afficherTableau', methods: "GET")]
+    public function afficherTableau($codeTableau): Response
     {
 
-        $codeTableau = $_REQUEST["codeTableau"] ?? null;
+        //$codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);

@@ -15,22 +15,18 @@
             {% for participant in tableau.participants %}
                 <span class="user">{{ partipant.prenom[0] }} {{ participant.nom[0] }}</span>
             {% endfor %}
-            <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
+            <div class="invite">Partager {# <img src="{{ asset('../tests/inviter.png') }}" alt="">#}</div>
         </div>
     </div>
 
     <div class="ul">
-        <?php
-        for ($i = 0;
-             $i < count($data);
-             $i++) {
-            ?>
-        {% for i in 0..length(data) %}
+
+        {% for i in 0..data|length %}
             <div class="draggable" data-columns="{{ colonnes[i].idColonne }}" draggable="true">
                 <!-- Entete de la colonne avec son titre et ses bullets -->
                 <div class="entete">
                     <h5 class="main" draggable="true">{{ colonnes[i].tittreColonne }}</h5>
-                    <div class="bullets"><img src="{{ asset('../tests/bullets.png') }}" alt=""></div>
+                    <div class="bullets">{#  <img src="{{ asset('../tests/bullets.png') }}" alt="">#}</div>
                 </div>
 
                 <!-- Stockage des cartes -->
@@ -47,12 +43,10 @@
                                 {% endfor %}
                             </div>
                         </div>
-                        <?php
-                    }}
-                    ?>
+                        {% endfor %}
                 </div>
-                <div class="add" data-columns="{{ asset(colonnes[i].idColonne) }}">
-                    <img src="{{ asset('../tests/plus.png') }}" alt="">
+                {#  #}<div class="add" data-columns="{{ colonnes[i].idColonne }}">
+                    {#<img src="{{ asset('../tests/plus.png') }}" alt="">#}
                     Ajouter une carte
                 </div>
             </div>
@@ -70,21 +64,21 @@
 
     <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
     <div class="menuColonnes">
-        <img src="{{ asset('../tests/close.png') }}" alt="" class="close">
+        {# <img src="{{ asset('../tests/close.png') }}" alt="" class="close"> #}
         <div class="deleteColumn">
             <h5>Supprimer</h5>
-            <img src="{{ asset('../tests/bin.png') }}" alt="">
+            {# <img src="{{ asset('../tests/bin.png') }}" alt=""> #}
         </div>
         <div class="updateColumn">
             <h5>Modifier</h5>
-            <img src="{{ asset('../tests/edition.png') }}" alt="">
+            {# <img src="{{ asset('../tests/edition.png') }}" alt=""> #}
         </div>
     </div>
 
 </div>
 
 <div class="formulaireCreationCarte">
-    <div class="wrap"><h2>Création d'une carte</h2><img class="closeCard" src="{{ asset('../tests/close.png') }}" alt=""></div>
+    <div class="wrap"><h2>Création d'une carte</h2>{# <img class="closeCard" src="{{ asset('../tests/close.png') }}" alt=""> #}</div>
     <input type="hidden" class="idColonne" data-reactiveInput="formulaireAjoutCarte.idColonne">
     <div class="content"><h4>Titre de la carte :</h4>
         <input maxlength="50" required
@@ -110,6 +104,6 @@
     </div>
 
 
-    <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
+    {#  <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>#}
 
 {% endblock %}

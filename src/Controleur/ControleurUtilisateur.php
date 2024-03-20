@@ -67,7 +67,7 @@ class ControleurUtilisateur extends ControleurGenerique
                 "pagetitle" => "Création d'un utilisateur",
                 "cheminVueBody" => "utilisateur/formulaireCreation.php"
             ]);*/
-            return $this->afficherTwig('utilisateur/formulaireCreatopn.html.twig');
+            return $this->afficherTwig('utilisateur/formulaireCreation.html.twig');
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }

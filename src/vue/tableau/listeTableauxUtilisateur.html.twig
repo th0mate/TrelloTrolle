@@ -5,13 +5,13 @@
 
 {% block page_content %}
     <div>
-        <h3>Mes tableaux ({{ length(tableaux) }})</h3>
+        <h3>Mes tableaux ({{ tableaux|length }})</h3>
         <div class="tableaux">
             {% for tableau in tableaux %}
             <div class="ligne_tableau">
                 <div>{{ tableau.titreTableau }}</div>
                 <div>
-                    <a href="{{ route('afficherTableau') }}">{# TODO A MODIFIER SUREMENT #}
+                    <a href="{{ route('afficherTableau', {codeTableau : tableau.codeTableau}) }}">{# TODO A MODIFIER SUREMENT #}
                         Modifier
                     </a>
                 </div>
