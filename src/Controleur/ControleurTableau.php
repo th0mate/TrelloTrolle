@@ -248,9 +248,9 @@ class ControleurTableau extends ControleurGenerique
     }
 
     #[Route('/tableau/quitter', name: 'quitterTableau', methods: "GET")]
-    public function quitterTableau(): Response
+    public function quitterTableau($idTableau): Response
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
+        //$idTableau = $_REQUEST["idTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
@@ -267,9 +267,9 @@ class ControleurTableau extends ControleurGenerique
     }
 
     #[Route('/tableau/suppression', name: 'supprimerTableau', methods: "GET")]
-    public function supprimerTableau(): Response
+    public function supprimerTableau($idTableau): Response
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
+        //$idTableau = $_REQUEST["idTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);

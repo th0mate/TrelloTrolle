@@ -16,7 +16,7 @@
             <input type="text" disabled value="{{ utilisateur.prenom }}">
         </p>
 
-    {% if idUtilsateurConnecte == utilisateur.login %}
+    {% if idUtilisateurConnecte == utilisateur.login %}
     <div class="btn btn_maj"><a href="{{ route('afficherFormulaireMiseAJourUtilisateur',{"login" : idUtilisateurConnecte}) }}">Mettre
             à jour le compte</a></div>
     <div class="btn btn_suppr"><a href="{{ route('supprimer',{"login" : idUtilisateurConnecte}) }}">Supprimer le compte</a></div>

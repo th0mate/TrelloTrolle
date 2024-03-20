@@ -17,9 +17,9 @@
                 </div>
                 <div>
                     {% if tableau.estProprietaire(idUtilisateurConnecte) %}
-                    <a href="{{ route('supprimerTableau') }}">Supprimer le tableau</a> {# TODO A MODIFIER SUREMENT #}
+                    <a href="{{ route('supprimerTableau', {idTableau : tableau.idTableau}) }}">Supprimer le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% else %}
-                    <a href="{{ route('mettreAJourTableau') }}">Quitter le tableau</a> {# TODO A MODIFIER SUREMENT #}
+                    <a href="{{ route('quiiterTableau', {idTableau : tableau.idTableau}) }}">Quitter le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% endif %}
                 </div>
             </div>
