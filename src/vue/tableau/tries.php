@@ -17,6 +17,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
     <meta charset="UTF-8">
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="../tests/tests.css">
+    <script type="module" src="../ressources/javaScript/Carte.js" defer></script>
     <script type="module" src="../ressources/javaScript/formulaireAjoutCarte.js" defer></script>
 </head>
 <body>

@@ -19,7 +19,7 @@ let formulaireAjoutCarte = reactive({
     },
 
     ajouterCarte: function () {
-        console.log(`<div class="card" draggable="true" data-colmuns="${this.idColonne}">
+        return(`<div class="card" draggable="true" data-colmuns="${this.idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>

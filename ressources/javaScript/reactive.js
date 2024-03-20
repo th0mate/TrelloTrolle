@@ -117,10 +117,11 @@ function startReactiveDom(subDom = document) {
             rel.value = objectByName.get(obj)[prop];
         });
     }
-    for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
-const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
+
+    for (let rel of document.querySelectorAll("[data-htmlfun]")) {
+        const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
         applyAndRegister(() => {
-            rel.innerHTML = objectByName.get(obj)[fun](arg)
+            rel.innerHTML = objectByName.get(obj)[fun](arg);
         });
     }
 }
