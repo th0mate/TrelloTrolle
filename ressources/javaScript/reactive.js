@@ -118,10 +118,9 @@ function startReactiveDom(subDom = document) {
         });
     }
     for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
-        const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
+const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
         applyAndRegister(() => {
-            rel.innerHTML = objectByName.get(obj)[fun](arg);
-            startReactiveDom(rel)
+            rel.innerHTML = objectByName.get(obj)[fun](arg)
         });
     }
 }
