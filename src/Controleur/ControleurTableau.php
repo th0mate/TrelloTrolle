@@ -41,7 +41,7 @@ class ControleurTableau extends ControleurGenerique
         return parent::afficherErreur($messageErreur, "tableau");
     }
 
-    #[Route('/tableau/{codeTableau}', name: 'afficherTableau', methods: "GET")]
+    #[Route('/tableau/monTableau/{codeTableau}', name: 'afficherTableau', methods: "GET")]
     public function afficherTableau($codeTableau): Response
     {
 

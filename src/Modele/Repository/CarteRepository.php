@@ -77,7 +77,7 @@ class CarteRepository extends AbstractRepository
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
         JOIN utilisateur u ON u.login=a.login WHERE a.{$this->getNomCle()} =:idcle";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
         $obj = [];
         foreach($pdoStatement as $objetFormatTableau) {
@@ -90,7 +90,7 @@ class CarteRepository extends AbstractRepository
     {
         foreach($affectationsCarte as $affectationCarte) {
             $query = "INSERT INTO affectationcarte VALUES (:idcarte, :login)";
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+            $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
             $pdoStatement->execute(["idcarte" => $instance->getIdCarte(), "login" => $affectationCarte->getLogin()]);
         }
     }
