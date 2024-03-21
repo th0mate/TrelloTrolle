@@ -22,7 +22,7 @@ use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
-class ServiceUtilisateur
+class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
 
     public function __construct(private UtilisateurRepository $utilisateurRepository,

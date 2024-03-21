@@ -12,7 +12,7 @@ use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
-class ServiceColonne
+class ServiceColonne implements ServiceColonneInterface
 {
 
 

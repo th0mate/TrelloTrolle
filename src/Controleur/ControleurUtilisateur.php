@@ -19,7 +19,9 @@ use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceConnexion;
+use App\Trellotrolle\Service\ServiceConnexionInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,8 +30,8 @@ class ControleurUtilisateur extends ControleurGenerique
 {
 
     public function __construct(ContainerInterface         $container,
-                                private ServiceConnexion   $serviceConnexion,
-                                private ServiceUtilisateur $serviceUtilisateur)
+                                private ServiceConnexionInterface   $serviceConnexion,
+                                private ServiceUtilisateurInterface $serviceUtilisateur)
     {
         parent::__construct($container);
 
@@ -194,7 +196,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/deconnexion', name: 'deconnexion',methods: "POST")]
+    #[Route('/deconnexion', name: 'deconnexion',methods: "GET")]
     public function deconnecter(): Response
     {
         try {

@@ -17,9 +17,13 @@ use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauEception;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceCarte;
+use App\Trellotrolle\Service\ServiceCarteInterface;
 use App\Trellotrolle\Service\ServiceConnexion;
+use App\Trellotrolle\Service\ServiceConnexionInterface;
 use App\Trellotrolle\Service\ServiceTableau;
+use App\Trellotrolle\Service\ServiceTableauInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -28,10 +32,10 @@ class ControleurTableau extends ControleurGenerique
 {
 
     public function __construct(ContainerInterface         $container,
-                                private ServiceTableau     $serviceTableau,
-                                private ServiceConnexion   $serviceConnexion,
-                                private ServiceUtilisateur $serviceUtilisateur,
-                                private ServiceCarte       $serviceCarte)
+                                private ServiceTableauInterface     $serviceTableau,
+                                private ServiceConnexionInterface   $serviceConnexion,
+                                private ServiceUtilisateurInterface $serviceUtilisateur,
+                                private ServiceCarteInterface       $serviceCarte)
     {
         parent::__construct($container);
 

@@ -17,7 +17,7 @@ use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
-class ServiceTableau
+class ServiceTableau implements ServiceTableauInterface
 {
 
 

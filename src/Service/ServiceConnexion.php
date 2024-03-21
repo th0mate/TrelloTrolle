@@ -12,7 +12,7 @@ use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 
-class ServiceConnexion
+class ServiceConnexion implements ServiceConnexionInterface
 {
 
 

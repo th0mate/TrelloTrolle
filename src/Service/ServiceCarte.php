@@ -15,7 +15,7 @@ use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
-class ServiceCarte
+class ServiceCarte implements ServiceCarteInterface
 {
 
 
