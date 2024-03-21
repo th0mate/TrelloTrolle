@@ -47,9 +47,9 @@ class TableauRepository extends AbstractRepository
      */
     public function recupererTableauxOuUtilisateurEstMembre(string $login): array
     {
-        $sql = "SELECT DISTINCT t.idtableau, codetableau, titretableau, t.login
-                from {$this->getNomTable()} t JOIN participant p ON t.idtableau = p.idtableau
-                WHERE p.login=:login OR t.login=:login";
+        $sql = "select * from {$this->getNomTable()} t where {$this->getNomCle()} in 
+                (select idtableau from participant p where p.login=:login) 
+                or t.login=:login";
         $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($sql);
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
@@ -107,7 +107,7 @@ class TableauRepository extends AbstractRepository
 
     public function estParticipant(string $login): bool
     {
-        if (in_array($login, $this->participant(), true)) {
+        if (in_array($login, $this->participants(), true)) {
             return true;
         }
         return false;
@@ -143,4 +143,29 @@ class TableauRepository extends AbstractRepository
         $obj = $pdoStatement->fetch();
         return Utilisateur::construireDepuisTableau($obj);
     }
+
+    public function getParticipants(Tableau $idcle): ?array
+    {
+        $query = "SELECT u.login,nom,prenom,email,mdphache
+        FROM {$this->getNomTable()} c JOIN participant p
+        ON c.idtableau=a.idtableau
+        JOIN utilisateur u ON u.login=p.login WHERE a.{$this->getNomCle()} =:idcle";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement->execute(["idcle" => $idcle->getIdTableau()]);
+        $obj = [];
+        foreach($pdoStatement as $objetFormatTableau) {
+            $obj[] = Utilisateur::construireDepuisTableau($objetFormatTableau);
+        }
+        return $obj;
+    }
+
+    public static function setParticipants(?array $participants, Tableau $instance): void
+    {
+        foreach($participants as $participant) {
+            $query = "INSERT INTO participant VALUES (:idtableau, :login)";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+            $pdoStatement->execute(["idtableau" => $instance->getIdTableau(), "login" => $participant->getLogin()]);
+        }
+    }
+
 }
