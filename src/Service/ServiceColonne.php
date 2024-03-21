@@ -91,8 +91,13 @@ class ServiceColonne
         );
     }
 
-    public function miseAJourColonne($colonne): void
+    public function miseAJourColonne($colonne): Colonne
     {
         $this->colonneRepository->mettreAJour($colonne);
+        return $colonne;
+    }
+    public function getNextIdColonne()
+    {
+        return $this->colonneRepository->getNextIdColonne();
     }
 }
