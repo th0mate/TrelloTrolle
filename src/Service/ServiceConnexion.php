@@ -64,11 +64,11 @@ class ServiceConnexion
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
 
         if ($utilisateur == null) {
-            throw new ("Login inconnu.");
+            throw new ServiceException("Login inconnu.");
         }
 
         if (!MotDePasse::verifier($mdp, $utilisateur->getMdpHache())) {
-            throw new ("Mot de passe incorrect.");
+            throw new ServiceException("Mot de passe incorrect.");
         }
 
         ConnexionUtilisateur::connecter($utilisateur->getLogin());
