@@ -4,11 +4,14 @@
 
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
 
-$loginsAffectes = array_map(function($u) {return $u->getLogin();}, $carte->getAffectationsCarte());
-$colonneCarte = $carte->getColonne();
-$tableau = $colonneCarte->getTableau();
-$proprietaire = $tableau->getUtilisateur();
+$loginsAffectes = array_map(function($u) {return $u->getLogin();}, CarteRepository::getAffectationsCarte($carte));
+$colonneCarte = CarteRepository::getColonne($carte);
+$tableau = ColonneRepository::getTableau($colonneCarte);
+$proprietaire = TableauRepository::getUtilisateur($tableau);
 
 use App\Trellotrolle\Lib\Conteneur;
 
@@ -52,7 +55,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 <div>
                     <select multiple name="affectationsCarte[]" id="affectationsCarte">
                         <option <?= in_array($proprietaire->getLogin(), $loginsAffectes) ? "selected" : "" ?> value="<?=htmlspecialchars($proprietaire->getLogin())?>"><?=htmlspecialchars($proprietaire->getPrenom())?> <?=htmlspecialchars($proprietaire->getNom())?> (<?=$proprietaire->getLogin()?>)</option>
-                        <?php foreach ($tableau->getParticipants() as $membre) {?>
+                        <?php foreach (TableauRepository::getParticipants($tableau) as $membre) {?>
                             <option <?= in_array($membre->getLogin(), $loginsAffectes) ? "selected" : "" ?> value="<?=htmlspecialchars($membre->getLogin())?>"><?=htmlspecialchars($membre->getPrenom())?> <?=htmlspecialchars($membre->getNom())?> (<?=$membre->getLogin()?>)</option>
                         <?php }?>
                     </select>

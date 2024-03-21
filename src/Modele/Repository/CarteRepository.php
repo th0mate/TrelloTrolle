@@ -4,6 +4,8 @@ namespace App\Trellotrolle\Modele\Repository;
 
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
+use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use Exception;
 
 class CarteRepository extends AbstractRepository
@@ -11,7 +13,7 @@ class CarteRepository extends AbstractRepository
 
     protected function getNomTable(): string
     {
-        return "app_db";
+        return "carte";
     }
 
     protected function getNomCle(): string
@@ -22,10 +24,7 @@ class CarteRepository extends AbstractRepository
     protected function getNomsColonnes(): array
     {
         return [
-            "login", "nom", "prenom", "email", "mdphache",
-            "mdp", "idtableau", "codetableau", "titretableau",
-            "participants", "idcolonne", "titrecolonne",
-            "idcarte", "titrecarte", "descriptifcarte", "couleurcarte", "affectationscarte"
+            "idcarte", "titrecarte", "descriptifcarte", "couleurcarte", "idcolonne"
         ];
     }
 
@@ -47,12 +46,12 @@ class CarteRepository extends AbstractRepository
      */
     public function recupererCartesUtilisateur(string $login): array
     {
-        $sql = "SELECT {$this->formatNomsColonnes()} from app_db WHERE affectationscarte @> :json";
+        $sql = "SELECT {$this->formatNomsColonnes()} from {$this->getNomTable()} c
+        JOIN affectationcarte a ON a.idcarte=c.idcarte
+        WHERE login=:login";
+        //TODO encode JSON comme code de base
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
-        $values = array(
-            "json" => json_encode(["utilisateurs" => [["login" => $login]]])
-        );
-        $pdoStatement->execute($values);
+        $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
             $objets[] = $this->construireDepuisTableau($objetFormatTableau);
@@ -61,7 +60,7 @@ class CarteRepository extends AbstractRepository
     }
 
     public function getNombreCartesTotalUtilisateur(string $login) : int {
-        $query = "SELECT COUNT(*) FROM app_db WHERE login=:login";
+        $query = "SELECT COUNT(*) FROM {$this->getNomTable()} WHERE login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["login" => $login]);
         $obj = $pdoStatement->fetch();
@@ -70,5 +69,29 @@ class CarteRepository extends AbstractRepository
 
     public function getNextIdCarte() : int {
         return $this->getNextId("idcarte");
+    }
+
+    public function getAffectationsCarte(Carte  $idcle): ?array
+    {
+        $query = "SELECT u.login,nom,prenom,email,mdphache
+        FROM {$this->getNomTable()} c JOIN affectationcarte a
+        ON c.idcarte=a.idcarte
+        JOIN utilisateur u ON u.login=a.login WHERE a.{$this->getNomCle()} =:idcle";
+        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
+        $obj = [];
+        foreach($pdoStatement as $objetFormatTableau) {
+            $obj[] = Utilisateur::construireDepuisTableau($objetFormatTableau);
+        }
+        return $obj;
+    }
+
+    public function setAffectationsCarte(?array $affectationsCarte, Carte $instance): void
+    {
+        foreach($affectationsCarte as $affectationCarte) {
+            $query = "INSERT INTO affectationcarte VALUES (:idcarte, :login)";
+            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+            $pdoStatement->execute(["idcarte" => $instance->getIdCarte(), "login" => $affectationCarte->getLogin()]);
+        }
     }
 }
