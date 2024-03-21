@@ -5,97 +5,101 @@
 
 {% block page_content %}
 
-<div class="all">
+    <div class="all">
 
-    <div class="infos">
-        <h3>{{ tableau.titreTableau }}</h3>
-        <div class="allUsers">
-            <h4>Collaborateurs :</h4>
-                        <span class="user"> {{ tableau.utilisateur.prenom[0] }} {{ tableau.utilisateur.nom[0] }} </span>
-            {% for participant in tableau.participants %}
-                <span class="user">{{ partipant.prenom[0] }} {{ participant.nom[0] }}</span>
-            {% endfor %}
-            <div class="invite">Partager {# <img src="{{ asset('../tests/inviter.png') }}" alt="">#}</div>
-        </div>
-    </div>
-
-    <div class="ul">
-
-        {% for i in 0..data|length %}
-            <div class="draggable" data-columns="{{ colonnes[i].idColonne }}" draggable="true">
-                <!-- Entete de la colonne avec son titre et ses bullets -->
-                <div class="entete">
-                    <h5 class="main" draggable="true">{{ colonnes[i].tittreColonne }}</h5>
-                    <div class="bullets">{#  <img src="{{ asset('../tests/bullets.png') }}" alt="">#}</div>
-                </div>
-
-                <!-- Stockage des cartes -->
-                <div class="stockage" data-htmlfun="formulaireAjoutCarte.afficherCarte()" data-columns="{{ colonnes[i].idColonnne }}">
-
-                    {% for carte in data[i] %}
-                        <div class="card">
-                            <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
-                            {{ carte.titreCarte }}
-                            <div class="features">
-
-                                {% for utilisateur in carte.affectationCarte %}
-                                    <span class="user">{{ utilisateur.prenom[0] }} {{ utilisateur.nom[0] }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endfor %}
-                </div>
-                {#  #}<div class="add" data-columns="{{ colonnes[i].idColonne }}">
-                    {#<img src="{{ asset('../tests/plus.png') }}" alt="">#}
-                    Ajouter une carte
-                </div>
+        <div class="infos">
+            <h3>{{ tableau.titreTableau }}</h3>
+            <div class="allUsers">
+                <h4>Collaborateurs :</h4>
+                <span class="user"> {{ tableau.utilisateur.prenom[0] }} {{ tableau.utilisateur.nom[0] }} </span>
+                {% for participant in tableau.participants %}
+                    <span class="user">{{ partipant.prenom[0] }} {{ participant.nom[0] }}</span>
+                {% endfor %}
+                <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
             </div>
-        {% endfor %}
-
-
-        <!-- Pour ajouter de nouvelles colonnes -->
-        <div class="adder">
-            <label>
-                <input type="text" class="input" placeholder="Ajouter une colonne"/>
-            </label>
-            <span class="addCard">OK</span>
         </div>
+
+        <div class="ul">
+
+            {% for i in 0..data|length %}
+                <div class="draggable" data-columns="{{ colonnes[i].idColonne }}" draggable="true">
+                    <!-- Entete de la colonne avec son titre et ses bullets -->
+                    <div class="entete">
+                        <h5 class="main" draggable="true">{{ colonnes[i].tittreColonne }}</h5>
+                        <div class="bullets"><img src="{{ asset('../tests/bullets.png') }}" alt=""></div>
+                    </div>
+
+                    <!-- Stockage des cartes -->
+                    <div class="stockage" data-htmlfun="formulaireAjoutCarte.afficherCarte()"
+                         data-columns="{{ colonnes[i].idColonnne }}">
+
+                        {% for carte in data[i] %}
+                            <div class="card">
+                                <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
+                                {{ carte.titreCarte }}
+                                <div class="features">
+
+                                    {% for utilisateur in carte.affectationCarte %}
+                                        <span class="user">{{ utilisateur.prenom[0] }} {{ utilisateur.nom[0] }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {#  #}
+                    <div class="add" data-columns="{{ colonnes[i].idColonne }}">
+                        <img src="{{ asset('../tests/plus.png') }}" alt="">
+                        Ajouter une carte
+                    </div>
+                </div>
+            {% endfor %}
+
+
+            <!-- Pour ajouter de nouvelles colonnes -->
+            <div class="adder">
+                <label>
+                    <input type="text" class="input" placeholder="Ajouter une colonne"/>
+                </label>
+                <span class="addCard">OK</span>
+            </div>
+        </div>
+
+        <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
+        <div class="menuColonnes">
+            <img src="{{ asset('../tests/close.png') }}" alt="" class="close">
+            <div class="deleteColumn">
+                <h5>Supprimer</h5>
+                <img src="{{ asset('../tests/bin.png') }}" alt="">
+            </div>
+            <div class="updateColumn">
+                <h5>Modifier</h5>
+                <img src="{{ asset('../tests/edition.png') }}" alt="">
+            </div>
+        </div>
+
     </div>
 
-    <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
-    <div class="menuColonnes">
-        {# <img src="{{ asset('../tests/close.png') }}" alt="" class="close"> #}
-        <div class="deleteColumn">
-            <h5>Supprimer</h5>
-            {# <img src="{{ asset('../tests/bin.png') }}" alt=""> #}
+    <div class="formulaireCreationCarte">
+        <div class="wrap"><h2>Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
+                                                              alt="">
         </div>
-        <div class="updateColumn">
-            <h5>Modifier</h5>
-            {# <img src="{{ asset('../tests/edition.png') }}" alt=""> #}
+        <input type="hidden" class="idColonne" data-reactiveInput="formulaireAjoutCarte.idColonne">
+        <div class="content"><h4>Titre de la carte :</h4>
+            <input maxlength="50" required
+                   data-reactiveInput="formulaireAjoutCarte.titre" type="text"
+                   class="inputCreationCarte"
+                   placeholder="Entrez le titre de la carte">
         </div>
-    </div>
-
-</div>
-
-<div class="formulaireCreationCarte">
-    <div class="wrap"><h2>Création d'une carte</h2>{# <img class="closeCard" src="{{ asset('../tests/close.png') }}" alt=""> #}</div>
-    <input type="hidden" class="idColonne" data-reactiveInput="formulaireAjoutCarte.idColonne">
-    <div class="content"><h4>Titre de la carte :</h4>
-        <input maxlength="50" required
-               data-reactiveInput="formulaireAjoutCarte.titre" type="text"
-               class="inputCreationCarte"
-               placeholder="Entrez le titre de la carte">
-    </div>
-    <div class="content"><h4>Description de la carte :</h4>
-        <textarea maxlength="255"
-                  data-reactiveInput="formulaireAjoutCarte.description"
-                  class="desc"
-                  placeholder="Description de la carte...">
+        <div class="content"><h4>Description de la carte :</h4>
+            <textarea maxlength="255"
+                      data-reactiveInput="formulaireAjoutCarte.description"
+                      class="desc"
+                      placeholder="Description de la carte...">
         </textarea>
-    </div>
-    <div class="content"><h4>Couleur de la carte :</h4>
-        <input required type="color"
-               data-reactiveInput="formulaireAjoutCarte.couleur">
+        </div>
+        <div class="content"><h4>Couleur de la carte :</h4>
+            <input required type="color"
+                   data-reactiveInput="formulaireAjoutCarte.couleur">
         </div>
         <div class="content"><h4>Membres affectés :</h4>
             <input type="text">
@@ -104,6 +108,6 @@
     </div>
 
 
-    {#  <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>#}
+    <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
 
 {% endblock %}
