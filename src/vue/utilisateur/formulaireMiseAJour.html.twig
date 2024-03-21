@@ -5,7 +5,7 @@
 
 {% block page_content %}
     <div>
-        <form method="post" action="{{ route('mettreAJour', {"login" : idUtilisateurConnecte}) }}controleurFrontal.php">
+        <form method="post" action="{{ route('mettreAJour', {"login" : idUtilisateurConnecte}) }}">
             <fieldset>
                 <h3>Mise à jour du profil</h3>
                 <p >
@@ -38,6 +38,8 @@
                     <input  type="password" value="" placeholder="" minlength="6" maxlength="50" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_=+\-]).{6,50}" name="mdp2" id="mdp2_id" required>
                 </p>
                 <input type='hidden' name='login' value='{{ utilisateur.login }}'>
+                <input type='hidden' name='action' value='mettreAJour'>
+                <input type='hidden' name='controleur' value='utilisateur'>
                 <p>
                     <input type="submit" value="Mettre à jour"/>
                 </p>
