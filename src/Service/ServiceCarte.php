@@ -62,7 +62,7 @@ class ServiceCarte implements ServiceCarteInterface
     /**
      * @throws CreationException
      */
-    public function creerCarte($tableau, $attributs,$colonne)
+    public function creerCarte($tableau, $attributs,$colonne):Carte
     {
         $affectationsCarte=$attributs["affectationsCarte"];
         $affectations = [];
@@ -82,10 +82,10 @@ class ServiceCarte implements ServiceCarteInterface
             }
         }
         $attributs["affectationsCarte"]=$affectations;
-        $this->newCarte($colonne,$attributs);
+        return $this->newCarte($colonne,$attributs);
     }
 
-    public function newCarte($colonne,$attributs):void
+    public function newCarte($colonne,$attributs):Carte
     {
         $carte=new Carte(
             $colonne,
@@ -96,7 +96,7 @@ class ServiceCarte implements ServiceCarteInterface
             $attributs["affectationsCarte"]
         );
         $this->carteRepository->ajouter($carte);
-
+        return $carte;
     }
 
     /**
@@ -136,9 +136,10 @@ class ServiceCarte implements ServiceCarteInterface
         }
         $attributs["affectationsCarte"]=$affectations;
         $this->carteUpdate($carte,$colonne,$attributs);
+        return $carte;
     }
 
-    public function carteUpdate(Carte $carte,$colonne,$attributs): void
+    public function carteUpdate(Carte $carte,$colonne,$attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);
@@ -146,6 +147,7 @@ class ServiceCarte implements ServiceCarteInterface
         $carte->setCouleurCarte($attributs["couleurCarte"]);
         $carte->setAffectationsCarte($attributs["affectationsCarte"]);
         $this->carteRepository->mettreAJour($carte);
+        return $carte;
     }
 
     /**
@@ -174,5 +176,10 @@ class ServiceCarte implements ServiceCarteInterface
             $carte->setAffectationsCarte($affectations);
             $this->carteRepository->mettreAJour($carte);
         }
+    }
+
+    public function getNextIdCarte()
+    {
+        return $this->carteRepository->getNextIdCarte();
     }
 }
