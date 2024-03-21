@@ -47,4 +47,5 @@ interface ServiceCarteInterface
     public function verificationsMiseAJourCarte($idCarte, $colonne, $attributs);
 
     public function miseAJourCarteMembre($tableau, $utilisateur);
+    public function getNextIdCarte();
 }

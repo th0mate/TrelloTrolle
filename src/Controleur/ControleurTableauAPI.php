@@ -7,9 +7,13 @@ use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceCarte;
+use App\Trellotrolle\Service\ServiceCarteInterface;
 use App\Trellotrolle\Service\ServiceConnexion;
+use App\Trellotrolle\Service\ServiceConnexionInterface;
 use App\Trellotrolle\Service\ServiceTableau;
+use App\Trellotrolle\Service\ServiceTableauInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
+use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,10 +21,10 @@ class ControleurTableauAPI
 {
 
     public function __construct(
-        private ServiceConnexion   $serviceConnexion,
-        private ServiceTableau     $serviceTableau,
-        private ServiceUtilisateur $serviceUtilisateur,
-        private ServiceCarte       $serviceCarte
+        private ServiceConnexionInterface   $serviceConnexion,
+        private ServiceTableauInterface     $serviceTableau,
+        private ServiceUtilisateurInterface $serviceUtilisateur,
+        private ServiceCarteInterface       $serviceCarte
     )
     {
     }

@@ -35,4 +35,6 @@ interface ServiceColonneInterface
     public function creerColonne($tableau, $nomColonne): Colonne;
 
     public function miseAJourColonne($colonne): void;
+    public function getNextIdColonne();
+
 }
