@@ -30,7 +30,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
                 Membres :
                 <ul>
                     <li><?= htmlspecialchars(TableauRepository::getUtilisateur($tableau)->getPrenom()) ?> <?= htmlspecialchars(TableauRepository::getUtilisateur($tableau)->getNom()) ?></li>
-                    <?php foreach ($tableau->getParticipants() as $participant) {?>
+                    <?php foreach (TableauRepository::getParticipants($tableau) as $participant) {?>
                         <li>
                             <div class="icons_menu_stick">
                                 <?= $participant->getPrenom() ?> <?= $participant->getNom() ?>

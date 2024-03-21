@@ -20,7 +20,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
                 </div>
                 <div>
                     <?php
-                    if (TableauRepository::estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                    if ((new TableauRepository())->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <a href="controleurFrontal.php?action=supprimerTableau&controleur=tableau&idTableau=<?= $tableau->getIdTableau() ?>">Supprimer
                             le tableau</a>

@@ -45,7 +45,7 @@ $proprietaire = TableauRepository::getUtilisateur($tableau);
                 <div>
                     <select multiple name="affectationsCarte[]" id="affectationsCarte">
                         <option <?= in_array($proprietaire->getLogin(), $loginsAffectes) ? "selected" : "" ?> value="<?=htmlspecialchars($proprietaire->getLogin())?>"><?=htmlspecialchars($proprietaire->getPrenom())?> <?=htmlspecialchars($proprietaire->getNom())?> (<?=$proprietaire->getLogin()?>)</option>
-                        <?php foreach ($tableau->getParticipants() as $membre) {?>
+                        <?php foreach (TableauRepository::getParticipants($tableau) as $membre) {?>
                             <option <?= in_array($membre->getLogin(), $loginsAffectes) ? "selected" : "" ?> value="<?=htmlspecialchars($membre->getLogin())?>"><?=htmlspecialchars($membre->getPrenom())?> <?=htmlspecialchars($membre->getNom())?> (<?=$membre->getLogin()?>)</option>
                         <?php }?>
                     </select>
