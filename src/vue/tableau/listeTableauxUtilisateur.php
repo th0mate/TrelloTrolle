@@ -27,7 +27,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 </div>
                 <div>
                     <?php
-                    if ($tableau->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+                    if ((new TableauRepository())->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <a href="<?=$generateurUrl->generate('supprimerTableau', ['idTableau' => $tableau->getIdTableau()])?>">Supprimer
                             le tableau</a>

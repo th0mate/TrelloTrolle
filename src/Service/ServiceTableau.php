@@ -80,7 +80,7 @@ class ServiceTableau
              */
             $cartes = $this->carteRepository->recupererCartesColonne($colonne->getIdColonne());
             foreach ($cartes as $carte) {
-                foreach ($carte->getAffectationsCarte() as $utilisateur) {
+                foreach ($this->carteRepository->getAffectationsCarte($carte) as $utilisateur) {
                     if (!isset($participants[$utilisateur->getLogin()])) {
                         $participants[$utilisateur->getLogin()] = ["infos" => $utilisateur, "colonnes" => []];
                     }
@@ -175,26 +175,34 @@ class ServiceTableau
         $idCarte1 = $this->carteRepository->getNextIdCarte();
 
         $tableau = new Tableau(
-            $utilisateur,
             $idTableau,
             $codeTableau,
             $_REQUEST["nomTableau"],
-            []
+            $utilisateur->getLogin()
+        );
+
+        $colonne = new Colonne(
+            $idColonne1,
+            $nomColonne1,
+            $idTableau
         );
 
         $carte1 = new Carte(
-            new Colonne(
-                $tableau,
-                $idColonne1,
-                $nomColonne1
-            ),
             $idCarte1,
             $carteInitiale,
             $descriptifInitial,
             "#FFFFFF",
-            []
+            $idColonne1
         );
+
+        $this->tableauRepository->ajouter($tableau);
+        $this->colonneRepository->ajouter($colonne);
         $this->carteRepository->ajouter($carte1);
         return $tableau;
+    }
+
+    public function estParticipant()
+    {
+        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
     }
 }

@@ -11,7 +11,7 @@ class UtilisateurRepository extends AbstractRepository
 
     protected function getNomTable(): string
     {
-        return "app_db";
+        return "Utilisateur";
     }
 
     protected function getNomCle(): string
@@ -21,7 +21,7 @@ class UtilisateurRepository extends AbstractRepository
 
     protected function getNomsColonnes(): array
     {
-        return ["login", "nom", "prenom", "email", "mdphache", "mdp"];
+        return ["login", "nom", "prenom", "email", "mdphache"];
     }
 
     protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
@@ -29,13 +29,6 @@ class UtilisateurRepository extends AbstractRepository
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function ajouter(AbstractDataObject $object): bool
-    {
-        throw new Exception("Impossible d'ajouter seulement un utilisateur...");
-    }
 
     public function recupererUtilisateursParEmail(string $email): array {
         return $this->recupererPlusieursPar("email", $email);

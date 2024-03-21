@@ -14,7 +14,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
-use App\Trellotrolle\Service\Exception\TableauException;
+use App\Trellotrolle\Service\Exception\TableauEception;
 use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceTableau;
@@ -139,7 +139,8 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceTableau->isNotNullNomTableau($nomTableau, $tableau);
-            if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+            $estProprio=$this->serviceTableau->estParticipant($tableau);
+            if (!$estProprio) {
                 MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
             } else {
                 $tableau->setTitreTableau($_REQUEST["nomTableau"]);

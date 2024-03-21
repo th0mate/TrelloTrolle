@@ -3,6 +3,8 @@
 /** @var Colonne[] $colonnes */
 
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
 
 $tableau = $colonne->getTableau();
 $proprietaire = $tableau->getUtilisateur();
@@ -47,7 +49,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 <div>
                     <select multiple name="affectationsCarte[]" id="affectationsCarte">
                         <option value="<?=htmlspecialchars($proprietaire->getLogin())?>"><?=htmlspecialchars($proprietaire->getPrenom())?> <?=htmlspecialchars($proprietaire->getNom())?> (<?=$proprietaire->getLogin()?>)</option>
-                        <?php foreach ($tableau->getParticipants() as $membre) {?>
+                        <?php foreach (TableauRepository::getParticipants($tableau) as $membre) {?>
                             <option value="<?=htmlspecialchars($membre->getLogin())?>"><?=htmlspecialchars($membre->getPrenom())?> <?=htmlspecialchars($membre->getNom())?> (<?=$membre->getLogin()?>)</option>
                         <?php }?>
                     </select>
