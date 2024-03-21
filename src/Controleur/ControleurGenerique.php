@@ -34,7 +34,7 @@ class ControleurGenerique {
 //        $queryString = [];
 //        if ($action != "") {
 //            $queryString[] = "action=$action";
-//        }
+//        }c
 //        if ($controleur != "") {
 //            $queryString[] = "controleur=$controleur";
 //        }

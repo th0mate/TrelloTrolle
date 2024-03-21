@@ -88,16 +88,16 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->dejaConnecter();
             $this->serviceUtilisateur->creerUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
-            return ControleurUtilisateur::redirection("utilisateur", "afficherFormulaireConnexion");
+            return ControleurUtilisateur::redirection( "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info",$e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger",$e->getMessage());
-            return self::redirection("utilisateur","afficherFormulaireCreation");
+            return self::redirection("afficherFormulaireCreation");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireCreation");
+            return self::redirection( "afficherFormulaireCreation");
         }
     }
 
@@ -134,12 +134,12 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été modifié !");
-            return self::redirection("tableau", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (MiseAJourException $e) {
             MessageFlash::ajouter($e->getTypeMessageFlash(),$e->getMessage());
-            return self::redirection("utilisateur","afficherFormulaireMiseAJour");
+            return self::redirection("afficherFormulaireMiseAJour");
         }
     }
 
@@ -151,12 +151,12 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $this->serviceUtilisateur->supprimerUtilisateur($login);
             MessageFlash::ajouter("success", "Votre compte a bien été supprimé !");
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            return self::redirection( "afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherDetail");
+            MessageFlash::ajouter("warning",$e->getMessage());
+            return self::redirection("afficherDetail");
         }
     }
 
@@ -172,7 +172,7 @@ class ControleurUtilisateur extends ControleurGenerique
             return $this->afficherTwig("utilisateur/formulaireConnexion.html.twig");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         }
     }
 
@@ -185,25 +185,25 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->dejaConnecter();
             $this->serviceConnexion->connecter($login, $mdp);
             MessageFlash::ajouter("success", "Connexion effectuée.");
-            return self::redirection("tableau", "afficherListeMesTableaux");
+          return  self::redirection( "afficherListeMesTableaux");
         } catch (ConnexionException $e) {
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+           return self::redirection("afficherListeMesTableaux");
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            MessageFlash::ajouter("warning",$e->getMessage());
+            return self::redirection( "afficherFormulaireConnexion");
         }
     }
 
-    #[Route('/deconnexion', name: 'deconnexion', methods: "GET")]
-    public function deconnecter(): Response
+    #[Route('/deconnexion', name: 'deconnexion',methods: "POST")]
+    public static function deconnecter(): Response
     {
         try {
             $this->serviceConnexion->deconnecter();
             MessageFlash::ajouter("success", "L'utilisateur a bien été déconnecté.");
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection("base", "accueil");
+            return self::redirection( "accueil");
         }
     }
 
@@ -219,7 +219,7 @@ class ControleurUtilisateur extends ControleurGenerique
             return $this->afficherTwig('utilisateur/resetCompte.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         }
     }
 
@@ -238,10 +238,10 @@ class ControleurUtilisateur extends ControleurGenerique
             return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig',["utilisateurs" => $utilisateurs]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection("utilisateur", "afficherListeMesTableaux");
+            return self::redirection( "afficherListeMesTableaux");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection("utilisateur", "afficherFormulaireConnexion");
+            return self::redirection( "afficherFormulaireConnexion");
         }
     }
 }
