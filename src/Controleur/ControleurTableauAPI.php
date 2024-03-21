@@ -25,7 +25,7 @@ class ControleurTableauAPI
     {
     }
 
-    #[Route("/api/tableau/membres/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
+    #[Route("/api/tableau/membre/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
     public function ajouterMembre()
     {
         {
@@ -42,7 +42,7 @@ class ControleurTableauAPI
         }
     }
 
-    #[Route('/api/tableau/membres/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
+    #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
     public function supprimerMembre()
     {
         $idTableau = $_REQUEST["idTableau"] ?? null;
