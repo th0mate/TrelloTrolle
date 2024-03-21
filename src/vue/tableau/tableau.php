@@ -4,6 +4,7 @@
 /** @var Carte[][] $data */
 /** @var array $participants */
 
+
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Carte;
@@ -111,7 +112,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                     </div>
                     <div class="corps">
                         <?php foreach ($data[$i] as $carte) {?>
-                        <div class="carte" style="background-color: <?= $carte->getCouleurCarte() ?>">
+                        <div id="c<?=$carte->getIdCarte()?>" class="carte" style="background-color: <?= $carte->getCouleurCarte() ?>">
                             <div class="titre icons_menu">
                                 <span><?= htmlspecialchars($carte->getTitreCarte()) ?></span>
                                 <?php
@@ -122,6 +123,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                                         <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer la carte"> </a>
                                     <a href="<?= $generateurUrl->generate('supprimerCarte', ['controleur' => 'carte', 'idCarte' => $carte->getIdCarte()])?>">
                                         <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/x.png');?>" alt="Supprimer la carte"> </a>
+                                    <span data-onclick="tableauxDatas.supprimerCarte(<?= $carte->getIdCarte() ?>)"><img class="icon" src="../ressources/img/x.png" alt="Supprimer la carte"></span>
                                 </span>
                                 <?php } ?>
                             </div>
