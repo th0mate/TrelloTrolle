@@ -29,7 +29,7 @@ class ControleurGenerique {
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
-    protected function redirection(string $controleur = "", string $action = "", array $query = []) : RedirectResponse
+    protected function redirection( string $action = "accueil", array $query = []) : RedirectResponse
     {
 //        $queryString = [];
 //        if ($action != "") {

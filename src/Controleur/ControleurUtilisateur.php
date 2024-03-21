@@ -195,7 +195,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     #[Route('/deconnexion', name: 'deconnexion',methods: "POST")]
-    public static function deconnecter(): Response
+    public function deconnecter(): Response
     {
         try {
             $this->serviceConnexion->deconnecter();
