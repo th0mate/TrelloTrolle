@@ -73,4 +73,5 @@ class Tableau extends AbstractDataObject
                 "loginTag" => $this->login,
         );
     }
+
 }

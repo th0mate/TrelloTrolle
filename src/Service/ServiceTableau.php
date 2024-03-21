@@ -205,4 +205,9 @@ class ServiceTableau
         $this->carteRepository->ajouter($carte1);
         return $tableau;
     }
+
+    public function estParticipant()
+    {
+        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+    }
 }

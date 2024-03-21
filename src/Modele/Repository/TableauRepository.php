@@ -90,7 +90,9 @@ class TableauRepository extends AbstractRepository
         return $obj[0];
     }
 
-    public function participant(): array
+
+
+    public function participants(): array
     {
         $query = "SELECT login FROM particpant WHERE 
         idtableau = {$this->getNomCle()}";

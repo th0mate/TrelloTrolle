@@ -59,7 +59,7 @@ class ServiceUtilisateur
      */
     public function estProprietaire(Tableau $tableau, $login)
     {
-        if (!$tableau->estProprietaire($login)) {
+        if (!$this->tableauRepository->estProprietaire($login)) {
             throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau);
         }
     }
@@ -94,13 +94,13 @@ class ServiceUtilisateur
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($tableau->estParticipantOuProprietaire($login)) {
+        if ($this->tableauRepository->estParticipantOuProprietaire($login)) {
             throw new TableauException("Ce membre est déjà membre du tableau", $tableau);
         }
 
-        $participants = $tableau->getParticipants();
+        $participants = $this->tableauRepository->getParticipants($tableau);
         $participants[] = $utilisateur;
-        $tableau->setParticipants($participants);
+        TableauRepository::setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
     }
@@ -113,16 +113,16 @@ class ServiceUtilisateur
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($tableau->estProprietaire($login)) {
+        if ($this->tableauRepository->estProprietaire($login)) {
             throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau);
         }
-        if (!$tableau->estParticipant($utilisateur->getLogin())) {
+        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin())) {
             throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau);
         }
-        $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
+        $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
         });
-        $tableau->setParticipants($participants);
+        TableauRepository::setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
         return $utilisateur;
     }
@@ -150,7 +150,7 @@ class ServiceUtilisateur
         $this->estProprietaire($tableau, $login);
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
         $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
-            return !$tableau->estParticipantOuProprietaire($u->getLogin());
+            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin());
         });
 
         if (empty($filtredUtilisateurs)) {
@@ -194,29 +194,28 @@ class ServiceUtilisateur
         $utilisateur->setPrenom($attributs["prenom"]);
         $utilisateur->setEmail($attributs["email"]);
         $utilisateur->setMdpHache(MotDePasse::hacher($attributs["mdp"]));
-        $utilisateur->setMdp($attributs["mdp"]);
 
         $this->utilisateurRepository->mettreAJour($utilisateur);
 
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
-            $participants = $carte->getAffectationsCarte();
+            $participants = $this->carteRepository->getAffectationsCarte($carte);
             $participants = array_filter($participants, function ($u) use ($login) {
                 return $u->getLogin() !== $login;
             });
             $participants[] = $utilisateur;
-            $carte->setAffectationsCarte($participants);
+            $this->carteRepository->setAffectationsCarte($participants, $carte);
             $this->carteRepository->mettreAJour($carte);
         }
 
         $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
         foreach ($tableaux as $tableau) {
-            $participants = $tableau->getParticipants();
+            $participants = $this->tableauRepository->getParticipants($tableau);
             $participants = array_filter($participants, function ($u) use ($login) {
                 return $u->getLogin() !== $login;
             });
             $participants[] = $utilisateur;
-            $tableau->setParticipants($participants);
+            TableauRepository::setParticipants($participants, $tableau);
             $this->tableauRepository->mettreAJour($tableau);
         }
 
@@ -233,21 +232,21 @@ class ServiceUtilisateur
         }
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
-            $participants = $carte->getAffectationsCarte();
+            $participants = $this->carteRepository->getAffectationsCarte($carte);
             $participants = array_filter($participants, function ($u) use ($login) {
                 return $u->getLogin() !== $login;
             });
-            $carte->setAffectationsCarte($participants);
+            $this->carteRepository->setAffectationsCarte($participants, $carte);
             $this->carteRepository->mettreAJour($carte);
         }
 
         $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
         foreach ($tableaux as $tableau) {
-            $participants = $tableau->getParticipants();
+            $participants = $this->tableauRepository->getParticipants($tableau);
             $participants = array_filter($participants, function ($u) use ($login) {
                 return $u->getLogin() !== $login;
             });
-            $tableau->setParticipants($participants);
+            TableauRepository::setParticipants($participants, $tableau);
             $this->tableauRepository->mettreAJour($tableau);
         }
         $this->utilisateurRepository->supprimer($login);
@@ -289,7 +288,6 @@ class ServiceUtilisateur
             $attributs["prenom"],
             $attributs["email"],
             $mdpHache,
-            $attributs["mdp"],
         );
         $succesSauvegarde=$this->utilisateurRepository->ajouter($utilisateur);
         if ($succesSauvegarde) {
