@@ -1,3 +1,4 @@
+
 /**
  * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP SUR LES COLONNES
@@ -126,6 +127,8 @@ function updateDraggables() {
         el.addEventListener('dragend', handleDragEnd, false);
         updateCards();
     });
+
+
 }
 
 /**
