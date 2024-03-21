@@ -17,7 +17,7 @@ let formulaireAjoutCarte = reactive({
         */
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
-        //on vide tous les inputs de formulaireCreationCarte
+
         document.querySelector('.idColonne').value = '';
         document.querySelector('.inputCreationCarte').value = '';
         document.querySelector('.desc').value = '';
