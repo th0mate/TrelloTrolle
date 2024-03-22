@@ -74,10 +74,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",404);
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.");
+                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.",400);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -89,12 +89,11 @@ class ServiceCarte implements ServiceCarteInterface
     public function newCarte($colonne,$attributs): Carte
     {
         $carte=new Carte(
-            $colonne,
             $this->carteRepository->getNextIdCarte(),
             $attributs["titreCarte"],
             $attributs["descriptifCarte"],
             $attributs["couleurCarte"],
-            $attributs["affectationsCarte"]
+            $colonne
         );
         $this->carteRepository->ajouter($carte);
         return $carte;
@@ -107,7 +106,7 @@ class ServiceCarte implements ServiceCarteInterface
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new CreationException("Attributs manquants");
+                throw new CreationException("Attributs manquants",404);
             }
         }
     }

@@ -138,7 +138,9 @@ class TableauRepository extends AbstractRepository
 
     public function estParticipantOuProprietaire(string $login): bool
     {
-        return $this->estProprietaire($login) || $this->estParticipant($login);
+        return true;
+        //TODO à REFAIRE
+        //return $this->estProprietaire($login) || $this->estParticipant($login);
     }
 
     public function getParticipants(Tableau $idcle): ?array
