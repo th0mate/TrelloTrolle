@@ -4,6 +4,8 @@
 {% block page_title %}Trollé{% endblock %}
 
 {% block page_content %}
+    <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutCarte.js') }}" defer></script>
     <p>{{ tableau.utilisateur.nom is null }}</p>
     <div class="all">
 
@@ -106,7 +108,5 @@
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
     </div>
 
-
-    <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
 
 {% endblock %}
