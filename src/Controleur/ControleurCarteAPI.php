@@ -16,6 +16,7 @@ use App\Trellotrolle\Service\ServiceConnexion;
 use App\Trellotrolle\Service\ServiceConnexionInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -72,16 +73,19 @@ class ControleurCarteAPI
     }
 
     #[Route("/api/carte/creer", name: "creerCarteAPI", methods: "PUT")]
-    public function creerCarte(): Response
+    public function creerCarte(Request $request): Response
     {
-        $idColonne = $_REQUEST["idColonne"] ?? null;
-        $attributs = [
-            "titreCarte" => $_REQUEST["titreCarte"] ?? null,
-            "descriptifCarte" => $_REQUEST["descriptifCarte"] ?? null,
-            "couleurCarte" => $_REQUEST["couleurCarte"] ?? null,
-            "affectationsCarte" => $_REQUEST["affectationsCarte"] ?? null,
-        ];
+
+        $corps=$request->getContent();
         try {
+            $jsondecode = json_decode($corps);
+            $idColonne = $jsondecode->idColonne ?? null;
+            $attributs = [
+                "titreCarte" =>  $jsondecode->titreCarte ?? null,
+                "descriptifCarte" =>  $jsondecode->descriptifCarte ?? null,
+                "couleurCarte" =>  $jsondecode->couleurCarte ?? null,
+                "affectationsCarte" =>  $jsondecode->affectationsCarte ?? null,
+            ];
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $this->serviceCarte->recupererAttributs($attributs);

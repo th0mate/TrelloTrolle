@@ -6,15 +6,33 @@ let formulaireAjoutCarte = reactive({
     description: "",
     couleur: "",
 
-    envoyerFormulaire: function () {
+    envoyerFormulaire: async function () {
 
 
         this.idColonne = document.querySelector('.idColonne').value;
-        /*
-        if (this.titre !== '') {
-            //TODO : AJAX
+
+        let response = await fetch(apiBase + '/carte/creer', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idColonne: this.idColonne,
+                titreCarte: this.titre,
+                descriptifCarte: this.description,
+                couleurCarte: this.couleur,
+                affectationCarte: null
+            })
+        });
+
+        if (response.status !== 200) {
+            console.error("Erreur lors de la création de la carte");
+            //TODO: Afficher un message d'erreur
         }
-        */
+        console.log( response);
+        console.log( response.responseText);
+
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
 

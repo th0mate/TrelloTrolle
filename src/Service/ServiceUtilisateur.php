@@ -21,6 +21,7 @@ use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
+use http\Env\Response;
 
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {

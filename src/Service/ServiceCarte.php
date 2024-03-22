@@ -14,6 +14,7 @@ use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceCarte implements ServiceCarteInterface
 {
@@ -160,7 +161,7 @@ class ServiceCarte implements ServiceCarteInterface
         $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
-            throw new CreationException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
+            throw new CreationException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!", Response::HTTP_CONFLICT);
         }
 
         return $carte;

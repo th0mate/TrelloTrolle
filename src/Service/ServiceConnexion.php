@@ -11,6 +11,7 @@ use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceConnexion implements ServiceConnexionInterface
 {
@@ -25,9 +26,9 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function pasConnecter()
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
-            throw new ConnexionException("Veuillez vous connecter");
-        }
+        /*if (!ConnexionUtilisateur::estConnecte()) {
+            throw new ConnexionException("Veuillez vous connecter", Response::HTTP_FORBIDDEN);
+        }*/
     }
 
     /**

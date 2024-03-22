@@ -11,6 +11,7 @@ use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceColonne implements ServiceColonneInterface
 {
@@ -27,15 +28,15 @@ class ServiceColonne implements ServiceColonneInterface
     public function recupererColonne($idColonne): Colonne
     {
         if (is_null($idColonne)) {
-            throw new ServiceException("Identifiant de colonne manquant");
+            throw new ServiceException("Identifiant de colonne manquant",Response::HTTP_NOT_FOUND);
         }
 
         /**
          * @var Colonne $colonne
          **/
-        $colonne = $this->colonneRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
+        $colonne = $this->colonneRepository->recupererParClePrimaire($idColonne);
         if (!$colonne) {
-            throw new ServiceException("Colonne inexistante");
+            throw new ServiceException("Colonne inexistante",Response::HTTP_NOT_FOUND);
         }
         return $colonne;
     }
