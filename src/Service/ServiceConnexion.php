@@ -26,9 +26,9 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function pasConnecter()
     {
-        /*if (!ConnexionUtilisateur::estConnecte()) {
+        if (!ConnexionUtilisateur::estConnecte()) {
             throw new ConnexionException("Veuillez vous connecter", Response::HTTP_FORBIDDEN);
-        }*/
+        }
     }
 
     /**

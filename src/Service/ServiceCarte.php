@@ -34,7 +34,7 @@ class ServiceCarte implements ServiceCarteInterface
         //Dans la fonction mettreAJourCarte(), les deux sont des warnings contrairement à supprimerCarte()
         if (is_null($idCarte)) {
             //warning
-            throw new ServiceException("Code de carte manquant");
+            throw new ServiceException("Code de carte manquant",Response::HTTP_NOT_FOUND);
         }
         /**
          * @var Carte $carte
@@ -42,7 +42,7 @@ class ServiceCarte implements ServiceCarteInterface
         $carte = $this->carteRepository->recupererParClePrimaire($idCarte);
         if (!$carte) {
             //danger
-            throw new ServiceException("Carte inexistante");
+            throw new ServiceException("Carte inexistante",Response::HTTP_NOT_FOUND);
         }
         return $carte;
     }
@@ -54,7 +54,7 @@ class ServiceCarte implements ServiceCarteInterface
     {
         //TODO supprimer Vérif après refonte BD
         if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau);
+            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau,Response::HTTP_UNAUTHORIZED);
         }
         $this->carteRepository->supprimer($idCarte);
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
@@ -74,10 +74,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",Response::HTTP_NOT_FOUND);
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.");
+                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.",Response::HTTP_FORBIDDEN);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -107,7 +107,7 @@ class ServiceCarte implements ServiceCarteInterface
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new CreationException("Attributs manquants");
+                throw new CreationException("Attributs manquants",Response::HTTP_NOT_FOUND);
             }
         }
     }
@@ -127,10 +127,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",Response::HTTP_NOT_FOUND);
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger",Response::HTTP_FORBIDDEN);
                 }
                 $affectations[] = $utilisateur;
             }

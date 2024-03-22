@@ -21,7 +21,7 @@ use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
-use http\Env\Response;
+use Symfony\Component\HttpFoundation\Response;
 
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
@@ -40,7 +40,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
         //TODO fonctions et appels à revoir car message de messageFlash différents
         if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau);
+            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
 

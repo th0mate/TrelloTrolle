@@ -7,9 +7,9 @@ class MiseAJourException extends ServiceException
 
     private $typeMessageFlash;
 
-    public function __construct(string $message,$typeMessageFlash)
+    public function __construct(string $message,$typeMessageFlash,$code)
     {
-        parent::__construct($message);
+        parent::__construct($message,$code);
         $this->typeMessageFlash=$typeMessageFlash;
     }
 
