@@ -125,7 +125,25 @@ function startReactiveDom(subDom = document) {
             rel.innerHTML = objectByName.get(obj)[fun](arg);
             startReactiveDom(rel);
         });
+    }
 
+    //TODO : TESTER
+    for (let rel of document.querySelectorAll("[data-oncheck]")) {
+        const [obj, fun, arg] = rel.dataset.oncheck.split(/[.()]+/);
+        rel.addEventListener('change', (event) => {
+            if (event.target.checked) {
+                objectByName.get(obj)[fun](arg);
+            }
+        });
+    }
+
+    for (let rel of document.querySelectorAll("[data-onUncheck]")) {
+        const [obj, fun, arg] = rel.dataset.onuncheck.split(/[.()]+/);
+        rel.addEventListener('change', (event) => {
+            if (!event.target.checked) {
+                objectByName.get(obj)[fun](arg);
+            }
+        });
     }
 }
 

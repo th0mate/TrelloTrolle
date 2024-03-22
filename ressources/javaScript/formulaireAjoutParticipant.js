@@ -31,8 +31,20 @@ let formulaireAjoutParticipant = reactive({
     },
 
     ajouterCheckboxPourUtilisateur: function (idUtilisateur, value) {
-        return `<input type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
+        return `<input data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})" data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
+    },
+
+    ajouterParticipant: function (idUtilisateur) {
+        if (this && this.participants) {
+            this.participants.push(idUtilisateur);
+        }
+    },
+
+    supprimerParticipant: function (idUtilisateur) {
+        if (this && this.participants) {
+            this.participants = this.participants.filter(participant => participant !== idUtilisateur);
+        }
     },
 
     envoyerFormulaire: async function () {
