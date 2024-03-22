@@ -103,7 +103,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/{login}/miseAJour', name: 'afficherFormulaireMiseAJourUtilisateur', methods: "GET")]
+    #[Route('/profile/miseAJour', name: 'afficherFormulaireMiseAJourUtilisateur', methods: "GET")]
     public function afficherFormulaireMiseAJour(): Response
     {
         try {
@@ -120,7 +120,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/{login}/miseAJour', name: 'mettreAJour', methods: "POST")]
+    #[Route('/profile/miseAJour', name: 'mettreAJour', methods: "POST")]
     public function mettreAJour(): Response
     {
         $attributs = [
@@ -141,7 +141,7 @@ class ControleurUtilisateur extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (MiseAJourException $e) {
             MessageFlash::ajouter($e->getTypeMessageFlash(),$e->getMessage());
-            return self::redirection("afficherFormulaireMiseAJour");
+            return self::redirection("afficherFormulaireMiseAJourUtilisateur");
         }
     }
 

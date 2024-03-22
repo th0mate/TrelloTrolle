@@ -85,7 +85,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne,$attributs);
     }
 
-    public function newCarte($colonne,$attributs):Carte
+    public function newCarte($colonne,$attributs): Carte
     {
         $carte=new Carte(
             $colonne,

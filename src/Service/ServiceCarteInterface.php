@@ -25,7 +25,7 @@ interface ServiceCarteInterface
      */
     public function creerCarte($tableau, $attributs, $colonne);
 
-    public function newCarte($colonne, $attributs): void;
+    public function newCarte($colonne, $attributs): Carte;
 
     /**
      * @throws CreationException
@@ -38,7 +38,7 @@ interface ServiceCarteInterface
      */
     public function miseAJourCarte($tableau, $attributs, $carte, $colonne);
 
-    public function carteUpdate(Carte $carte, $colonne, $attributs): void;
+    public function carteUpdate(Carte $carte, $colonne, $attributs): Carte;
 
     /**
      * @throws CreationException

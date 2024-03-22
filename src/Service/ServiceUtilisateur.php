@@ -165,7 +165,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             }
         }
         $login = $attributs['login'];
-
+        var_dump($login);
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
 
         if (!$utilisateur) {
@@ -176,6 +176,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new MiseAJourException("Email non valide", "warning");
         }
 
+        var_dump($attributs["mdpAncien"]);
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
             throw new MiseAJourException("Ancien mot de passe erroné.", "warning");
         }
@@ -190,7 +191,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $utilisateur->setMdpHache(MotDePasse::hacher($attributs["mdp"]));
 
         $this->utilisateurRepository->mettreAJour($utilisateur);
-
+        /*
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
             $participants = $this->carteRepository->getAffectationsCarte($carte);
@@ -212,6 +213,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $this->tableauRepository->setParticipants($participants, $tableau);
             $this->tableauRepository->mettreAJour($tableau);
         }
+        */
 
         Cookie::enregistrer("mdp", $attributs["mdp"]);
     }
