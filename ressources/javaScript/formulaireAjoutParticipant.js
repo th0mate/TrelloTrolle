@@ -3,6 +3,7 @@ import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 let formulaireAjoutParticipant = reactive({
     idTableau: "",
     adresseMailARechercher: "",
+    participants: [],
 
     rechercherDebutAdresseMail: async function () {
         if (this && this.adresseMailARechercher) {
@@ -25,6 +26,32 @@ let formulaireAjoutParticipant = reactive({
             } else {
                 console.log(response.responseText);
                 //TODO : afficher les résultats
+            }
+        }
+    },
+
+    ajouterCheckboxPourUtilisateur: function (idUtilisateur, value) {
+        return `<input type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
+        <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
+    },
+
+    envoyerFormulaire: async function () {
+        if (this && this.participants) {
+            //TODO : faire la fonction API
+            let response = await fetch(apiBase + '/tableau/ajouterParticipant', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idTableau: this.idTableau,
+                    participants: this.participants
+                })
+            });
+
+            if (response.status !== 200) {
+                console.error(response.error);
             }
         }
     }

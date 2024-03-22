@@ -1,4 +1,3 @@
-
 /**
  * ---------------------------------------------------------------------------------------------------------------------
  * PARTIE GESTION DES DRAG AND DROP SUR LES COLONNES
@@ -557,3 +556,20 @@ document.addEventListener('DOMContentLoaded', function () {
         el.style.backgroundColor = randomColor();
     });
 });
+
+
+document.querySelector('.invite').addEventListener('click', function () {
+    document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '0.5';
+    });
+});
+
+
+function listenerFermerAjoutMembre() {
+    document.querySelector('.formulaireAjoutMembreTableau').style.display = "none";
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '1';
+    });
+
+}

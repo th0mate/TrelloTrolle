@@ -121,8 +121,9 @@
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
     </div>
 
+
     <div class="formulaireAjoutMembreTableau">
-        <div class="wrap"><h2>Ajout d'un collaborateur</h2> <img class="closeCard"
+        <div class="wrap"><h2>Ajout d'un collaborateur</h2> <img onclick="listenerFermerAjoutMembre()" class="closeCard"
                                                                  src="{{ asset('../tests/close.png') }}"
                                                                  alt="">
         </div>
@@ -131,7 +132,7 @@
                 <input type="email" class="inputCreationCarte" placeholder="Entrez l'adresse mail du collaborateur">
             </label>
         </div>
-        <div class="boutonAjout">Ajouter</div>
+        <div class="boutonAjout">Terminer</div>
     </div>
 
 
