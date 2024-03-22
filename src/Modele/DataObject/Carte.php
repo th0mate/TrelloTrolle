@@ -2,7 +2,7 @@
 
 namespace App\Trellotrolle\Modele\DataObject;
 
-class Carte extends AbstractDataObject
+class Carte extends AbstractDataObject implements \JsonSerializable
 {
     public function __construct(
         private int     $idCarte,
@@ -87,4 +87,17 @@ class Carte extends AbstractDataObject
     }
 
 
+    public function jsonSerialize(): mixed
+    {
+        return [
+            "idCarte"=> $this->idCarte,
+            "titreCarte"=> $this->titreCarte,
+            "descriptifCarte"=> $this->descriptifCarte,
+            "couleurCarte"=> $this->couleurCarte,
+            "colonne"=> [
+                "idColonne"=> $this->colonne->getIdColonne(),
+                "titreColonne"=> $this->colonne->getTitreColonne(),
+            ]
+        ];
+    }
 }

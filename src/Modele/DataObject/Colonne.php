@@ -2,7 +2,7 @@
 
 namespace App\Trellotrolle\Modele\DataObject;
 
-class Colonne extends AbstractDataObject
+class Colonne extends AbstractDataObject implements \JsonSerializable
 {
     public function __construct(
         private ?int     $idColonne,
@@ -61,4 +61,15 @@ class Colonne extends AbstractDataObject
         );
     }
 
+    public function jsonSerialize(): mixed
+    {
+        return [
+            "idcolonne" => $this->idColonne,
+            "titrecolonne" => $this->titreColonne,
+            "tableau" =>[
+                "idtableau" => $this->tableau->getIdTableau(),
+                "titretableau" => $this->tableau->getTitreTableau(),
+            ]
+        ];
+    }
 }
