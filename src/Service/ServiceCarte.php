@@ -127,10 +127,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",402);
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger",403);
                 }
                 $affectations[] = $utilisateur;
             }

@@ -12,7 +12,7 @@ let formulaireAjoutCarte = reactive({
         this.idColonne = document.querySelector('.idColonne').value;
 
         let response = await fetch(apiBase + '/carte/creer', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -22,15 +22,14 @@ let formulaireAjoutCarte = reactive({
                 titreCarte: this.titre,
                 descriptifCarte: this.description,
                 couleurCarte: this.couleur,
-                affectationCarte: null
+                affectationsCarte: []
             })
         });
 
         if (response.status !== 200) {
-            console.error("Erreur lors de la création de la carte");
+            console.error(response.error);
             //TODO: Afficher un message d'erreur
         }
-        console.log( response);
         console.log( response.responseText);
 
         this.ajouterCarte(this.idColonne)

@@ -8,9 +8,9 @@ class TableauException extends ServiceException
 {
     private Tableau $tableau;
 
-    public function __construct($message,$tableau)
+    public function __construct($message,$tableau,$code)
     {
-        parent::__construct($message);
+        parent::__construct($message,$code);
         $this->tableau=$tableau;
     }
 

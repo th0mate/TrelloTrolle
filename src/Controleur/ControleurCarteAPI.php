@@ -72,7 +72,7 @@ class ControleurCarteAPI
         }
     }
 
-    #[Route("/api/carte/creer", name: "creerCarteAPI", methods: "PUT")]
+    #[Route("/api/carte/creer", name: "creerCarteAPI", methods: "POST")]
     public function creerCarte(Request $request): Response
     {
 

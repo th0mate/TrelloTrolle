@@ -28,7 +28,7 @@ class ServiceColonne implements ServiceColonneInterface
     public function recupererColonne($idColonne): Colonne
     {
         if (is_null($idColonne)) {
-            throw new ServiceException("Identifiant de colonne manquant",Response::HTTP_NOT_FOUND);
+            throw new ServiceException("Identifiant de colonne manquant",404);
         }
 
         /**
@@ -36,7 +36,7 @@ class ServiceColonne implements ServiceColonneInterface
          **/
         $colonne = $this->colonneRepository->recupererParClePrimaire($idColonne);
         if (!$colonne) {
-            throw new ServiceException("Colonne inexistante",Response::HTTP_NOT_FOUND);
+            throw new ServiceException("Colonne inexistante",401);
         }
         return $colonne;
     }

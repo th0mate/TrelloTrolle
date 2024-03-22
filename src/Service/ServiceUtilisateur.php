@@ -39,8 +39,8 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
 
         //TODO fonctions et appels à revoir car message de messageFlash différents
-        if (!$tableau->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau);
+        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,401);
         }
     }
 
