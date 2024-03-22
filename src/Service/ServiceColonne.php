@@ -54,7 +54,7 @@ class ServiceColonne implements ServiceColonneInterface
         //TODO supprimer Vérif après refonte BD
 
         if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau);
+            throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau,Response::HTTP_UNAUTHORIZED);
         }
         $this->colonneRepository->supprimer($idColonne);
         return $this->colonneRepository->getNombreColonnesTotalTableau($tableau->getIdTableau());
@@ -66,7 +66,7 @@ class ServiceColonne implements ServiceColonneInterface
     public function isSetNomColonne($nomColonne): void
     {
         if (is_null($nomColonne)) {
-            throw new CreationException("Nom de colonne manquant");
+            throw new CreationException("Nom de colonne manquant",Response::HTTP_NOT_FOUND);
         }
     }
 

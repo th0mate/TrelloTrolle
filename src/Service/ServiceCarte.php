@@ -34,7 +34,7 @@ class ServiceCarte implements ServiceCarteInterface
         //Dans la fonction mettreAJourCarte(), les deux sont des warnings contrairement à supprimerCarte()
         if (is_null($idCarte)) {
             //warning
-            throw new ServiceException("Code de carte manquant");
+            throw new ServiceException("Code de carte manquant",Response::HTTP_NOT_FOUND);
         }
         /**
          * @var Carte $carte
@@ -42,7 +42,7 @@ class ServiceCarte implements ServiceCarteInterface
         $carte = $this->carteRepository->recupererParClePrimaire($idCarte);
         if (!$carte) {
             //danger
-            throw new ServiceException("Carte inexistante");
+            throw new ServiceException("Carte inexistante",Response::HTTP_NOT_FOUND);
         }
         return $carte;
     }
@@ -127,10 +127,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",402);
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger",403);
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
                 }
                 $affectations[] = $utilisateur;
             }
