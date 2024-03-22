@@ -10,7 +10,7 @@ let formulaireAjoutCarte = reactive({
 
 
         this.idColonne = document.querySelector('.idColonne').value;
-
+        //TODO : à corriger, la carte s'ajoute trois fois
         let response = await fetch(apiBase + '/carte/creer', {
             method: 'POST',
             headers: {
@@ -38,7 +38,7 @@ let formulaireAjoutCarte = reactive({
         document.querySelector('.idColonne').value = '';
         document.querySelector('.inputCreationCarte').value = '';
         document.querySelector('.desc').value = '';
-        document.querySelector('.color').value = '';
+        document.querySelector('.color').value = '#ffffff';
         document.querySelector('.all').style.opacity = 1;
     },
 
