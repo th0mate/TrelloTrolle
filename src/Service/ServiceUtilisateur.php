@@ -94,7 +94,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
         $participants = $this->tableauRepository->getParticipants($tableau);
         $participants[] = $utilisateur;
-        TableauRepository::setParticipants($participants, $tableau);
+        $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
     }
@@ -116,7 +116,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
         });
-        TableauRepository::setParticipants($participants, $tableau);
+        $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
         return $utilisateur;
     }
@@ -209,7 +209,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
                 return $u->getLogin() !== $login;
             });
             $participants[] = $utilisateur;
-            TableauRepository::setParticipants($participants, $tableau);
+            $this->tableauRepository->setParticipants($participants, $tableau);
             $this->tableauRepository->mettreAJour($tableau);
         }
 
@@ -240,7 +240,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $participants = array_filter($participants, function ($u) use ($login) {
                 return $u->getLogin() !== $login;
             });
-            TableauRepository::setParticipants($participants, $tableau);
+            $this->tableauRepository->setParticipants($participants, $tableau);
             $this->tableauRepository->mettreAJour($tableau);
         }
         $this->utilisateurRepository->supprimer($login);

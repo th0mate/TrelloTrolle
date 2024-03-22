@@ -4,7 +4,7 @@
 {% block page_title %}Trollé{% endblock %}
 
 {% block page_content %}
-
+    <p>{{ tableau.utilisateur.nom is null }}</p>
     <div class="all">
 
         <div class="infos">
@@ -21,11 +21,11 @@
 
         <div class="ul">
 
-            {% for i in 0..data|length %}
+            {% for i in 0..data|length-1 %}
                 <div class="draggable" data-columns="{{ colonnes[i].idColonne }}" draggable="true">
                     <!-- Entete de la colonne avec son titre et ses bullets -->
                     <div class="entete">
-                        <h5 class="main" draggable="true">{{ colonnes[i].tittreColonne }}</h5>
+                        <h5 class="main" draggable="true">{{ colonnes[i].titreColonne }}</h5>
                         <div class="bullets"><img src="{{ asset('../tests/bullets.png') }}" alt=""></div>
                     </div>
 

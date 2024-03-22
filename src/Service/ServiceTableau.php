@@ -16,6 +16,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
+use http\Message;
 
 class ServiceTableau implements ServiceTableauInterface
 {
@@ -178,13 +179,13 @@ class ServiceTableau implements ServiceTableauInterface
             $idTableau,
             $codeTableau,
             $_REQUEST["nomTableau"],
-            $utilisateur->getLogin()
+            $utilisateur
         );
 
         $colonne = new Colonne(
             $idColonne1,
             $nomColonne1,
-            $idTableau
+            $tableau
         );
 
         $carte1 = new Carte(
@@ -192,7 +193,7 @@ class ServiceTableau implements ServiceTableauInterface
             $carteInitiale,
             $descriptifInitial,
             "#FFFFFF",
-            $idColonne1
+            $colonne
         );
 
         $this->tableauRepository->ajouter($tableau);

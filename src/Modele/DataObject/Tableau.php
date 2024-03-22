@@ -7,31 +7,32 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 class Tableau extends AbstractDataObject
 {
     public function __construct(
-        private int         $idTableau,
-        private string      $codeTableau,
-        private string      $titreTableau,
-        private string      $login
+        private ?int         $idTableau,
+        private ?string      $codeTableau,
+        private ?string      $titreTableau,
+        private ?Utilisateur $utilisateur,
     )
-    {}
+    {
+    }
 
     public static function construireDepuisTableau(array $objetFormatTableau): Tableau
     {
         return new Tableau(
-            $objetFormatTableau["idtableau"],
-            $objetFormatTableau["codetableau"],
-            $objetFormatTableau["titretableau"],
-            $objetFormatTableau["login"],
+            $objetFormatTableau["idtableau"] ?? null,
+            $objetFormatTableau["codetableau"] ?? null,
+            $objetFormatTableau["titretableau"] ?? null,
+            Utilisateur::construireDepuisTableau($objetFormatTableau),
         );
     }
 
-    public function getlogin(): string
+    public function getUtilisateur(): ?Utilisateur
     {
-        return $this->login;
+        return $this->utilisateur;
     }
 
-    public function setLogin(string $login): void
+    public function setUtilisateur(Utilisateur $utilisateur): void
     {
-        $this->login = $login;
+        $this->utilisateur = $utilisateur;
     }
 
     public function getIdTableau(): ?int
@@ -67,11 +68,12 @@ class Tableau extends AbstractDataObject
     public function formatTableau(): array
     {
         return array(
-                "idtableauTag" => $this->idTableau,
-                "codetableauTag" => $this->codeTableau,
-                "titretableauTag" => $this->titreTableau,
-                "loginTag" => $this->login,
+            "idtableauTag" => $this->idTableau,
+            "codetableauTag" => $this->codeTableau,
+            "titretableauTag" => $this->titreTableau,
+            "loginTag" => $this->utilisateur->getLogin(),
         );
     }
+
 
 }

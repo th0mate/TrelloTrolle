@@ -5,29 +5,32 @@ namespace App\Trellotrolle\Modele\DataObject;
 class Colonne extends AbstractDataObject
 {
     public function __construct(
-        private int $idColonne,
-        private string $titreColonne,
-        private int $idTableau
+        private ?int     $idColonne,
+        private ?string  $titreColonne,
+        private ?Tableau $tableau,
     )
-    {}
+    {
+    }
 
-    public static function construireDepuisTableau(array $objetFormatTableau) : Colonne {
+    public static function construireDepuisTableau(array $objetFormatTableau): Colonne
+    {
         return new Colonne(
-            $objetFormatTableau["idcolonne"],
-            $objetFormatTableau["titrecolonne"],
-            $objetFormatTableau["idtableau"],
+            $objetFormatTableau["idcolonne"] ?? null,
+            $objetFormatTableau["titrecolonne"] ?? null,
+            Tableau::construireDepuisTableau($objetFormatTableau),
         );
     }
 
-    public function getIdTableau(): int
+    public function getTableau(): Tableau
     {
-        return $this->idTableau;
+        return $this->tableau;
     }
 
-    public function setIdTableau(int $idTableau): void
+    public function setTableau(Tableau $tableau): void
     {
-        $this->idTableau = $idTableau;
+        $this->tableau = $tableau;
     }
+
 
     public function getIdColonne(): ?int
     {
@@ -52,9 +55,10 @@ class Colonne extends AbstractDataObject
     public function formatTableau(): array
     {
         return array(
-                "idcolonneTag" => $this->idColonne,
-                "titrecolonneTag" => $this->titreColonne,
-                "idtableauTag" => $this->idTableau,
+            "idcolonneTag" => $this->idColonne,
+            "titrecolonneTag" => $this->titreColonne,
+            "idtableauTag" => $this->tableau->getIdTableau(),
         );
     }
+
 }
