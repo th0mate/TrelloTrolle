@@ -30,20 +30,23 @@ let formulaireAjoutParticipant = reactive({
         }
     },
 
+    supprimerParticipant: function (idUtilisateur) {
+        document.querySelector(`#participant${idUtilisateur}`).remove();
+        if (this && this.participants) {
+            this.participants = this.participants.filter(participant => participant !== idUtilisateur);
+        }
+    },
+
     ajouterCheckboxPourUtilisateur: function (idUtilisateur, value) {
-        return `<input data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})" data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
+        //data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})"
+        this.ajouterParticipant(idUtilisateur);
+        return `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
     },
 
     ajouterParticipant: function (idUtilisateur) {
         if (this && this.participants) {
             this.participants.push(idUtilisateur);
-        }
-    },
-
-    supprimerParticipant: function (idUtilisateur) {
-        if (this && this.participants) {
-            this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }
     },
 
