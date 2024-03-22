@@ -37,11 +37,15 @@ let formulaireAjoutParticipant = reactive({
         }
     },
 
-    ajouterCheckboxPourUtilisateur: function (idUtilisateur, value) {
+    ajouterCheckboxPourUtilisateur: function (idUtilisateur = null, value = null, estDepuisRecherche = false) {
         //data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})"
-        this.ajouterParticipant(idUtilisateur);
-        return `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
+        if (estDepuisRecherche && this) {
+            this.ajouterParticipant(idUtilisateur);
+            return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
+        } else {
+            return document.querySelector('.checkBoxCollaborateurs').innerHTML;
+        }
     },
 
     ajouterParticipant: function (idUtilisateur) {

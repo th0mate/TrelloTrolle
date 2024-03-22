@@ -115,7 +115,7 @@
                     </label>
                 {% endfor %}
             {% else %}
-                <p>Il n'y a pas de collaborateurs pour le moment. <a href="">Ajouter des collaborateurs</a></p>
+                <p>Il n'y a pas de collaborateurs pour le moment. <span class="addCollborateurs">Ajouter des collaborateurs</span></p>
             {% endif %}
         </div>
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
@@ -123,7 +123,7 @@
 
 
     <div class="formulaireAjoutMembreTableau">
-        <div class="wrap"><h2>Ajout d'un collaborateur</h2> <img onclick="listenerFermerAjoutMembre()" class="closeCard"
+        <div class="wrap"><h2>Ajout de Collaborateurs</h2> <img onclick="listenerFermerAjoutMembre()" class="closeCard"
                                                                  src="{{ asset('../tests/close.png') }}"
                                                                  alt="">
         </div>
@@ -131,6 +131,7 @@
             <label>
                 <input type="email" data-reactiveIput="formulaireAjoutParticipant.rechercherDebutAdresseMail" class="inputCreationCarte" placeholder="Entrez l'adresse mail du collaborateur">
             </label>
+            <div class="checkBoxCollaborateurs" data-htmlfun="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur"></div>
         </div>
         <div data-onclick="formulaireAjoutParticipant.envoyerFormulaire" class="boutonAjout">Terminer</div>
     </div>
