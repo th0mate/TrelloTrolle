@@ -38,7 +38,16 @@ class TableauRepository extends AbstractRepository
 
     public function recupererParCodeTableau(string $codeTableau): ?AbstractDataObject
     {
-        return $this->recupererPar("codetableau", $codeTableau);
+        $query = "SELECT idtableau,codetableau,titretableau,t.login, nom,prenom,email,mdphache FROM {$this->getNomTable()} t
+        JOIN utilisateur u ON t.login=u.login
+        WHERE codetableau=:codetableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["codetableau" => $codeTableau]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if ($objetFormatTableau === false) {
+            return null;
+        }
+        return $this->construireDepuisTableau($objetFormatTableau);
     }
 
 
@@ -51,7 +60,6 @@ class TableauRepository extends AbstractRepository
                 (select idtableau from participant p where p.login=:login) 
                 or t.login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
-        //TODO encode avec JSON comme code de base
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
@@ -69,7 +77,6 @@ class TableauRepository extends AbstractRepository
                 from {$this->getNomTable()} t JOIN participant p ON t.idtableau = p.idtableau
                 WHERE p.idlogin = :login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
-        //TODO encode avec JSON comme code de base
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
@@ -96,9 +103,9 @@ class TableauRepository extends AbstractRepository
 
     public function participants(): array
     {
-        $query = "SELECT login FROM particpant WHERE 
+        $query = "SELECT login FROM participant WHERE 
         idtableau = {$this->getNomCle()}";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute();
         $obj = [];
         foreach ($pdoStatement as $objetFormatTableau) {
@@ -119,7 +126,7 @@ class TableauRepository extends AbstractRepository
     {
         $query = "SELECT login FROM {$this->getNomTable()} WHERE 
         idtableau = {$this->getNomCle()}";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute();
         $obj = $pdoStatement->fetch();
         if ($obj[0] === $login) {
@@ -134,25 +141,13 @@ class TableauRepository extends AbstractRepository
         return $this->estProprietaire($login) || $this->estParticipant($login);
     }
 
-    public function getUtilisateur(Tableau  $idcle): Utilisateur
-    {
-        $formatNomsColonnes=(new UtilisateurRepository())->formatNomsColonnes();
-        $query = "SELECT $formatNomsColonnes
-        FROM {$this->getNomTable()} t JOIN utilisateur u
-        ON u.idlogin=t.idlogin WHERE idtableau =: idcle";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
-        $pdoStatement->execute(["idcle" => $idcle->getIdTableau()]);
-        $obj = $pdoStatement->fetch();
-        return Utilisateur::construireDepuisTableau($obj);
-    }
-
     public function getParticipants(Tableau $idcle): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
-        FROM {$this->getNomTable()} c JOIN participant p
-        ON c.idtableau=a.idtableau
+        FROM {$this->getNomTable()} c 
+        JOIN participant p ON c.idtableau=a.idtableau
         JOIN utilisateur u ON u.login=p.login WHERE a.{$this->getNomCle()} =:idcle";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idcle" => $idcle->getIdTableau()]);
         $obj = [];
         foreach($pdoStatement as $objetFormatTableau) {
@@ -161,11 +156,11 @@ class TableauRepository extends AbstractRepository
         return $obj;
     }
 
-    public static function setParticipants(?array $participants, Tableau $instance): void
+    public function setParticipants(?array $participants, Tableau $instance): void
     {
         foreach($participants as $participant) {
             $query = "INSERT INTO participant VALUES (:idtableau, :login)";
-            $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
+            $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
             $pdoStatement->execute(["idtableau" => $instance->getIdTableau(), "login" => $participant->getLogin()]);
         }
     }

@@ -50,17 +50,5 @@ class ColonneRepository extends AbstractRepository
         return $obj[0];
     }
 
-    public function getTableau(Colonne  $idcle): Tableau
-    {
-        $formatNomsColonnes=(new TableauRepository())->formatNomsColonnes();
-        $query = "SELECT $formatNomsColonnes
-        FROM {$this->getNomTable()} t JOIN tableau ta
-        ON u.idtableau=ta.idtableau WHERE idcolonne =: idcolonne";
-        $pdoStatement = ConnexionBaseDeDonnees::getPdo()->prepare($query);
-        $pdoStatement->execute(["idcolonne" => $idcle->getIdColonne()]);
-        $obj = $pdoStatement->fetch();
-        return Tableau::construireDepuisTableau($obj);
-    }
-
 
 }

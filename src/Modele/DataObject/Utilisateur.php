@@ -5,70 +5,70 @@ namespace App\Trellotrolle\Modele\DataObject;
 class Utilisateur extends AbstractDataObject
 {
     public function __construct(
-        private string $login,
-        private string $nom,
-        private string $prenom,
-        private string $email,
-        private string $mdpHache,
+        private ?string $login ,
+        private ?string $nom,
+        private ?string $prenom,
+        private ?string $email,
+        private ?string $mdpHache,
     )
     {}
 
     public static function construireDepuisTableau(array $objetFormatTableau) : Utilisateur {
         return new Utilisateur(
-            $objetFormatTableau["login"],
-            $objetFormatTableau["nom"],
-            $objetFormatTableau["prenom"],
-            $objetFormatTableau["email"],
-            $objetFormatTableau["mdphache"],
+            $objetFormatTableau["login"] ??null,
+            $objetFormatTableau["nom"]??null,
+            $objetFormatTableau["prenom"]??null,
+            $objetFormatTableau["email"]??null,
+            $objetFormatTableau["mdphache"]??null,
         );
     }
 
-    public function getLogin(): string
+    public function getLogin(): ?string
     {
         return $this->login;
     }
 
-    public function setLogin(string $login): void
+    public function setLogin(?string $login): void
     {
         $this->login = $login;
     }
 
-    public function getNom(): string
+    public function getNom(): ?string
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): void
+    public function setNom(?string $nom): void
     {
         $this->nom = $nom;
     }
 
-    public function getPrenom(): string
+    public function getPrenom(): ?string
     {
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): void
+    public function setPrenom(?string $prenom): void
     {
         $this->prenom = $prenom;
     }
 
-    public function getMdpHache(): string
+    public function getMdpHache(): ?string
     {
         return $this->mdpHache;
     }
 
-    public function setMdpHache(string $mdpHache): void
+    public function setMdpHache(?string $mdpHache): void
     {
         $this->mdpHache = $mdpHache;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(?string $email): void
     {
         $this->email = $email;
     }

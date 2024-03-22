@@ -29,13 +29,11 @@ class ServiceColonne
         if (is_null($idColonne)) {
             throw new ServiceException("Identifiant de colonne manquant");
         }
-        $colonneRepository = new ColonneRepository();
 
         /**
          * @var Colonne $colonne
          **/
-
-        $colonne = $colonneRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
+        $colonne = $this->colonneRepository->recupererParClePrimaire($_REQUEST["idColonne"]);
         if (!$colonne) {
             throw new ServiceException("Colonne inexistante");
         }

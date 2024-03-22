@@ -49,7 +49,6 @@ class CarteRepository extends AbstractRepository
         $sql = "SELECT {$this->formatNomsColonnes()} from {$this->getNomTable()} c
         JOIN affectationcarte a ON a.idcarte=c.idcarte
         WHERE login=:login";
-        //TODO encode JSON comme code de base
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
@@ -76,7 +75,8 @@ class CarteRepository extends AbstractRepository
         $query = "SELECT u.login,nom,prenom,email,mdphache
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
-        JOIN utilisateur u ON u.login=a.login WHERE a.{$this->getNomCle()} =:idcle";
+        JOIN utilisateur u ON u.login=a.login 
+        WHERE a.{$this->getNomCle()} =:idcle";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
         $obj = [];

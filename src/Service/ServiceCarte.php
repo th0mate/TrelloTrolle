@@ -144,7 +144,7 @@ class ServiceCarte
         $carte->setTitreCarte($attributs["titreCarte"]);
         $carte->setDescriptifCarte($attributs["descriptifCarte"]);
         $carte->setCouleurCarte($attributs["couleurCarte"]);
-        $carte->setAffectationsCarte($attributs["affectationsCarte"]);
+        $this->carteRepository->setAffectationsCarte($attributs["affectationsCarte"],$carte);
         $this->carteRepository->mettreAJour($carte);
     }
 

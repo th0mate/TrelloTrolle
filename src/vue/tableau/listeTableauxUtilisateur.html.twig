@@ -4,10 +4,12 @@
 {% block page_title %}Trollé{% endblock %}
 
 {% block page_content %}
+
     <div>
         <h3>Mes tableaux ({{ tableaux|length }})</h3>
         <div class="tableaux">
             {% for tableau in tableaux %}
+
             <div class="ligne_tableau">
                 <div>{{ tableau.titreTableau }}</div>
                 <div>
@@ -16,7 +18,7 @@
                     </a>
                 </div>
                 <div>
-                    {% if tableau.estProprietaire(idUtilisateurConnecte) %}
+                    {% if tableau.utilisateur.login == idUtilisateurConnecte %}
                     <a href="{{ route('supprimerTableau', {idTableau : tableau.idTableau}) }}">Supprimer le tableau</a> {# TODO A MODIFIER SUREMENT #}
                     {% else %}
                     <a href="{{ route('quitterTableau', {idTableau : tableau.idTableau}) }}">Quitter le tableau</a> {# TODO A MODIFIER SUREMENT #}

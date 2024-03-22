@@ -17,10 +17,6 @@ abstract class AbstractRepository
     protected abstract function getNomsColonnes(): array;
     protected abstract function construireDepuisTableau(array $objetFormatTableau) : AbstractDataObject;
 
-    private function myDbInt() {
-        //TO-DO ! Important !
-    }
-
     protected function formatNomsColonnes() : string {
         return join(",",$this->getNomsColonnes());
     }
@@ -173,7 +169,8 @@ abstract class AbstractRepository
     }
 
     protected function getNextId(string $type) : int {
-        $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM app_db");
+        $nomTable = $this->getNomTable();
+        $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM $nomTable");
         $query->execute();
         $obj = $query->fetch();
         return $obj[0] === null ? 0 : $obj[0] + 1;
