@@ -691,3 +691,114 @@ body {
     }
 
 }
+
+
+.formulaireAjoutMembreTableau {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    min-height: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #101204;
+    z-index: 5;
+    padding: 1%;
+    border-radius: 10px;
+    color: white;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 7px;
+        background-color: #282828;
+        border-radius: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: #8100ff;
+        border-radius: 5px;
+    }
+
+    .wrap {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 1%;
+
+        h2 {
+            width: 95%;
+            padding-left: 20px;
+            text-align: center;
+        }
+
+        img {
+            width: 20px;
+            cursor: pointer;
+        }
+    }
+
+    .content {
+
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+
+        h4 {
+            margin-bottom: 10px;
+        }
+
+        label {
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            height: 30px;
+            border-radius: 5px;
+            border: 2px solid #8100ff;
+            padding-left: 10px;
+            background-color: #23272b;
+            color: white;
+            transition: background-color 200ms ease-in-out;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+
+        }
+
+        input:focus {
+            background-color: white;
+            color: black;
+        }
+
+    }
+
+    .boutonAjout {
+        width: 50%;
+        height: 28px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        background-color: #8100ff;
+        border-radius: 5px;
+        transition: all 200ms ease-in-out;
+        cursor: pointer;
+        border: 2px solid transparent;
+    }
+
+    .boutonAjout:hover {
+        background-color: white;
+        color: black;
+        border: 2px solid #8100ff;
+
+    }
+}

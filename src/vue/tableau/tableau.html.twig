@@ -84,7 +84,7 @@
 
     <div class="formulaireCreationCarte">
         <div class="wrap"><h2>Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
-                                                              alt="">
+                                                             alt="">
         </div>
         <input type="hidden" class="idColonne" data-reactiveInput="formulaireAjoutCarte.idColonne">
         <div class="content"><h4>Titre de la carte :</h4>
@@ -105,9 +105,33 @@
                    data-reactiveInput="formulaireAjoutCarte.couleur">
         </div>
         <div class="content"><h4>Membres affectés :</h4>
-            <input type="text">
+            {% if participants|length > 0 %}
+                {% for participant in participants %}
+                    <label>
+                        <input type="checkbox"
+                               data-reactiveInput="formulaireAjoutCarte.affectation"
+                               value="{{ participant.idUtilisateur }}">
+                        {{ participant.prenom }} {{ participant.nom }}
+                    </label>
+                {% endfor %}
+            {% else %}
+                <p>Il n'y a pas de collaborateurs pour le moment. <a href="">Ajouter des collaborateurs</a></p>
+            {% endif %}
         </div>
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
+    </div>
+
+    <div class="formulaireAjoutMembreTableau">
+        <div class="wrap"><h2>Ajout d'un collaborateur</h2> <img class="closeCard"
+                                                                 src="{{ asset('../tests/close.png') }}"
+                                                                 alt="">
+        </div>
+        <div class="content"><h4>Adresse mail du collaborateur :</h4>
+            <label>
+                <input type="email" class="inputCreationCarte" placeholder="Entrez l'adresse mail du collaborateur">
+            </label>
+        </div>
+        <div class="boutonAjout">Ajouter</div>
     </div>
 
 
