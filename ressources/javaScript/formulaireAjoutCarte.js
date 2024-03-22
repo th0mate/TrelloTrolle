@@ -17,6 +17,11 @@ let formulaireAjoutCarte = reactive({
         */
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
+
+        document.querySelector('.idColonne').value = '';
+        document.querySelector('.inputCreationCarte').value = '';
+        document.querySelector('.desc').value = '';
+        document.querySelector('.color').value = '';
         document.querySelector('.all').style.opacity = 1;
     },
 

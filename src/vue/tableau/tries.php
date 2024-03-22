@@ -18,7 +18,6 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
     <title>Title</title>
     <link rel="stylesheet" type="text/css" href="../tests/tests.css">
     <script type="text/javascript" src="../tests/tableaux.js" defer></script>
-    <script type="module" src="../ressources/javaScript/colonne.js" defer></script>
     <script type="module" src="../ressources/javaScript/formulaireAjoutCarte.js" defer></script>
 </head>
 <body>
@@ -53,7 +52,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
                 </div>
 
                 <!-- Stockage des cartes -->
-                <div class="stockage"  data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
+                <div class="stockage" data-columns="<?= $colonnes[$i]->getIdColonne() ?>">
                     <?php
                     foreach ($data[$i] as $carte) {
                         ?>
