@@ -148,7 +148,7 @@ class ServiceTableau implements ServiceTableauInterface
 
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
-            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
+            $affectations = array_filter($this->carteRepository->getAffectationsCarte($carte), function ($u) use ($utilisateur) {
                 return $u->getLogin() != $utilisateur->getLogin();
             });
             $carte->setAffectationsCarte($affectations);
