@@ -6,7 +6,7 @@ let formulaireAjoutParticipant = reactive({
     participants: [],
 
     rechercherDebutAdresseMail: async function () {
-        if (this && this.adresseMailARechercher) {
+        if (this) {
             this.idTableau = document.querySelector('.formulaireAjoutMembreTableau').getAttribute('data-tableau');
             console.log(this.idTableau);
             this.adresseMailARechercher = document.querySelector('.adresseMailARechercher').value;
@@ -41,14 +41,15 @@ let formulaireAjoutParticipant = reactive({
 
     ajouterCheckboxPourUtilisateur: function (idUtilisateur = null, value = null, estDepuisRecherche = false) {
         //data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})"
-        if (estDepuisRecherche && this) {
+
+        //TODO : corriger cette fonction
+        if (this.idTableau !== '' && estDepuisRecherche) {
             console.log("dans le if");
             this.ajouterParticipant(idUtilisateur);
             return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
         } else {
-            //return document.querySelector('.checkBoxCollaborateurs').innerHTML;
-            return "aaa";
+            return document.querySelector('.checkBoxCollaborateurs').innerHTML;
         }
     },
 
