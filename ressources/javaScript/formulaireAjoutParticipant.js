@@ -8,6 +8,7 @@ let formulaireAjoutParticipant = reactive({
     rechercherDebutAdresseMail: async function () {
         if (this && this.adresseMailARechercher) {
             this.idTableau = document.querySelector('.formulaireAjoutMembreTableau').getAttribute('data-tableau');
+            console.log(this.idTableau);
             this.adresseMailARechercher = document.querySelector('.adresseMailARechercher').value;
             let response = await fetch(apiBase + '/utilisateur/rechercher', {
                 //TODO : faire la fonction API et le reste
@@ -41,11 +42,13 @@ let formulaireAjoutParticipant = reactive({
     ajouterCheckboxPourUtilisateur: function (idUtilisateur = null, value = null, estDepuisRecherche = false) {
         //data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})"
         if (estDepuisRecherche && this) {
+            console.log("dans le if");
             this.ajouterParticipant(idUtilisateur);
             return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
         } else {
-            return document.querySelector('.checkBoxCollaborateurs').innerHTML;
+            //return document.querySelector('.checkBoxCollaborateurs').innerHTML;
+            return "aaa";
         }
     },
 

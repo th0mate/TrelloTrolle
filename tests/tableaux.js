@@ -151,8 +151,8 @@ function addNewItem() {
     newElement.setAttribute('draggable', 'true');
     newElement.setAttribute('data-columns', id);
     if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="../tests/bullets.png" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
-                <img src="../tests/plus.png" alt="">
+        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
+                <img src="${plusImageUrl}" alt="">
                 Ajouter une carte
             </div>`;
         let ul = document.querySelector('.ul');
@@ -567,7 +567,6 @@ document.querySelector('.invite').addEventListener('click', function () {
 
 document.querySelector('.addCollborateurs').addEventListener('click', function () {
     document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
-    document.querySelector('.formulaireAjoutMembreTableau').setAttribute();
     document.querySelector('.formulaireCreationCarte').style.display = "none";
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';

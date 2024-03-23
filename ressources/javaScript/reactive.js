@@ -82,7 +82,6 @@ function startReactiveDom(subDom = document) {
     for (let elementClickable of document.querySelectorAll("[data-onclick]")) {
         const [nomObjet, methode, argument] = elementClickable.dataset.onclick.split(/[.()]+/);
         elementClickable.addEventListener('click', (event) => {
-            console.log(nomObjet, methode, argument);
             const objet = objectByName.get(nomObjet);
             objet[methode](argument);
         });
@@ -120,13 +119,9 @@ function startReactiveDom(subDom = document) {
         });
     }
 
-    for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
+    for (let rel of subDom.querySelectorAll("[data-htmlfun]")){
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
-
-        applyAndRegister(() => {
-            rel.innerHTML = objectByName.get(obj)[fun](arg);
-            startReactiveDom(rel);
-        });
+        applyAndRegister(()=>{ rel.innerHTML = objectByName.get(obj)[fun](arg); startReactiveDom(rel)});
     }
 
     //TODO : TESTER

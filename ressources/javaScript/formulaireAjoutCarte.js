@@ -26,10 +26,9 @@ let formulaireAjoutCarte = reactive({
         });
 
         if (response.status !== 200) {
-            console.error(response.error);
+            console.error("Erreur lors de la création de la carte dans l'API");
             //TODO: Afficher un message d'erreur
         }
-        console.log(response.responseText);
 
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
