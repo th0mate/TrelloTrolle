@@ -132,7 +132,7 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function quitterTableau(Tableau $tableau, $utilisateur): void
+    public function quitterTableau(Tableau $tableau, Utilisateur $utilisateur): void
     {
         if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);

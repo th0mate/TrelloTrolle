@@ -40,7 +40,7 @@ interface ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function quitterTableau(Tableau $tableau, $utilisateur);
+    public function quitterTableau(Tableau $tableau, Utilisateur $utilisateur);
 
     /**
      * @throws ServiceException
