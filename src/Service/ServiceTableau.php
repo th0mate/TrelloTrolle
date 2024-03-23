@@ -7,6 +7,7 @@ use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -132,7 +133,7 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function quitterTableau(Tableau $tableau, Utilisateur $utilisateur): void
+    public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur): void
     {
         if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
@@ -151,7 +152,7 @@ class ServiceTableau implements ServiceTableauInterface
             $affectations = array_filter($this->carteRepository->getAffectationsCarte($carte), function ($u) use ($utilisateur) {
                 return $u->getLogin() != $utilisateur->getLogin();
             });
-            $carte->setAffectationsCarte($affectations);
+            $this->carteRepository->setAffectationsCarte($affectations, $carte);
             $this->carteRepository->mettreAJour($carte);
         }
     }
