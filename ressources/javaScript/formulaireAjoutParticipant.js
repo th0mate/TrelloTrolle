@@ -26,28 +26,44 @@ let formulaireAjoutParticipant = reactive({
                 let collaborateurs = await response.json();
                 document.querySelector('.listeAjouter').innerHTML = '';
                 for (let collaborateur of collaborateurs) {
-                    document.querySelector('.listeAjouter').innerHTML += `<p data-idUtilisateur="${collaborateur.login}" data-onclick="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur('${collaborateur.login}', '${collaborateur.prenom[0]}${collaborateur.nom[0]}', true)">${collaborateur.prenom} ${collaborateur.nom}</p>`;
+                    document.querySelector('.listeAjouter').innerHTML += `<p data-login="${collaborateur.login}" data-onclick="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur(${collaborateur.login}, ${collaborateur.prenom[0]}${collaborateur.nom[0]}, true)">${collaborateur.prenom} ${collaborateur.nom}</p>`;
                 }
+                startReactiveDom();
             }
         }
     },
 
 
     supprimerParticipant: function (idUtilisateur) {
-        document.querySelector(`#participant${idUtilisateur}`).remove();
+        console.log(this.participants);
+        let elements = document.querySelectorAll(`[data-participant="${idUtilisateur}"]`);
+        for (let element of elements) {
+            element.remove();
+        }
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }
+        console.log(this.participants);
     },
 
-    ajouterCheckboxPourUtilisateur: function (idUtilisateur = null, value = null, estDepuisRecherche = false) {
-        //data-oncheck="formulaireAjoutParticipant.ajouterParticipant(${idUtilisateur})"
-        //TODO : corriger cette fonction
-        console.log(estDepuisRecherche);
-        if (this.idTableau !== '' && estDepuisRecherche) {
-            this.ajouterParticipant(idUtilisateur);
-            return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
-        <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
+    ajouterCheckboxPourUtilisateur: function (parametres = null) {
+        //TODO : corriger cette fonction qui affiche une erreur dans la console au chargement de la page
+        if (parametres !== null) {
+            let [idUtilisateur, value, estDepuisRecherche] = parametres.split(',');
+            if (this.idTableau !== '' && estDepuisRecherche && !this.participants.includes(idUtilisateur)) {
+                this.ajouterParticipant(idUtilisateur);
+                document.querySelector('.listeAjouter').innerHTML = '';
+                document.querySelector('.inputAjoutMembre').value = '';
+                setTimeout(() => {
+                    startReactiveDom();
+                }, 100);
+                return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
+        <label for="participant${idUtilisateur}" data-participant="${idUtilisateur}"><span class="user">${value}</span></label>`;
+            } else {
+                document.querySelector('.listeAjouter').innerHTML = '';
+                document.querySelector('.inputAjoutMembre').value = '';
+                return document.querySelector('.checkBoxCollaborateurs').innerHTML;
+            }
         } else {
             return document.querySelector('.checkBoxCollaborateurs').innerHTML;
         }
@@ -61,9 +77,8 @@ let formulaireAjoutParticipant = reactive({
 
     envoyerFormulaireAjoutMembre: async function () {
         if (this && this.participants) {
-            //TODO : faire la fonction API
-            let response = await fetch(apiBase + '/tableau/ajouterParticipant', {
-                method: 'POST',
+            let response = await fetch(apiBase + `/tableau/membre/ajouter?idTableau=${this.idTableau}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
