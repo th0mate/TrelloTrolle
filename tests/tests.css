@@ -813,6 +813,37 @@ body {
             color: black;
         }
 
+        .listeAjouter {
+            width: 100%;
+            background-color: white;
+            border-radius: 5px;
+            min-height: 0;
+            max-height: 100px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+
+            * {
+                flex-shrink: 0;
+                margin-top: 5px;
+                margin-bottom: 5px;
+                color: black;
+                text-align: center;
+                width: 98%;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 200ms ease-in-out;
+            }
+
+            *:hover {
+                background-color: #e2c2ff;
+            }
+
+        }
+
     }
 
     .boutonAjout {

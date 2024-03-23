@@ -1,15 +1,22 @@
 import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 
+/**
+ * Objet réactif formulaireAjoutCarte
+ * @type {*|Object|boolean} un objet réactif
+ */
 let formulaireAjoutCarte = reactive({
     idColonne: "",
     titre: "",
     description: "",
     couleur: "",
 
+    /**
+     * Fonction qui envoie le formulaire de création de carte et crée une carte dans l'API
+     * @returns {Promise<void>} une promesse
+     */
     envoyerFormulaire: async function () {
-
         this.idColonne = document.querySelector('.idColonne').value;
-        //TODO : à corriger, la carte s'ajoute trois fois
+
         let response = await fetch(apiBase + '/carte/creer', {
             method: 'POST',
             headers: {
@@ -41,6 +48,10 @@ let formulaireAjoutCarte = reactive({
     },
 
 
+    /**
+     * Fonction qui ajoute une carte dans le DOM
+     * @param idColonne l'id de la colonne dans laquelle ajouter la carte
+     */
     ajouterCarte: function (idColonne) {
         if (this) {
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${idColonne}">

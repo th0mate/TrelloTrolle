@@ -26,10 +26,17 @@ let formulaireAjoutParticipant = reactive({
             if (response.status !== 200) {
                 console.error(response.error);
             } else {
-                console.log(response.responseText);
-                //TODO : afficher les résultats
+                // pour chaque adresse mail retournée par la bd, on ajoute un document.querySelector('.listeAjouter').innerHTML = <p data-idUtilisateur={id}>emaildeUtilisateur</p>
+                let collaborateurs = await response.json();
+                for (let collaborateur of collaborateurs) {
+                    document.querySelector('.listeAjouter').innerHTML += `<p data-onlick="aa" data-idUtilisateur="${collaborateur.idUtilisateur}" data-onclick="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur(${collaborateur.idUtilisateur}, ${collaborateur.adresseMail}, true)">${collaborateur.adresseMail}</p>`;
+                }
             }
         }
+    },
+
+    selectionnerParticipant: function (idUtilisateur) {
+
     },
 
     supprimerParticipant: function (idUtilisateur) {
@@ -44,7 +51,6 @@ let formulaireAjoutParticipant = reactive({
 
         //TODO : corriger cette fonction
         if (this.idTableau !== '' && estDepuisRecherche) {
-            console.log("dans le if");
             this.ajouterParticipant(idUtilisateur);
             return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input checked data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}"><span class="user">${value}</span></label>`;
