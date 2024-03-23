@@ -160,8 +160,11 @@ class TableauRepository extends AbstractRepository
 
     public function setParticipants(?array $participants, Tableau $instance): void
     {
+        $query = "DELETE FROM participant WHERE idtableau=:idtableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idtableau" => $instance->getIdTableau()]);
         foreach($participants as $participant) {
-            $query = "INSERT INTO participant VALUES (:idtableau, :login)";
+            $query = "INSERT INTO participant VALUES (:login, :idtableau)";
             $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
             $pdoStatement->execute(["idtableau" => $instance->getIdTableau(), "login" => $participant->getLogin()]);
         }

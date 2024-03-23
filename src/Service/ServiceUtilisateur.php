@@ -39,7 +39,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
 
         //TODO fonctions et appels à revoir car message de messageFlash différents
-        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau->getIdTableau())) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
@@ -89,7 +89,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estParticipantOuProprietaire($login)) {
+        if ($this->tableauRepository->estParticipantOuProprietaire($login, $tableau->getIdTableau())) {
             throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
         }
 
@@ -145,7 +145,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau, $login);
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
         $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
-            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin());
+            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin(), $tableau->getIdTableau());
         });
 
         if (empty($filtredUtilisateurs)) {
