@@ -34,9 +34,11 @@ class ControleurCarteAPI
     }
 
 
-    #[Route("/api/carte/supprimer/{idCarte}", name: "supprimerCarteAPI", methods: "DELETE")]
-    public function supprimerCarte($idCarte): Response
+    #[Route("/api/carte/supprimer", name: "supprimerCarteAPI", methods: "DELETE")]
+    public function supprimerCarte(Request $request): Response
     {
+        $jsondecode=json_decode($request->getContent());
+        $idCarte=$jsondecode->idCarte;
         try {
             $this->serviceConnexion->pasConnecter();
             $carte = $this->serviceCarte->recupererCarte($idCarte);
@@ -49,15 +51,17 @@ class ControleurCarteAPI
         }
     }
 
-    #[Route("api/carte/modifier/{idCarte}", name: "modifierCarteAPI", methods: "PATCH")]
-    public function modifierCarte($idCarte): Response
+    #[Route("api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
+    public function modifierCarte(Request $request): Response
     {
-        $idColonne = $_REQUEST["idColonne"] ?? null;
+        $jsondecode=json_decode($request->getContent());
+        $idCarte=$jsondecode->idCarte ??null;
+        $idColonne = $jdondecode->idColonne ?? null;
         $attributs = [
-            "titreCarte" => $_REQUEST["titreCarte"] ?? null,
-            "descriptifCarte" => $_REQUEST["descriptifCarte"] ?? null,
-            "couleurCarte" => $_REQUEST["couleurCarte"] ?? null,
-            "affectationsCarte" => $_REQUEST["affectationsCarte"] ?? null,
+            "titreCarte" => $jdondecode->titreCarte ?? null,
+            "descriptifCarte" => $jdondecode->descriptifCarte ?? null,
+            "couleurCarte" => $jdondecode->couleurCarte ?? null,
+            "affectationsCarte" => $jdondecode->affectationsCarte ?? null,
         ];
         try {
             $this->serviceConnexion->pasConnecter();

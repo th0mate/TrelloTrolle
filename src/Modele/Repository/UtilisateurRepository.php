@@ -37,4 +37,18 @@ class UtilisateurRepository extends AbstractRepository
     public function recupererUtilisateursOrderedPrenomNom() : array {
         return $this->recupererOrdonne(["prenom", "nom"]);
     }
+
+    public function recherche($recherche)
+    {
+        $recherche="%".strtolower($recherche)."%";
+        $sql="SELECT {$this->formatNomsColonnes()} FROM {$this->getNomTable()} WHERE LOWER(login) LIKE :tagLogin OR LOWER(nom) LIKE :tagNom OR LOWER(prenom) LIKE :tagPrenom OR LOWER(email) LIKE :tagMail";
+        $values=["tagLogin"=>$recherche,"tagNom"=>$recherche,"tagPrenom"=>$recherche,"tagMail"=>$recherche];
+        $pdoStatement=$this->connexionBaseDeDonnees->getPdo()->prepare($sql);
+        $pdoStatement->execute($values);
+        $utlisateurs=[];
+        foreach ($pdoStatement as $utilisateur) {
+            $utlisateurs[]=$this->construireDepuisTableau($utilisateur);
+        }
+        return $utlisateurs;
+    }
 }

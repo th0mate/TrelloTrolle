@@ -66,4 +66,6 @@ interface ServiceUtilisateurInterface
      * @throws \Exception
      */
     public function creerUtilisateur($attributs);
+
+    public function rechercheUtilisateur(?string $recherche);
 }

@@ -2,7 +2,7 @@
 
 namespace App\Trellotrolle\Modele\DataObject;
 
-class Utilisateur extends AbstractDataObject
+class Utilisateur extends AbstractDataObject implements \JsonSerializable
 {
     public function __construct(
         private ?string $login ,
@@ -82,5 +82,14 @@ class Utilisateur extends AbstractDataObject
             "emailTag" => $this->email,
             "mdphacheTag" => $this->mdpHache,
         );
+    }
+
+    public function jsonSerialize() :mixed
+    {
+        return [
+            "login"=>$this->login,
+            "nom"=>$this->nom,
+            "prenom"=>$this->prenom,
+        ];
     }
 }

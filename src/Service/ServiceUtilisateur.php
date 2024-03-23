@@ -294,4 +294,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.",Response::HTTP_BAD_REQUEST);
         }
     }
+
+    /**
+     * @throws ServiceException
+     */
+    public function rechercheUtilisateur(?string $recherche): array
+    {
+        if (is_null($recherche)) {
+            throw new ServiceException("La recherche est nulle", 404);
+        }
+        return $this->utilisateurRepository->recherche($recherche);
+    }
 }

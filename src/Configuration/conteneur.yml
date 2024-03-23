@@ -102,5 +102,8 @@ services:
     class: App\Trellotrolle\Controleur\ControleurColonneAPI
     arguments: ['@service_connexion','@service_colonne','@service_utilisateur','@service_tableau']
   controleur_tableau_api:
-    class: App\trellotrolle\Controleur\ControleurTableauAPI
+    class: App\Trellotrolle\Controleur\ControleurTableauAPI
     arguments: ['@service_connexion','@service_tableau','@service_utilisateur','@service_carte']
+  controleur_utilisateur_api:
+    class: App\Trellotrolle\Controleur\ControleurUtilisateurAPI
+    arguments: ['@service_utilisateur']
