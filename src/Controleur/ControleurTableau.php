@@ -253,7 +253,7 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
-    #[Route('/tableau/quitter', name: 'quitterTableau', methods: "GET")]
+    #[Route('/{idTableau}/quitter', name: 'quitterTableau', methods: "GET")]
     public function quitterTableau($idTableau): Response
     {
         //$idTableau = $_REQUEST["idTableau"] ?? null;

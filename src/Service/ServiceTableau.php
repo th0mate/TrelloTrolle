@@ -132,18 +132,18 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function quitterTableau($tableau, $utilisateur)
+    public function quitterTableau(Tableau $tableau, $utilisateur)
     {
-        if ($tableau->estProprietaire($utilisateur->getLogin())) {
+        if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
         }
-        if (!$tableau->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+        if (!$this->tableauRepository->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau->getIdTableau())) {
             throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_UNAUTHORIZED);
         }
-        $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
+        $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
         });
-        $tableau->setParticipants($participants);
+        $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
