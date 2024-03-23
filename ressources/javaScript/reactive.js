@@ -142,6 +142,14 @@ function startReactiveDom(subDom = document) {
             }
         });
     }
+
+    for (let rel of document.querySelectorAll("[data-onChange]")) {
+        const [obj, fun, arg] = rel.dataset.onchange.split(/[.()]+/);
+        rel.addEventListener('input', (event) => {
+            objectByName.get(obj)[fun](arg);
+        });
+        rel.removeAttribute('data-onChange');
+    }
 }
 
 export {applyAndRegister, reactive, startReactiveDom, objectByName};
