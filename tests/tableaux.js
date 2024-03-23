@@ -134,8 +134,6 @@ function updateDraggables() {
  * Permet d'ajouter un nouvel élément `.draggable` dans la page
  */
 function addNewItem() {
-    //TODO : AJAX ICI
-
     //temporaire - prend le premier id disponible non présent dans la page
     let id = 1;
     let ids = [];
@@ -295,7 +293,6 @@ function cardDrop(e) {
             }
             draggedCard = null;
             updateCards();
-            //TODO : AJAX ICI
         }
     }
 }
@@ -344,15 +341,12 @@ document.querySelector('.deleteColumn').addEventListener('click', function () {
         draggableElement.remove();
     }
     document.querySelector('.menuColonnes').style.display = "none";
-
-    //TODO : AJAX ICI
 });
 
 document.querySelector('.updateColumn').addEventListener('click', function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
     document.querySelector('.menuColonnes').style.display = "none";
     afficherFormulaireModificationColonne();
-    //TODO : AJAX ICI
 });
 
 
@@ -431,7 +425,6 @@ function ajouterCarte(id, value, color = 'white') {
 function afficherFormulaireCreationCarte(id, pourModifier = false) {
 
     document.querySelector('.formulaireCreationCarte').style.display = "flex";
-    //TODO : passer en paramètre l'id de la colonne ciblée et l'id de la carte
     document.querySelector('.idColonne').value = id;
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';
@@ -518,7 +511,6 @@ function addListenersModificationColonne() {
 
         newBoutonModification.addEventListener('click', function () {
             const titre = document.querySelector('.inputModificationColonne').value;
-            //TODO : AJAX ICI
             if (titre !== '') {
                 document.querySelector('.formulaireModificationColonne').remove();
                 document.querySelectorAll('.all').forEach(el => {
