@@ -64,11 +64,11 @@
 
 
             <!-- Pour ajouter de nouvelles colonnes -->
-            <div class="adder">
+            <div class="adder" data-tableau="{{ tableau.idTableau }}">
                 <label>
-                    <input type="text" class="input" placeholder="Ajouter une colonne"/>
+                    <input type="text" data-reactiveInput="formulaireAjoutColonne.titre" data-onEnter="formulaireAjoutColonne.envoyerFormulaireCreerColonne" class="input" placeholder="Ajouter une colonne"/>
                 </label>
-                <span class="addCard">OK</span>
+                <span class="addCard" data-onclick="formulaireAjoutColonne.envoyerFormulaireCreerColonne">OK</span>
             </div>
         </div>
 

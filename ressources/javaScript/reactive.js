@@ -119,9 +119,12 @@ function startReactiveDom(subDom = document) {
         });
     }
 
-    for (let rel of subDom.querySelectorAll("[data-htmlfun]")){
+    for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
-        applyAndRegister(()=>{ rel.innerHTML = objectByName.get(obj)[fun](arg); startReactiveDom(rel)});
+        applyAndRegister(() => {
+            rel.innerHTML = objectByName.get(obj)[fun](arg);
+            startReactiveDom(rel)
+        });
     }
 
     //TODO : TESTER
@@ -149,6 +152,16 @@ function startReactiveDom(subDom = document) {
             objectByName.get(obj)[fun](arg);
         });
         rel.removeAttribute('data-onChange');
+    }
+
+    //data-onEnter : déclenche l'événement lorsqu'on appuie sur la touche entrée et que l'élément est focus
+    for (let rel of document.querySelectorAll("[data-onEnter]")) {
+        const [obj, fun, arg] = rel.dataset.onenter.split(/[.()]+/);
+        rel.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                objectByName.get(obj)[fun](arg);
+            }
+        });
     }
 }
 

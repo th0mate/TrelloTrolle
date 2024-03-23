@@ -130,47 +130,6 @@ function updateDraggables() {
 
 }
 
-/**
- * Permet d'ajouter un nouvel élément `.draggable` dans la page
- */
-function addNewItem() {
-    //temporaire - prend le premier id disponible non présent dans la page
-    let id = 1;
-    let ids = [];
-    document.querySelectorAll('.stockage').forEach(stockage => {
-        ids.push(parseInt(stockage.getAttribute('data-columns')));
-    });
-    while (ids.includes(id)) {
-        id++;
-    }
-    let input = document.getElementsByClassName('input')[0];
-    let newElement = document.createElement('div');
-    newElement.classList.add('draggable');
-    newElement.setAttribute('draggable', 'true');
-    newElement.setAttribute('data-columns', id);
-    if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
-                <img src="${plusImageUrl}" alt="">
-                Ajouter une carte
-            </div>`;
-        let ul = document.querySelector('.ul');
-        ul.insertBefore(newElement, ul.lastElementChild);
-        input.value = '';
-        updateDraggables();
-        addEventsBullets(newElement);
-        addEventsAdd();
-    }
-}
-
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && document.activeElement.classList.contains('input')) {
-        addNewItem();
-    }
-});
-
-btn.addEventListener('click', addNewItem);
-
-
 updateDraggables();
 
 
