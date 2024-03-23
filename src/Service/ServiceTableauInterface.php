@@ -47,5 +47,5 @@ interface ServiceTableauInterface
      */
     public function creerTableau($nomTableau);
 
-    public function estParticipant();
+    public function estParticipant(Tableau $tableau);
 }

@@ -203,8 +203,8 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
-    public function estParticipant()
+    public function estParticipant(Tableau $tableau): bool
     {
-        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau->getIdTableau());
     }
 }
