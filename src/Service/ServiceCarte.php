@@ -54,7 +54,7 @@ class ServiceCarte implements ServiceCarteInterface
     {
         //TODO supprimer Vérif après refonte BD
         if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau);
+            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau,Response::HTTP_CONFLICT);
         }
         $this->carteRepository->supprimer($idCarte);
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
@@ -126,10 +126,10 @@ class ServiceCarte implements ServiceCarteInterface
                  */
                 $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($affectation);
                 if (!$utilisateur) {
-                    throw new CreationException("Un des membres affecté à la tâche n'existe pas");
+                    throw new CreationException("Un des membres affecté à la tâche n'existe pas",404);
                 }
                 if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger");
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau","danger",400);
                 }
                 $affectations[] = $utilisateur;
             }

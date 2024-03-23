@@ -37,7 +37,7 @@ class ServiceConnexion implements ServiceConnexionInterface
     public function dejaConnecter()
     {
         if (ConnexionUtilisateur::estConnecte()) {
-            throw new ConnexionException("Vous êtes déjà connecter");
+            throw new ConnexionException("Vous êtes déjà connecter",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -47,7 +47,7 @@ class ServiceConnexion implements ServiceConnexionInterface
     public function deconnecter()
     {
         if (!ConnexionUtilisateur::estConnecte()) {
-            throw new ConnexionException("Utilisateur non connecté");
+            throw new ConnexionException("Utilisateur non connecté",Response::HTTP_FORBIDDEN);
         }
         ConnexionUtilisateur::deconnecter();
     }
@@ -59,17 +59,17 @@ class ServiceConnexion implements ServiceConnexionInterface
     {
         if (is_null($login) || is_null($mdp)) {
             //TODO ce messageFlash était en "danger", c'est maintenant un "warning"
-            throw new ServiceException("Login ou mot de passe manquant");
+            throw new ServiceException("Login ou mot de passe manquant",404);
         }
 
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
 
         if ($utilisateur == null) {
-            throw new ServiceException("Login inconnu.");
+            throw new ServiceException("Login inconnu.",404);
         }
 
         if (!MotDePasse::verifier($mdp, $utilisateur->getMdpHache())) {
-            throw new ServiceException("Mot de passe incorrect.");
+            throw new ServiceException("Mot de passe incorrect.",Response::HTTP_UNAUTHORIZED);
         }
 
         ConnexionUtilisateur::connecter($utilisateur->getLogin());

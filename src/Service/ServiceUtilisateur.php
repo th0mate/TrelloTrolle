@@ -55,7 +55,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function estProprietaire(Tableau $tableau, $login)
     {
         if (!$this->tableauRepository->estProprietaire($login)) {
-            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau);
+            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -65,7 +65,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function isNotNullLogin($login, $tableau, $action)
     {
         if (is_null($login)) {
-            throw new TableauException("Login du membre à " . $action . " manquant", $tableau);
+            throw new TableauException("Login du membre à " . $action . " manquant", $tableau,404);
         }
     }
 
@@ -76,7 +76,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         $utilisateur = $this->recupererUtilisateurParCle($login);
         if (!$utilisateur) {
-            throw new TableauException("Utilisateur inexistant", $tableau);
+            throw new TableauException("Utilisateur inexistant", $tableau,404);
         }
         return $utilisateur;
     }
@@ -90,7 +90,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
         if ($this->tableauRepository->estParticipantOuProprietaire($login)) {
-            throw new TableauException("Ce membre est déjà membre du tableau", $tableau);
+            throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
         }
 
         $participants = $this->tableauRepository->getParticipants($tableau);
@@ -109,10 +109,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
         if ($this->tableauRepository->estProprietaire($login)) {
-            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau);
+            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,Response::HTTP_UNAUTHORIZED);
         }
         if (!$this->tableauRepository->estParticipant($utilisateur->getLogin())) {
-            throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau);
+            throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
@@ -128,11 +128,11 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function recupererCompte($mail)
     {
         if (is_null($mail)) {
-            throw new ServiceException("Adresse email manquante");
+            throw new ServiceException("Adresse email manquante",404);
         }
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursParEmail($mail);
         if (empty($utilisateurs)) {
-            throw new ServiceException("Aucun compte associé à cette adresse email");
+            throw new ServiceException("Aucun compte associé à cette adresse email",404);
         }
         return $utilisateurs;
     }
@@ -150,7 +150,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
         if (empty($filtredUtilisateurs)) {
             //TODO le message flash est censé était en warning de base mais c'est maintenant un danger
-            throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.", $tableau);
+            throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.", $tableau,Response::HTTP_CONFLICT);
         }
         return $filtredUtilisateurs;
     }
@@ -162,7 +162,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new MiseAJourException('Login, nom, prenom, email ou mot de passe manquant.', "danger");
+                throw new MiseAJourException('Login, nom, prenom, email ou mot de passe manquant.', "danger",404);
             }
         }
         $login = $attributs['login'];
@@ -170,20 +170,20 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
 
         if (!$utilisateur) {
-            throw new MiseAJourException("L'utilisateur n'existe pas", "danger");
+            throw new MiseAJourException("L'utilisateur n'existe pas", "danger",404);
         }
 
         if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
-            throw new MiseAJourException("Email non valide", "warning");
+            throw new MiseAJourException("Email non valide", "warning",404);
         }
 
         var_dump($attributs["mdpAncien"]);
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
-            throw new MiseAJourException("Ancien mot de passe erroné.", "warning");
+            throw new MiseAJourException("Ancien mot de passe erroné.", "warning",Response::HTTP_CONFLICT);
         }
 
         if ($attributs["mdp"] !== $attributs["mdp2"]) {
-            throw new MiseAJourException("Mots de passe distincts", "warning");
+            throw new MiseAJourException("Mots de passe distincts", "warning",Response::HTTP_CONFLICT);
         }
 
         $utilisateur->setNom($attributs["nom"]);
@@ -225,7 +225,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function supprimerUtilisateur($login)
     {
         if (is_null("login")) {
-            throw new ServiceException("Login manquant");
+            throw new ServiceException("Login manquant",404);
         }
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
@@ -260,21 +260,21 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
-                throw new CreationException("Login, nom, prenom, email ou mot de passe manquant.");
+                throw new CreationException("Login, nom, prenom, email ou mot de passe manquant.",404);
             }
         }
         if ($attributs["mdp"] !== $attributs["mdp2"]) {
-            throw new ServiceException("Mots de passe distincts");
+            throw new ServiceException("Mots de passe distincts",Response::HTTP_CONFLICT);
         }
 
         if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
-            throw new ServiceException("Email non valide");
+            throw new ServiceException("Email non valide",404);
         }
 
 
         $checkUtilisateur = $this->utilisateurRepository->recupererParClePrimaire($attributs["login"]);
         if ($checkUtilisateur) {
-            throw new ServiceException("Le login est déjà pris");
+            throw new ServiceException("Le login est déjà pris",Response::HTTP_FORBIDDEN);
         }
 
         $mdpHache = MotDePasse::hacher($attributs["mdp"]);
@@ -291,7 +291,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             Cookie::enregistrer("login", $attributs["login"]);
             Cookie::enregistrer("mdp", $attributs["mdp"]);
         } else {
-            throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.");
+            throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.",Response::HTTP_BAD_REQUEST);
         }
     }
 }
