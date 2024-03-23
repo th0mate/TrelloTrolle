@@ -7,6 +7,7 @@ let formulaireAjoutParticipant = reactive({
 
     rechercherDebutAdresseMail: async function () {
         if (this && this.adresseMailARechercher) {
+            this.idTableau = document.querySelector('.formulaireAjoutMembreTableau').getAttribute('data-tableau');
             this.adresseMailARechercher = document.querySelector('.adresseMailARechercher').value;
             let response = await fetch(apiBase + '/utilisateur/rechercher', {
                 //TODO : faire la fonction API et le reste
@@ -54,7 +55,7 @@ let formulaireAjoutParticipant = reactive({
         }
     },
 
-    envoyerFormulaire: async function () {
+    envoyerFormulaireAjoutMembre: async function () {
         if (this && this.participants) {
             //TODO : faire la fonction API
             let response = await fetch(apiBase + '/tableau/ajouterParticipant', {

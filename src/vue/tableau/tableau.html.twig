@@ -124,7 +124,7 @@
     </div>
 
 
-    <div class="formulaireAjoutMembreTableau">
+    <div class="formulaireAjoutMembreTableau" data-tableau="{{ tableau.idTableau }}">
         <div class="wrap"><h2>Ajout de Collaborateurs</h2> <img onclick="listenerFermerAjoutMembre()" class="closeCard"
                                                                 src="{{ asset('../tests/close.png') }}"
                                                                 alt="">
@@ -137,7 +137,7 @@
             <div class="checkBoxCollaborateurs"
                  data-htmlfun="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur"></div>
         </div>
-        <div data-onclick="formulaireAjoutParticipant.envoyerFormulaire" class="boutonAjout">Terminer</div>
+        <div data-onclick="formulaireAjoutParticipant.envoyerFormulaireAjoutMembre" class="boutonAjout">Terminer</div>
     </div>
 
 

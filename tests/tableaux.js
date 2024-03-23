@@ -567,6 +567,7 @@ document.querySelector('.invite').addEventListener('click', function () {
 
 document.querySelector('.addCollborateurs').addEventListener('click', function () {
     document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
+    document.querySelector('.formulaireAjoutMembreTableau').setAttribute();
     document.querySelector('.formulaireCreationCarte').style.display = "none";
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';

@@ -8,7 +8,6 @@ let formulaireAjoutCarte = reactive({
 
     envoyerFormulaire: async function () {
 
-
         this.idColonne = document.querySelector('.idColonne').value;
         //TODO : à corriger, la carte s'ajoute trois fois
         let response = await fetch(apiBase + '/carte/creer', {
@@ -30,7 +29,7 @@ let formulaireAjoutCarte = reactive({
             console.error(response.error);
             //TODO: Afficher un message d'erreur
         }
-        console.log( response.responseText);
+        console.log(response.responseText);
 
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
