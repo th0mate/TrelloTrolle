@@ -7,7 +7,9 @@ use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -17,8 +19,8 @@ class ServiceColonne implements ServiceColonneInterface
 {
 
 
-    public function __construct(private ColonneRepository $colonneRepository,
-                                private CarteRepository   $carteRepository)
+    public function __construct(private ColonneRepositoryInterface $colonneRepository,
+                                private CarteRepositoryInterface   $carteRepository)
     {
     }
 

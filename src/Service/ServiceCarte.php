@@ -9,7 +9,9 @@ use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -20,8 +22,8 @@ class ServiceCarte implements ServiceCarteInterface
 {
 
 
-    public function __construct(private CarteRepository $carteRepository,
-                                private UtilisateurRepository $utilisateurRepository)
+    public function __construct(private CarteRepositoryInterface $carteRepository,
+                                private UtilisateurRepositoryInterface $utilisateurRepository)
     {}
 
     /**
