@@ -81,14 +81,16 @@ let formulaireAjoutCarte = reactive({
 
         if (response.status !== 200) {
             console.error(response.error);
+            return 'aaa';
+
         } else {
-            //TODO c'est cassé ici !
+            document.querySelector('.listeParticipants').innerHTML = '';
             let membres = await response.json();
             if (membres.length === 0) {
                 return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
             }
             membres.forEach(membre => {
-                document.querySelector('.listeParticipants').innerHTML =  `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
+                return document.querySelector('.listeParticipants').innerHTML +=  `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
                 <label for="participant${membre.login}" data-participant="${membre.login}"><span class="user">${membre.prenom[0]}${membre.nom[0]}</span></label>`;
             });
         }

@@ -868,7 +868,7 @@ body {
     }
 }
 
-.checkBoxCollaborateurs {
+.checkBoxCollaborateurs, .listeParticipants {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
