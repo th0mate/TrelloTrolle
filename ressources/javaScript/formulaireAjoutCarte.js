@@ -33,6 +33,7 @@ let formulaireAjoutCarte = reactive({
             })
         });
 
+        console.log(response.json());
         if (response.status !== 200) {
             console.error("Erreur lors de la création de la carte dans l'API");
             //TODO: Afficher un message d'erreur
