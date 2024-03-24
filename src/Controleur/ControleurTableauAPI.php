@@ -34,7 +34,7 @@ class ControleurTableauAPI
     public function ajouterMembre(Request $request)
     {
         {
-            $jsondecode=json_decode($request->getContent());
+            $jsondecode = json_decode($request->getContent());
             $idTableau = $jsondecode->idTableau ?? null;
             $login = $jsondecode->login ?? null;
             try {
@@ -51,7 +51,7 @@ class ControleurTableauAPI
     #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
     public function supprimerMembre(Request $request)
     {
-        $jsondecode=json_decode($request->getContent());
+        $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
         $login = $jsondecode->login ?? null;
         try {

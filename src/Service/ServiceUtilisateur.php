@@ -55,7 +55,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function estProprietaire(Tableau $tableau, $login)
     {
         if (!$this->tableauRepository->estProprietaire($login, $tableau->getIdTableau())) {
-            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_FORBIDDEN);
+            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_UNAUTHORIZED);
         }
     }
 
@@ -88,13 +88,16 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
-        $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estParticipantOuProprietaire($login, $tableau->getIdTableau())) {
-            throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+        $utilisateurs=[];
+        foreach ($login as $user) {
+            $utilisateur = $this->utilisateurExistant($user, $tableau);
+            if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
+                throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+            }
+            $utilisateurs[]=$utilisateur;
         }
-
         $participants = $this->tableauRepository->getParticipants($tableau);
-        $participants[] = $utilisateur;
+        $participants=array_merge($participants,$utilisateurs);
         $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
