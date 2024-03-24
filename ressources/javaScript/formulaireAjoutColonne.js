@@ -12,7 +12,6 @@ let formulaireAjoutColonne = reactive({
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 
             let response1 = await fetch(apiBase + '/colonne/nextid', {
-                //retourne l'id de la colonne
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

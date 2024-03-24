@@ -48,18 +48,25 @@ let formulaireAjoutParticipant = reactive({
 
     ajouterCheckboxPourUtilisateur: function (parametres = null) {
         //TODO : corriger cette fonction qui affiche une erreur dans la console au chargement de la page
+
         if (parametres !== null) {
+
             let [idUtilisateur, value, estDepuisRecherche] = parametres.split(',');
             if (this.idTableau !== '' && estDepuisRecherche && !this.participants.includes(idUtilisateur)) {
+
                 this.ajouterParticipant(idUtilisateur);
                 document.querySelector('.listeAjouter').innerHTML = '';
                 document.querySelector('.inputAjoutMembre').value = '';
+
                 setTimeout(() => {
                     startReactiveDom();
                 }, 100);
+
                 return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
         <label for="participant${idUtilisateur}" data-participant="${idUtilisateur}"><span class="user">${value}</span></label>`;
+
             } else {
+
                 document.querySelector('.listeAjouter').innerHTML = '';
                 document.querySelector('.inputAjoutMembre').value = '';
                 return document.querySelector('.checkBoxCollaborateurs').innerHTML;
