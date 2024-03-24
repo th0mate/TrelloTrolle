@@ -308,4 +308,9 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
         return $this->utilisateurRepository->recherche($recherche);
     }
+
+    public function getParticipants(Tableau $tableau)
+    {
+        return $this->tableauRepository->getParticipants($tableau);
+    }
 }

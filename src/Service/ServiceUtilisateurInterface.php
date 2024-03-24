@@ -68,4 +68,5 @@ interface ServiceUtilisateurInterface
     public function creerUtilisateur($attributs);
 
     public function rechercheUtilisateur(?string $recherche);
+    public function getParticipants(Tableau $tableau);
 }

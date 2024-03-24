@@ -23,8 +23,8 @@
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
                 <span class="user"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
-                {% for participant in tableau.participants %}
-                    <span class="user">{{ partipant.prenom|slice(0,1) }} {{ participant.nom|slice(0,1) }}</span>
+                {% for participant in collaborateurs %}
+                    <span class="user">{{ participant.prenom|slice(0,1) }} {{ participant.nom|slice(0,1) }}</span>
                 {% endfor %}
                 <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
             </div>
