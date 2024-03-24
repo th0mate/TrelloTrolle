@@ -313,4 +313,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         return $this->tableauRepository->getParticipants($tableau);
     }
+
+    //retourne le propriétaire du tableau
+    public function getProprietaireTableau(Tableau $tableau)
+    {
+        return $this->tableauRepository->getProprietaire($tableau);
+    }
 }
