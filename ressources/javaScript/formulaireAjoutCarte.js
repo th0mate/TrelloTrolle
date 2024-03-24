@@ -17,6 +17,8 @@ let formulaireAjoutCarte = reactive({
      */
     envoyerFormulaire: async function () {
         this.idColonne = document.querySelector('.idColonne').value;
+        //TODO problèmes parfois si il y a des participants
+        console.log(this.idColonne);
 
         let response = await fetch(apiBase + '/carte/creer', {
             method: 'POST',
