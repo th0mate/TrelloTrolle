@@ -114,21 +114,9 @@
                    data-reactiveInput="formulaireAjoutCarte.couleur">
         </div>
         <div class="content"><h4>Membres affectés :</h4>
+            {# TODO : ne marche PAS! #}
             <div class="listeParticipants" data-htmlfun="formulaireAjoutCarte.afficherCheckBoxParticipants">
-                {#
-                {% if participants|length > 0 %}
-                    {% for participant in participants %}
-                        <label>
-                            <input type="checkbox"
-                                   data-reactiveInput="formulaireAjoutCarte.affectation"
-                                   value="{{ participant.idUtilisateur }}">
-                            {{ participant.prenom }} {{ participant.nom }}
-                        </label>
-                    {% endfor %}
-                {% else %}
-                    <p>Il n'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>
-                {% endif %}
-                #}
+
             </div>
         </div>
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
@@ -146,7 +134,6 @@
                    data-onChange="formulaireAjoutParticipant.rechercherDebutAdresseMail"
                    class="inputAjoutMembre" placeholder="Entrez l'adresse mail du collaborateur">
             <div class="listeAjouter"></div>
-
             <div class="checkBoxCollaborateurs"
                  data-htmlfun="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur"></div>
         </div>
