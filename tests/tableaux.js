@@ -299,6 +299,8 @@ document.querySelector('.deleteColumn').addEventListener('click', async function
     if (draggableElement) {
         draggableElement.remove();
     }
+    document.querySelector('.menuColonnes').style.display = "none";
+
     let response = await fetch(apiBase + '/colonne/supprimer', {
         method: 'DELETE',
         headers: {
@@ -313,8 +315,6 @@ document.querySelector('.deleteColumn').addEventListener('click', async function
     if (response.status !== 200) {
         console.error(response.error);
     }
-
-    document.querySelector('.menuColonnes').style.display = "none";
 });
 
 document.querySelector('.updateColumn').addEventListener('click', function () {
