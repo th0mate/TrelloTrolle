@@ -65,4 +65,21 @@ class ControleurTableauAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    #[Route('/api/tableau/membre/getPourTableau', name: 'getMembresTableau', methods: "POST")]
+    public function getMembresTableau(Request $request)
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $membres = $this->serviceUtilisateur->getParticipants($tableau);
+            return new JsonResponse($membres, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
 }
+

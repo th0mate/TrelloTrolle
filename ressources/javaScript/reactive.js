@@ -130,6 +130,7 @@ function startReactiveDom(subDom = document) {
                 rel.innerHTML = reactiveObject[fun](arg);
                 startReactiveDom(rel)
             }
+            rel.removeAttribute('data-htmlfun');
         });
     }
 

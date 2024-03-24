@@ -68,7 +68,9 @@
             <!-- Pour ajouter de nouvelles colonnes -->
             <div class="adder" data-tableau="{{ tableau.idTableau }}">
                 <label>
-                    <input type="text" data-reactiveInput="formulaireAjoutColonne.titre" data-onEnter="formulaireAjoutColonne.envoyerFormulaireCreerColonne" class="input" placeholder="Ajouter une colonne"/>
+                    <input type="text" data-reactiveInput="formulaireAjoutColonne.titre"
+                           data-onEnter="formulaireAjoutColonne.envoyerFormulaireCreerColonne" class="input"
+                           placeholder="Ajouter une colonne"/>
                 </label>
                 <span class="addCard" data-onclick="formulaireAjoutColonne.envoyerFormulaireCreerColonne">OK</span>
             </div>
@@ -112,7 +114,8 @@
                    data-reactiveInput="formulaireAjoutCarte.couleur">
         </div>
         <div class="content"><h4>Membres affectés :</h4>
-            <div class="listeParticipants">
+            <div class="listeParticipants" data-htmlfun="formulaireAjoutCarte.afficherCheckBoxParticipants">
+                {#
                 {% if participants|length > 0 %}
                     {% for participant in participants %}
                         <label>
@@ -125,6 +128,7 @@
                 {% else %}
                     <p>Il n'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>
                 {% endif %}
+                #}
             </div>
         </div>
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
@@ -138,7 +142,8 @@
         </div>
         <div class="content"><h4>Adresse mail du collaborateur :</h4>
 
-            <input type="email" data-reactiveInput="formulaireAjoutParticipant.adresseMailARechercher" data-onChange="formulaireAjoutParticipant.rechercherDebutAdresseMail"
+            <input type="email" data-reactiveInput="formulaireAjoutParticipant.adresseMailARechercher"
+                   data-onChange="formulaireAjoutParticipant.rechercherDebutAdresseMail"
                    class="inputAjoutMembre" placeholder="Entrez l'adresse mail du collaborateur">
             <div class="listeAjouter"></div>
 
