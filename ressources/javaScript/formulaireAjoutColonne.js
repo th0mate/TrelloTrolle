@@ -12,6 +12,7 @@ let formulaireAjoutColonne = reactive({
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 
             let response1 = await fetch(apiBase + '/colonne/nextid', {
+                //retourne l'id de la colonne
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -22,7 +23,6 @@ let formulaireAjoutColonne = reactive({
             if (response1.status !== 200) {
                 console.error("Erreur lors de la création de la colonne dans l'API");
             }
-
             this.idColonne = await response1.json();
             this.idColonne = this.idColonne.idColonne;
 
@@ -56,9 +56,8 @@ let formulaireAjoutColonne = reactive({
 
             if (response.status !== 200) {
                 console.error("Erreur lors de la création de la colonne dans l'API");
-            } else {
-                console.log(response.json());
             }
+            document.querySelector('.input').value = '';
         }
     }
 
