@@ -77,7 +77,8 @@ let formulaireAjoutParticipant = reactive({
 
     envoyerFormulaireAjoutMembre: async function () {
         if (this && this.participants) {
-            let response = await fetch(apiBase + `/tableau/membre/ajouter?idTableau=${this.idTableau}`, {
+            console.log(this.participants);
+            let response = await fetch(apiBase + `/tableau/membre/ajouter`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,13 +86,16 @@ let formulaireAjoutParticipant = reactive({
                 },
                 body: JSON.stringify({
                     idTableau: this.idTableau,
-                    participants: this.participants
+                    login: this.participants
                 })
             });
 
             if (response.status !== 200) {
                 console.error(response.error);
             }
+            console.log(response);
+            document.querySelector('.formulaireAjoutMembreTableau').style.display = 'none';
+            document.querySelector('.all').style.opacity = '1';
         }
     }
 
