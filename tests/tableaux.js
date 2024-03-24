@@ -299,6 +299,21 @@ document.querySelector('.deleteColumn').addEventListener('click', function () {
     if (draggableElement) {
         draggableElement.remove();
     }
+    let response = fetch(apiBase + '/colonne/supprimer', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            idColonne: id
+        })
+    });
+
+    if (response.status !== 200) {
+        console.error(response.error);
+    }
+
     document.querySelector('.menuColonnes').style.display = "none";
 });
 
