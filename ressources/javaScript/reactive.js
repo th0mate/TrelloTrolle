@@ -115,19 +115,25 @@ function startReactiveDom(subDom = document) {
             objectByName.get(obj)[prop] = event.target.value;
         });
         applyAndRegister(() => {
-            rel.value = objectByName.get(obj)[prop];
+            let reactiveObject = objectByName.get(obj);
+            if (reactiveObject !== undefined && reactiveObject !== null) {
+                rel.value = reactiveObject[prop];
+            }
         });
     }
 
     for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
         applyAndRegister(() => {
-            rel.innerHTML = objectByName.get(obj)[fun](arg);
-            startReactiveDom(rel)
+            let reactiveObject = objectByName.get(obj);
+            if (reactiveObject !== undefined && reactiveObject !== null && typeof reactiveObject[fun] === 'function') {
+                rel.innerHTML = reactiveObject[fun](arg);
+                startReactiveDom(rel)
+            }
         });
     }
 
-    //TODO : TESTER
+
     for (let rel of document.querySelectorAll("[data-oncheck]")) {
         const [obj, fun, arg] = rel.dataset.oncheck.split(/[.()]+/);
         rel.addEventListener('change', (event) => {

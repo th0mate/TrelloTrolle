@@ -47,7 +47,6 @@ let formulaireAjoutParticipant = reactive({
     },
 
     ajouterCheckboxPourUtilisateur: function (parametres = null) {
-        //TODO : corriger cette fonction qui affiche une erreur dans la console au chargement de la page
 
         if (parametres !== null) {
 
