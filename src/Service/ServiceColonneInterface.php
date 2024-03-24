@@ -19,7 +19,7 @@ interface ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): int;
+    public function supprimerColonne($tableau, $idColonne): void;
 
     /**
      * @throws CreationException

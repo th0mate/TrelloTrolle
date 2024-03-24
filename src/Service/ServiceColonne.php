@@ -49,15 +49,11 @@ class ServiceColonne implements ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): int
+    public function supprimerColonne($tableau, $idColonne): void
     {
         //TODO supprimer Vérif après refonte BD
 
-        if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau,Response::HTTP_UNAUTHORIZED);
-        }
-        $this->colonneRepository->supprimer($idColonne);
-        return $this->colonneRepository->getNombreColonnesTotalTableau($tableau->getIdTableau());
+        $this->colonneRepository->supprimer($idColonne);;
     }
 
     /**

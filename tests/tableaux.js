@@ -293,13 +293,13 @@ document.querySelector('.close').addEventListener('click', function () {
 /**
  * Evenement permettant de suppimer une colonne
  */
-document.querySelector('.deleteColumn').addEventListener('click', function () {
+document.querySelector('.deleteColumn').addEventListener('click', async function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
     const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
     if (draggableElement) {
         draggableElement.remove();
     }
-    let response = fetch(apiBase + '/colonne/supprimer', {
+    let response = await fetch(apiBase + '/colonne/supprimer', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
