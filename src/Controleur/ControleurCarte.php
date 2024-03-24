@@ -39,6 +39,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     #[Route('/carte/suprression', name: 'supprimerCarte', methods: "GET")]
+    //TODO supprimer cette fonction car elle est maintenant dans l'API
     public function supprimerCarte(): Response
     {
         $idCarte = $_REQUEST["idCarte"] ?? null;
