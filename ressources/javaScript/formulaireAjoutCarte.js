@@ -84,18 +84,41 @@ let formulaireAjoutCarte = reactive({
             return 'aaa';
 
         } else {
-            document.querySelector('.listeParticipants').innerHTML = '';
-            let membres = await response.json();
-            if (membres.length === 0) {
-                return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
-            }
-            setTimeout(() => {
-                startReactiveDom();
-            }, 100);
-            membres.forEach(membre => {
-                return document.querySelector('.listeParticipants').innerHTML +=  `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
-                <label for="participant${membre.login}" data-participant="${membre.login}"><span class="user">${membre.prenom[0]}${membre.nom[0]}</span></label>`;
+
+            let response2 = await fetch(apiBase + `/tableau/membre/getProprio`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idTableau: idTableau
+                })
             });
+
+            if (response2.status !== 200) {
+                console.error(response2.error);
+            } else {
+
+                //TODO : problème
+                const proprio = await response2.json();
+                console.log(proprio);
+
+                document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${proprio.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${proprio.login})" type="checkbox" data-participant="${proprio.login}" id="participant${proprio.login}" name="participant${proprio.login}" value="${proprio.login}">
+                <label for="participant${proprio.login}" data-participant="${proprio.login}"><span class="user">${proprio.prenom[0]}${proprio.nom[0]}</span></label>`;
+
+                let membres = await response.json();
+                if (membres.length === 0) {
+                    return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
+                }
+                setTimeout(() => {
+                    startReactiveDom();
+                }, 100);
+                membres.forEach(membre => {
+                    return document.querySelector('.listeParticipants').innerHTML += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
+                <label for="participant${membre.login}" data-participant="${membre.login}"><span class="user">${membre.prenom[0]}${membre.nom[0]}</span></label>`;
+                });
+            }
         }
     },
 

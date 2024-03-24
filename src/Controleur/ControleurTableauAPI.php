@@ -81,5 +81,20 @@ class ControleurTableauAPI
         }
     }
 
+    #[Route('/api/tableau/membre/getProprio', name: 'getProprietaireTableau', methods: "POST")]
+    public function getProprietaireTableau(Request $request)
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $proprietaire = $this->serviceUtilisateur->getParticipants($tableau);
+            return new JsonResponse($proprietaire, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
 }
 
