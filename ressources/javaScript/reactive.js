@@ -154,7 +154,6 @@ function startReactiveDom(subDom = document) {
         rel.removeAttribute('data-onChange');
     }
 
-    //data-onEnter : déclenche l'événement lorsqu'on appuie sur la touche entrée et que l'élément est focus
     for (let rel of document.querySelectorAll("[data-onEnter]")) {
         const [obj, fun, arg] = rel.dataset.onenter.split(/[.()]+/);
         rel.addEventListener('keydown', (event) => {
@@ -162,6 +161,7 @@ function startReactiveDom(subDom = document) {
                 objectByName.get(obj)[fun](arg);
             }
         });
+        rel.removeAttribute('data-onEnter');
     }
 }
 
