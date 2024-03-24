@@ -89,7 +89,7 @@ class ControleurTableauAPI
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $proprietaire = $this->serviceUtilisateur->getParticipants($tableau);
+            $proprietaire = $this->serviceUtilisateur->getProprietaireTableau($tableau);
             return new JsonResponse($proprietaire, 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
