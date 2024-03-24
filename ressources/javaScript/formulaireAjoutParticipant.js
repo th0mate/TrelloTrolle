@@ -7,7 +7,7 @@ let formulaireAjoutParticipant = reactive({
 
     rechercherDebutAdresseMail: async function () {
         this.idTableau = document.querySelector('.formulaireAjoutMembreTableau').getAttribute('data-tableau');
-        if (this.adresseMailARechercher !== '' && this.adresseMailARechercher.length > 3) {
+        if (this.adresseMailARechercher !== '' && this.adresseMailARechercher.length > 2) {
             let response = await fetch(apiBase + '/utilisateur/recherche', {
 
                 method: 'POST',
