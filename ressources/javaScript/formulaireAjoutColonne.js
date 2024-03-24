@@ -57,7 +57,7 @@ let formulaireAjoutColonne = reactive({
             if (response.status !== 200) {
                 console.error("Erreur lors de la création de la colonne dans l'API");
             } else {
-                console.log(response);
+                console.log(response.json());
             }
         }
     }
