@@ -100,9 +100,7 @@ let formulaireAjoutCarte = reactive({
                 console.error(response2.error);
             } else {
 
-                //TODO : problème
                 const proprio = await response2.json();
-                console.log(proprio);
 
                 document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${proprio.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${proprio.login})" type="checkbox" data-participant="${proprio.login}" id="participant${proprio.login}" name="participant${proprio.login}" value="${proprio.login}">
                 <label for="participant${proprio.login}" data-participant="${proprio.login}"><span class="user">${proprio.prenom[0]}${proprio.nom[0]}</span></label>`;
@@ -125,14 +123,12 @@ let formulaireAjoutCarte = reactive({
     ajouterParticipantCarte: function (idUtilisateur) {
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
-            console.log(this.participants);
         }
     },
 
     supprimerParticipantCarte: function (idUtilisateur) {
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
-            console.log(this.participants);
         }
     }
 
