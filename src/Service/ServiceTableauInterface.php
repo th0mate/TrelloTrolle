@@ -2,7 +2,10 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
+use App\Trellotrolle\Modele\Repository\AbstractRepository;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 
@@ -37,12 +40,12 @@ interface ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function quitterTableau($tableau, $utilisateur);
+    public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur);
 
     /**
      * @throws ServiceException
      */
     public function creerTableau($nomTableau);
 
-    public function estParticipant();
+    public function estParticipant(Tableau $tableau);
 }
