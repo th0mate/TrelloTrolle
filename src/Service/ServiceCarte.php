@@ -7,6 +7,8 @@ use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
+use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
@@ -26,10 +28,8 @@ class ServiceCarte implements ServiceCarteInterface
                                 private UtilisateurRepositoryInterface $utilisateurRepository)
     {}
 
-    /**
-     * @throws ServiceException
-     */
-    public function recupererCarte($idCarte): Carte
+
+    public function recupererCarte(?int $idCarte): Carte
     {
         //TODO différencier warning de danger pour message flash:
         //Pk ici c'est différent mais pas pour recupererColonne, voir afficherFormulaireCreationCarte
@@ -49,18 +49,12 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    /**
-     * @throws TableauException
-     */
-    public function supprimerCarte($idCarte): void
+    public function supprimerCarte(int $idCarte): void
     {
         $this->carteRepository->supprimer($idCarte);
     }
 
-    /**
-     * @throws CreationException
-     */
-    public function creerCarte($tableau, $attributs,$colonne):Carte
+    public function creerCarte(Tableau $tableau,array $attributs,Colonne $colonne):Carte
     {
         $affectationsCarte=$attributs["affectationsCarte"];
         $affectations = [];
@@ -80,11 +74,6 @@ class ServiceCarte implements ServiceCarteInterface
             }
         }
         $attributs["affectationsCarte"]=$affectations;
-        return $this->newCarte($colonne,$attributs);
-    }
-
-    public function newCarte($colonne,$attributs): Carte
-    {
         $carte=new Carte(
             $this->carteRepository->getNextIdCarte(),
             $attributs["titreCarte"],
@@ -96,10 +85,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    /**
-     * @throws CreationException
-     */
-    public function recupererAttributs($attributs): void
+    public function recupererAttributs(array $attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
