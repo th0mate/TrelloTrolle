@@ -48,7 +48,6 @@
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
                                 {{ carte.titreCarte }}
                                 <div class="features">
-
                                     {% for utilisateur in participants %}
                                         {# en sachant que le contenu json d'un participant est {"touzer":{"infos":{"login":"touzer","nom":"Touz\u00e9","prenom":"Romain"},"colonnes":{"17":["Totam culpa nihil en",3]}} #}
                                         {# on doit donc afficher le tout ssi l'id de la carte est égal à l'un des idCarte dans "colonnes" #}
