@@ -18,7 +18,12 @@ let formulaireAjoutCarte = reactive({
     envoyerFormulaire: async function () {
         this.idColonne = document.querySelector('.idColonne').value;
         //TODO problèmes parfois si il y a des participants
-        console.log(this.idColonne);
+
+        this.ajouterCarte(this.idColonne)
+        document.querySelector('.formulaireCreationCarte').style.display = 'none';
+        document.querySelector('.all').style.opacity = 1;
+        updateDraggables();
+        updateCards();
 
         let response = await fetch(apiBase + '/carte/creer', {
             method: 'POST',
@@ -41,14 +46,10 @@ let formulaireAjoutCarte = reactive({
             //TODO: Afficher un message d'erreur
         }
 
-        this.ajouterCarte(this.idColonne)
-        document.querySelector('.formulaireCreationCarte').style.display = 'none';
-
         document.querySelector('.idColonne').value = '';
         document.querySelector('.inputCreationCarte').value = '';
         document.querySelector('.desc').value = '';
         document.querySelector('.color').value = '#ffffff';
-        document.querySelector('.all').style.opacity = 1;
     },
 
 
@@ -104,11 +105,10 @@ let formulaireAjoutCarte = reactive({
             } else {
 
                 const proprio = await response2.json();
-
+                let membres = await response.json();
                 document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${proprio.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${proprio.login})" type="checkbox" data-participant="${proprio.login}" id="participant${proprio.login}" name="participant${proprio.login}" value="${proprio.login}">
                 <label for="participant${proprio.login}" data-participant="${proprio.login}"><span class="user">${proprio.prenom[0]}${proprio.nom[0]}</span></label>`;
 
-                let membres = await response.json();
                 if (membres.length === 0) {
                     return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
                 }

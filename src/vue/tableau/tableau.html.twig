@@ -49,8 +49,9 @@
                                 {{ carte.titreCarte }}
                                 <div class="features">
 
-                                    {% for utilisateur in carte.affectationCarte %}
-                                        <span class="user">{{ utilisateur.prenom[0] }} {{ utilisateur.nom[0] }}</span>
+                                    {% for utilisateur in participants %}
+                                        {# en sachant que le contenu json d'un participant est  #}
+                                        <span class="user">{{ utilisateur.infos.prenom|slice(0,1) }}{{ utilisateur.infos.nom|slice(0,1) }}</span>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -64,6 +65,7 @@
                 </div>
             {% endfor %}
 
+            {{ participants|json_encode|raw }}
 
             <!-- Pour ajouter de nouvelles colonnes -->
             <div class="adder" data-tableau="{{ tableau.idTableau }}">

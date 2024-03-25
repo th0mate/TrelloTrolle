@@ -315,6 +315,8 @@ document.querySelector('.deleteColumn').addEventListener('click', async function
     if (response.status !== 200) {
         console.error(response.error);
     }
+
+    console.log(response.json());
 });
 
 document.querySelector('.updateColumn').addEventListener('click', function () {
