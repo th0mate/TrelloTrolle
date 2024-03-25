@@ -13,10 +13,22 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurUtilisateurAPI
 {
 
+    /**
+     * ControleurUtilisateurAPI constructor.
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     *
+     * fonction qui permet de construire le controleur de l'utilisateur avec l'API
+     */
     public function __construct(private ServiceUtilisateurInterface $serviceUtilisateur)
     {
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de rechercher un utilisateur avec l'API via une requête de recherche
+     */
     #[Route("/api/utilisateur/recherche",name: "rechercheUtilisateurAPI",methods: "POST")]
     public function rechercheUtilisateur(Request $request):Response
     {

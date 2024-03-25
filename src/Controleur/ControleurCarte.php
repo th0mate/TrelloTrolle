@@ -24,6 +24,17 @@ use Symfony\Component\HttpFoundation\Request;
 class ControleurCarte extends ControleurGenerique
 {
 
+    /**
+     * ControleurCarte constructor.
+     * @param ContainerInterface $container
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceCarteInterface $serviceCarte
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceColonneInterface $serviceColonne
+     *
+     * fonction qui permet de construire le controleur de carte
+     */
+
     public function __construct(ContainerInterface         $container,
                                 private ServiceConnexionInterface   $serviceConnexion,
                                 private ServiceCarteInterface      $serviceCarte,
@@ -33,10 +44,23 @@ class ControleurCarte extends ControleurGenerique
         parent::__construct($container);
     }
 
+    /**
+     * @param string $messageErreur
+     * @param string $controleur
+     * @return Response
+     *
+     * fonction permettant d'afficher une erreur avec un message et un controleur donné
+     */
     public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         return parent::afficherErreur($messageErreur, "carte");
     }
+
+    /**
+     * @return Response
+     *
+     * fonction permettant de supprimer une carte
+     */
 
     #[Route('/carte/suprression', name: 'supprimerCarte', methods: "GET")]
     public function supprimerCarte(): Response
@@ -63,6 +87,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response
+     *
+     * fonction permettant d'afficher le formulaire de création d'une carte
+     */
 
     #[Route('/carte/nouveau', name: 'afficherFormulaireCreationCarte', methods: "GET")]
     public function afficherFormulaireCreationCarte(): Response
@@ -92,6 +122,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response
+     *
+     * fonction permettant de créer une carte
+     */
 
     #[Route('/carte/nouveau', name: 'creerCarte', methods: "POST")]
     public function creerCarte(): Response
@@ -125,6 +161,12 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction permettant d'afficher le formulaire de mise à jour d'une carte
+     */
+
     #[Route('/carte/mettreAJour', name: 'afficherFormulaireMiseAJourCarte', methods: "GET")]
     public function afficherFormulaireMiseAJourCarte(): Response
     {
@@ -147,6 +189,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response
+     *
+     * fonction permettant de mettre à jour une carte
+     */
 
     #[Route('/carte/mettreAJour', name: 'mettreAJourCarte', methods: "POST")]
     public function mettreAJourCarte(): Response

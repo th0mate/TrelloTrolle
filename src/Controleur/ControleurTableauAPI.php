@@ -20,6 +20,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurTableauAPI
 {
 
+    /**
+     * ControleurTableauAPI constructor.
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceTableauInterface $serviceTableau
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceCarteInterface $serviceCarte
+     *
+     * fonction qui permet de construire le controleur de tableau avec l'API
+     */
+
     public function __construct(
         private ServiceConnexionInterface   $serviceConnexion,
         private ServiceTableauInterface     $serviceTableau,
@@ -29,6 +39,11 @@ class ControleurTableauAPI
     {
     }
 
+    /**
+     * @return JsonResponse
+     *
+     * fonction qui permet de creer un tableau avec l'API
+     */
     #[Route("/api/tableau/membre/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
     public function ajouterMembre()
     {
@@ -45,6 +60,12 @@ class ControleurTableauAPI
             }
         }
     }
+
+    /**
+     * @return JsonResponse
+     *
+     * fonction qui permet de supprimer un membre avec l'API
+     */
 
     #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
     public function supprimerMembre()

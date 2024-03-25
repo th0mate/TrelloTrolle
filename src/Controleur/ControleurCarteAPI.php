@@ -24,6 +24,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurCarteAPI
 {
 
+    /**
+     * ControleurCarteAPI constructor.
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceCarteInterface $serviceCarte
+     * @param ServiceColonneInterface $serviceColonne
+     *
+     * fonction qui permet de construire le controleur de carte avec l'API
+     */
+
     public function __construct(
         private ServiceUtilisateurInterface $serviceUtilisateur,
         private ServiceConnexionInterface   $serviceConnexion,
@@ -33,6 +43,13 @@ class ControleurCarteAPI
     {
     }
 
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de supprimer une carte avec l'API
+     */
 
     #[Route("/api/carte/supprimer", name: "supprimerCarteAPI", methods: "DELETE")]
     public function supprimerCarte(Request $request): Response
@@ -51,6 +68,12 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de modifier une carte avec l'API
+     */
     #[Route("api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
     public function modifierCarte(Request $request): Response
     {
@@ -75,6 +98,13 @@ class ControleurCarteAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de creer une carte avec l'API
+     */
 
     #[Route("/api/carte/creer", name: "creerCarteAPI", methods: "POST")]
     public function creerCarte(Request $request): Response
@@ -102,6 +132,13 @@ class ControleurCarteAPI
         }
     }
 
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de recuperer l'ID d'une carte avec l'API
+     */
     #[Route("/api/carte/nextid",name: "getNextIdCarteAPI",methods: "POST")]
     public function getNextIdCarte():Response
     {

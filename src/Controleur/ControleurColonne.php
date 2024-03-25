@@ -31,6 +31,17 @@ use Symfony\Component\HttpFoundation\Request;
 class ControleurColonne extends ControleurGenerique
 {
 
+    /**
+     * ControleurColonne constructor.
+     * @param ContainerInterface $container
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceColonneInterface $serviceColonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceTableauInterface $serviceTableau
+     *
+     * fonction qui permet de construire le controleur de colonne
+     */
+
     public function __construct(ContainerInterface         $container,
                                 private ServiceConnexionInterface   $serviceConnexion,
                                 private ServiceColonneInterface     $serviceColonne,
@@ -41,10 +52,27 @@ class ControleurColonne extends ControleurGenerique
 
     }
 
+
+    /**
+     * @param string $messageErreur
+     * @param string $controleur
+     * @return Response
+     *
+     * fonction qui permet d'afficher une erreur
+     */
+
     public function afficherErreur($messageErreur = "", $controleur = ""): \Symfony\Component\HttpFoundation\Response
     {
         return parent::afficherErreur($messageErreur, "colonne");
     }
+
+
+    /**
+     * @param Request $request
+     * @return Response
+     *
+     * fonction qui permet de supprimer une colonne
+     */
 
     #[Route('/colonne/suppression', name: 'supprimerColonne', methods: "GET")]
     public function supprimerColonne(): Response
@@ -72,6 +100,12 @@ class ControleurColonne extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher le formulaire de création d'une colonne
+     */
+
     #[Route('/colonne/nouveau', name: 'afficherFormulaireCreationColonne', methods: "GET")]
     public function afficherFormulaireCreationColonne(): Response
     {
@@ -96,6 +130,13 @@ class ControleurColonne extends ControleurGenerique
         ]);*/
         return $this->afficherTwig('colonne/formulaireCreationColonne.html.twig',["idTableau" => $_REQUEST["idTableau"]]);
     }
+
+
+    /**
+     * @return Response
+     *
+     * fonction qui permet de créer une colonne
+     */
 
     #[Route('/colonne/nouveau', name: 'creerColonne', methods: "POST")]
     public function creerColonne(): Response
@@ -123,6 +164,13 @@ class ControleurColonne extends ControleurGenerique
             return self::redirection("accueil");
         }
     }
+
+
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher le formulaire de mise à jour d'une colonne
+     */
 
     #[Route('/colonne/mettreAJour', name: 'afficherFormulaireMiseAJourColonne', methods: "GET")]
     public function afficherFormulaireMiseAJourColonne(): Response
@@ -154,6 +202,12 @@ class ControleurColonne extends ControleurGenerique
         }
 
     }
+
+    /**
+     * @return Response
+     *
+     * fonction qui permet de mettre à jour une colonne
+     */
 
     #[Route('/colonne/mettreAJour', name: 'mettreAJourColonne', methods: "POST")]
     public function mettreAJourColonne(): Response

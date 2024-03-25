@@ -13,9 +13,23 @@ use Twig\Environment;
 class ControleurGenerique {
 
 
+    /**
+     * ControleurGenerique constructor.
+     * @param ContainerInterface $container
+     * fonction qui permet de construire le controleur generique
+     */
+
     public function __construct(private ContainerInterface $container)
     {
     }
+
+    /**
+     * @param string $cheminVue
+     * @param array $parametres
+     * @return Response
+     *
+     * fonction qui permet d'afficher une vue via le chemin de la vue et les parametres
+     */
 
     protected function afficherVue(string $cheminVue, array $parametres = []): Response
     {
@@ -51,6 +65,14 @@ class ControleurGenerique {
         return new RedirectResponse($url);
     }
 
+    /**
+     * @param string $messageErreur
+     * @param string $controleur
+     * @return Response
+     *
+     * fonction qui permet d'afficher une erreur en indiquant le message d'erreur et le controleur
+     */
+
     public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         $messageErreurVue = "Problème";
@@ -67,6 +89,13 @@ class ControleurGenerique {
         return $this->afficherTwig('error.html.twig',["errorMessage" => $messageErreurVue]);
     }
 
+    /**
+     * @param array $requestParams
+     * @return bool
+     *
+     * fonction qui permet de verifier si les parametres de la requete sont bien definis et non null
+     */
+
     public function issetAndNotNull(array $requestParams) : bool {
         foreach ($requestParams as $param) {
             if(!(isset($_REQUEST[$param]) && $_REQUEST[$param] != null)) {
@@ -75,6 +104,13 @@ class ControleurGenerique {
         }
         return true;
     }
+
+    /**
+     * @param ConnexionException $e
+     * @return Response
+     *
+     * fonction qui permet de rediriger vers la page de connexion avec un message flash
+     */
 
     protected function redirectionConnectionFlash(ConnexionException $e): Response
     {

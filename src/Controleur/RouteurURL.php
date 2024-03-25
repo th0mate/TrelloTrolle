@@ -47,6 +47,13 @@ use App\Trellotrolle\Lib\AttributeRouteControllerLoader;
 class RouteurURL
 {
 
+    /**
+     * @param Request $requete
+     * @return Response
+     * @throws \Exception
+     *
+     * fonction qui permet de traiter la requete pour afficher la page demandée
+     */
     public static function traiterRequete(Request $requete) : Response
     {
         $conteneur = new ContainerBuilder();

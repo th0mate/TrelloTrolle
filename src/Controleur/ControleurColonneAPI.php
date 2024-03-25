@@ -22,6 +22,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurColonneAPI
 {
 
+    /**
+     * ControleurColonneAPI constructor.
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceColonneInterface $serviceColonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceTableauInterface $serviceTableau
+     *
+     * fonction qui permet de construire le controleur de colonne avec l'API
+     */
+
     public function __construct(
         private ServiceConnexionInterface $serviceConnexion,
         private ServiceColonneInterface $serviceColonne,
@@ -31,6 +41,11 @@ class ControleurColonneAPI
     {
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet de creer une colonne avec l'API
+     */
     #[Route("/api/colonne/creer",name: "creerColonneAPI",methods: "PUT")]
     public function creerColonne():Response
     {
@@ -49,6 +64,13 @@ class ControleurColonneAPI
         }
     }
 
+    /**
+     * @param $idColonne
+     * @return Response
+     *
+     * fonction qui permet de supprimer une colonne avec l'API
+     */
+
     #[Route("/api/colonne/supprimer/{idColonne}",name: "supprimerColonneAPI",methods: "DELETE")]
     public function supprimerColonne($idColonne): Response
     {
@@ -63,6 +85,13 @@ class ControleurColonneAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    /**
+     * @param $idColonne
+     * @return Response
+     *
+     * fonction qui permet de modifier une colonne avec l'API
+     */
 
     #[Route("/api/colonne/modifier/{idColonne}",name: "modifierColonneAPI",methods:"PATCH" )]
     public function modifierColonne($idColonne):Response
@@ -80,6 +109,13 @@ class ControleurColonneAPI
             return new JsonResponse(["error"=>$e->getMessage()],$e->getCode());
         }
     }
+
+/**
+     * @return Response
+     *
+     * fonction qui permet de recuperer le prochain id de colonne avec l'API
+     */
+
     #[Route("/api/colonne/nextid",name: "getNextIdColonneAPI",methods: "POST")]
     public function getNextIdColonne():Response
     {

@@ -31,6 +31,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurTableau extends ControleurGenerique
 {
 
+
+    /**
+     * ControleurTableau constructor.
+     * @param ContainerInterface $container
+     * @param ServiceTableauInterface $serviceTableau
+     * @param ServiceConnexionInterface $serviceConnexion
+     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ServiceCarteInterface $serviceCarte
+     *
+     * fonction qui permet de construire le controleur de tableau
+     */
+
     public function __construct(ContainerInterface         $container,
                                 private ServiceTableauInterface     $serviceTableau,
                                 private ServiceConnexionInterface   $serviceConnexion,
@@ -41,10 +53,25 @@ class ControleurTableau extends ControleurGenerique
 
     }
 
+    /**
+     * @param string $messageErreur
+     * @param string $controleur
+     * @return Response
+     *
+     * fonction qui permet d'afficher une erreur
+     */
+
     public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         return parent::afficherErreur($messageErreur, "tableau");
     }
+
+    /**
+     * @param $codeTableau
+     * @return Response
+     *
+     * fonction qui permet d'afficher un tableau avec son code
+     */
 
     #[Route('/tableau/monTableau/{codeTableau}', name: 'afficherTableau', methods: "GET")]
     public function afficherTableau($codeTableau): Response
@@ -75,6 +102,12 @@ class ControleurTableau extends ControleurGenerique
 
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher un formulaire de mise à jour d'un tableau
+     */
+
     #[Route('/tableau/mettreAJour', name: 'afficherFormulaireMiseAJourTableau', methods: "GET")]
     public function afficherFormulaireMiseAJourTableau(): Response
     {
@@ -103,6 +136,11 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher un formulaire de création d'un tableau
+     */
     #[Route('/tableau/nouveau', name: 'afficherFormulaireCreationTableau', methods: "GET")]
     public function afficherFormulaireCreationTableau(): Response
     {
@@ -118,6 +156,11 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet de creer un tableau
+     */
     #[Route('/tableau/nouveau', name: 'creerTableau', methods: "POST")]
     public function creerTableau(): Response
     {
@@ -135,6 +178,11 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet de mettre à jour un tableau
+     */
     #[Route('/tableau/mettreAJour', name: 'mettreAJourTableau', methods: "POST")]
     public function mettreAJourTableau(): Response
     {
@@ -163,6 +211,11 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher un formulaire d'ajout d'un membre
+     */
     #[Route('/tableau/inviter', name: 'afficherFormulaireAjoutMembre', methods: "GET")]
     public function afficherFormulaireAjoutMembre(): Response
     {
@@ -191,6 +244,11 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'ajouter un membre
+     */
     #[Route('/tableau/inviter', name: 'ajouterMembreTableau', methods: "POST")]
     public function ajouterMembre(): Response
     {
@@ -211,6 +269,12 @@ class ControleurTableau extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response
+     *
+     * fonction qui permet de supprimer un membre
+     */
 
     #[Route('/tableau/supprimerMembre', name: 'supprimerMembre', methods: "GET")]
     public function supprimerMembre(): Response
@@ -235,6 +299,12 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response
+     *
+     * fonction qui permet d'afficher la liste des tableaux
+     */
+
     #[Route('/tableau', name: 'afficherListeMesTableaux', methods: "GET")]
     public function afficherListeMesTableaux(): Response
     {
@@ -252,6 +322,13 @@ class ControleurTableau extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         }
     }
+
+    /**
+     * @param $idTableau
+     * @return Response
+     *
+     * fonction qui permet de quitter un tableau via son id
+     */
 
     #[Route('/tableau/quitter', name: 'quitterTableau', methods: "GET")]
     public function quitterTableau($idTableau): Response
@@ -272,6 +349,12 @@ class ControleurTableau extends ControleurGenerique
         }
     }
 
+    /**
+     * @param $idTableau
+     * @return Response
+     *
+     * fonction qui permet de supprimer un tableau via son id
+     */
     #[Route('/{idTableau}/suppression', name: 'supprimerTableau', methods: "GET")]
     public function supprimerTableau($idTableau): Response
     {
