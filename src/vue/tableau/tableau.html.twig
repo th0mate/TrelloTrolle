@@ -50,8 +50,17 @@
                                 <div class="features">
 
                                     {% for utilisateur in participants %}
-                                        {# en sachant que le contenu json d'un participant est  #}
-                                        <span class="user">{{ utilisateur.infos.prenom|slice(0,1) }}{{ utilisateur.infos.nom|slice(0,1) }}</span>
+                                        {# en sachant que le contenu json d'un participant est {"touzer":{"infos":{"login":"touzer","nom":"Touz\u00e9","prenom":"Romain"},"colonnes":{"17":["Totam culpa nihil en",3]}} #}
+                                        {# on doit donc afficher le tout ssi l'id de la carte est égal à l'un des idCarte dans "colonnes" #}
+                                        {# on a donc dans utilisateur :  "login":{"infos":{"login":"Bouah","nom":"Bouah","prenom":"Bouah"},"colonnes":{"idColonne":["titreCarte",idCarte]}} #}
+                                        {% for idColonne, carteData in utilisateur.colonnes %}
+                                            {# carte.idCarte #}
+                                            {# carteData|json_encode #}
+                                            {% if carte.idCarte in carteData  %}
+                                                <span class="user">{{ utilisateur.infos.prenom|slice(0,1) }}{{ utilisateur.infos.nom|slice(0,1) }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+
                                     {% endfor %}
                                 </div>
                             </div>
@@ -64,8 +73,6 @@
                     </div>
                 </div>
             {% endfor %}
-
-            {{ participants|json_encode|raw }}
 
             <!-- Pour ajouter de nouvelles colonnes -->
             <div class="adder" data-tableau="{{ tableau.idTableau }}">
