@@ -5,22 +5,27 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceTableau;
+use App\Trellotrolle\Service\ServiceTableauInterface;
 use PHPUnit\Framework\TestCase;
 class ServiceTableauTest extends TestCase
 {
 
-    private ServiceTableau $serviceTableau;
+    private ServiceTableauInterface $serviceTableau;
 
-    private UtilisateurRepository $utilisateurRepository;
-    private CarteRepository $carteRepository;
-    private ColonneRepository $colonneRepository;
-    private TableauRepository $tableauRepository;
+    private UtilisateurRepositoryInterface $utilisateurRepository;
+    private CarteRepositoryInterface $carteRepository;
+    private ColonneRepositoryInterface $colonneRepository;
+    private TableauRepositoryInterface $tableauRepository;
 
 
     protected function setUp():void{
@@ -29,7 +34,7 @@ class ServiceTableauTest extends TestCase
         $this->carteRepository=$this->createMock(CarteRepository::class);
         $this->colonneRepository=$this->createMock(ColonneRepository::class);
         $this->tableauRepository=$this->createMock(TableauRepository::class);
-        $this->serviceTableau=new ServiceTableau();
+        $this->serviceTableau=new ServiceTableau($this->tableauRepository,$this->colonneRepository,$this->carteRepository,$this->utilisateurRepository);
     }
 
     /** supprimerTableau */
@@ -45,9 +50,11 @@ class ServiceTableauTest extends TestCase
     public function testRecupererCartesColonnes()
     {
         //TODO Pas fini
-        $fakeColonne=new Colonne($this->creerTableauEtUtilisateurFake(),"-1","fake",);
-        $this->colonneRepository->method("recupererColonnesTableau")->willReturn($fakeColonne);
-
+        $tableau=$this->creerTableauEtUtilisateurFake();
+        $fakeColonne=new Colonne("-1","fake",$tableau);
+        $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
+        $colonnes=$this->serviceTableau->recupererCartesColonnes($tableau);
+        self::assertEquals([$fakeColonne],$colonnes);
     }
 
     /** recupererTableauEstMembre */
@@ -72,6 +79,7 @@ class ServiceTableauTest extends TestCase
     }
     public function testIsNotNullNomTableauValide()
     {
+        $this->expectNotToPerformAssertions();
         $this->serviceTableau->isNotNullNomTableau("Bonjour",$this->creerTableauEtUtilisateurFake());
     }
 
@@ -94,9 +102,11 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererTableauParCodeValide()
     {
+
         $fakeTableau=$this->creerTableauEtUtilisateurFake();
-        $this->tableauRepository->method("recupererParClePrimaire")->willReturn($fakeTableau);
-        $this->serviceTableau->recupererTableauParCode("1");
+        $this->tableauRepository->method("recupererParCodeTableau")->willReturn($fakeTableau);
+        $tableau=$this->serviceTableau->recupererTableauParCode("1");
+        self::assertEquals($fakeTableau,$tableau);
     }
 
     /** recupererTableauParId */
@@ -118,9 +128,11 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererTableauIdValide()
     {
+        $this->expectNotToPerformAssertions();
         $fakeTableau=$this->creerTableauEtUtilisateurFake();
         $this->tableauRepository->method("recupererParClePrimaire")->willReturn($fakeTableau);
-        $this->serviceTableau->recupererTableauParId("1");
+        $tableau=$this->serviceTableau->recupererTableauParId("1");
+        self::assertEquals($tableau,$fakeTableau);
     }
 
 
@@ -134,15 +146,13 @@ class ServiceTableauTest extends TestCase
                 "fake",
                 "fake@fake.fr",
                 "fake",
-                "fake"
             );
         }
         return new Tableau(
-            $utilisateur,
             $id,
             $id,
-            "titre",
-            []
+            "Titre",
+            $utilisateur
         );
     }
 }
