@@ -40,7 +40,6 @@ let formulaireAjoutCarte = reactive({
             })
         });
 
-        console.log(response.json());
         if (response.status !== 200) {
             console.error("Erreur lors de la création de la carte dans l'API");
             //TODO: Afficher un message d'erreur
@@ -151,10 +150,10 @@ async function getNextIdCarte() {
     });
 
     if (response.status !== 200) {
-        console.error(response.error);
+        console.error((await response).json());
     }
 
-    let idCarte = await response.json();
+    let idCarte = await response.json;
     console.log(idCarte);
     return idCarte;
 }
