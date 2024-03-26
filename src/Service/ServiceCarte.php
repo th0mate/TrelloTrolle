@@ -56,10 +56,6 @@ class ServiceCarte implements ServiceCarteInterface
      */
     public function supprimerCarte($tableau, $idCarte): array
     {
-        //TODO supprimer Vérif après refonte BD
-        if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau, Response::HTTP_CONFLICT);
-        }
         $this->carteRepository->supprimer($idCarte);
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
     }
