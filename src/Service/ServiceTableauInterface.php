@@ -21,16 +21,16 @@ interface ServiceTableauInterface
      */
     public function recupererTableauParCode($codeTableau): Tableau;
 
-    public function recupererCartesColonnes($tableau): array;
+    public function recupererCartesColonnes(Tableau $tableau): array;
 
     public function recupererTableauEstMembre($login);
 
     /**
      * @throws TableauException
      */
-    public function isNotNullNomTableau($nomTableau, $tableau);
+    public function isNotNullNomTableau($nomTableau, Tableau $tableau);
 
-    public function mettreAJourTableau($tableau);
+    public function mettreAJourTableau(Tableau $tableau);
 
     /**
      * @throws ServiceException

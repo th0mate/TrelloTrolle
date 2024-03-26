@@ -61,7 +61,7 @@ class ControleurColonneAPI
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
             $this->serviceUtilisateur->estParticipant($tableau);
-            $this->serviceColonne->supprimerColonne($tableau, $idColonne);
+            $this->serviceColonne->supprimerColonne($tableau->getIdTableau(), $idColonne);
             return new JsonResponse('', 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());

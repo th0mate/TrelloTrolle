@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -19,7 +20,7 @@ interface ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): void;
+    public function supprimerColonne(Tableau $tableau, $idColonne): array;
 
     /**
      * @throws CreationException
@@ -32,9 +33,9 @@ interface ServiceColonneInterface
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne);
 
-    public function creerColonne($tableau, $nomColonne): Colonne;
+    public function creerColonne(Tableau $tableau, $nomColonne): Colonne;
 
-    public function miseAJourColonne($colonne): Colonne;
+    public function miseAJourColonne(Colonne $colonne): Colonne;
     public function getNextIdColonne();
     public function inverserOrdreColonnes($idColonne1, $idColonne2);
 

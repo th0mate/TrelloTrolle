@@ -68,7 +68,7 @@ class ServiceTableau implements ServiceTableauInterface
 
     }
 
-    public function recupererCartesColonnes($tableau): array
+    public function recupererCartesColonnes(Tableau $tableau): array
     {
         /**
          * @var Colonne[] $colonnes
@@ -91,7 +91,7 @@ class ServiceTableau implements ServiceTableauInterface
         return ["data" => $data, "colonnes" => $colonnes, "participants" => $participants];
     }
 
-    public function recupererTableauEstMembre($login)
+    public function recupererTableauEstMembre($login): array
     {
         return $this->tableauRepository->recupererTableauxOuUtilisateurEstMembre($login);
     }
@@ -99,14 +99,14 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws TableauException
      */
-    public function isNotNullNomTableau($nomTableau, $tableau)
+    public function isNotNullNomTableau($nomTableau, Tableau $tableau): void
     {
         if (is_null($nomTableau)) {
             throw new TableauException("Nom de tableau manquant", $tableau, 404);
         }
     }
 
-    public function mettreAJourTableau($tableau)
+    public function mettreAJourTableau(Tableau $tableau): void
     {
         $this->tableauRepository->mettreAJour($tableau);
     }
@@ -114,7 +114,7 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function supprimerTableau($idTableau)
+    public function supprimerTableau($idTableau): void
     {
         $this->tableauRepository->supprimer($idTableau);
     }
@@ -150,7 +150,7 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau)
+    public function creerTableau($nomTableau): Tableau
     {
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
         if (is_null($nomTableau)) {

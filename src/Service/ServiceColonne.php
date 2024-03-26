@@ -6,6 +6,7 @@ use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -17,8 +18,7 @@ class ServiceColonne implements ServiceColonneInterface
 {
 
 
-    public function __construct(private ColonneRepository $colonneRepository,
-                                private CarteRepository   $carteRepository)
+    public function __construct(private ColonneRepository $colonneRepository)
     {
     }
 
@@ -49,9 +49,11 @@ class ServiceColonne implements ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): void
+    public function supprimerColonne(Tableau $tableau, $idColonne): array
     {
-        $this->colonneRepository->supprimer($idColonne);;
+        $this->colonneRepository->supprimer($idColonne);
+        return $this->colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
+
     }
 
     /**
@@ -75,7 +77,7 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
-    public function creerColonne($tableau, $nomColonne): Colonne
+    public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
         $colonne= new Colonne(
             $this->colonneRepository->getNextIdColonne(),
@@ -86,18 +88,18 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
-    public function miseAJourColonne($colonne): Colonne
+    public function miseAJourColonne(Colonne $colonne): Colonne
     {
         $this->colonneRepository->mettreAJour($colonne);
         return $colonne;
     }
-    public function getNextIdColonne()
+    public function getNextIdColonne(): int
     {
         return $this->colonneRepository->getNextIdColonne();
     }
 
-    public function inverserOrdreColonnes($colonne1, $colonne2): void
+    public function inverserOrdreColonnes($idColonne1, $idColonne2): void
     {
-        $this->colonneRepository->inverserOrdreColonnes($colonne1, $colonne2);
+        $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);
     }
 }

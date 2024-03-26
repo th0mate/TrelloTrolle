@@ -12,7 +12,7 @@ interface ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estParticipant($tableau);
+    public function estParticipant(Tableau $tableau);
 
     public function recupererUtilisateurParCle($login): \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 
@@ -24,12 +24,12 @@ interface ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function isNotNullLogin($login, $tableau, $action);
+    public function isNotNullLogin($login, Tableau $tableau, $action);
 
     /**
      * @throws TableauException
      */
-    public function utilisateurExistant($login, $tableau);
+    public function utilisateurExistant($login, Tableau $tableau);
 
     /**
      * @throws TableauException
