@@ -70,7 +70,7 @@ class ServiceColonne implements ServiceColonneInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function recupererColonneAndNomColonne($idColonne, $nomColonne)
+    public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne
     {
         $colonne = $this->recupererColonne($idColonne);
         $this->isSetNomColonne($nomColonne);
