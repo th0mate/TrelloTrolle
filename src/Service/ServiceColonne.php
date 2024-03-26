@@ -51,8 +51,6 @@ class ServiceColonne implements ServiceColonneInterface
      */
     public function supprimerColonne($tableau, $idColonne): void
     {
-        //TODO supprimer Vérif après refonte BD
-
         $this->colonneRepository->supprimer($idColonne);;
     }
 
