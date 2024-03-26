@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Modele\DataObject\Carte;
+use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
@@ -49,4 +50,6 @@ interface ServiceCarteInterface
 
     public function miseAJourCarteMembre($tableau, $utilisateur);
     public function getNextIdCarte();
+    public function deplacerCarte(Carte $carte,Colonne $colonne);
+
 }

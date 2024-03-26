@@ -228,7 +228,7 @@ function cardDragLeave() {
  * Permet de gérer le drop des cartes
  * @param e {DragEvent} L'événement de drop
  */
-function cardDrop(e) {
+async function cardDrop(e) {
     if (!this.classList.contains('main')) {
         this.classList.remove('cardOver');
         if (draggedCard) {
@@ -258,7 +258,7 @@ function cardDrop(e) {
             }
             draggedCard = null;
             updateCards();
-            let response = fetch(apiBase + '/carte/modifier', {
+            let response = await fetch(apiBase + '/carte/deplacer', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -266,10 +266,12 @@ function cardDrop(e) {
                 },
                 body: JSON.stringify({
                     idCarte: idCarte,
-                    idColonne: idColonne
+                    idColonne: idColonne,
                 })
             });
 
+            console.log(response.json());
+            console.log("response/error")
             if (response.status !== 200) {
                 console.error(response.error);
             }

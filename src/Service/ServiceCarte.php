@@ -7,6 +7,7 @@ use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
+use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
@@ -185,5 +186,11 @@ class ServiceCarte implements ServiceCarteInterface
     public function getNextIdCarte()
     {
         return $this->carteRepository->getNextIdCarte();
+    }
+
+    public function deplacerCarte(Carte $carte,Colonne $colonne)
+    {
+        $carte->setColonne($colonne);
+        $this->carteRepository->mettreAJour($carte);
     }
 }
