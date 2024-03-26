@@ -17,7 +17,7 @@ let formulaireAjoutCarte = reactive({
      */
     envoyerFormulaire: async function () {
         this.idColonne = document.querySelector('.idColonne').value;
-        //TODO problèmes parfois si il y a des participants
+        console.log(`idColonne : ${this.idColonne}`)
 
         this.ajouterCarte(this.idColonne)
         document.querySelector('.formulaireCreationCarte').style.display = 'none';
@@ -59,7 +59,7 @@ let formulaireAjoutCarte = reactive({
      */
     ajouterCarte: function (idColonne) {
         if (this) {
-            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-colmuns="${idColonne}">
+            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>
@@ -136,6 +136,28 @@ let formulaireAjoutCarte = reactive({
     }
 
 }, "formulaireAjoutCarte");
+
+
+/**
+ * Fonction qui récupère l'id de la prochaine carte disponible dans la BD
+ */
+async function getNextIdCarte() {
+    let response = fetch(apiBase + '/carte/nextid', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    });
+
+    if (response.status !== 200) {
+        console.error("Erreur lors de la récupération de l'id de la prochaine carte");
+    }
+
+    let idCarte = await response.json();
+    console.log(idCarte);
+    return idCarte;
+}
 
 applyAndRegister(() => {
 });
