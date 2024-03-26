@@ -97,4 +97,9 @@ class ServiceColonne implements ServiceColonneInterface
     {
         return $this->colonneRepository->getNextIdColonne();
     }
+
+    public function inverserOrdreColonnes($colonne1, $colonne2): void
+    {
+        $this->colonneRepository->inverserOrdreColonnes($colonne1, $colonne2);
+    }
 }

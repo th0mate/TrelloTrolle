@@ -36,5 +36,6 @@ interface ServiceColonneInterface
 
     public function miseAJourColonne($colonne): Colonne;
     public function getNextIdColonne();
+    public function inverserOrdreColonnes($idColonne1, $idColonne2);
 
 }
