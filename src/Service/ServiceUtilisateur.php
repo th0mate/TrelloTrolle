@@ -54,7 +54,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function estProprietaire(Tableau $tableau, $login)
     {
-        if (!$this->tableauRepository->estProprietaire($login, $tableau->getIdTableau())) {
+        if (!$this->tableauRepository->estProprietaire($login, $tableau)) {
             throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
@@ -89,7 +89,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estParticipantOuProprietaire($login, $tableau->getIdTableau())) {
+        if ($this->tableauRepository->estParticipantOuProprietaire($login, $tableau)) {
             throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
         }
 
@@ -108,10 +108,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estProprietaire($login, $tableau->getIdTableau())) {
+        if ($this->tableauRepository->estProprietaire($login, $tableau)) {
             throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,Response::HTTP_UNAUTHORIZED);
         }
-        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau->getIdTableau())) {
+        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
             throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
@@ -145,7 +145,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau, $login);
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
         $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
-            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin(), $tableau->getIdTableau());
+            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin(), $tableau);
         });
 
         if (empty($filtredUtilisateurs)) {

@@ -80,15 +80,15 @@ class CarteRepository extends AbstractRepository
         return $this->getNextId("idcarte");
     }
 
-    public function getAffectationsCarte(Carte  $idcle): ?array
+    public function getAffectationsCarte(Carte $carte): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
         JOIN utilisateur u ON u.login=a.login 
-        WHERE a.{$this->getNomCle()} =:idcle";
+        WHERE a.{$this->getNomCle()} =:idcarte";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
+        $pdoStatement->execute(["idcarte" => $carte->getIdCarte()]);
         $obj = [];
         foreach($pdoStatement as $objetFormatTableau) {
             $obj[] = Utilisateur::construireDepuisTableau($objetFormatTableau);
@@ -96,12 +96,15 @@ class CarteRepository extends AbstractRepository
         return $obj;
     }
 
-    public function setAffectationsCarte(?array $affectationsCarte, Carte $instance): void
+    public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void
     {
+        $query = "DELETE FROM affectationcarte WHERE idcarte=:idcarte";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idcarte" => $carte->getIdCarte()]);
         foreach($affectationsCarte as $affectationCarte) {
             $query = "INSERT INTO affectationcarte VALUES (:idcarte, :login)";
             $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-            $pdoStatement->execute(["idcarte" => $instance->getIdCarte(), "login" => $affectationCarte->getLogin()]);
+            $pdoStatement->execute(["idcarte" => $carte->getIdCarte(), "login" => $affectationCarte->getLogin()]);
         }
     }
 }
