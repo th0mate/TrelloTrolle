@@ -151,7 +151,7 @@ async function getNextIdCarte() {
     });
 
     if (response.status !== 200) {
-        console.error("Erreur lors de la récupération de l'id de la prochaine carte");
+        console.error(response.error);
     }
 
     let idCarte = await response.json();
