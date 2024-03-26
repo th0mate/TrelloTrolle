@@ -258,7 +258,7 @@ async function cardDrop(e) {
             }
             draggedCard = null;
             updateCards();
-            let response = await fetch(apiBase + '/carte/deplacer', {
+            let response = fetch(apiBase + '/carte/deplacer', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -266,15 +266,9 @@ async function cardDrop(e) {
                 },
                 body: JSON.stringify({
                     idCarte: idCarte,
-                    idColonne: idColonne,
+                    idColonne: idColonne
                 })
             });
-
-            console.log(response.json());
-            console.log("response/error")
-            if (response.status !== 200) {
-                console.error(response.error);
-            }
         }
     }
 }
