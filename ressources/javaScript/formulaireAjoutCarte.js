@@ -17,38 +17,41 @@ let formulaireAjoutCarte = reactive({
      */
     envoyerFormulaire: async function () {
         this.idColonne = document.querySelector('.idColonne').value;
-        console.log(`idColonne : ${this.idColonne}`)
+        //TODO : corrige idColonne qui pose problème parfois
+        if (this.idColonne !== '') {
+            this.ajouterCarte(this.idColonne)
+            document.querySelector('.formulaireCreationCarte').style.display = 'none';
+            document.querySelector('.all').style.opacity = 1;
+            updateDraggables();
+            updateCards();
 
-        this.ajouterCarte(this.idColonne)
-        document.querySelector('.formulaireCreationCarte').style.display = 'none';
-        document.querySelector('.all').style.opacity = 1;
-        updateDraggables();
-        updateCards();
+            let response = await fetch(apiBase + '/carte/creer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idColonne: this.idColonne,
+                    titreCarte: this.titre,
+                    descriptifCarte: this.description,
+                    couleurCarte: this.couleur,
+                    affectationsCarte: this.participants
+                })
+            });
 
-        let response = await fetch(apiBase + '/carte/creer', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                idColonne: this.idColonne,
-                titreCarte: this.titre,
-                descriptifCarte: this.description,
-                couleurCarte: this.couleur,
-                affectationsCarte: this.participants
-            })
-        });
+            if (response.status !== 200) {
+                console.error("Erreur lors de la création de la carte dans l'API");
+                //TODO: Afficher un message d'erreur
+            }
 
-        if (response.status !== 200) {
-            console.error("Erreur lors de la création de la carte dans l'API");
-            //TODO: Afficher un message d'erreur
+            document.querySelector('.idColonne').value = '';
+            document.querySelector('.inputCreationCarte').value = '';
+            document.querySelector('.desc').value = '';
+            document.querySelector('.color').value = '#ffffff';
+        } else {
+            console.error("idColonne manquant.");
         }
-
-        document.querySelector('.idColonne').value = '';
-        document.querySelector('.inputCreationCarte').value = '';
-        document.querySelector('.desc').value = '';
-        document.querySelector('.color').value = '#ffffff';
     },
 
 
@@ -56,9 +59,9 @@ let formulaireAjoutCarte = reactive({
      * Fonction qui ajoute une carte dans le DOM
      * @param idColonne l'id de la colonne dans laquelle ajouter la carte
      */
-    ajouterCarte: function (idColonne) {
+    ajouterCarte: async function (idColonne) {
         if (this) {
-            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${getNextIdCarte()}" data-colmuns="${idColonne}">
+            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>
@@ -141,7 +144,7 @@ let formulaireAjoutCarte = reactive({
  * Fonction qui récupère l'id de la prochaine carte disponible dans la BD
  */
 async function getNextIdCarte() {
-    let response = fetch(apiBase + '/carte/nextid', {
+    let response = await fetch(apiBase + '/carte/nextid', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -153,9 +156,8 @@ async function getNextIdCarte() {
         console.error((await response).json());
     }
 
-    let idCarte = await response.json;
-    console.log(idCarte);
-    return idCarte;
+    let idCarte = await response.json();
+    return idCarte.idCarte;
 }
 
 applyAndRegister(() => {
