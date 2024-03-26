@@ -451,16 +451,11 @@ function fermeFormulaireEtAjouteCarte(id) {
  */
 function afficherFormulaireModificationColonne() {
     const valeurActuelle = document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText;
-    const html = '<div class="formulaireModificationColonne">' +
-        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="../tests/close.png" alt=""></div>' +
-        '<div class="content"><h4>Nouveau titre :</h4><input maxlength="50" required type="text" value="' + valeurActuelle + '" class="inputModificationColonne" placeholder="Entrez le nouveau titre"></div>' +
-        '<div class="boutonModification">Modifier</div>' +
-        '</div>';
-
-    document.body.insertAdjacentHTML('beforeend', html);
+    document.querySelector('.formulaireModificationColonne').style.display = "flex";
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';
     });
+    document.querySelector('.inputModificationColonne').value = valeurActuelle;
     addListenersModificationColonne();
 }
 
@@ -474,29 +469,10 @@ function addListenersModificationColonne() {
         closeColumn.parentNode.replaceChild(newCloseColumn, closeColumn);
 
         newCloseColumn.addEventListener('click', function () {
-            document.querySelector('.formulaireModificationColonne').remove();
+            document.querySelector('.formulaireModificationColonne').style.display = "none";
             document.querySelectorAll('.all').forEach(el => {
                 el.style.opacity = '1';
             });
-        });
-    });
-
-    document.querySelectorAll('.boutonModification').forEach(function (boutonModification) {
-        let newBoutonModification = boutonModification.cloneNode(true);
-        boutonModification.parentNode.replaceChild(newBoutonModification, boutonModification);
-
-        newBoutonModification.addEventListener('click', function () {
-            const titre = document.querySelector('.inputModificationColonne').value;
-            if (titre !== '') {
-                document.querySelector('.formulaireModificationColonne').remove();
-                document.querySelectorAll('.all').forEach(el => {
-                    el.style.opacity = '1';
-                });
-
-                document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = titre;
-                updateCards();
-                addEventsAdd();
-            }
         });
     });
 }

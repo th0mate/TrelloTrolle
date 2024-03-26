@@ -142,4 +142,19 @@
     </div>
 
 
+    <div class="formulaireModificationColonne">
+        <div class="wrap">
+            <h2>Modification de la colonne</h2>
+            <img class="closeColumn" src="{{ asset('../tests/close.png') }}" alt="">
+        </div>
+        <div class="content">
+            <h4>Nouveau titre :</h4>
+            <input maxlength="50" required type="text"
+                   class="inputModificationColonne" data-reactiveInput="formulaireModificationColonne.titre"
+                   placeholder="Entrez le nouveau titre">
+        </div>
+        <div class="boutonModification" data-onclick="formulaireModificationColonne.modifierColonne">Modifier</div>
+    </div>
+
+
 {% endblock %}
