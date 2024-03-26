@@ -123,10 +123,6 @@ class ServiceTableau implements ServiceTableauInterface
      */
     public function supprimerTableau($idTableau)
     {
-        //TODO supprimer Vérif après refonte BD
-        if ($this->tableauRepository->getNombreTableauxTotalUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte()) == 1) {
-            throw new ServiceException("Vous ne pouvez pas supprimer ce tableau car cela entrainera la suppression du compte",Response::HTTP_CONFLICT);
-        }
         $this->tableauRepository->supprimer($idTableau);
     }
 
