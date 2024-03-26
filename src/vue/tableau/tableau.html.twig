@@ -41,10 +41,10 @@
                     </div>
 
                     <!-- Stockage des cartes -->
-                    <div class="stockage" data-columns="{{ colonnes[i].idColonnne }}">
+                    <div class="stockage" data-columns="{{ colonnes[i].idColonne }}">
 
                         {% for carte in data[i] %}
-                            <div class="card">
+                            <div class="card" data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
                                 {{ carte.titreCarte }}
                                 <div class="features">
@@ -70,7 +70,7 @@
             <!-- Pour ajouter de nouvelles colonnes -->
             <div class="adder" data-tableau="{{ tableau.idTableau }}">
                 <label>
-                    <input type="text" data-reactiveInput="formulaireAjoutColonne.titre"
+                    <input type="text" maxlength="30" data-reactiveInput="formulaireAjoutColonne.titre"
                            data-onEnter="formulaireAjoutColonne.envoyerFormulaireCreerColonne" class="input"
                            placeholder="Ajouter une colonne"/>
                 </label>
@@ -149,7 +149,7 @@
         </div>
         <div class="content">
             <h4>Nouveau titre :</h4>
-            <input maxlength="50" required type="text"
+            <input maxlength="30" required type="text"
                    class="inputModificationColonne" data-reactiveInput="formulaireModificationColonne.titre"
                    placeholder="Entrez le nouveau titre">
         </div>

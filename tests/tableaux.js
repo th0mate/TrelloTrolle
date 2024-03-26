@@ -232,9 +232,13 @@ function cardDrop(e) {
     if (!this.classList.contains('main')) {
         this.classList.remove('cardOver');
         if (draggedCard) {
+            const idColonne = this.getAttribute('data-columns');
+            const idCarte = draggedCard.getAttribute('data-card');
+
             if (this.children.length > 0) {
                 let targetCard = document.elementFromPoint(e.clientX, e.clientY).closest('.card');
                 if (targetCard) {
+                    //SUR AUTRE CARTE
                     this.insertBefore(draggedCard, targetCard);
                     let rect = targetCard.getBoundingClientRect();
                     let x = rect.left + rect.width / 2;
@@ -244,14 +248,31 @@ function cardDrop(e) {
                         clientY: y
                     });
                     document.dispatchEvent(evt);
+
                 } else {
                     this.appendChild(draggedCard);
                 }
             } else {
+                //SUR STOCKAGE
                 this.appendChild(draggedCard);
             }
             draggedCard = null;
             updateCards();
+            let response = fetch(apiBase + '/carte/modifier', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCarte: idCarte,
+                    idColonne: idColonne
+                })
+            });
+
+            if (response.status !== 200) {
+                console.error(response.error);
+            }
         }
     }
 }
@@ -291,7 +312,7 @@ document.querySelector('.close').addEventListener('click', function () {
 
 
 /**
- * Evenement permettant de suppimer une colonne
+ * Evenement permettant de supprimer une colonne
  */
 document.querySelector('.deleteColumn').addEventListener('click', async function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');

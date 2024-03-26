@@ -29,7 +29,7 @@ let formulaireModificationColonne = reactive({
             });
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la modification de la colonne dans l'API");
+                console.error(response.error.json());
             }
         }
     }
