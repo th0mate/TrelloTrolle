@@ -115,16 +115,26 @@ function startReactiveDom(subDom = document) {
             objectByName.get(obj)[prop] = event.target.value;
         });
         applyAndRegister(() => {
-            rel.value = objectByName.get(obj)[prop];
+            let reactiveObject = objectByName.get(obj);
+            if (reactiveObject !== undefined && reactiveObject !== null) {
+                rel.value = reactiveObject[prop];
+            }
         });
     }
 
-    for (let rel of subDom.querySelectorAll("[data-htmlfun]")){
+    for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
-        applyAndRegister(()=>{ rel.innerHTML = objectByName.get(obj)[fun](arg); startReactiveDom(rel)});
+        applyAndRegister(() => {
+            let reactiveObject = objectByName.get(obj);
+            if (reactiveObject !== undefined && reactiveObject !== null && typeof reactiveObject[fun] === 'function') {
+                rel.innerHTML = reactiveObject[fun](arg);
+                startReactiveDom(rel)
+            }
+            rel.removeAttribute('data-htmlfun');
+        });
     }
 
-    //TODO : TESTER
+
     for (let rel of document.querySelectorAll("[data-oncheck]")) {
         const [obj, fun, arg] = rel.dataset.oncheck.split(/[.()]+/);
         rel.addEventListener('change', (event) => {
@@ -141,6 +151,24 @@ function startReactiveDom(subDom = document) {
                 objectByName.get(obj)[fun](arg);
             }
         });
+    }
+
+    for (let rel of document.querySelectorAll("[data-onChange]")) {
+        const [obj, fun, arg] = rel.dataset.onchange.split(/[.()]+/);
+        rel.addEventListener('input', (event) => {
+            objectByName.get(obj)[fun](arg);
+        });
+        rel.removeAttribute('data-onChange');
+    }
+
+    for (let rel of document.querySelectorAll("[data-onEnter]")) {
+        const [obj, fun, arg] = rel.dataset.onenter.split(/[.()]+/);
+        rel.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                objectByName.get(obj)[fun](arg);
+            }
+        });
+        rel.removeAttribute('data-onEnter');
     }
 }
 

@@ -156,4 +156,16 @@ class TableauRepository extends AbstractRepository
         }
     }
 
+    public function getProprietaire(Tableau $tableau) : Utilisateur
+    {
+        $query = "SELECT u.login,nom,prenom,email,mdphache
+        FROM {$this->getNomTable()} t
+        JOIN utilisateur u ON t.login=u.login
+        WHERE t.{$this->getNomCle()}=:idtableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idtableau" => $tableau->getIdTableau()]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        return Utilisateur::construireDepuisTableau($objetFormatTableau);
+    }
+
 }

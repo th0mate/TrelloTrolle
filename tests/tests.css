@@ -23,7 +23,7 @@ body {
     align-items: center;
 
     .all {
-        height: 99vh;
+        height: 83vh;
         width: 98%;
         display: flex;
         flex-direction: column;
@@ -374,7 +374,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
+    cursor: default;
     width: 25px;
     height: 25px;
     border-radius: 50%;
@@ -626,7 +626,7 @@ body {
     transform: translate(-50%, -50%);
     width: 500px;
     min-height: 30%;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
@@ -866,4 +866,49 @@ body {
         border: 2px solid #8100ff;
 
     }
+}
+
+.checkBoxCollaborateurs, .listeParticipants {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    width: 98%;
+    padding-top: 10px;
+
+    *{
+        flex-shrink: 0;
+    }
+
+    label {
+        width: auto!important;
+    }
+
+    input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        border: 2px solid #8100ff;
+        border-radius: 5px;
+        position: relative;
+    }
+
+    input[type="checkbox"]:checked {
+        background-color: #8100ff;
+    }
+
+    input[type="checkbox"]:checked:after {
+        content: '✓';
+        font-size: 20px;
+        color: white;
+        position: absolute;
+        top: -5px;
+        left: 0;
+    }
+
+    .user {
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+
 }

@@ -229,8 +229,8 @@ main {
 
 /* Style des formulaires */
 form {
-    width: 60%;
-    margin: 50px auto;
+    width: 100%;
+    margin: 0;
     text-align: center;
     position: relative;
 

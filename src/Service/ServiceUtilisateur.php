@@ -88,13 +88,16 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
-        $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estParticipantOuProprietaire($login, $tableau)) {
-            throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+        $utilisateurs=[];
+        foreach ($login as $user) {
+            $utilisateur = $this->utilisateurExistant($user, $tableau);
+            if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
+                throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+            }
+            $utilisateurs[]=$utilisateur;
         }
-
         $participants = $this->tableauRepository->getParticipants($tableau);
-        $participants[] = $utilisateur;
+        $participants=array_merge($participants,$utilisateurs);
         $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
@@ -304,5 +307,16 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new ServiceException("La recherche est nulle", 404);
         }
         return $this->utilisateurRepository->recherche($recherche);
+    }
+
+    public function getParticipants(Tableau $tableau)
+    {
+        return $this->tableauRepository->getParticipants($tableau);
+    }
+
+    //retourne le propriétaire du tableau
+    public function getProprietaireTableau(Tableau $tableau)
+    {
+        return $this->tableauRepository->getProprietaire($tableau);
     }
 }

@@ -16,6 +16,7 @@ use App\Trellotrolle\Service\ServiceTableauInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -32,10 +33,11 @@ class ControleurColonneAPI
     }
 
     #[Route("/api/colonne/creer",name: "creerColonneAPI",methods: "PUT")]
-    public function creerColonne():Response
+    public function creerColonne(Request $request):Response
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
-        $nomColonne = $_REQUEST["nomColonne"] ?? null;
+        $jsondecode=json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        $nomColonne = $jsondecode->nomColonne ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
@@ -49,9 +51,11 @@ class ControleurColonneAPI
         }
     }
 
-    #[Route("/api/colonne/supprimer/{idColonne}",name: "supprimerColonneAPI",methods: "DELETE")]
-    public function supprimerColonne($idColonne): Response
+    #[Route("/api/colonne/supprimer",name: "supprimerColonneAPI",methods: "DELETE")]
+    public function supprimerColonne(Request $request): Response
     {
+        $jsondecode=json_decode($request->getContent());
+        $idColonne=$jsondecode->idColonne ??null;
         try {
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
@@ -64,10 +68,12 @@ class ControleurColonneAPI
         }
     }
 
-    #[Route("/api/colonne/modifier/{idColonne}",name: "modifierColonneAPI",methods:"PATCH" )]
-    public function modifierColonne($idColonne):Response
+    #[Route("/api/colonne/modifier",name: "modifierColonneAPI",methods:"PATCH" )]
+    public function modifierColonne(Request $request):Response
     {
-        $nomColonne = $_REQUEST["nomColonne"] ?? null;
+        $jsondecode=json_decode($request->getContent());
+        $nomColonne = $jsondecode->nomColonne ?? null;
+        $idColonne=$jsondecode->idColonne ??null;
         try {
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);

@@ -19,7 +19,7 @@ interface ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): int;
+    public function supprimerColonne($tableau, $idColonne): void;
 
     /**
      * @throws CreationException
@@ -36,5 +36,6 @@ interface ServiceColonneInterface
 
     public function miseAJourColonne($colonne): Colonne;
     public function getNextIdColonne();
+    public function inverserOrdreColonnes($idColonne1, $idColonne2);
 
 }

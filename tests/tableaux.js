@@ -130,47 +130,6 @@ function updateDraggables() {
 
 }
 
-/**
- * Permet d'ajouter un nouvel élément `.draggable` dans la page
- */
-function addNewItem() {
-    //temporaire - prend le premier id disponible non présent dans la page
-    let id = 1;
-    let ids = [];
-    document.querySelectorAll('.stockage').forEach(stockage => {
-        ids.push(parseInt(stockage.getAttribute('data-columns')));
-    });
-    while (ids.includes(id)) {
-        id++;
-    }
-    let input = document.getElementsByClassName('input')[0];
-    let newElement = document.createElement('div');
-    newElement.classList.add('draggable');
-    newElement.setAttribute('draggable', 'true');
-    newElement.setAttribute('data-columns', id);
-    if (input.value !== '') {
-        newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${input.value}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${id}" class="stockage"></div><div class="add" data-columns="${id}">
-                <img src="${plusImageUrl}" alt="">
-                Ajouter une carte
-            </div>`;
-        let ul = document.querySelector('.ul');
-        ul.insertBefore(newElement, ul.lastElementChild);
-        input.value = '';
-        updateDraggables();
-        addEventsBullets(newElement);
-        addEventsAdd();
-    }
-}
-
-document.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' && document.activeElement.classList.contains('input')) {
-        addNewItem();
-    }
-});
-
-btn.addEventListener('click', addNewItem);
-
-
 updateDraggables();
 
 
@@ -269,13 +228,17 @@ function cardDragLeave() {
  * Permet de gérer le drop des cartes
  * @param e {DragEvent} L'événement de drop
  */
-function cardDrop(e) {
+async function cardDrop(e) {
     if (!this.classList.contains('main')) {
         this.classList.remove('cardOver');
         if (draggedCard) {
+            const idColonne = this.getAttribute('data-columns');
+            const idCarte = draggedCard.getAttribute('data-card');
+
             if (this.children.length > 0) {
                 let targetCard = document.elementFromPoint(e.clientX, e.clientY).closest('.card');
                 if (targetCard) {
+                    //SUR AUTRE CARTE
                     this.insertBefore(draggedCard, targetCard);
                     let rect = targetCard.getBoundingClientRect();
                     let x = rect.left + rect.width / 2;
@@ -285,14 +248,27 @@ function cardDrop(e) {
                         clientY: y
                     });
                     document.dispatchEvent(evt);
+
                 } else {
                     this.appendChild(draggedCard);
                 }
             } else {
+                //SUR STOCKAGE
                 this.appendChild(draggedCard);
             }
             draggedCard = null;
             updateCards();
+            let response = fetch(apiBase + '/carte/deplacer', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCarte: idCarte,
+                    idColonne: idColonne
+                })
+            });
         }
     }
 }
@@ -332,15 +308,32 @@ document.querySelector('.close').addEventListener('click', function () {
 
 
 /**
- * Evenement permettant de suppimer une colonne
+ * Evenement permettant de supprimer une colonne
  */
-document.querySelector('.deleteColumn').addEventListener('click', function () {
+document.querySelector('.deleteColumn').addEventListener('click', async function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
     const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
     if (draggableElement) {
         draggableElement.remove();
     }
     document.querySelector('.menuColonnes').style.display = "none";
+
+    let response = await fetch(apiBase + '/colonne/supprimer', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            idColonne: id
+        })
+    });
+
+    if (response.status !== 200) {
+        console.error(response.error);
+    }
+
+    console.log(response.json());
 });
 
 document.querySelector('.updateColumn').addEventListener('click', function () {
@@ -475,16 +468,11 @@ function fermeFormulaireEtAjouteCarte(id) {
  */
 function afficherFormulaireModificationColonne() {
     const valeurActuelle = document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText;
-    const html = '<div class="formulaireModificationColonne">' +
-        '<div class="wrap"><h2>Modification de la colonne</h2><img class="closeColumn" src="../tests/close.png" alt=""></div>' +
-        '<div class="content"><h4>Nouveau titre :</h4><input maxlength="50" required type="text" value="' + valeurActuelle + '" class="inputModificationColonne" placeholder="Entrez le nouveau titre"></div>' +
-        '<div class="boutonModification">Modifier</div>' +
-        '</div>';
-
-    document.body.insertAdjacentHTML('beforeend', html);
+    document.querySelector('.formulaireModificationColonne').style.display = "flex";
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';
     });
+    document.querySelector('.inputModificationColonne').value = valeurActuelle;
     addListenersModificationColonne();
 }
 
@@ -498,29 +486,10 @@ function addListenersModificationColonne() {
         closeColumn.parentNode.replaceChild(newCloseColumn, closeColumn);
 
         newCloseColumn.addEventListener('click', function () {
-            document.querySelector('.formulaireModificationColonne').remove();
+            document.querySelector('.formulaireModificationColonne').style.display = "none";
             document.querySelectorAll('.all').forEach(el => {
                 el.style.opacity = '1';
             });
-        });
-    });
-
-    document.querySelectorAll('.boutonModification').forEach(function (boutonModification) {
-        let newBoutonModification = boutonModification.cloneNode(true);
-        boutonModification.parentNode.replaceChild(newBoutonModification, boutonModification);
-
-        newBoutonModification.addEventListener('click', function () {
-            const titre = document.querySelector('.inputModificationColonne').value;
-            if (titre !== '') {
-                document.querySelector('.formulaireModificationColonne').remove();
-                document.querySelectorAll('.all').forEach(el => {
-                    el.style.opacity = '1';
-                });
-
-                document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = titre;
-                updateCards();
-                addEventsAdd();
-            }
         });
     });
 }
@@ -556,15 +525,6 @@ document.querySelector('.invite').addEventListener('click', function () {
         el.style.opacity = '0.5';
     });
 });
-
-document.querySelector('.addCollborateurs').addEventListener('click', function () {
-    document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
-    document.querySelector('.formulaireCreationCarte').style.display = "none";
-    document.querySelectorAll('.all').forEach(el => {
-        el.style.opacity = '0.5';
-    });
-});
-
 
 function listenerFermerAjoutMembre() {
     document.querySelector('.formulaireAjoutMembreTableau').style.display = "none";

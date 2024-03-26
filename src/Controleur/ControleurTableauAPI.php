@@ -15,6 +15,7 @@ use App\Trellotrolle\Service\ServiceTableauInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ControleurTableauAPI
@@ -30,11 +31,12 @@ class ControleurTableauAPI
     }
 
     #[Route("/api/tableau/membre/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
-    public function ajouterMembre()
+    public function ajouterMembre(Request $request)
     {
         {
-            $idTableau = $_REQUEST["idTableau"] ?? null;
-            $login = $_REQUEST["login"] ?? null;
+            $jsondecode = json_decode($request->getContent());
+            $idTableau = $jsondecode->idTableau ?? null;
+            $login = $jsondecode->login ?? null;
             try {
                 $this->serviceConnexion->pasConnecter();
                 $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
@@ -47,10 +49,11 @@ class ControleurTableauAPI
     }
 
     #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
-    public function supprimerMembre()
+    public function supprimerMembre(Request $request)
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
-        $login = $_REQUEST["login"] ?? null;
+        $jsondecode = json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        $login = $jsondecode->login ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
@@ -62,4 +65,36 @@ class ControleurTableauAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    #[Route('/api/tableau/membre/getPourTableau', name: 'getMembresTableau', methods: "POST")]
+    public function getMembresTableau(Request $request)
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $membres = $this->serviceUtilisateur->getParticipants($tableau);
+            return new JsonResponse($membres, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    #[Route('/api/tableau/membre/getProprio', name: 'getProprietaireTableau', methods: "POST")]
+    public function getProprietaireTableau(Request $request)
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idTableau = $jsondecode->idTableau ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
+            $proprietaire = $this->serviceUtilisateur->getProprietaireTableau($tableau);
+            return new JsonResponse($proprietaire, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
 }
+

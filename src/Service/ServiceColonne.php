@@ -34,7 +34,7 @@ class ServiceColonne implements ServiceColonneInterface
         /**
          * @var Colonne $colonne
          **/
-        $colonne = $this->colonneRepository->recupererParClePrimaire($idColonne);
+        $colonne = $this->colonneRepository->recupererParClePrimaire(strval($idColonne));
         if (!$colonne) {
             throw new ServiceException("Colonne inexistante",401);
         }
@@ -49,15 +49,11 @@ class ServiceColonne implements ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): int
+    public function supprimerColonne($tableau, $idColonne): void
     {
         //TODO supprimer Vérif après refonte BD
 
-        if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau,Response::HTTP_UNAUTHORIZED);
-        }
-        $this->colonneRepository->supprimer($idColonne);
-        return $this->colonneRepository->getNombreColonnesTotalTableau($tableau->getIdTableau());
+        $this->colonneRepository->supprimer($idColonne);;
     }
 
     /**
@@ -83,11 +79,13 @@ class ServiceColonne implements ServiceColonneInterface
 
     public function creerColonne($tableau, $nomColonne): Colonne
     {
-        return new Colonne(
-            $tableau,
+        $colonne= new Colonne(
             $this->colonneRepository->getNextIdColonne(),
-            $nomColonne
+            $nomColonne,
+            $tableau
         );
+        $this->colonneRepository->ajouter($colonne);
+        return $colonne;
     }
 
     public function miseAJourColonne($colonne): Colonne
@@ -98,5 +96,10 @@ class ServiceColonne implements ServiceColonneInterface
     public function getNextIdColonne()
     {
         return $this->colonneRepository->getNextIdColonne();
+    }
+
+    public function inverserOrdreColonnes($colonne1, $colonne2): void
+    {
+        $this->colonneRepository->inverserOrdreColonnes($colonne1, $colonne2);
     }
 }
