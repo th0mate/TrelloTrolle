@@ -17,7 +17,7 @@ let formulaireAjoutCarte = reactive({
      */
     envoyerFormulaire: async function () {
         this.idColonne = document.querySelector('.idColonne').value;
-        //TODO : corrige idColonne qui pose problème parfois
+
         if (this.idColonne !== '') {
             this.ajouterCarte(this.idColonne)
             document.querySelector('.formulaireCreationCarte').style.display = 'none';
@@ -67,7 +67,6 @@ let formulaireAjoutCarte = reactive({
             <div class="features"></div>
             </div>`;
             updateDraggables();
-
         }
     },
 
@@ -106,21 +105,25 @@ let formulaireAjoutCarte = reactive({
                 console.error(response2.error);
             } else {
 
+
                 const proprio = await response2.json();
                 let membres = await response.json();
                 document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${proprio.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${proprio.login})" type="checkbox" data-participant="${proprio.login}" id="participant${proprio.login}" name="participant${proprio.login}" value="${proprio.login}">
                 <label for="participant${proprio.login}" data-participant="${proprio.login}"><span class="user">${proprio.prenom[0]}${proprio.nom[0]}</span></label>`;
 
-                if (membres.length === 0) {
-                    return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
-                }
                 setTimeout(() => {
                     startReactiveDom();
                 }, 100);
-                membres.forEach(membre => {
-                    return document.querySelector('.listeParticipants').innerHTML += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
+
+                console.log(membres);
+                if (membres.length === 0) {
+                    return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
+                } else {
+                    membres.forEach(membre => {
+                        return document.querySelector('.listeParticipants').innerHTML += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
                 <label for="participant${membre.login}" data-participant="${membre.login}"><span class="user">${membre.prenom[0]}${membre.nom[0]}</span></label>`;
-                });
+                    });
+                }
             }
         }
     },

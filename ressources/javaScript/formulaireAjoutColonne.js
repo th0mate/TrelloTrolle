@@ -9,6 +9,7 @@ let formulaireAjoutColonne = reactive({
 
         if (this.titre !== '') {
 
+
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 
             let response1 = await fetch(apiBase + '/colonne/nextid', {
