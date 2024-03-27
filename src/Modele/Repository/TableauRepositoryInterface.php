@@ -4,6 +4,7 @@ namespace App\Trellotrolle\Modele\Repository;
 
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
 
 interface TableauRepositoryInterface
 {
@@ -25,15 +26,18 @@ interface TableauRepositoryInterface
 
     public function getNombreTableauxTotalUtilisateur(string $login): int;
 
-    public function participants(): array;
+    public function estParticipant(string $login, Tableau $tableau): bool;
 
-    public function estParticipant(string $login): bool;
+    public function estProprietaire($login, Tableau $tableau): bool;
 
-    public function estProprietaire($login): bool;
+    public function estParticipantOuProprietaire(string $login, Tableau $tableau): bool;
 
-    public function estParticipantOuProprietaire(string $login): bool;
+    public function getParticipants(Tableau $tableau): ?array;
 
-    public function getParticipants(Tableau $idcle): ?array;
+    public function setParticipants(?array $participants, Tableau $tableau): void;
 
-    public function setParticipants(?array $participants, Tableau $instance): void;
+    public function getProprietaire(Tableau $tableau) : Utilisateur;
+
+    public function getAllFromTableau(int $idTableau): array;
+
 }

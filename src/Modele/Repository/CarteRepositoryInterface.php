@@ -19,7 +19,9 @@ interface CarteRepositoryInterface
 
     public function getNextIdCarte(): int;
 
-    public function getAffectationsCarte(Carte $idcle): ?array;
+    public function getAffectationsCarte(Carte $carte): ?array;
 
-    public function setAffectationsCarte(?array $affectationsCarte, Carte $instance): void;
+    public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void;
+
+    public function getAllFromCartes(int $idCarte): array;
 }
