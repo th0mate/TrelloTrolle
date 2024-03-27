@@ -115,7 +115,6 @@ let formulaireAjoutCarte = reactive({
                     startReactiveDom();
                 }, 100);
 
-                console.log(membres);
                 if (membres.length === 0) {
                     return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
                 } else {
