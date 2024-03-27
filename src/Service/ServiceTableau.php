@@ -135,7 +135,6 @@ class ServiceTableau implements ServiceTableauInterface
             return $u->getLogin() !== $utilisateur->getLogin();
         });
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
 
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
@@ -143,7 +142,6 @@ class ServiceTableau implements ServiceTableauInterface
                 return $u->getLogin() != $utilisateur->getLogin();
             });
             $this->carteRepository->setAffectationsCarte($affectations, $carte);
-            $this->carteRepository->mettreAJour($carte);
         }
     }
 

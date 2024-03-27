@@ -107,4 +107,20 @@ class CarteRepository extends AbstractRepository
             $pdoStatement->execute(["idcarte" => $carte->getIdCarte(), "login" => $affectationCarte->getLogin()]);
         }
     }
+
+    public function getAllFromCartes(int $idCarte): array
+    {
+        $query = "SELECT * FROM {$this->getNomTable()} ca 
+        JOIN colonne co ON ca.idcolonne=co.idcolonne
+        JOIN tableau ta ON co.idtableau=ta.idtableau
+        JOIN utilisateur u ON ta.login=u.login
+        WHERE idcarte=:idcarte";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idcarte" => $idCarte]);
+        $obj = [];
+        foreach($pdoStatement as $objetFormatTableau) {
+            $obj[] = $objetFormatTableau;
+        }
+        return $obj;
+    }
 }

@@ -168,4 +168,18 @@ class TableauRepository extends AbstractRepository
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
+    public function getAllFromTableau(int $idTableau): array
+    {
+        $query = "SELECT * FROM {$this->getNomTable()} ta
+        JOIN utilisateur u ON ta.login=u.login
+        WHERE idcarte=:idTableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idTableau" => $idTableau]);
+        $obj = [];
+        foreach($pdoStatement as $objetFormatTableau) {
+            $obj[] = $objetFormatTableau;
+        }
+        return $obj;
+    }
+
 }
