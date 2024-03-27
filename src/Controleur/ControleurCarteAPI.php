@@ -127,4 +127,19 @@ class ControleurCarteAPI
         }
     }
 
+    #[Route("/api/carte/affectations",name: "getAffectationsCarteAPI",methods:"POST")]
+    public function getAffectations(Request $request):Response
+    {
+        $josndecode=json_decode($request->getContent());
+        $idCarte=$josndecode->isCarte ??null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $carte=$this->serviceCarte->recupererCarte($idCarte);
+            $affectations=$this->serviceCarte->getAffectations($carte);
+            return new JsonResponse($affectations,200);
+        }catch (ServiceException $e){
+            return new JsonResponse(["error"=>$e->getMessage()],$e->getCode());
+        }
+    }
+
 }
