@@ -417,8 +417,10 @@ function ajouterCarte(id, value, color = 'white') {
  */
 function afficherFormulaireCreationCarte(id, pourModifier = false) {
 
-    document.querySelector('.formulaireCreationCarte').style.display = "flex";
     document.querySelector('.idColonne').value = id;
+
+    document.querySelector('.formulaireCreationCarte').style.display = "flex";
+
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '0.5';
     });
