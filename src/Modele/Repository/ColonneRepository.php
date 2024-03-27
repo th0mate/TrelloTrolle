@@ -8,7 +8,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use Exception;
 
-class ColonneRepository extends AbstractRepository
+class ColonneRepository extends AbstractRepository implements ColonneRepositoryInterface
 {
 
 

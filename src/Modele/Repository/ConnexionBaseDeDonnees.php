@@ -6,7 +6,7 @@ use App\Trellotrolle\Configuration\ConfigurationBaseDeDonnees;
 use PDO;
 
 
-class ConnexionBaseDeDonnees
+class ConnexionBaseDeDonnees implements ConnexionBaseDeDonneesInterface
 {
     private PDO $pdo;
 

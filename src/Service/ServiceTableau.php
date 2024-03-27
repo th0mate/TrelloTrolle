@@ -12,9 +12,13 @@ use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use http\Message;
@@ -24,10 +28,10 @@ class ServiceTableau implements ServiceTableauInterface
 {
 
 
-    public function __construct(private TableauRepository     $tableauRepository,
-                                private ColonneRepository     $colonneRepository,
-                                private CarteRepository       $carteRepository,
-                                private UtilisateurRepository $utilisateurRepository)
+    public function __construct(private TableauRepositoryInterface     $tableauRepository,
+                                private ColonneRepositoryInterface     $colonneRepository,
+                                private CarteRepositoryInterface       $carteRepository,
+                                private UtilisateurRepositoryInterface $utilisateurRepository)
     {
     }
 

@@ -15,9 +15,12 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -27,9 +30,9 @@ use Symfony\Component\HttpFoundation\Response;
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
 
-    public function __construct(private UtilisateurRepository $utilisateurRepository,
-                                private TableauRepository     $tableauRepository,
-                                private CarteRepository       $carteRepository)
+    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
+                                private TableauRepositoryInterface     $tableauRepository,
+                                private CarteRepositoryInterface       $carteRepository)
     {
     }
 

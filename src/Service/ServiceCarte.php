@@ -11,8 +11,8 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
-use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -29,10 +29,8 @@ class ServiceCarte implements ServiceCarteInterface
     {
     }
 
-    /**
-     * @throws ServiceException
-     */
-    public function recupererCarte($idCarte): Carte
+
+    public function recupererCarte(?int $idCarte): Carte
     {
         //TODO différencier warning de danger pour message flash:
         //Pk ici c'est différent mais pas pour recupererColonne, voir afficherFormulaireCreationCarte
@@ -101,10 +99,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    /**
-     * @throws CreationException
-     */
-    public function recupererAttributs($attributs): void
+    public function recupererAttributs(array $attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
