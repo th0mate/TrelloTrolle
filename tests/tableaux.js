@@ -148,13 +148,14 @@ function updateCards() {
     let stockages = document.querySelectorAll('.stockage');
 
     cards.forEach(card => {
+
         card.setAttribute('draggable', 'true');
         card.addEventListener('dragstart', cardDragStart);
         card.addEventListener('dragend', cardDragEnd);
         card.addEventListener('dragover', cardDragOver);
 
         card.addEventListener('click', function (e) {
-            afficherFormulaireCreationCarte(card.getAttribute('data-colmuns'), true, card.getAttribute('data-card'));
+            afficherFormulaireCreationCarte(card.getAttribute('data-columns'), true, card.getAttribute('data-card'));
         });
     });
 
@@ -425,7 +426,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
     document.querySelector('.idColonne').value = id;
 
     if (pourModifier) {
-
+        document.body.style.cursor = 'wait';
         let response = await fetch(apiBase + '/carte/getCarte', {
             method: 'POST',
             headers: {
@@ -441,9 +442,12 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             console.error(response.error);
         } else {
             let carte = await response.json();
+            document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true')
             document.querySelector('.inputCreationCarte').value = carte.titreCarte;
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
+            document.querySelector('.listeParticipants').style.display = 'none';
+            document.body.style.cursor = 'default';
         }
     }
 
@@ -468,6 +472,7 @@ function addListenersAjoutCard(id) {
             document.querySelector('.formulaireCreationCarte').style.display = "none";
 
             document.querySelector('.inputCreationCarte').value = '';
+            document.querySelector('.listeParticipants').style.display = 'flex';
             document.querySelector('.desc').value = '';
             document.querySelector('input[type="color"]').value = '#ffffff';
             document.querySelectorAll('.all').forEach(el => {
