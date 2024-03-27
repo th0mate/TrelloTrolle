@@ -193,4 +193,9 @@ class ServiceCarte implements ServiceCarteInterface
         $carte->setColonne($colonne);
         $this->carteRepository->mettreAJour($carte);
     }
+
+    public function getAffectations(Carte $carte) :array
+    {
+        return $this->carteRepository->getAffectationsCarte($carte);
+    }
 }

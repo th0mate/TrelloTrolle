@@ -51,5 +51,7 @@ interface ServiceCarteInterface
     public function miseAJourCarteMembre($tableau, $utilisateur);
     public function getNextIdCarte();
     public function deplacerCarte(Carte $carte,Colonne $colonne);
+    public function getAffectations(Carte $carte) :array;
+
 
 }
