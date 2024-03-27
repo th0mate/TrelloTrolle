@@ -31,12 +31,12 @@ interface ServiceColonneInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function recupererColonneAndNomColonne($idColonne, $nomColonne);
+    public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne;
 
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne;
 
     public function miseAJourColonne(Colonne $colonne): Colonne;
-    public function getNextIdColonne();
-    public function inverserOrdreColonnes($idColonne1, $idColonne2);
+    public function getNextIdColonne(): int;
+    public function inverserOrdreColonnes($idColonne1, $idColonne2): void;
 
 }

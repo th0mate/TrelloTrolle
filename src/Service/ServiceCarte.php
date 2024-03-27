@@ -141,7 +141,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    public function carteUpdate(Carte $carte, $colonne, $attributs): Carte
+    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);

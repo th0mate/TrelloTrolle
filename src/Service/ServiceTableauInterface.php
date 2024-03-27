@@ -23,29 +23,29 @@ interface ServiceTableauInterface
 
     public function recupererCartesColonnes(Tableau $tableau): array;
 
-    public function recupererTableauEstMembre($login);
+    public function recupererTableauEstMembre($login): array;
 
     /**
      * @throws TableauException
      */
-    public function isNotNullNomTableau($nomTableau, Tableau $tableau);
+    public function isNotNullNomTableau($nomTableau, Tableau $tableau): void;
 
-    public function mettreAJourTableau(Tableau $tableau);
-
-    /**
-     * @throws ServiceException
-     */
-    public function supprimerTableau($idTableau);
+    public function mettreAJourTableau(Tableau $tableau): void;
 
     /**
      * @throws ServiceException
      */
-    public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur);
+    public function supprimerTableau($idTableau): void;
 
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau);
+    public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur): void;
 
-    public function estParticipant(Tableau $tableau);
+    /**
+     * @throws ServiceException
+     */
+    public function creerTableau($nomTableau): Tableau;
+
+    public function estParticipant(Tableau $tableau): bool;
 }

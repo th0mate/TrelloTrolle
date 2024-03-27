@@ -26,7 +26,7 @@ interface ServiceCarteInterface
     /**
      * @throws CreationException
      */
-    public function creerCarte(Tableau $tableau, $attributs, Colonne $colonne);
+    public function creerCarte(Tableau $tableau, $attributs, Colonne $colonne): Carte;
 
     public function newCarte(Colonne $colonne, $attributs): Carte;
 
@@ -39,7 +39,7 @@ interface ServiceCarteInterface
      * @throws CreationException
      * @throws MiseAJourException
      */
-    public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne);
+    public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte;
 
     public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte;
 
@@ -47,10 +47,10 @@ interface ServiceCarteInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs);
+    public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte;
 
-    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur);
-    public function getNextIdCarte();
-    public function deplacerCarte(Carte $carte,Colonne $colonne);
+    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void;
+    public function getNextIdCarte(): int;
+    public function deplacerCarte(Carte $carte,Colonne $colonne): void;
 
 }

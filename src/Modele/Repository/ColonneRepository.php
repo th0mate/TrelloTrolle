@@ -50,7 +50,8 @@ class ColonneRepository extends AbstractRepository
         return $obj[0];
     }
 
-    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2) {
+    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
+    {
         $query = "UPDATE {$this->getNomTable()} SET idcolonne = CASE idcolonne WHEN :idColonne1 THEN :idColonne2 WHEN :idColonne2 THEN :idColonne1 END WHERE idcolonne IN (:idColonne1, :idColonne2)";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idColonne1" => $idColonne1, "idColonne2" => $idColonne2]);
