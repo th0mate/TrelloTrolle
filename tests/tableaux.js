@@ -441,7 +441,18 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             })
         });
 
-        if (response.status !== 200) {
+        let response2 = await fetch(apiBase + '/carte/affectations', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idCarte: idCarte
+            })
+        });
+
+        if (response.status !== 200 || response2.status !== 200) {
             console.error(response.error);
         } else {
             let carte = await response.json();
@@ -451,6 +462,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
             document.querySelector('.listeParticipants').style.display = 'none';
             document.body.style.cursor = 'default';
+            console.log(response2.json());
         }
     }
 

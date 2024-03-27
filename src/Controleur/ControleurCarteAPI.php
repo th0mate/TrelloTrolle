@@ -131,7 +131,7 @@ class ControleurCarteAPI
     public function getAffectations(Request $request):Response
     {
         $josndecode=json_decode($request->getContent());
-        $idCarte=$josndecode->isCarte ??null;
+        $idCarte=$josndecode->idCarte ??null;
         try {
             $this->serviceConnexion->pasConnecter();
             $carte=$this->serviceCarte->recupererCarte($idCarte);
