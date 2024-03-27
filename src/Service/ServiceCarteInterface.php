@@ -83,9 +83,18 @@ interface ServiceCarteInterface
      */
     public function getNextIdCarte(): int;
 
-
+    /**
+     * @param Colonne $colonne
+     * @param $attributs
+     * @return Carte
+     */
     public function newCarte(Colonne $colonne, $attributs): Carte;
 
+    /**
+     * @param Carte $carte
+     * @param Colonne $colonne
+     * @return void
+     */
     public function deplacerCarte(Carte $carte,Colonne $colonne): void;
 
 }
