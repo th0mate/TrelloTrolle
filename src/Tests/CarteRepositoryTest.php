@@ -22,14 +22,14 @@ class CarteRepositoryTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        self::$connexionBaseDeDonnees = new ConnexionBaseDeDonnees(new ConfigurationBDDTestUnitaires()3);
+        self::$connexionBaseDeDonnees = new ConnexionBaseDeDonnees(new ConfigurationBDDTestUnitaires());
         self::$carteRepository = new CarteRepository(self::$connexionBaseDeDonnees);
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
+        /*self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
                                                               utilisateur (login,nom,prenom,email,mdphache,nonce)
                                                               VALUES ('bob69','bobby','bob','bob.bobby@bob.com','mdpBob','aaa')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
@@ -40,7 +40,7 @@ class CarteRepositoryTest extends TestCase
                                                          VALUES (1, 'test', 'test','bob69')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                          colonne (idcolonne,titrecolonne,idtableau) 
-                                                         VALUES (2, 'test2', 'test2', 'test2@example.com', 1)");
+                                                         VALUES (2, 'test2', 1)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                          carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
                                                          VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
@@ -49,7 +49,7 @@ class CarteRepositoryTest extends TestCase
                                                          VALUES (4, 'carte2', 'carte2', 'c est une carte2', 2)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
                                                        affectationCarte(idcarte,login )
-                                                       VALUES (3,'bob69')");
+                                                       VALUES (3,'bob69')");*/
     }
 
     /** Test récupererCartesColonne, prend en argument: idColonne */

@@ -121,15 +121,8 @@ class ServiceTableau implements ServiceTableauInterface
         $this->tableauRepository->mettreAJour($tableau);
     }
 
-    /**
-     * @throws ServiceException
-     */
     public function supprimerTableau($idTableau)
     {
-        //TODO supprimer Vérif après refonte BD
-        if ($this->tableauRepository->getNombreTableauxTotalUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte()) == 1) {
-            throw new ServiceException("Vous ne pouvez pas supprimer ce tableau car cela entrainera la suppression du compte",Response::HTTP_CONFLICT);
-        }
         $this->tableauRepository->supprimer($idTableau);
     }
 
@@ -163,9 +156,9 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau)
+    public function creerTableau($nomTableau,$login)
     {
-        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
         if (is_null($nomTableau)) {
             throw new ServiceException("Nom de tableau manquant",404);
         }
@@ -183,7 +176,7 @@ class ServiceTableau implements ServiceTableauInterface
         $tableau = new Tableau(
             $idTableau,
             $codeTableau,
-            $_REQUEST["nomTableau"],
+            $nomTableau,
             $utilisateur
         );
 
@@ -207,8 +200,8 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
-    public function estParticipant()
+    public function estParticipant($login)
     {
-        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        return $this->tableauRepository->estParticipantOuProprietaire($login);
     }
 }

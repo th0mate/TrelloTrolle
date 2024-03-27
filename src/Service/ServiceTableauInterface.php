@@ -42,7 +42,7 @@ interface ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau);
+    public function creerTableau($nomTableau,$login);
 
-    public function estParticipant();
+    public function estParticipant($login);
 }
