@@ -17,6 +17,7 @@ use App\Trellotrolle\Service\ServiceConnexionInterface;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -181,6 +182,20 @@ class ControleurCarte extends ControleurGenerique
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection( "accueil");
+        }
+    }
+
+    #[Route("/api/carte/getCarte", name: "getCarteAPI", methods: "POST")]
+    public function getCarte(Request $request): Response
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idCarte = $jsondecode->idCarte ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $carte = $this->serviceCarte->recupererCarte($idCarte);
+            return new JsonResponse($carte, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
 

@@ -152,6 +152,10 @@ function updateCards() {
         card.addEventListener('dragstart', cardDragStart);
         card.addEventListener('dragend', cardDragEnd);
         card.addEventListener('dragover', cardDragOver);
+
+        card.addEventListener('click', function (e) {
+            afficherFormulaireCreationCarte(card.getAttribute('data-colmuns'), true, card.getAttribute('data-card'));
+        });
     });
 
     stockages.forEach(stockage => {
@@ -414,10 +418,34 @@ function ajouterCarte(id, value, color = 'white') {
  * Affiche le formulaire de création de carte pour la colonne avec l'id `id`
  * @param id {string} L'id de la colonne
  * @param pourModifier {boolean} Si le formulaire est affiché pour modifier une carte
+ * @param idCarte {string} L'id de la carte à modifier
  */
-function afficherFormulaireCreationCarte(id, pourModifier = false) {
+async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte = null) {
 
     document.querySelector('.idColonne').value = id;
+
+    if (pourModifier) {
+
+        let response = await fetch(apiBase + '/carte/getCarte', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idCarte: idCarte
+            })
+        });
+
+        if (response.status !== 200) {
+            console.error(response.error);
+        } else {
+            let carte = await response.json();
+            document.querySelector('.inputCreationCarte').value = carte.titreCarte;
+            document.querySelector('.desc').value = carte.descriptifCarte;
+            document.querySelector('input[type="color"]').value = carte.couleurCarte;
+        }
+    }
 
     document.querySelector('.formulaireCreationCarte').style.display = "flex";
 
