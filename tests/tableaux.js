@@ -148,11 +148,18 @@ function updateCards() {
     let stockages = document.querySelectorAll('.stockage');
 
     cards.forEach(card => {
-        updateClickOnCard();
         card.setAttribute('draggable', 'true');
         card.addEventListener('dragstart', cardDragStart);
         card.addEventListener('dragend', cardDragEnd);
         card.addEventListener('dragover', cardDragOver);
+
+
+        if (!card.hasAttribute('data-click-listener-added')) {
+            card.addEventListener('click', function (e) {
+                afficherFormulaireCreationCarte(card.getAttribute('data-columns'), true, card.getAttribute('data-card'));
+            });
+            card.setAttribute('data-click-listener-added', 'true');
+        }
     });
 
     stockages.forEach(stockage => {
@@ -170,18 +177,6 @@ function updateCards() {
         } else {
             stockage.classList.remove('isVoid');
         }
-    });
-}
-
-
-function updateClickOnCard() {
-    document.querySelectorAll('.card').forEach(card => {
-        let newCard = card.cloneNode(true);
-        card.parentNode.replaceChild(newCard, card);
-
-        newCard.addEventListener('click', function (e) {
-            afficherFormulaireCreationCarte(card.getAttribute('data-columns'), true, card.getAttribute('data-card'));
-        });
     });
 }
 
