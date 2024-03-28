@@ -429,7 +429,9 @@ function ajouterCarte(id, value, color = 'white') {
 async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte = null) {
 
     document.querySelector('.idColonne').value = id;
-    document.querySelector('.boutonCreation').removeAttribute('data-onclick');
+    while (document.querySelector('.boutonCreation').hasAttribute('data-onclick')) {
+        document.querySelector('.boutonCreation').removeAttribute('data-onclick');
+    }
 
     if (pourModifier) {
         document.body.style.cursor = 'wait';
@@ -523,7 +525,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
         }
     } else {
         document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
-
+        console.log("bite");
     }
     window.startReactiveDom();
 

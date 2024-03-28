@@ -16,7 +16,7 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-
+        console.log("envoyerFormulaire");
         this.idColonne = document.querySelector('.idColonne').value;
 
         if (this.idColonne !== '') {
@@ -150,19 +150,13 @@ let formulaireAjoutCarte = reactive({
                 HTMLFeatures += `<span class="user">${participant}</span>`;
             });
 
-            /*document.querySelector(`[data-card="${idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
-            ${this.titre}
-            <div class="features"></div>`;
 
-             */
-            //on modifie le innerHTLM de la carte
             document.querySelector(`[data-card="${idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>`;
 
             updateDraggables();
             updateCards();
-            closeForm();
 
             let response = await fetch(apiBase + '/carte/modifier', {
                 method: 'PATCH',
@@ -183,6 +177,7 @@ let formulaireAjoutCarte = reactive({
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
             }
+            closeForm();
         } else {
             closeForm();
         }
