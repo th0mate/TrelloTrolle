@@ -28,9 +28,9 @@ interface ServiceCarteInterface
     /**
      * Supprime la carte dont l'id est donné en paramètre
      * @param int $idCarte l'id de la carte à supprimer
-     * @return void
+     * @return array
      */
-    public function supprimerCarte(Tableau $tableau, int $idCarte): void;
+    public function supprimerCarte(Tableau $tableau, int $idCarte): array;
 
     /**
      * Créer une carte
