@@ -4,6 +4,7 @@
  * ---------------------------------------------------------------------------------------------------------------------
  */
 
+
 let dragSrcEl = null;
 let btn = document.querySelector('.addCard');
 
@@ -517,6 +518,8 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             }
 
             document.querySelector('.listeNouveauxParticipants').innerHTML = html;
+
+            window.startReactiveDom();
         }
     }
 

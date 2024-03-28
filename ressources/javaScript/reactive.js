@@ -172,4 +172,6 @@ function startReactiveDom(subDom = document) {
     }
 }
 
+window.startReactiveDom = startReactiveDom;
+
 export {applyAndRegister, reactive, startReactiveDom, objectByName};

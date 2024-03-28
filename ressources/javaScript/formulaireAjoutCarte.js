@@ -144,6 +144,7 @@ let formulaireAjoutCarte = reactive({
     },
 
     supprimerParticipantCarte: function (idUtilisateur) {
+        console.log('appel');
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }
