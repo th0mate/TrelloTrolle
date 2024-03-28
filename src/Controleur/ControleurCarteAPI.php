@@ -119,9 +119,25 @@ class ControleurCarteAPI
             $this->serviceConnexion->pasConnecter();
             $colonne=$this->serviceColonne->recupererColonne($idColonne);
             $carte=$this->serviceCarte->recupererCarte($idCarte);
+            $tableau=$colonne->getTableau();
+            $this->serviceUtilisateur->estParticipant($tableau);
             $carte->setColonne($colonne);
             $this->serviceCarte->deplacerCarte($carte,$colonne);
             return new JsonResponse('',200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    #[Route("/api/carte/getCarte", name: "getCarteAPI", methods: "POST")]
+    public function getCarte(Request $request): Response
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idCarte = $jsondecode->idCarte ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $carte = $this->serviceCarte->recupererCarte($idCarte);
+            return new JsonResponse($carte, 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }

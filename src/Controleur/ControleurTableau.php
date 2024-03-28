@@ -52,6 +52,7 @@ class ControleurTableau extends ControleurGenerique
 
         //$codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
+            $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);
             $colaborateurs = $this->serviceUtilisateur->getParticipants($tableau);
