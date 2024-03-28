@@ -10,19 +10,23 @@ let formulaireAjoutCarte = reactive({
     description: "",
     couleur: "",
     participants: [],
+    estEnvoye: false,
 
     /**
      * Fonction qui envoie le formulaire de création de carte et crée une carte dans l'API
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-        console.log("envoyerFormulaire");
+
+        if (this.estEnvoye) {
+            return;
+        }
+        this.estEnvoye = true;
         this.idColonne = document.querySelector('.idColonne').value;
 
         if (this.idColonne !== '') {
             this.ajouterCarte(this.idColonne)
-            document.querySelector('.formulaireCreationCarte').style.display = 'none';
-            document.querySelector('.all').style.opacity = 1;
+            closeForm();
             updateDraggables();
             updateCards();
 
@@ -45,11 +49,7 @@ let formulaireAjoutCarte = reactive({
                 console.error("Erreur lors de la création de la carte dans l'API");
                 //TODO: Afficher un message d'erreur
             }
-
-            document.querySelector('.idColonne').value = '';
-            document.querySelector('.inputCreationCarte').value = '';
-            document.querySelector('.desc').value = '';
-            document.querySelector('.color').value = '#ffffff';
+            this.estEnvoye = false;
         } else {
             console.error("idColonne manquant.");
         }
