@@ -496,7 +496,6 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
             document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte(${id},${idCarte})`);
-
             console.log(document.querySelector('.boutonCreation').getAttribute('data-onclick'));
 
             document.body.style.cursor = 'default';
@@ -521,13 +520,12 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             }
 
             document.querySelector('.listeNouveauxParticipants').innerHTML = html;
-
-            window.startReactiveDom();
         }
     } else {
         document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
 
     }
+    window.startReactiveDom();
 
     document.querySelector('.formulaireCreationCarte').style.display = "flex";
 

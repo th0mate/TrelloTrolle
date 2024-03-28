@@ -16,6 +16,7 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
+
         this.idColonne = document.querySelector('.idColonne').value;
 
         if (this.idColonne !== '') {
@@ -61,6 +62,7 @@ let formulaireAjoutCarte = reactive({
      */
     ajouterCarte: async function (idColonne) {
         if (this) {
+            console.log("AJOUT CARTE");
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
