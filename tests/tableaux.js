@@ -419,7 +419,7 @@ function ajouterCarte(id, value, color = 'white') {
 }
 
 /**
- * Affiche le formulaire de création de carte pour la colonne avec l'id `id`
+ * Affiche le formulaire de création de carte/ ou de modification de carte pour la colonne avec l'id `id`
  * @param id {string} L'id de la colonne
  * @param pourModifier {boolean} Si le formulaire est affiché pour modifier une carte
  * @param idCarte {string} L'id de la carte à modifier
@@ -452,7 +452,36 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             })
         });
 
-        if (response.status !== 200 || response2.status !== 200) {
+        let response3 = await fetch(apiBase + '/tableau/membre/getPourTableau', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idTableau: document.querySelector('.adder').getAttribute('data-tableau')
+            })
+        });
+
+        let response4 = await fetch(apiBase + '/tableau/membre/getProprio', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idTableau: document.querySelector('.adder').getAttribute('data-tableau')
+            })
+        });
+
+
+        let users = await response3.json();
+        let users2 = await response4.json();
+        let affectations = await response2.json();
+
+        const allUsers = users.concat(users2);
+
+        if (response.status !== 200 || response2.status !== 200 || response3.status !== 200 || response4.status !== 200) {
             console.error(response.error);
         } else {
             let carte = await response.json();
@@ -461,8 +490,33 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
             document.querySelector('.listeParticipants').style.display = 'none';
+            document.querySelector('.listeNouveauxParticipants').style.display = 'flex';
+            document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
+            document.querySelector('.boutonCreation').innerText = "Enregistrer";
+
             document.body.style.cursor = 'default';
-            console.log(response2.json());
+
+            let html = '';
+            for (let affectation of affectations) {
+                html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
+                <label for="participant${affectation.login}" data-participant="${affectation.login}"><span class="user">${affectation.prenom[0]}${affectation.nom[0]}</span></label>`;
+            }
+
+            for (let user of allUsers) {
+                let found = false;
+                for (let affectation of affectations) {
+                    if (affectation.login === user.login) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
+                <label for="participant${user.login}" data-participant="${user.login}"><span class="user">${user.prenom[0]}${user.nom[0]}</span></label>`;
+                }
+            }
+
+            document.querySelector('.listeNouveauxParticipants').innerHTML = html;
         }
     }
 
@@ -488,7 +542,10 @@ function addListenersAjoutCard(id) {
 
             document.querySelector('.inputCreationCarte').value = '';
             document.querySelector('.listeParticipants').style.display = 'flex';
+            document.querySelector('.listeNouveauxParticipants').style.display = 'none';
+            document.querySelector('.titreCreationCarte').innerText = "Création d'une carte";
             document.querySelector('.desc').value = '';
+            document.querySelector('.boutonCreation').innerText = "Créer";
             document.querySelector('input[type="color"]').value = '#ffffff';
             document.querySelectorAll('.all').forEach(el => {
                 el.style.opacity = '1';

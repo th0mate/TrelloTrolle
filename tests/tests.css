@@ -511,7 +511,7 @@ body {
             color: black;
         }
 
-        .listeParticipants {
+        .listeParticipants, .listeNouveauxParticipants {
             width: 98%;
             display: flex;
             justify-content: center;
@@ -616,6 +616,10 @@ body {
     div:hover {
         background-color: #3e474f;
     }
+}
+
+.listeNouveauxParticipants {
+    display: none;
 }
 
 
@@ -868,7 +872,7 @@ body {
     }
 }
 
-.checkBoxCollaborateurs, .listeParticipants {
+.checkBoxCollaborateurs, .listeParticipants, .listeNouveauxParticipants {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

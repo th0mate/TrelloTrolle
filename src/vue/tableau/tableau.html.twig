@@ -94,7 +94,7 @@
     </div>
 
     <div class="formulaireCreationCarte" data-modif="">
-        <div class="wrap"><h2>Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
+        <div class="wrap"><h2 class="titreCreationCarte">Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
                                                              alt="">
         </div>
         <input type="hidden" class="idColonne" value="">
@@ -119,6 +119,7 @@
             <div class="listeParticipants" data-htmlfun="formulaireAjoutCarte.afficherCheckBoxParticipants">
 
             </div>
+            <div class="listeNouveauxParticipants"></div>
         </div>
         <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
     </div>
