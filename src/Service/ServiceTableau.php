@@ -12,9 +12,13 @@ use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use http\Message;
@@ -24,10 +28,10 @@ class ServiceTableau implements ServiceTableauInterface
 {
 
 
-    public function __construct(private TableauRepository     $tableauRepository,
-                                private ColonneRepository     $colonneRepository,
-                                private CarteRepository       $carteRepository,
-                                private UtilisateurRepository $utilisateurRepository)
+    public function __construct(private TableauRepositoryInterface     $tableauRepository,
+                                private ColonneRepositoryInterface     $colonneRepository,
+                                private CarteRepositoryInterface       $carteRepository,
+                                private UtilisateurRepositoryInterface $utilisateurRepository)
     {
     }
 
@@ -68,7 +72,7 @@ class ServiceTableau implements ServiceTableauInterface
 
     }
 
-    public function recupererCartesColonnes($tableau): array
+    public function recupererCartesColonnes(Tableau $tableau): array
     {
         /**
          * @var Colonne[] $colonnes
@@ -91,7 +95,7 @@ class ServiceTableau implements ServiceTableauInterface
         return ["data" => $data, "colonnes" => $colonnes, "participants" => $participants];
     }
 
-    public function recupererTableauEstMembre($login)
+    public function recupererTableauEstMembre($login): array
     {
         return $this->tableauRepository->recupererTableauxOuUtilisateurEstMembre($login);
     }
@@ -99,14 +103,14 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws TableauException
      */
-    public function isNotNullNomTableau($nomTableau, $tableau)
+    public function isNotNullNomTableau($nomTableau, Tableau $tableau): void
     {
         if (is_null($nomTableau)) {
             throw new TableauException("Nom de tableau manquant", $tableau, 404);
         }
     }
 
-    public function mettreAJourTableau($tableau)
+    public function mettreAJourTableau(Tableau $tableau): void
     {
         $this->tableauRepository->mettreAJour($tableau);
     }
@@ -114,12 +118,8 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function supprimerTableau($idTableau)
+    public function supprimerTableau($idTableau): void
     {
-        //TODO supprimer Vérif après refonte BD
-        if ($this->tableauRepository->getNombreTableauxTotalUtilisateur(ConnexionUtilisateur::getLoginUtilisateurConnecte()) == 1) {
-            throw new ServiceException("Vous ne pouvez pas supprimer ce tableau car cela entrainera la suppression du compte", Response::HTTP_CONFLICT);
-        }
         $this->tableauRepository->supprimer($idTableau);
     }
 
@@ -128,20 +128,17 @@ class ServiceTableau implements ServiceTableauInterface
      */
     public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur): void
     {
-        if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau->getIdTableau())) {
-            ;
-            throw new ServiceException("Vous ne pouvez pas quitter ce tableau", Response::HTTP_FORBIDDEN);
+        if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau)) {;
+            throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
         }
-        if (!$this->tableauRepository->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau->getIdTableau())) {
-            throw new ServiceException("Vous n'appartenez pas à ce tableau", Response::HTTP_UNAUTHORIZED);
+        if (!$this->tableauRepository->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_UNAUTHORIZED);
         }
 
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
         });
-        var_dump($participants);
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
 
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
@@ -149,14 +146,13 @@ class ServiceTableau implements ServiceTableauInterface
                 return $u->getLogin() != $utilisateur->getLogin();
             });
             $this->carteRepository->setAffectationsCarte($affectations, $carte);
-            $this->carteRepository->mettreAJour($carte);
         }
     }
 
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau)
+    public function creerTableau($nomTableau): Tableau
     {
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
         if (is_null($nomTableau)) {
@@ -202,6 +198,6 @@ class ServiceTableau implements ServiceTableauInterface
 
     public function estParticipant(Tableau $tableau): bool
     {
-        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau->getIdTableau());
+        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau);
     }
 }

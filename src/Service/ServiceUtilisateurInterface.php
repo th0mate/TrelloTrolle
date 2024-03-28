@@ -2,7 +2,9 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -12,63 +14,63 @@ interface ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estParticipant($tableau);
+    public function estParticipant(Tableau $tableau): void;
 
-    public function recupererUtilisateurParCle($login): \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
-
-    /**
-     * @throws TableauException
-     */
-    public function estProprietaire(Tableau $tableau, $login);
+    public function recupererUtilisateurParCle($login): AbstractDataObject;
 
     /**
      * @throws TableauException
      */
-    public function isNotNullLogin($login, $tableau, $action);
+    public function estProprietaire(Tableau $tableau, $login): void;
 
     /**
      * @throws TableauException
      */
-    public function utilisateurExistant($login, $tableau);
+    public function isNotNullLogin($login, Tableau $tableau, $action): void;
 
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login);
+    public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject;
 
     /**
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login);
+    public function ajouterMembre(Tableau $tableau, mixed $login): void;
+
+    /**
+     * @throws TableauException
+     */
+    public function supprimerMembre(Tableau $tableau, $login): AbstractDataObject;
 
     /**
      * @throws ServiceException
      */
-    public function recupererCompte($mail);
+    public function recupererCompte($mail): array;
 
     /**
      * @throws TableauException
      */
-    public function verificationsMembre(Tableau $tableau, $login);
+    public function verificationsMembre(Tableau $tableau, $login): array;
 
     /**
      * @throws MiseAJourException
      */
-    public function mettreAJourUtilisateur($attributs);
+    public function mettreAJourUtilisateur($attributs): void;
 
     /**
      * @throws ServiceException
      */
-    public function supprimerUtilisateur($login);
+    public function supprimerUtilisateur($login): void;
 
     /**
      * @throws ServiceException
      * @throws \Exception
      */
-    public function creerUtilisateur($attributs);
+    public function creerUtilisateur($attributs): void;
 
-    public function rechercheUtilisateur(?string $recherche);
-    public function getParticipants(Tableau $tableau);
+    public function rechercheUtilisateur(?string $recherche): array;
+    public function getParticipants(Tableau $tableau): ?array;
 
-    public function getProprietaireTableau(Tableau $tableau);
+    public function getProprietaireTableau(Tableau $tableau): Utilisateur;
 }

@@ -8,10 +8,12 @@ use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -28,10 +30,8 @@ class ServiceCarte implements ServiceCarteInterface
     {
     }
 
-    /**
-     * @throws ServiceException
-     */
-    public function recupererCarte($idCarte): Carte
+
+    public function recupererCarte(?int $idCarte): Carte
     {
         //TODO différencier warning de danger pour message flash:
         //Pk ici c'est différent mais pas pour recupererColonne, voir afficherFormulaireCreationCarte
@@ -54,12 +54,8 @@ class ServiceCarte implements ServiceCarteInterface
     /**
      * @throws TableauException
      */
-    public function supprimerCarte($tableau, $idCarte): array
+    public function supprimerCarte(Tableau $tableau, $idCarte): array
     {
-        //TODO supprimer Vérif après refonte BD
-        if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette carte car cela entrainera la supression du compte du propriétaire du tableau", $tableau, Response::HTTP_CONFLICT);
-        }
         $this->carteRepository->supprimer($idCarte);
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
     }
@@ -67,7 +63,7 @@ class ServiceCarte implements ServiceCarteInterface
     /**
      * @throws CreationException
      */
-    public function creerCarte( $tableau, $attributs, $colonne): Carte
+    public function creerCarte(Tableau $tableau, $attributs, Colonne $colonne): Carte
     {
         $affectationsCarte = $attributs["affectationsCarte"];
         $affectations = [];
@@ -80,7 +76,7 @@ class ServiceCarte implements ServiceCarteInterface
                 if (!$utilisateur) {
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
-                if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau->getIdTableau())) {
+                if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
                     throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.", 400);
                 }
                 $affectations[] = $utilisateur;
@@ -90,7 +86,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne, $attributs);
     }
 
-    public function newCarte($colonne, $attributs): Carte
+    public function newCarte(Colonne $colonne, $attributs): Carte
     {
         $carte = new Carte(
             $this->carteRepository->getNextIdCarte(),
@@ -104,10 +100,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    /**
-     * @throws CreationException
-     */
-    public function recupererAttributs($attributs): void
+    public function recupererAttributs(array $attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
@@ -120,7 +113,7 @@ class ServiceCarte implements ServiceCarteInterface
      * @throws CreationException
      * @throws MiseAJourException
      */
-    public function miseAJourCarte($tableau, $attributs, $carte, $colonne)
+    public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte
     {
         $affectationsCarte = $attributs["affectationsCarte"];
         $affectations = [];
@@ -133,7 +126,7 @@ class ServiceCarte implements ServiceCarteInterface
                 if (!$utilisateur) {
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
-                if (!$tableau->estParticipantOuProprietaire($utilisateur->getLogin())) {
+                if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
                     throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau", "danger", 400);
                 }
                 $affectations[] = $utilisateur;
@@ -144,7 +137,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    public function carteUpdate(Carte $carte, $colonne, $attributs): Carte
+    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);
@@ -159,36 +152,35 @@ class ServiceCarte implements ServiceCarteInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function verificationsMiseAJourCarte(int $idCarte, $colonne, $attributs)
+    public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte
     {
-        $carte = $this->recupererCarte($idCarte);
+        $carte = $this->carteRepository->getAllFromCartes($idCarte);
         $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
             throw new CreationException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!", Response::HTTP_CONFLICT);
         }
-
         return $carte;
     }
 
-    public function miseAJourCarteMembre($tableau, $utilisateur)
+    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void
     {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
             $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
                 return $u->getLogin() != $utilisateur->getLogin();
             });
-            $carte->setAffectationsCarte($affectations);
+            $this->carteRepository->setAffectationsCarte($affectations, $carte);
             $this->carteRepository->mettreAJour($carte);
         }
     }
 
-    public function getNextIdCarte()
+    public function getNextIdCarte(): int
     {
         return $this->carteRepository->getNextIdCarte();
     }
 
-    public function deplacerCarte(Carte $carte,Colonne $colonne)
+    public function deplacerCarte(Carte $carte,Colonne $colonne): void
     {
         $carte->setColonne($colonne);
         $this->carteRepository->mettreAJour($carte);

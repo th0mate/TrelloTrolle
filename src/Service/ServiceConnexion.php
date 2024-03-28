@@ -9,6 +9,7 @@ use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +18,7 @@ class ServiceConnexion implements ServiceConnexionInterface
 {
 
 
-    public function __construct(private UtilisateurRepository $utilisateurRepository)
+    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository)
     {
     }
 
