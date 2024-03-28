@@ -62,7 +62,6 @@ let formulaireAjoutCarte = reactive({
      */
     ajouterCarte: async function (idColonne) {
         if (this) {
-            console.log("AJOUT CARTE");
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
@@ -146,8 +145,6 @@ let formulaireAjoutCarte = reactive({
             let [idColonne, idCarte] = idColonneIdCarte.split(',');
             this.idColonne = idColonne;
 
-            console.log("idColonne :" + this.idColonne + " |idCarte :" + idCarte);
-
             let HTMLFeatures = '';
             this.participants.forEach(participant => {
                 HTMLFeatures += `<span class="user">${participant}</span>`;
@@ -166,7 +163,7 @@ let formulaireAjoutCarte = reactive({
             updateDraggables();
             updateCards();
             closeForm();
-            console.log(this.idColonne);
+
             let response = await fetch(apiBase + '/carte/modifier', {
                 method: 'PATCH',
                 headers: {
@@ -183,7 +180,6 @@ let formulaireAjoutCarte = reactive({
                 })
             });
 
-            console.log(response.json());
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
             }
@@ -200,7 +196,6 @@ let formulaireAjoutCarte = reactive({
     },
 
     supprimerParticipantCarte: function (idUtilisateur) {
-        console.log('appel');
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }

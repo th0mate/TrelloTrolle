@@ -341,8 +341,6 @@ document.querySelector('.deleteColumn').addEventListener('click', async function
     if (response.status !== 200) {
         console.error(response.error);
     }
-
-    console.log(response.json());
 });
 
 document.querySelector('.updateColumn').addEventListener('click', function () {
@@ -366,6 +364,9 @@ function addEventListeners() {
     addEventsAdd();
 }
 
+/**
+ * Permet d'ajouter des attributs et des EventListeners
+ */
 function addEventsAdd() {
     document.querySelectorAll('.add').forEach(btn => {
         let newBtn = btn.cloneNode(true);
@@ -496,7 +497,6 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
             document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte(${id},${idCarte})`);
-            console.log(document.querySelector('.boutonCreation').getAttribute('data-onclick'));
 
             document.body.style.cursor = 'default';
             let html = '';
@@ -560,21 +560,6 @@ function addListenersAjoutCard(id) {
                 el.style.opacity = '1';
             });
         });
-    });
-}
-
-function fermeFormulaireEtAjouteCarte(id) {
-    const titre = document.querySelector('.inputCreationCarte').value;
-    const description = document.querySelector('.desc').value;
-    const couleur = document.querySelector('input[type="color"]').value;
-
-    if (titre !== '') {
-        ajouterCarte(id, titre, couleur);
-    }
-
-    document.querySelector('.formulaireCreationCarte').style.display = "none";
-    document.querySelectorAll('.all').forEach(el => {
-        el.style.opacity = '1';
     });
 }
 
