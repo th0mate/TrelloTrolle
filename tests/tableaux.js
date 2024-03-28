@@ -428,6 +428,7 @@ function ajouterCarte(id, value, color = 'white') {
 async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte = null) {
 
     document.querySelector('.idColonne').value = id;
+    document.querySelector('.boutonCreation').removeAttribute('data-onclick');
 
     if (pourModifier) {
         document.body.style.cursor = 'wait';
@@ -494,7 +495,6 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.listeNouveauxParticipants').style.display = 'flex';
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
-            document.querySelector('.boutonCreation').removeAttribute('data-onclick');
             document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte(${id},${idCarte})`);
 
             console.log(document.querySelector('.boutonCreation').getAttribute('data-onclick'));
@@ -524,6 +524,9 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
 
             window.startReactiveDom();
         }
+    } else {
+        document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
+
     }
 
     document.querySelector('.formulaireCreationCarte').style.display = "flex";

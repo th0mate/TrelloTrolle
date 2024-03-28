@@ -159,7 +159,7 @@ class ServiceCarte implements ServiceCarteInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function verificationsMiseAJourCarte($idCarte, $colonne, $attributs)
+    public function verificationsMiseAJourCarte(int $idCarte, $colonne, $attributs)
     {
         $carte = $this->recupererCarte($idCarte);
         $this->recupererAttributs($attributs);

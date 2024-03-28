@@ -139,7 +139,7 @@ let formulaireAjoutCarte = reactive({
 
 
     modifierCarte: async function (idColonneIdCarte) {
-        if (this.titre !=='') {
+        if (this.titre !== '') {
 
             let [idColonne, idCarte] = idColonneIdCarte.split(',');
             this.idColonne = idColonne;

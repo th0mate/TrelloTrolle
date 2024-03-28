@@ -12,7 +12,7 @@ interface ServiceColonneInterface
     /**
      * @throws ServiceException
      */
-    public function recupererColonne($idColonne): Colonne;
+    public function recupererColonne(int $idColonne): Colonne;
 
     public function recupererColonnesTableau($idTableau): array;
 

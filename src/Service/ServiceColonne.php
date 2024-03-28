@@ -25,7 +25,7 @@ class ServiceColonne implements ServiceColonneInterface
     /**
      * @throws ServiceException
      */
-    public function recupererColonne($idColonne): Colonne
+    public function recupererColonne(int $idColonne): Colonne
     {
         if (is_null($idColonne)) {
             throw new ServiceException("Identifiant de colonne manquant",404);

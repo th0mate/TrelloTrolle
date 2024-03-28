@@ -57,12 +57,12 @@ class ControleurCarteAPI
 
         $jsondecode = json_decode($request->getContent());
         $idCarte = $jsondecode->idCarte ?? null;
-        $idColonne = $jdondecode->idColonne ?? null;
+        $idColonne = $jsondecode->idColonne ?? null;
         $attributs = [
-            "titreCarte" => $jdondecode->titreCarte ?? null,
-            "descriptifCarte" => $jdondecode->descriptifCarte ?? null,
-            "couleurCarte" => $jdondecode->couleurCarte ?? null,
-            "affectationsCarte" => $jdondecode->affectationsCarte ?? null,
+            "titreCarte" => $jsondecode->titreCarte ?? null,
+            "descriptifCarte" => $jsondecode->descriptifCarte ?? null,
+            "couleurCarte" => $jsondecode->couleurCarte ?? null,
+            "affectationsCarte" => $jsondecode->affectationsCarte ?? null,
         ];
         try {
             $this->serviceConnexion->pasConnecter();
