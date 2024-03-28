@@ -69,7 +69,7 @@ interface ServiceCarteInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte;
+    public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte;
 
     /**
      * @param $tableau

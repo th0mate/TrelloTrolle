@@ -117,10 +117,6 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         WHERE idcarte=:idcarte";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idcarte" => $idCarte]);
-        $obj = [];
-        foreach($pdoStatement as $objetFormatTableau) {
-            $obj[] = $objetFormatTableau;
-        }
-        return $this->construireDepuisTableau($obj);
+        return $this->construireDepuisTableau($pdoStatement->fetch());
     }
 }
