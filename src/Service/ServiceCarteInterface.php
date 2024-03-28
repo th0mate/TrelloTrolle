@@ -97,4 +97,6 @@ interface ServiceCarteInterface
      */
     public function deplacerCarte(Carte $carte,Colonne $colonne): void;
 
+
+
 }

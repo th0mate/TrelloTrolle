@@ -154,13 +154,12 @@ class ServiceCarte implements ServiceCarteInterface
      */
     public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte
     {
-        $carte = $this->recupererCarte($idCarte);
+        $carte = $this->carteRepository->getAllFromCartes($idCarte);
         $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {
             throw new CreationException("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!", Response::HTTP_CONFLICT);
         }
-
         return $carte;
     }
 

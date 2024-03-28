@@ -28,7 +28,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         ];
     }
 
-    protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
+    protected function construireDepuisTableau(array $objetFormatTableau): Carte
     {
         return Carte::construireDepuisTableau($objetFormatTableau);
     }
@@ -108,7 +108,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         }
     }
 
-    public function getAllFromCartes(int $idCarte): array
+    public function getAllFromCartes(int $idCarte): Carte
     {
         $query = "SELECT * FROM {$this->getNomTable()} ca 
         JOIN colonne co ON ca.idcolonne=co.idcolonne
@@ -121,6 +121,6 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         foreach($pdoStatement as $objetFormatTableau) {
             $obj[] = $objetFormatTableau;
         }
-        return $obj;
+        return $this->construireDepuisTableau($obj);
     }
 }

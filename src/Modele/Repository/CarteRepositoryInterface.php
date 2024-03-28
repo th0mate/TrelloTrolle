@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Modele\Repository;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
 
 interface CarteRepositoryInterface
@@ -23,5 +24,5 @@ interface CarteRepositoryInterface
 
     public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void;
 
-    public function getAllFromCartes(int $idCarte): array;
+    public function getAllFromCartes(int $idCarte): Carte;
 }
