@@ -483,14 +483,20 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
         let users2 = await response4.json();
         let affectations = await response2.json();
 
+        let loginAffectations = [];
+        for (let affectation of affectations) {
+            loginAffectations.push(affectation.login);
+        }
+
         const allUsers = users.concat(users2);
 
         if (response.status !== 200 || response2.status !== 200 || response3.status !== 200 || response4.status !== 200) {
             console.error(response.error);
         } else {
             let carte = await response.json();
+            window.affectationsCarte = loginAffectations;
             document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
-            document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}, ${affectations})`);
+            document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}`);
             document.querySelector('.inputCreationCarte').value = carte.titreCarte;
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
@@ -498,7 +504,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.listeNouveauxParticipants').style.display = 'flex';
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
-            document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte})`);
+            document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte`);
 
 
             document.body.style.cursor = 'default';
@@ -509,15 +515,15 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             }
 
             for (let user of allUsers) {
-                let found = false;
+                let trouve = false;
                 for (let affectation of affectations) {
                     if (affectation.login === user.login) {
-                        found = true;
+                        trouve = true;
                         break;
                     }
                 }
-                if (!found) {
-                    html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
+                if (!trouve) {
+                    html += `<input data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
                 <label for="participant${user.login}" data-participant="${user.login}"><span class="user">${user.prenom[0]}${user.nom[0]}</span></label>`;
                 }
             }
@@ -527,7 +533,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
     } else {
         document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
     }
-    window.startReactiveDom(document.querySelector('.formulaireCreationCarte'));
+    window.startReactiveDom();
     //on empêche le fait d'envoyer plusieurs fois le formulaire
 
 

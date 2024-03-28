@@ -139,23 +139,17 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
-    setParametresPourModifier: function(parametres) {
-        let [id, idCarte, titreCarte, descriptifCarte, couleurCarte, affectations] = parametres.split(',');
+    setParametresPourModifier: function (parametres) {
+        let [id, idCarte, titreCarte, descriptifCarte, couleurCarte] = parametres.split(',');
         this.idColonne = id;
         this.titre = titreCarte;
         this.description = descriptifCarte;
         this.couleur = couleurCarte;
         this.idCarte = idCarte;
-
-        for (let affectation of affectations) {
-            this.participants.push(affectation.login);
-        }
-
-        console.log(this);
+        this.participants = window.affectationsCarte;
     },
 
-    modifierCarte: async function (idColonneIdCarte) {
-        //${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}, ${affectations}
+    modifierCarte: async function (idColonneIdCarte = null) {
         if (this.titre !== '') {
             document.querySelector(`[data-card="${this.idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
@@ -171,7 +165,7 @@ let formulaireAjoutCarte = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    idCarte: idCarte,
+                    idCarte: this.idCarte,
                     idColonne: this.idColonne,
                     titreCarte: this.titre,
                     descriptifCarte: this.description,
