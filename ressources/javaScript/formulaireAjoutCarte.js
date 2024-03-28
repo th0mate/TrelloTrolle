@@ -174,6 +174,9 @@ let formulaireAjoutCarte = reactive({
                 })
             });
 
+            console.log(response.json());
+            console.log(this);
+
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
             }
