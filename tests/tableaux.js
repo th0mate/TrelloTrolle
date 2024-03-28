@@ -157,7 +157,7 @@ function updateCards() {
 
         if (!card.hasAttribute('data-click-listener-added')) {
             card.addEventListener('click', function (e) {
-                afficherFormulaireCreationCarte(card.getAttribute('data-columns'), true, card.getAttribute('data-card'));
+                afficherFormulaireCreationCarte(card.closest('.stockage').getAttribute('data-columns'), true, card.getAttribute('data-card'));
             });
             card.setAttribute('data-click-listener-added', 'true');
         }
@@ -486,7 +486,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             console.error(response.error);
         } else {
             let carte = await response.json();
-            document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true')
+            document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
             document.querySelector('.inputCreationCarte').value = carte.titreCarte;
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
@@ -494,9 +494,12 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.listeNouveauxParticipants').style.display = 'flex';
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
+            document.querySelector('.boutonCreation').removeAttribute('data-onclick');
+            document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte(${id},${idCarte})`);
+
+            console.log(document.querySelector('.boutonCreation').getAttribute('data-onclick'));
 
             document.body.style.cursor = 'default';
-
             let html = '';
             for (let affectation of affectations) {
                 html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
@@ -547,6 +550,8 @@ function addListenersAjoutCard(id) {
             document.querySelector('.listeParticipants').style.display = 'flex';
             document.querySelector('.listeNouveauxParticipants').style.display = 'none';
             document.querySelector('.titreCreationCarte').innerText = "Création d'une carte";
+            document.querySelector('.boutonCreation').removeAttribute('data-onclick');
+            document.querySelector('.boutonCreation').setAttribute('data-onclick', 'formulaireAjoutCarte.envoyerFormulaire');
             document.querySelector('.desc').value = '';
             document.querySelector('.boutonCreation').innerText = "Créer";
             document.querySelector('input[type="color"]').value = '#ffffff';

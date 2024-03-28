@@ -137,6 +137,60 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
+
+    modifierCarte: async function (idColonneIdCarte) {
+        if (this.titre !=='') {
+
+            let [idColonne, idCarte] = idColonneIdCarte.split(',');
+            this.idColonne = idColonne;
+
+            console.log("idColonne :" + this.idColonne + " |idCarte :" + idCarte);
+
+            let HTMLFeatures = '';
+            this.participants.forEach(participant => {
+                HTMLFeatures += `<span class="user">${participant}</span>`;
+            });
+
+            /*document.querySelector(`[data-card="${idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
+            ${this.titre}
+            <div class="features"></div>`;
+
+             */
+            //on modifie le innerHTLM de la carte
+            document.querySelector(`[data-card="${idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
+            ${this.titre}
+            <div class="features"></div>`;
+
+            updateDraggables();
+            updateCards();
+            closeForm();
+            console.log(this.idColonne);
+            let response = await fetch(apiBase + '/carte/modifier', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCarte: idCarte,
+                    idColonne: this.idColonne,
+                    titreCarte: this.titre,
+                    descriptifCarte: this.description,
+                    couleurCarte: this.couleur,
+                    affectationsCarte: this.participants
+                })
+            });
+
+            console.log(response.json());
+            if (response.status !== 200) {
+                console.error("Erreur lors de la modification de la carte dans l'API");
+            }
+        } else {
+            closeForm();
+        }
+    },
+
+
     ajouterParticipantCarte: function (idUtilisateur) {
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
@@ -171,6 +225,22 @@ async function getNextIdCarte() {
 
     let idCarte = await response.json();
     return idCarte.idCarte;
+}
+
+function closeForm() {
+    document.querySelector('.formulaireCreationCarte').style.display = "none";
+    document.querySelector('.inputCreationCarte').value = '';
+    document.querySelector('.listeParticipants').style.display = 'flex';
+    document.querySelector('.listeNouveauxParticipants').style.display = 'none';
+    document.querySelector('.titreCreationCarte').innerText = "Création d'une carte";
+    document.querySelector('.boutonCreation').removeAttribute('data-onclick');
+    document.querySelector('.boutonCreation').setAttribute('data-onclick', 'formulaireAjoutCarte.envoyerFormulaire');
+    document.querySelector('.desc').value = '';
+    document.querySelector('.boutonCreation').innerText = "Créer";
+    document.querySelector('input[type="color"]').value = '#ffffff';
+    document.querySelectorAll('.all').forEach(el => {
+        el.style.opacity = '1';
+    });
 }
 
 applyAndRegister(() => {

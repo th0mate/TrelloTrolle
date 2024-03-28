@@ -55,8 +55,6 @@ function trigger(target, key) {
         for (let effect of objetDependencies.get(target).get(key)) {
             if (effect !== null && effect !== undefined) {
                 effect();
-            } else {
-                console.error("Aucun effet pour " + target + " et " + key);
             }
         }
     }
@@ -70,9 +68,10 @@ function trigger(target, key) {
 function registerEffect(target, key) {
     if (!objetDependencies.get(target).has(key)) {
         objetDependencies.get(target).set(key, new Set());
-
     }
-    objetDependencies.get(target).get(key).add(registeringEffect);
+    if (typeof registeringEffect === 'function') {
+        objetDependencies.get(target).get(key).add(registeringEffect);
+    }
 }
 
 /**
@@ -114,12 +113,15 @@ function startReactiveDom(subDom = document) {
         rel.addEventListener('input', (event) => {
             objectByName.get(obj)[prop] = event.target.value;
         });
+        /*
         applyAndRegister(() => {
             let reactiveObject = objectByName.get(obj);
             if (reactiveObject !== undefined && reactiveObject !== null) {
                 rel.value = reactiveObject[prop];
             }
         });
+
+         */
     }
 
     for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
