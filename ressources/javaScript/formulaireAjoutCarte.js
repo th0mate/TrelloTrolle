@@ -10,6 +10,7 @@ let formulaireAjoutCarte = reactive({
     description: "",
     couleur: "",
     participants: [],
+    idCarte: "",
     estEnvoye: false,
 
     /**
@@ -138,20 +139,25 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
+    setParametresPourModifier: function(parametres) {
+        let [id, idCarte, titreCarte, descriptifCarte, couleurCarte, affectations] = parametres.split(',');
+        this.idColonne = id;
+        this.titre = titreCarte;
+        this.description = descriptifCarte;
+        this.couleur = couleurCarte;
+        this.idCarte = idCarte;
+
+        for (let affectation of affectations) {
+            this.participants.push(affectation.login);
+        }
+
+        console.log(this);
+    },
 
     modifierCarte: async function (idColonneIdCarte) {
+        //${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}, ${affectations}
         if (this.titre !== '') {
-
-            let [idColonne, idCarte] = idColonneIdCarte.split(',');
-            this.idColonne = idColonne;
-
-            let HTMLFeatures = '';
-            this.participants.forEach(participant => {
-                HTMLFeatures += `<span class="user">${participant}</span>`;
-            });
-
-
-            document.querySelector(`[data-card="${idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
+            document.querySelector(`[data-card="${this.idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features"></div>`;
 

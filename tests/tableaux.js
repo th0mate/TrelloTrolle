@@ -490,6 +490,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
         } else {
             let carte = await response.json();
             document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
+            document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}, ${affectations})`);
             document.querySelector('.inputCreationCarte').value = carte.titreCarte;
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
@@ -497,7 +498,8 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.listeNouveauxParticipants').style.display = 'flex';
             document.querySelector('.titreCreationCarte').innerText = "Modifier la carte";
             document.querySelector('.boutonCreation').innerText = "Enregistrer";
-            document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte(${id},${idCarte})`);
+            document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte})`);
+
 
             document.body.style.cursor = 'default';
             let html = '';
