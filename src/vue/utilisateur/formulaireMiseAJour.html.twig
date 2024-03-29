@@ -5,7 +5,7 @@
 
 {% block page_content %}
     <div>
-        <form method="post" action="{{ route('mettreAJour', {"login" : idUtilisateurConnecte}) }}">
+        <form method="post" action="{{ route('mettreAJour', {"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">
             <fieldset>
                 <h3>Mise à jour du profil</h3>
                 <p >

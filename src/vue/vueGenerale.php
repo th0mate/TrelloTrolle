@@ -4,7 +4,7 @@
 
 
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\Conteneur;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\UrlHelper;
@@ -39,7 +39,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 <a href="<?=$generateurUrl->generate("accueil");?>">Accueil</a>
             </li>
             <?php
-            if (!ConnexionUtilisateur::estConnecte()) {
+            if (!ConnexionUtilisateurSession::estConnecte()) {
                 ?>
                 <li>
                     <a href="<?=$generateurUrl->generate("afficherFormulaireConnexion");?>">
@@ -53,8 +53,8 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 </li>
                 <?php
             } else {
-                $loginHTML = htmlspecialchars(ConnexionUtilisateur::getLoginUtilisateurConnecte());
-                $loginURL = rawurlencode(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+                $loginHTML = htmlspecialchars(ConnexionUtilisateurSession::getLoginUtilisateurConnecte());
+                $loginURL = rawurlencode(ConnexionUtilisateurSession::getLoginUtilisateurConnecte());
                 ?>
                 <li>
                     <a href="<?=$generateurUrl->generate("afficherListeMesTableaux");?>">

@@ -2,6 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -22,10 +24,12 @@ class ControleurTableauAPI
 {
 
     public function __construct(
-        private ServiceConnexionInterface   $serviceConnexion,
-        private ServiceTableauInterface     $serviceTableau,
-        private ServiceUtilisateurInterface $serviceUtilisateur,
-        private ServiceCarteInterface       $serviceCarte
+        private ServiceConnexionInterface     $serviceConnexion,
+        private ServiceTableauInterface       $serviceTableau,
+        private ServiceUtilisateurInterface   $serviceUtilisateur,
+        private ServiceCarteInterface         $serviceCarte,
+        private ConnexionUtilisateurInterface $connexionUtilisateur
+
     )
     {
     }
@@ -40,7 +44,7 @@ class ControleurTableauAPI
             try {
                 $this->serviceConnexion->pasConnecter();
                 $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-                $this->serviceUtilisateur->ajouterMembre($tableau, $login);
+                $this->serviceUtilisateur->ajouterMembre($tableau, $login,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
                 return new JsonResponse('', 200);
             } catch (ServiceException $e) {
                 return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
@@ -57,7 +61,7 @@ class ControleurTableauAPI
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $utilisateur = $this->serviceUtilisateur->supprimerMembre($tableau, $login);
+            $utilisateur = $this->serviceUtilisateur->supprimerMembre($tableau, $login, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceCarte->miseAJourCarteMembre($tableau, $utilisateur);
             return new JsonResponse("", 200);
 

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Trellotrolle\Controleur;
+use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
@@ -26,10 +27,9 @@ use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\UrlHelper;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\Conteneur;
 use App\Trellotrolle\Lib\MessageFlash;
-use TheFeed\Lib\ConnexionUtilisateurSession;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 use Twig\TwigFunction;
@@ -81,7 +81,7 @@ class RouteurURL
         $twig->addFunction(new TwigFunction("asset",function ($path) use ($assistantUrl){
             return $assistantUrl->getAbsoluteUrl($path);
         }));
-        $twig->addGlobal('idUtilisateurConnecte', ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $twig->addGlobal('connexionUtilisateur', new ConnexionUtilisateurSession());
         $twig->addGlobal("messagesFlash",new MessageFlash());
 
 

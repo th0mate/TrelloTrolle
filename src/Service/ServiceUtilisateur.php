@@ -5,7 +5,6 @@ namespace App\Trellotrolle\Service;
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Carte;
@@ -13,7 +12,6 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 use \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
-use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 
@@ -41,10 +39,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estParticipant(Tableau $tableau): void
+    public function estParticipant(Tableau $tableau,$loginConnecte): void
     {
 
-        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+        if (!$this->tableauRepository->estParticipantOuProprietaire($loginConnecte, $tableau)) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
@@ -89,9 +87,9 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login): void
+    public function ajouterMembre(Tableau $tableau, mixed $login,$loginConnecte): void
     {
-        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $this->estProprietaire($tableau, $loginConnecte);
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateurs=[];
         foreach ($login as $user) {
@@ -111,9 +109,9 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login): AbstractDataObject
+    public function supprimerMembre(Tableau $tableau, $login,$loginConnecte): AbstractDataObject
     {
-        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $this->estProprietaire($tableau,$loginConnecte);
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
         if ($this->tableauRepository->estProprietaire($login, $tableau)) {
@@ -255,7 +253,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->utilisateurRepository->supprimer($login);
         Cookie::supprimer("login");
         Cookie::supprimer("mdp");
-        ConnexionUtilisateur::deconnecter();
     }
 
     /**
