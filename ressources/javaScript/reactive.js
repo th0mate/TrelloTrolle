@@ -187,6 +187,16 @@ function startReactiveDom(subDom = document) {
             }
         });
     }
+    //pareil mais pour le mouseleave
+    for (let rel of document.querySelectorAll("[data-onleave]")) {
+        const [obj, fun, arg] = rel.dataset.onleave.split(/[.()]+/);
+        rel.addEventListener('mouseleave', (event) => {
+            if (objectByName.get(obj) !== undefined) {
+                objectByName.get(obj)[fun](arg);
+                rel.removeAttribute('data-onleave');
+            }
+        });
+    }
 }
 
 window.startReactiveDom = startReactiveDom;

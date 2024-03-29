@@ -1,4 +1,4 @@
-import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 
 let utilisateursReactifs = [];
 
@@ -11,25 +11,29 @@ let utilisateurs = reactive({
 
     afficherContenuUtilisateur: function (loginUtilisateur) {
         if (utilisateursReactifs.length > 0) {
-            const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === loginUtilisateur);
+            const utilisateur = objectByName.get(loginUtilisateur);
 
             if (!utilisateur) {
                 return;
             }
 
             const div = document.querySelector('.' + loginUtilisateur);
-            div.setAttribute('data-htmlfun', `afficherElements(${loginUtilisateur})`);
-            console.log(div.getAttribute('data-htmlfun'));
+            div.setAttribute('data-htmlfun', `utilisateur.afficherElements(${loginUtilisateur})`);
             startReactiveDom();
 
             div.style.display = 'flex';
             div.style.top = `${event.clientY}px`;
-            div.style.left = `${event.clientX}px`;
+            div.style.left = `((${event.clientX})-50)px`;
         }
     },
 
+    cacherContenuUtilisateur: function (loginUtilisateur) {
+        const div = document.querySelector('.' + loginUtilisateur);
+        div.style.display = 'none';
+    },
+
+
     afficherElements: function (idUtilisateur) {
-        console.log("aa");
         const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
         let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
         for (let colonne of utilisateur.colonnes) {
@@ -130,6 +134,8 @@ let utilisateurs = reactive({
                         }
                     }
                 }
+
+                utilisateur = reactive(utilisateur, membre.login);
                 utilisateursReactifs.push(utilisateur);
             }
 
@@ -138,8 +144,12 @@ let utilisateurs = reactive({
         }
     },
 
-
 }, "utilisateur");
+
+window.majUtilisateurs = function () {
+    document.querySelector('.waiting').setAttribute('data-onload', 'utilisateur.MAJUtilisateursDepuisBaseDeDonnees()');
+    startReactiveDom();
+};
 
 applyAndRegister({});
 

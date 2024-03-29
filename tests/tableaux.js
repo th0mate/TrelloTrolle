@@ -279,9 +279,12 @@ async function cardDrop(e) {
                 })
             });
 
+            window.majUtilisateurs();
+
             if (response.status !== 200) {
                 console.error(response.json());
             }
+
         }
     }
 }
