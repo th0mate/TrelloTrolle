@@ -28,14 +28,18 @@
                       data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-user="{{ tableau.utilisateur.login }}"
                       data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
+                <div class="contenuUtilisateur {{ tableau.utilisateur.login }}"
+                     data-htmlfun="utilisateur.afficherElements({{ tableau.utilisateur.login }})"></div>
+
                 {% for participant in collaborateurs %}
                     <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
                           data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
+                    <div class="contenuUtilisateur {{ participant.login }}"
+                         data-htmlfun="utilisateur.afficherElements({{ participant.login }})"></div>
                 {% endfor %}
-                <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
             </div>
         </div>
-        <div class="contenuUtilisateur" data-htmlfun="utilisateur.afficherContenuUtilisateur()"></div>
+
 
         <div class="ul">
 

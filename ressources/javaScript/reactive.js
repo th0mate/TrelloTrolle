@@ -124,9 +124,9 @@ function startReactiveDom(subDom = document) {
         applyAndRegister(() => {
             let reactiveObject = objectByName.get(obj);
             if (reactiveObject !== undefined && reactiveObject !== null && typeof reactiveObject[fun] === 'function') {
-                let innerHTML = reactiveObject[fun](arg);
-                rel.innerHTML = innerHTML;
-                startReactiveDom(rel)
+                rel.innerHTML = reactiveObject[fun](arg);
+            } else {
+                //console.error('Erreur : ' + obj + '.' + fun + ' n\'est pas une fonction');
             }
             rel.removeAttribute('data-htmlfun');
         });

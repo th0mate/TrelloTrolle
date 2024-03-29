@@ -9,7 +9,6 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
-
     afficherContenuUtilisateur: function (loginUtilisateur) {
         if (utilisateursReactifs.length > 0) {
             const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === loginUtilisateur);
@@ -18,33 +17,26 @@ let utilisateurs = reactive({
                 return;
             }
 
-            const div = document.querySelector('.contenuUtilisateur');
-            div.setAttribute('data-htmlfun', 'utilisateur.afficherContenuUtilisateur')
-
-            let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
-            for (let colonne of utilisateur.colonnes) {
-                html += `<li>${colonne.titreColonne} : ${colonne.nbCartes}</li>`;
-            }
-            html += '</ul>';
+            const div = document.querySelector('.' + loginUtilisateur);
+            div.setAttribute('data-htmlfun', `afficherElements(${loginUtilisateur})`);
+            console.log(div.getAttribute('data-htmlfun'));
+            startReactiveDom();
 
             div.style.display = 'flex';
             div.style.top = `${event.clientY}px`;
             div.style.left = `${event.clientX}px`;
-
-            console.log(html);
-            setTimeout(() => {
-                startReactiveDom();
-            }, 100);
-            return html;
-        } else {
-            return "aaa";
         }
     },
 
-    afficherElements: function (html) {
-        if (html) {
-            return html;
+    afficherElements: function (idUtilisateur) {
+        console.log("aa");
+        const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
+        let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
+        for (let colonne of utilisateur.colonnes) {
+            html += `<li>${colonne.titreColonne} : ${colonne.nbCartes}</li>`;
         }
+        html += '</ul>';
+        return html;
     },
 
 
