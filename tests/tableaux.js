@@ -278,6 +278,10 @@ async function cardDrop(e) {
                     idColonne: idColonne
                 })
             });
+
+            if (response.status !== 200) {
+                console.error(response.error);
+            }
         }
     }
 }
@@ -542,6 +546,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
         document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
     }
     window.startReactiveDom();
+    randomColorsNewUsers();
     document.querySelector('.formulaireCreationCarte').style.display = "flex";
 
     document.querySelectorAll('.all').forEach(el => {
@@ -645,6 +650,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     })
 });
+
+
+/**
+ * Met une couleur aléatoire à tous les éléments '.user' n'ayant pas d'attribut 'data-user'
+ */
+function randomColorsNewUsers() {
+    document.querySelectorAll('.user').forEach(el => {
+        if (!el.hasAttribute('data-user')) {
+            el.style.backgroundColor = randomColor();
+        }
+    });
+}
 
 
 /**

@@ -59,6 +59,7 @@ let formulaireAjoutParticipant = reactive({
 
                 setTimeout(() => {
                     startReactiveDom();
+                    randomColorsNewUsers();
                 }, 100);
 
                 return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">

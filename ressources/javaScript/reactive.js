@@ -117,15 +117,6 @@ function startReactiveDom(subDom = document) {
         rel.addEventListener('input', (event) => {
             objectByName.get(obj)[prop] = event.target.value;
         });
-        /*
-        applyAndRegister(() => {
-            let reactiveObject = objectByName.get(obj);
-            if (reactiveObject !== undefined && reactiveObject !== null) {
-                rel.value = reactiveObject[prop];
-            }
-        });
-
-         */
     }
 
     for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
