@@ -24,13 +24,18 @@
             <h3>{{ tableau.titreTableau }}</h3>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
-                <span class="user" data-user="{{ tableau.utilisateur.login }}" data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
+                <span class="user"
+                      data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
+                      data-user="{{ tableau.utilisateur.login }}"
+                      data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
                 {% for participant in collaborateurs %}
-                    <span class="user" data-user="{{ participant.login }}" >{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
+                    <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
+                          data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
                 {% endfor %}
                 <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
             </div>
         </div>
+        <div class="contenuUtilisateur" data-htmlfun="utilisateur.afficherElements"></div>
 
         <div class="ul">
 
@@ -53,7 +58,8 @@
                                     {% for idCarte,utilisateurs in participants %}
                                         {% if idCarte == carte.idCarte %}
                                             {% for utilisateur in utilisateurs %}
-                                                <span class="user" data-user="{{ utilisateur.login }}" >{{ utilisateur.prenom|slice(0,1) }}{{ utilisateur.nom|slice(0,1) }}</span>
+                                                <span class="user"
+                                                      data-user="{{ utilisateur.login }}">{{ utilisateur.prenom|slice(0,1) }}{{ utilisateur.nom|slice(0,1) }}</span>
                                             {% endfor %}
                                         {% endif %}
                                     {% endfor %}
@@ -96,8 +102,9 @@
     </div>
 
     <div class="formulaireCreationCarte" data-modif="">
-        <div class="wrap"><h2 class="titreCreationCarte">Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
-                                                             alt="">
+        <div class="wrap"><h2 class="titreCreationCarte">Création d'une carte</h2> <img class="closeCard"
+                                                                                        src="{{ asset('../tests/close.png') }}"
+                                                                                        alt="">
         </div>
         <input type="hidden" class="idColonne" value="">
         <div class="content"><h4>Titre de la carte :</h4>

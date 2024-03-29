@@ -267,7 +267,7 @@ async function cardDrop(e) {
             }
             draggedCard = null;
             updateCards();
-            let response = fetch(apiBase + '/carte/deplacer', {
+            let response = await fetch(apiBase + '/carte/deplacer', {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json',
@@ -280,7 +280,7 @@ async function cardDrop(e) {
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                console.error(response.json());
             }
         }
     }
@@ -682,5 +682,4 @@ function listenerFermerAjoutMembre() {
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '1';
     });
-
 }

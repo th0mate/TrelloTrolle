@@ -170,12 +170,21 @@ function startReactiveDom(subDom = document) {
 
 
     for (let rel of document.querySelectorAll("[data-onload]")) {
-        //dès que l'objet est chargé. On ne lance qu'une fois
         const [obj, fun, arg] = rel.dataset.onload.split(/[.()]+/);
         if (objectByName.get(obj) !== undefined) {
             objectByName.get(obj)[fun](arg);
             rel.removeAttribute('data-onload');
         }
+    }
+    //TODO : il y a sept appels à l'événement
+    for (let rel of document.querySelectorAll("[data-onhover]")) {
+        const [obj, fun, arg] = rel.dataset.onhover.split(/[.()]+/);
+        rel.addEventListener('mouseenter', (event) => {
+            if (objectByName.get(obj) !== undefined) {
+                objectByName.get(obj)[fun](arg);
+                rel.removeAttribute('data-onhover');
+            }
+        });
     }
 }
 

@@ -1,4 +1,5 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+
 let utilisateursReactifs = [];
 
 let utilisateurs = reactive({
@@ -8,6 +9,47 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
+
+    afficherContenuUtilisateur: function (loginUtilisateur) {
+        if (utilisateursReactifs.length > 0) {
+            const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === loginUtilisateur);
+
+            if (!utilisateur) {
+                return;
+            }
+
+            const div = document.querySelector('.contenuUtilisateur');
+
+            setTimeout(
+                () => div.style.display = 'flex',
+                div.style.top = `${event.clientY}px`,
+                div.style.left = `${event.clientX}px`,
+                100
+            );
+
+            let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
+            for (let colonne of utilisateur.colonnes) {
+                html += `<li>${colonne.titreColonne} : ${colonne.nbCartes}</li>`;
+            }
+            html += '</ul>';
+
+            this.afficherElements(html);
+        }
+    },
+
+    afficherElements : function(html = null) {
+        console.log("aa");
+        if (html) {
+            return html;
+        }
+    },
+
+
+    /**
+     * Charge et crée les utilisateurs à partir de la base de données. N'est lancé qu'au chargement initial de la page
+     * @returns {Promise<void>} La promesse habituelle
+     * @constructor pour créer les utilisateurs en objets réactifs à partir de this
+     */
     MAJUtilisateursDepuisBaseDeDonnees: async function () {
 
         if (this.drapeau) {
@@ -74,10 +116,8 @@ let utilisateurs = reactive({
                 }
             }
 
-
             for (let membre of tousMembres) {
-                console.log(membre);
-                let utilisateur = Object.create(this);
+                let utilisateur = {};
                 utilisateur.prenom = membre.prenom;
                 utilisateur.nom = membre.nom;
                 utilisateur.login = membre.login;
@@ -97,8 +137,6 @@ let utilisateurs = reactive({
                 }
                 utilisateursReactifs.push(utilisateur);
             }
-
-            console.log(utilisateursReactifs);
 
             document.querySelector('.waiting').style.display = 'none';
             this.drapeau = false;
