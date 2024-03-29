@@ -6,8 +6,11 @@ use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
+use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
@@ -17,8 +20,7 @@ class ServiceColonne implements ServiceColonneInterface
 {
 
 
-    public function __construct(private ColonneRepository $colonneRepository,
-                                private CarteRepository   $carteRepository)
+    public function __construct(private ColonneRepositoryInterface $colonneRepository)
     {
     }
 
@@ -34,7 +36,7 @@ class ServiceColonne implements ServiceColonneInterface
         /**
          * @var Colonne $colonne
          **/
-        $colonne = $this->colonneRepository->recupererParClePrimaire($idColonne);
+        $colonne = $this->colonneRepository->recupererParClePrimaire(strval($idColonne));
         if (!$colonne) {
             throw new ServiceException("Colonne inexistante",401);
         }
@@ -49,15 +51,11 @@ class ServiceColonne implements ServiceColonneInterface
     /**
      * @throws TableauException
      */
-    public function supprimerColonne($tableau, $idColonne): int
+    public function supprimerColonne(Tableau $tableau, $idColonne): array
     {
-        //TODO supprimer Vérif après refonte BD
-
-        if ($this->carteRepository->getNombreCartesTotalUtilisateur($tableau->getUtilisateur()->getLogin()) == 1) {
-            throw new TableauException("Vous ne pouvez pas supprimer cette colonne car cela entrainera la suppression du compte du propriétaire du tableau", $tableau,Response::HTTP_UNAUTHORIZED);
-        }
         $this->colonneRepository->supprimer($idColonne);
-        return $this->colonneRepository->getNombreColonnesTotalTableau($tableau->getIdTableau());
+        return $this->colonneRepository->recupererColonnesTableau($tableau->getIdTableau());
+
     }
 
     /**
@@ -74,29 +72,36 @@ class ServiceColonne implements ServiceColonneInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function recupererColonneAndNomColonne($idColonne, $nomColonne)
+    public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne
     {
         $colonne = $this->recupererColonne($idColonne);
         $this->isSetNomColonne($nomColonne);
         return $colonne;
     }
 
-    public function creerColonne($tableau, $nomColonne): Colonne
+    public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
-        return new Colonne(
-            $tableau,
+        $colonne= new Colonne(
             $this->colonneRepository->getNextIdColonne(),
-            $nomColonne
+            $nomColonne,
+            $tableau
         );
+        $this->colonneRepository->ajouter($colonne);
+        return $colonne;
     }
 
-    public function miseAJourColonne($colonne): Colonne
+    public function miseAJourColonne(Colonne $colonne): Colonne
     {
         $this->colonneRepository->mettreAJour($colonne);
         return $colonne;
     }
-    public function getNextIdColonne()
+    public function getNextIdColonne(): int
     {
         return $this->colonneRepository->getNextIdColonne();
+    }
+
+    public function inverserOrdreColonnes($idColonne1, $idColonne2): void
+    {
+        $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);
     }
 }

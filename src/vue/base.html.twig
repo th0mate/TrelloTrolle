@@ -11,11 +11,14 @@
     <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutCarte.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutParticipant.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutColonne.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/formulaireModificationColonne.js') }}" defer></script>
 
 
 </head>
 
 <body>
+
 <header>
     <nav>
         <ul>
@@ -62,15 +65,13 @@
         {% endfor %}
     </div>
 </header>
+
 <main>
     {% block page_content %}
     {% endblock %}
 </main>
 
 <footer>
-    <p>
-        Copyright Trello-Trollé Company
-    </p>
 </footer>
 </body>
 </html>

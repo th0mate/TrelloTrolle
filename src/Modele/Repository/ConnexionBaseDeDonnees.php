@@ -3,10 +3,11 @@
 namespace App\Trellotrolle\Modele\Repository;
 
 use App\Trellotrolle\Configuration\ConfigurationBaseDeDonnees;
+use App\Trellotrolle\Configuration\ConfigurationBaseDeDonneesInterface;
 use PDO;
 
 
-class ConnexionBaseDeDonnees
+class ConnexionBaseDeDonnees implements ConnexionBaseDeDonneesInterface
 {
     private PDO $pdo;
 
@@ -15,19 +16,14 @@ class ConnexionBaseDeDonnees
         return $this->pdo;
     }
 
-    public function __construct(ConfigurationBaseDeDonnees $configurationBaseDeDonnees)
+    public function __construct(ConfigurationBaseDeDonneesInterface $configurationBDD)
     {
-        $nomHote = $configurationBaseDeDonnees->getNomHote();
-        $port = $configurationBaseDeDonnees->getPort();
-        $login = $configurationBaseDeDonnees->getLogin();
-        $motDePasse = $configurationBaseDeDonnees->getMotDePasse();
-        $nomBaseDeDonnees = $configurationBaseDeDonnees->getNomBaseDeDonnees();
 
         $this->pdo = new PDO(
-            "pgsql:host=$nomHote;port=$port;dbname=$nomBaseDeDonnees",
-            $login,
-            $motDePasse,
-            array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+            $configurationBDD->getDSN(),
+            $configurationBDD->getLogin(),
+            $configurationBDD->getMotDePasse(),
+            $configurationBDD->getOptions()
         );
 
         $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

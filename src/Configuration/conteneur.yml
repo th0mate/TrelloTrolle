@@ -29,7 +29,7 @@ services:
   #Services
   service_carte:
     class: App\Trellotrolle\Service\ServiceCarte
-    arguments: ['@carte_repository','@utilisateur_repository']
+    arguments: ['@carte_repository','@utilisateur_repository','@tableau_repository']
 
   service_colonne:
     class: App\Trellotrolle\Service\ServiceColonne

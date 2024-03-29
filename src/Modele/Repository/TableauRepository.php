@@ -8,7 +8,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use Exception;
 
-class TableauRepository extends AbstractRepository
+class TableauRepository extends AbstractRepository implements TableauRepositoryInterface
 {
 
     protected function getNomTable(): string
@@ -100,34 +100,22 @@ class TableauRepository extends AbstractRepository
     }
 
 
-
-    public function participants(): array
+    public function estParticipant(string $login, Tableau $tableau): bool
     {
-        $query = "SELECT login FROM participant WHERE 
-        idtableau = {$this->getNomCle()}";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute();
-        $obj = [];
-        foreach ($pdoStatement as $objetFormatTableau) {
-            $obj[] = $objetFormatTableau;
-        }
-        return $obj;
-    }
-
-    public function estParticipant(string $login): bool
-    {
-        if (in_array($login, $this->participants(), true)) {
-            return true;
+        for ($i = 0; $i < count($this->getParticipants($tableau)); $i++) {
+            if ($this->getParticipants($tableau)[$i]->getLogin() === $login) {
+                return true;
+            }
         }
         return false;
     }
 
-    public function estProprietaire($login): bool
+    public function estProprietaire($login, Tableau $tableau): bool
     {
         $query = "SELECT login FROM {$this->getNomTable()} WHERE 
-        idtableau = {$this->getNomCle()}";
+        {$this->getNomCle()} =:idtableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute();
+        $pdoStatement->execute(["idtableau" => $tableau->getIdTableau()]);
         $obj = $pdoStatement->fetch();
         if ($obj[0] === $login) {
             return true;
@@ -136,21 +124,19 @@ class TableauRepository extends AbstractRepository
         }
     }
 
-    public function estParticipantOuProprietaire(string $login): bool
+    public function estParticipantOuProprietaire(string $login, Tableau $tableau): bool
     {
-        return true;
-        //TODO à REFAIRE
-        //return $this->estProprietaire($login) || $this->estParticipant($login);
+        return $this->estProprietaire($login, $tableau) || $this->estParticipant($login, $tableau);
     }
 
-    public function getParticipants(Tableau $idcle): ?array
+    public function getParticipants(Tableau $tableau): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
-        FROM {$this->getNomTable()} c 
-        JOIN participant p ON c.idtableau=a.idtableau
-        JOIN utilisateur u ON u.login=p.login WHERE a.{$this->getNomCle()} =:idcle";
+        FROM {$this->getNomTable()} t 
+        JOIN participant p ON t.idtableau=p.idtableau
+        JOIN utilisateur u ON u.login=p.login WHERE p.{$this->getNomCle()} =:idtableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idcle" => $idcle->getIdTableau()]);
+        $pdoStatement->execute(["idtableau" => $tableau->getIdTableau()]);
         $obj = [];
         foreach($pdoStatement as $objetFormatTableau) {
             $obj[] = Utilisateur::construireDepuisTableau($objetFormatTableau);
@@ -158,13 +144,42 @@ class TableauRepository extends AbstractRepository
         return $obj;
     }
 
-    public function setParticipants(?array $participants, Tableau $instance): void
+    public function setParticipants(?array $participants, Tableau $tableau): void
     {
+        $query = "DELETE FROM participant WHERE idtableau=:idtableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idtableau" => $tableau->getIdTableau()]);
         foreach($participants as $participant) {
-            $query = "INSERT INTO participant VALUES (:idtableau, :login)";
+            $query = "INSERT INTO participant VALUES (:login, :idtableau)";
             $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-            $pdoStatement->execute(["idtableau" => $instance->getIdTableau(), "login" => $participant->getLogin()]);
+            $pdoStatement->execute(["idtableau" => $tableau->getIdTableau(), "login" => $participant->getLogin()]);
         }
+    }
+
+    public function getProprietaire(Tableau $tableau) : Utilisateur
+    {
+        $query = "SELECT u.login,nom,prenom,email,mdphache
+        FROM {$this->getNomTable()} t
+        JOIN utilisateur u ON t.login=u.login
+        WHERE t.{$this->getNomCle()}=:idtableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idtableau" => $tableau->getIdTableau()]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        return Utilisateur::construireDepuisTableau($objetFormatTableau);
+    }
+
+    public function getAllFromTableau(int $idTableau): array
+    {
+        $query = "SELECT * FROM {$this->getNomTable()} ta
+        JOIN utilisateur u ON ta.login=u.login
+        WHERE idcarte=:idTableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idTableau" => $idTableau]);
+        $obj = [];
+        foreach($pdoStatement as $objetFormatTableau) {
+            $obj[] = $objetFormatTableau;
+        }
+        return $obj;
     }
 
 }

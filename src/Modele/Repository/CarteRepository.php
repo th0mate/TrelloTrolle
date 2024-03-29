@@ -8,7 +8,7 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use Exception;
 
-class CarteRepository extends AbstractRepository
+class CarteRepository extends AbstractRepository implements CarteRepositoryInterface
 {
 
     protected function getNomTable(): string
@@ -28,7 +28,7 @@ class CarteRepository extends AbstractRepository
         ];
     }
 
-    protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
+    protected function construireDepuisTableau(array $objetFormatTableau): Carte
     {
         return Carte::construireDepuisTableau($objetFormatTableau);
     }
@@ -38,7 +38,17 @@ class CarteRepository extends AbstractRepository
     }
 
     public function recupererCartesTableau(int $idTableau): array {
-        return $this->recupererPlusieursPar("idtableau", $idTableau);
+        $sql = "SELECT c.idcarte, titrecarte, descriptifcarte, couleurcarte, c.idcolonne
+        FROM {$this->getNomTable()} c 
+        JOIN colonne co ON c.idcolonne=co.idcolonne
+        WHERE co.idtableau=:idTableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
+        $pdoStatement->execute(["idTableau" => $idTableau]);
+        $obj = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $obj[] = $this->construireDepuisTableau($objetFormatTableau);
+        }
+        return $obj;
     }
 
     /**
@@ -70,15 +80,15 @@ class CarteRepository extends AbstractRepository
         return $this->getNextId("idcarte");
     }
 
-    public function getAffectationsCarte(Carte  $idcle): ?array
+    public function getAffectationsCarte(Carte $carte): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
         JOIN utilisateur u ON u.login=a.login 
-        WHERE a.{$this->getNomCle()} =:idcle";
+        WHERE a.{$this->getNomCle()} =:idcarte";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idcle" => $idcle->getIdCarte()]);
+        $pdoStatement->execute(["idcarte" => $carte->getIdCarte()]);
         $obj = [];
         foreach($pdoStatement as $objetFormatTableau) {
             $obj[] = Utilisateur::construireDepuisTableau($objetFormatTableau);
@@ -86,12 +96,27 @@ class CarteRepository extends AbstractRepository
         return $obj;
     }
 
-    public function setAffectationsCarte(?array $affectationsCarte, Carte $instance): void
+    public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void
     {
+        $query = "DELETE FROM affectationcarte WHERE idcarte=:idcarte";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idcarte" => $carte->getIdCarte()]);
         foreach($affectationsCarte as $affectationCarte) {
             $query = "INSERT INTO affectationcarte VALUES (:idcarte, :login)";
             $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-            $pdoStatement->execute(["idcarte" => $instance->getIdCarte(), "login" => $affectationCarte->getLogin()]);
+            $pdoStatement->execute(["idcarte" => $carte->getIdCarte(), "login" => $affectationCarte->getLogin()]);
         }
+    }
+
+    public function getAllFromCartes(int $idCarte): Carte
+    {
+        $query = "SELECT * FROM {$this->getNomTable()} ca 
+        JOIN colonne co ON ca.idcolonne=co.idcolonne
+        JOIN tableau ta ON co.idtableau=ta.idtableau
+        JOIN utilisateur u ON ta.login=u.login
+        WHERE idcarte=:idcarte";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idcarte" => $idCarte]);
+        return $this->construireDepuisTableau($pdoStatement->fetch());
     }
 }

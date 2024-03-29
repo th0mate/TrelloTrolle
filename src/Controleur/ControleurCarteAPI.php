@@ -54,8 +54,8 @@ class ControleurCarteAPI
     #[Route("/api/carte/supprimer", name: "supprimerCarteAPI", methods: "DELETE")]
     public function supprimerCarte(Request $request): Response
     {
-        $jsondecode=json_decode($request->getContent());
-        $idCarte=$jsondecode->idCarte;
+        $jsondecode = json_decode($request->getContent());
+        $idCarte = $jsondecode->idCarte;
         try {
             $this->serviceConnexion->pasConnecter();
             $carte = $this->serviceCarte->recupererCarte($idCarte);
@@ -74,11 +74,11 @@ class ControleurCarteAPI
      *
      * fonction qui permet de modifier une carte avec l'API
      */
-    #[Route("api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
+    #[Route("/api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
     public function modifierCarte(Request $request): Response
     {
-        $jsondecode=json_decode($request->getContent());
-        $idCarte=$jsondecode->idCarte ??null;
+        $jsondecode = json_decode($request->getContent());
+        $idCarte = $jsondecode->idCarte ?? null;
         $idColonne = $jdondecode->idColonne ?? null;
         $attributs = [
             "titreCarte" => $jdondecode->titreCarte ?? null,
@@ -110,15 +110,15 @@ class ControleurCarteAPI
     public function creerCarte(Request $request): Response
     {
 
-        $corps=$request->getContent();
+        $corps = $request->getContent();
         try {
             $jsondecode = json_decode($corps);
             $idColonne = $jsondecode->idColonne ?? null;
             $attributs = [
-                "titreCarte" =>  $jsondecode->titreCarte ?? null,
-                "descriptifCarte" =>  $jsondecode->descriptifCarte ?? null,
-                "couleurCarte" =>  $jsondecode->couleurCarte ?? null,
-                "affectationsCarte" =>  $jsondecode->affectationsCarte ?? null,
+                "titreCarte" => $jsondecode->titreCarte ?? null,
+                "descriptifCarte" => $jsondecode->descriptifCarte ?? null,
+                "couleurCarte" => $jsondecode->couleurCarte ?? null,
+                "affectationsCarte" => $jsondecode->affectationsCarte ?? null,
             ];
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
@@ -139,11 +139,29 @@ class ControleurCarteAPI
      *
      * fonction qui permet de recuperer l'ID d'une carte avec l'API
      */
-    #[Route("/api/carte/nextid",name: "getNextIdCarteAPI",methods: "POST")]
-    public function getNextIdCarte():Response
+    #[Route("/api/carte/nextid", name: "getNextIdCarteAPI", methods: "POST")]
+    public function getNextIdCarte(): Response
+   {
+        $idCarte = $this->serviceCarte->getNextIdCarte();
+        return new JsonResponse(["idCarte" => $idCarte], 200);
+    }
+
+    #[Route("/api/carte/deplacer",name: "deplacerCarteAPI",methods: "PATCH")]
+    public function deplacerCarte(Request $request): Response
     {
-        $idCarte=$this->serviceCarte->getNextIdCarte();
-        return new JsonResponse(["idCarte"=>$idCarte],200);
+        $jsondecode=json_decode($request->getContent());
+        $idCarte=$jsondecode->idCarte ??null;
+        $idColonne=$jsondecode->idColonne ??null;
+        try{
+            $this->serviceConnexion->pasConnecter();
+            $colonne=$this->serviceColonne->recupererColonne($idColonne);
+            $carte=$this->serviceCarte->recupererCarte($idCarte);
+            $carte->setColonne($colonne);
+            $this->serviceCarte->deplacerCarte($carte,$colonne);
+            return new JsonResponse('',200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
     }
 
 }

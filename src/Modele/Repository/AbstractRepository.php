@@ -5,10 +5,10 @@ namespace App\Trellotrolle\Modele\Repository;
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use PDOException;
 
-abstract class AbstractRepository
+abstract class AbstractRepository implements AbstractRepositoryInterface
 {
     
-    public function __construct(protected ConnexionBaseDeDonnees $connexionBaseDeDonnees)
+    public function __construct(protected ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees)
     {
     }
 

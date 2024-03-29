@@ -10,13 +10,19 @@ use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+
+use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -26,25 +32,24 @@ use Symfony\Component\HttpFoundation\Response;
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
 
-    public function __construct(private UtilisateurRepository $utilisateurRepository,
-                                private TableauRepository     $tableauRepository,
-                                private CarteRepository       $carteRepository)
+    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
+                                private TableauRepositoryInterface     $tableauRepository,
+                                private CarteRepositoryInterface       $carteRepository)
     {
     }
 
     /**
      * @throws TableauException
      */
-    public function estParticipant($tableau)
+    public function estParticipant(Tableau $tableau): void
     {
 
-        //TODO fonctions et appels à revoir car message de messageFlash différents
-        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
+        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
 
-    public function recupererUtilisateurParCle($login): \App\Trellotrolle\Modele\DataObject\AbstractDataObject
+    public function recupererUtilisateurParCle($login):AbstractDataObject|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }
@@ -52,9 +57,9 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estProprietaire(Tableau $tableau, $login)
+    public function estProprietaire(Tableau $tableau, $login): void
     {
-        if (!$this->tableauRepository->estProprietaire($login)) {
+        if (!$this->tableauRepository->estProprietaire($login, $tableau)) {
             throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
@@ -62,7 +67,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function isNotNullLogin($login, $tableau, $action)
+    public function isNotNullLogin($login, Tableau $tableau, $action): void
     {
         if (is_null($login)) {
             throw new TableauException("Login du membre à " . $action . " manquant", $tableau,404);
@@ -72,7 +77,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function utilisateurExistant($login, $tableau)
+    public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject
     {
         $utilisateur = $this->recupererUtilisateurParCle($login);
         if (!$utilisateur) {
@@ -84,17 +89,20 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login)
+    public function ajouterMembre(Tableau $tableau, mixed $login): void
     {
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "ajouter");
-        $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estParticipantOuProprietaire($login)) {
-            throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+        $utilisateurs=[];
+        foreach ($login as $user) {
+            $utilisateur = $this->utilisateurExistant($user, $tableau);
+            if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau)) {
+                throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+            }
+            $utilisateurs[]=$utilisateur;
         }
-
         $participants = $this->tableauRepository->getParticipants($tableau);
-        $participants[] = $utilisateur;
+        $participants=array_merge($participants,$utilisateurs);
         $this->tableauRepository->setParticipants($participants, $tableau);
         $this->tableauRepository->mettreAJour($tableau);
 
@@ -103,15 +111,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login)
+    public function supprimerMembre(Tableau $tableau, $login): AbstractDataObject
     {
         $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estProprietaire($login)) {
+        if ($this->tableauRepository->estProprietaire($login, $tableau)) {
             throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,Response::HTTP_UNAUTHORIZED);
         }
-        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin())) {
+        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
             throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
@@ -125,7 +133,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws ServiceException
      */
-    public function recupererCompte($mail)
+    public function recupererCompte($mail): array
     {
         if (is_null($mail)) {
             throw new ServiceException("Adresse email manquante",404);
@@ -140,12 +148,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function verificationsMembre(Tableau $tableau, $login)
+    public function verificationsMembre(Tableau $tableau, $login): array
     {
         $this->estProprietaire($tableau, $login);
         $utilisateurs = $this->utilisateurRepository->recupererUtilisateursOrderedPrenomNom();
         $filtredUtilisateurs = array_filter($utilisateurs, function ($u) use ($tableau) {
-            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin());
+            return !$this->tableauRepository->estParticipantOuProprietaire($u->getLogin(), $tableau);
         });
 
         if (empty($filtredUtilisateurs)) {
@@ -158,7 +166,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws MiseAJourException
      */
-    public function mettreAJourUtilisateur($attributs)
+    public function mettreAJourUtilisateur($attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
@@ -166,7 +174,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             }
         }
         $login = $attributs['login'];
-        var_dump($login);
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
 
         if (!$utilisateur) {
@@ -177,7 +184,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new MiseAJourException("Email non valide", "warning",404);
         }
 
-        var_dump($attributs["mdpAncien"]);
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
             throw new MiseAJourException("Ancien mot de passe erroné.", "warning",Response::HTTP_CONFLICT);
         }
@@ -222,7 +228,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws ServiceException
      */
-    public function supprimerUtilisateur($login)
+    public function supprimerUtilisateur($login): void
     {
         if (is_null("login")) {
             throw new ServiceException("Login manquant",404);
@@ -256,7 +262,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      * @throws ServiceException
      * @throws \Exception
      */
-    public function creerUtilisateur($attributs)
+    public function creerUtilisateur($attributs): void
     {
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
@@ -304,5 +310,16 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new ServiceException("La recherche est nulle", 404);
         }
         return $this->utilisateurRepository->recherche($recherche);
+    }
+
+    public function getParticipants(Tableau $tableau): ?array
+    {
+        return $this->tableauRepository->getParticipants($tableau);
+    }
+
+    //retourne le propriétaire du tableau
+    public function getProprietaireTableau(Tableau $tableau): Utilisateur
+    {
+        return $this->tableauRepository->getProprietaire($tableau);
     }
 }
