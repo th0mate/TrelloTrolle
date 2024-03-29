@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
@@ -14,7 +15,7 @@ interface ServiceUtilisateurInterface
      */
     public function estParticipant($tableau);
 
-    public function recupererUtilisateurParCle($login): \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
+    public function recupererUtilisateurParCle($login): ?AbstractDataObject;
 
     /**
      * @throws TableauException
