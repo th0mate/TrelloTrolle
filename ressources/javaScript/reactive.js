@@ -177,10 +177,12 @@ function startReactiveDom(subDom = document) {
         rel.removeAttribute('data-onEnter');
     }
 
-    //data-onload - lance sa fonction dès qu'il apparait dans la page
+
     for (let rel of document.querySelectorAll("[data-onload]")) {
         const [obj, fun, arg] = rel.dataset.onload.split(/[.()]+/);
-        objectByName.get(obj)[fun](arg);
+        if (objectByName.get(obj) !== undefined) {
+            objectByName.get(obj)[fun](arg);
+        }
     }
 }
 
