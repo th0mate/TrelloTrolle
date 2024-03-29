@@ -10,10 +10,12 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
+use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use PHPUnit\Framework\TestCase;
+use function PHPUnit\Framework\assertEquals;
 
 class ServiceUtilisateurTest extends TestCase
 {
@@ -37,6 +39,7 @@ class ServiceUtilisateurTest extends TestCase
 
     /** RECUPER COMPTE */
 
+
     /** IS NOT NULL LOGIN */
 
     public function testIsNullLogin()
@@ -57,6 +60,37 @@ class ServiceUtilisateurTest extends TestCase
 
     /** AJOUTER MEMBRE */
 
+    public function testAjouterMembre()
+    {
+        $this->expectException(TableauException::class);
+        $this->expectExceptionCode(409);
+        $this->expectExceptionMessage("Ce membre est déjà membre du tableau");
+        $fakesUsers=["1","2"];
+        $fakeUser=$this->createFakeUser();
+        $fakeTableau=$this->createFakeTableau();
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->serviceUtilisateur->ajouterMembre($fakeTableau,$fakesUsers,"loginConnecte");
+    }
+
+    public function testAjouterMembreValide()
+    {
+        $fakesUsers=["1","2"];
+        $fakeUser1=$this->createFakeUser();
+        $fakeUser2=$this->createFakeUser();
+        $fakesUtilisateurs=[$fakeUser1,$fakeUser2];
+        $fakeTableau=$this->createFakeTableau();
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(false);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser1);
+        $this->tableauRepository->method("getParticipants")->willReturn([]);
+        $this->tableauRepository->method("setParticipants")->willReturnCallback(function ($participants) use ($fakesUtilisateurs){
+            self::assertEquals($fakesUtilisateurs,$participants);
+        });
+        $this->serviceUtilisateur->ajouterMembre($fakeTableau,$fakesUsers,"loginConnecte");
+    }
+
     /** VERIFICATIONS MEMBRE */
 
     /** UTILISATEUR EXISTANT*/
@@ -73,9 +107,10 @@ class ServiceUtilisateurTest extends TestCase
 
     public function testUtilisateurExistantValide()
     {
+        $this->expectNotToPerformAssertions();
         $fakeUser=$this->createFakeUser();
         $fakeTableau=$this->createFakeTableau($fakeUser);
-        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
         $this->serviceUtilisateur->utilisateurExistant("test",$fakeTableau);
     }
 
@@ -83,15 +118,24 @@ class ServiceUtilisateurTest extends TestCase
     //TODO utilise connexionUtilisateur
     public function testEstPasParticipant()
     {
-
+        $this->expectException(TableauException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("Vous n'avez pas de droits d'éditions sur ce tableau");
+        $tableau=$this->createFakeTableau();
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(false);
+        $this->serviceUtilisateur->estParticipant($tableau,"NULL");
     }
 
-    public function testEstParticipantValide()
-    {
-
+    public function testEstParticipantValide(){
+        $this->expectNotToPerformAssertions();
+        $tableau=$this->createFakeTableau();
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
+        $this->serviceUtilisateur->estParticipant($tableau,"test");
     }
 
     /** CREER UTILISATEUR */
+
+    public fu,
 
     /** SUPPRIMER UTILISATEUR */
 
@@ -134,6 +178,42 @@ class ServiceUtilisateurTest extends TestCase
         self::assertEquals(null, $utilisateur);
     }
 
+    /** RECHERCHE */
+
+    public function testRechercheUtilisateurNull()
+    {
+        $this->expectExceptionMessage("La recherche est nulle");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->serviceUtilisateur->rechercheUtilisateur(null);
+    }
+
+    public function testRechercheUtilisateurValide()
+    {
+        $this->expectNotToPerformAssertions();
+        $fakesUser=[$this->createFakeUser(),$this->createFakeUser()];
+        $this->utilisateurRepository->method("recherche")->willReturn($fakesUser);
+        $this->serviceUtilisateur->rechercheUtilisateur("test");
+    }
+
+    /** GET PARTICIPANTS */
+    public function testGetParticipants()
+    {
+        $fakeUser1=$this->createFakeUser();
+        $fakeTableau=$this->createFakeTableau($fakeUser1);
+        $fakeUsers=[$this->createFakeUser(),$this->createFakeUser()];
+        $this->tableauRepository->method("getParticipants")->willReturn($fakeUsers);
+        assertEquals($fakeUsers,$this->serviceUtilisateur->getParticipants($fakeTableau));
+    }
+    /** GET PROPRIETAIRE TABLEAU */
+
+    public function testGetProprietaireTableau()
+    {
+        $fakeUser=$this->createFakeUser();
+        $fakeTableau=$this->createFakeTableau($fakeUser);
+        $this->tableauRepository->method("getProprietaire")->willReturn($fakeUser);
+        self::assertEquals($fakeUser,$this->serviceUtilisateur->getProprietaireTableau($fakeTableau));
+    }
 
     /** FONCTIONS UTILITAIRES */
 
@@ -142,11 +222,11 @@ class ServiceUtilisateurTest extends TestCase
         return new Utilisateur($login, 'test', "test", 'test@t.t', "test");
     }
 
-    public function createFakeTableau($idTableau = 1, $utilisateur = null): Tableau
+    public function createFakeTableau($utilisateur = null,$idTableau=1): Tableau
     {
         if (is_null($utilisateur)) {
             $utilisateur = $this->createFakeUser();
         }
-        return new Tableau($idTableau, "code" . $idTableau, "titre", $utilisateur);
+        return new Tableau($idTableau, "code", "titre", $utilisateur);
     }
 }
