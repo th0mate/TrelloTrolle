@@ -45,6 +45,80 @@ let utilisateurs = reactive({
             let proprio = await proprioTableau.json();
             const tousMembres = membres.concat(proprio);
 
+            let colonnes = document.querySelectorAll('.draggable');
+            const listeAffectationsColonnes = [];
+
+            for (let colonne of colonnes) {
+                let nbCartes = await fetch(apiBase + '/utilisateur/affectations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        idColonne: colonne.getAttribute('data-columns')
+                    })
+                });
+
+                if (nbCartes.status !== 200) {
+                    console.error(nbCartes.json());
+                } else {
+                    /**
+                     * Retourne
+                     * "loginUtilisateur": {
+                     *         "colonnes": {
+                     *             "idColonne": [
+                     *                 "titreColonne",
+                     *                 nbCartes
+                     *             ]
+                     *         }
+                     *     },
+                     */
+                    let nbCartesJson = await nbCartes.json();
+
+                    //console.log(JSON.stringify(nbCartesJson, null, 2));
+                    listeAffectationsColonnes.push(nbCartesJson);
+                }
+            }
+            /**
+             * Contenu de listeAffectationsColonnes :
+             * [
+             *   {
+             *     "Bouah": {
+             *       "colonnes": {
+             *         "47": [
+             *           "iuefhlsd",
+             *           1
+             *         ]
+             *       }
+             *     },
+             *     "touzer": {
+             *       "colonnes": {
+             *         "47": [
+             *           "iuefhlsd",
+             *           1
+             *         ]
+             *       }
+             *     },
+             *     "ffb": {
+             *       "colonnes": {
+             *         "47": [
+             *           "iuefhlsd",
+             *           1
+             *         ]
+             *       }
+             *     }
+             *   },
+             *   {
+             *     "Bouah": {
+             *       "colonnes": {
+             *         "49": [
+             *           "tests",
+             *           1
+             *         ]
+             *       }
+             *     }...
+             */
 
             for (let membre of tousMembres) {
                 let utilisateur = Object.create(this);
@@ -54,41 +128,19 @@ let utilisateurs = reactive({
                 utilisateur.colonnes = [];
                 utilisateur.drapeau = false;
 
-                console.log(utilisateur);
-
-                let colonnes = document.querySelectorAll('.draggable');
-
-                for (let colonne of colonnes) {
-                    let nbCartes = await fetch(apiBase + '/utilisateur/affectations', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            idColonne: colonne.getAttribute('data-colonne')
-                        })
-                    });
-
-                    if (nbCartes.status !== 200) {
-                        console.error(nbCartes.json());
-                    } else {
-                        /**
-                         * Retourne
-                         * "loginUtilisateur": {
-                         *         "colonnes": {
-                         *             "idColonne": [
-                         *                 "titreColonne",
-                         *                 nbCartes
-                         *             ]
-                         *         }
-                         *     },
-                         */
-                        let nbCartesJson = await nbCartes.json();
-
-                        console.log(JSON.stringify(nbCartesJson, null, 2));
+                for (let affectation of listeAffectationsColonnes) {
+                    if (affectation[membre.login] !== undefined) {
+                        for (let [idColonne, [titreColonne, nbCartes]] of Object.entries(affectation[membre.login].colonnes)) {
+                            utilisateur.colonnes.push({
+                                idColonne: idColonne,
+                                titreColonne: titreColonne,
+                                nbCartes: nbCartes
+                            });
+                        }
                     }
                 }
+
+                console.log(utilisateur);
 
             }
 

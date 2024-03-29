@@ -34,7 +34,7 @@ class ControleurUtilisateurAPI
         }
     }
 
-    #[Route('/api/utilisateur/affectations',name: "affectationsColonnesAPI",methods: "GET")]
+    #[Route('/api/utilisateur/affectations',name: "affectationsColonnesAPI",methods: "POST")]
     public function getAffectationsColonnes(Request $request):Response
     {
         $jsondecode=json_decode($request->getContent());
