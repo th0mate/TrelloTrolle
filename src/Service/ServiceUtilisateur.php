@@ -327,16 +327,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $cartes = $this->carteRepository->recupererCartesColonne($colonne->getIdColonne());
         foreach ($cartes as $carte) {
             foreach ($this->carteRepository->getAffectationsCarte($carte) as $utilisateur) {
-                if ($utilisateur->getLogin == $login) {
                     if (!isset($participants[$utilisateur->getLogin()])) {
-                        $participants[$utilisateur->getLogin()] = ["infos" => $utilisateur, "colonnes" => []];
+                        $participants[$utilisateur->getLogin()] = ["colonnes" => []];
                     }
                     if (!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
                         $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()] = [$colonne->getTitreColonne(), 0];
                     }
                     $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()][1]++;
                 }
-            }
         }
         return $participants;
     }

@@ -106,5 +106,4 @@ services:
     arguments: ['@service_connexion','@service_tableau','@service_utilisateur','@service_carte']
   controleur_utilisateur_api:
     class: App\Trellotrolle\Controleur\ControleurUtilisateurAPI
-    autowire: true
-    public: true
+    arguments: ['@service_utilisateur','@service_colonne']
