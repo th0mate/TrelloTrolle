@@ -104,6 +104,41 @@ class ServiceTableauTest extends TestCase
 
     /** quitterTableau */
 
+    //TODO finir testQuitterTableau après merge car appel BD manquant par rapport à la version avec appels repository
+    public function testQuitterTableauEstProprietaire()
+    {
+        $this->expectException(ServiceException::class);
+        $this->expectExceptionMessage("Vous ne pouvez pas quitter ce tableau");
+        $this->expectExceptionCode(403);
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $tableau=new Tableau(1,"code","titre",$utilisateur);
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->serviceTableau->quitterTableau($tableau,$utilisateur);
+    }
+
+    public function testQuitterTableauEstPasParticipant()
+    {
+        $this->expectException(ServiceException::class);
+        $this->expectExceptionMessage("Vous n'appartenez pas à ce tableau");
+        $this->expectExceptionCode(403);
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $tableau=new Tableau(1,"code","titre",$utilisateur);
+        $this->tableauRepository->method("estProprietaire")->willReturn(false);
+        $this->tableauRepository->method("estParticipant")->willReturn(false);
+        $this->serviceTableau->quitterTableau($tableau,$utilisateur);
+    }
+
+    public function testQuitterTableauValide()
+    {
+
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $tableau=new Tableau(1,"code","titre",$utilisateur);
+        $this->tableauRepository->method("estProprietaire")->willReturn(false);
+        $this->tableauRepository->method("estParticipant")->willReturn(true);
+        //TODO besoin de
+        $this->serviceTableau->quitterTableau($tableau,$utilisateur);
+    }
+
     /** recupererCartesColonne */
 
     public function testRecupererCartesColonnes()

@@ -40,14 +40,14 @@ class ServiceTableau implements ServiceTableauInterface
     public function recupererTableauParId($idTableau): Tableau
     {
         if (is_null($idTableau)) {
-            throw new ServiceException("Identifiant du tableau manquant",404);
+            throw new ServiceException("Identifiant du tableau manquant", 404);
         }
         /**
          * @var Tableau $tableau
          */
         $tableau = $this->tableauRepository->recupererParClePrimaire($idTableau);
         if (!$tableau) {
-            throw new ServiceException("Tableau inexistant",404);
+            throw new ServiceException("Tableau inexistant", 404);
         }
         return $tableau;
     }
@@ -58,14 +58,14 @@ class ServiceTableau implements ServiceTableauInterface
     public function recupererTableauParCode($codeTableau): Tableau
     {
         if (is_null($codeTableau)) {
-            throw new ServiceException("Code de tableau manquant",404);
+            throw new ServiceException("Code de tableau manquant", 404);
         }
         /**
          * @var Tableau $tableau
          */
         $tableau = $this->tableauRepository->recupererParCodeTableau($codeTableau);
         if (!$tableau) {
-            throw new ServiceException("Tableau inexistant",404);
+            throw new ServiceException("Tableau inexistant", 404);
         }
         return $tableau;
 
@@ -112,7 +112,7 @@ class ServiceTableau implements ServiceTableauInterface
     public function isNotNullNomTableau($nomTableau, $tableau)
     {
         if (is_null($nomTableau)) {
-            throw new TableauException("Nom de tableau manquant", $tableau,404);
+            throw new TableauException("Nom de tableau manquant", $tableau, 404);
         }
     }
 
@@ -132,10 +132,10 @@ class ServiceTableau implements ServiceTableauInterface
     public function quitterTableau($tableau, $utilisateur)
     {
         if ($tableau->estProprietaire($utilisateur->getLogin())) {
-            throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
+            throw new ServiceException("Vous ne pouvez pas quitter ce tableau", Response::HTTP_FORBIDDEN);
         }
-        if (!$tableau->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte())) {
-            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_UNAUTHORIZED);
+        if (!$tableau->estParticipant($utilisateur->getLogin())) {
+            throw new ServiceException("Vous n'appartenez pas à ce tableau", Response::HTTP_FORBIDDEN);
         }
         $participants = array_filter($tableau->getParticipants(), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
@@ -156,11 +156,11 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau,$login)
+    public function creerTableau($nomTableau, $login)
     {
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
         if (is_null($nomTableau)) {
-            throw new ServiceException("Nom de tableau manquant",404);
+            throw new ServiceException("Nom de tableau manquant", 404);
         }
         $idTableau = $this->tableauRepository->getNextIdTableau();
         $codeTableau = hash("sha256", $utilisateur->getLogin() . $idTableau);
