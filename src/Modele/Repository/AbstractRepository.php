@@ -17,6 +17,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     protected abstract function getNomsColonnes(): array;
     protected abstract function construireDepuisTableau(array $objetFormatTableau) : AbstractDataObject;
 
+
     protected function formatNomsColonnes() : string {
         return join(",",$this->getNomsColonnes());
     }
@@ -27,8 +28,8 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     public function recuperer(): array
     {
         $nomTable = $this->getNomTable();
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query("SELECT DISTINCT {$this->formatNomsColonnes()} FROM $nomTable");
-
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query("SELECT DISTINCT {$this->formatNomsColonnes()} 
+        FROM $nomTable");
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
             $objets[] = $this->construireDepuisTableau($objetFormatTableau);

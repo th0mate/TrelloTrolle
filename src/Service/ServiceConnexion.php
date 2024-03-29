@@ -74,7 +74,5 @@ class ServiceConnexion implements ServiceConnexionInterface
         }
 
         ConnexionUtilisateur::connecter($utilisateur->getLogin());
-        Cookie::enregistrer("login", $login);
-        Cookie::enregistrer("mdp", $mdp);
     }
 }

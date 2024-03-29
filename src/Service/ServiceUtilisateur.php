@@ -220,7 +220,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
         */
 
-        Cookie::enregistrer("mdp", $attributs["mdp"]);
+
     }
 
     /**
@@ -249,8 +249,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $this->tableauRepository->setParticipants($participants, $tableau);
         }
         $this->utilisateurRepository->supprimer($login);
-        Cookie::supprimer("login");
-        Cookie::supprimer("mdp");
         ConnexionUtilisateur::deconnecter();
     }
 
@@ -289,10 +287,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $mdpHache,
         );
         $succesSauvegarde=$this->utilisateurRepository->ajouter($utilisateur);
-        if ($succesSauvegarde) {
-            Cookie::enregistrer("login", $attributs["login"]);
-            Cookie::enregistrer("mdp", $attributs["mdp"]);
-        } else {
+        if (!$succesSauvegarde) {
             throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.",Response::HTTP_BAD_REQUEST);
         }
     }
