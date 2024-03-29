@@ -29,7 +29,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         ];
     }
 
-    protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
+    protected function construireDepuisTableau(array $objetFormatTableau): Colonne
     {
         return Colonne::construireDepuisTableau($objetFormatTableau);
     }
@@ -57,19 +57,15 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         $pdoStatement->execute(["idColonne1" => $idColonne1, "idColonne2" => $idColonne2]);
     }
 
-    public function getAllFromColonne(int $idColonne): array
+    public function getAllFromColonne(int $idColonne): Colonne
     {
         $query = "SELECT * FROM {$this->getNomTable()} co
         JOIN tableau ta ON co.idtableau=ta.idtableau
         JOIN utilisateur u ON ta.login=u.login
-        WHERE idcarte=:idColonne";
+        WHERE idcolonne=:idColonne";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idColonne" => $idColonne]);
-        $obj = [];
-        foreach($pdoStatement as $objetFormatTableau) {
-            $obj[] = $objetFormatTableau;
-        }
-        return $obj;
+        return $this->construireDepuisTableau($pdoStatement->fetch());
     }
 
 

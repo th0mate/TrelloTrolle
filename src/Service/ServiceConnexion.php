@@ -38,7 +38,7 @@ class ServiceConnexion implements ServiceConnexionInterface
     public function dejaConnecter()
     {
         if (ConnexionUtilisateur::estConnecte()) {
-            throw new ConnexionException("Vous êtes déjà connecter",Response::HTTP_FORBIDDEN);
+            throw new ConnexionException("Vous êtes déjà connecté",Response::HTTP_FORBIDDEN);
         }
     }
 

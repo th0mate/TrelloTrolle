@@ -2,6 +2,8 @@
 
 namespace App\Trellotrolle\Modele\Repository;
 
+use App\Trellotrolle\Modele\DataObject\Colonne;
+
 interface ColonneRepositoryInterface
 {
     public function recupererColonnesTableau(int $idTableau): array;
@@ -12,5 +14,5 @@ interface ColonneRepositoryInterface
 
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void;
 
-    public function getAllFromColonne(int $idColonne): array;
+    public function getAllFromColonne(int $idColonne): Colonne;
 }

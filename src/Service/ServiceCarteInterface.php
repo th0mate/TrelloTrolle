@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -76,7 +77,7 @@ interface ServiceCarteInterface
      * @param $utilisateur
      * @return mixed
      */
-    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void;
+    public function miseAJourCarteMembre(Tableau $tableau, AbstractDataObject $utilisateur): void;
 
     /**
      * @return mixed

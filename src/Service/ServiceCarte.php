@@ -6,6 +6,7 @@ use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -163,7 +164,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void
+    public function miseAJourCarteMembre(Tableau $tableau, AbstractDataObject $utilisateur): void
     {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {

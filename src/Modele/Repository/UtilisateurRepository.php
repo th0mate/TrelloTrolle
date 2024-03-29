@@ -40,7 +40,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
         return $this->recupererOrdonne(["prenom", "nom"]);
     }
 
-    public function recherche($recherche)
+    public function recherche($recherche): array
     {
         $recherche = strtolower($recherche) . "%";
         $sql = "SELECT {$this->formatNomsColonnes()} FROM {$this->getNomTable()} WHERE LOWER(login) LIKE :tagLogin OR LOWER(nom) LIKE :tagNom OR LOWER(prenom) LIKE :tagPrenom OR LOWER(email) LIKE :tagMail";

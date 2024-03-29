@@ -238,7 +238,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
                 return $u->getLogin() !== $login;
             });
             $this->carteRepository->setAffectationsCarte($participants, $carte);
-            $this->carteRepository->mettreAJour($carte);
         }
 
         $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
@@ -248,7 +247,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
                 return $u->getLogin() !== $login;
             });
             $this->tableauRepository->setParticipants($participants, $tableau);
-            $this->tableauRepository->mettreAJour($tableau);
         }
         $this->utilisateurRepository->supprimer($login);
         Cookie::supprimer("login");

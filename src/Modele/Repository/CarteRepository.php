@@ -56,7 +56,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
      */
     public function recupererCartesUtilisateur(string $login): array
     {
-        $sql = "SELECT {$this->formatNomsColonnes()} from {$this->getNomTable()} c
+        $sql = "SELECT a.idcarte, titrecarte,descriptifcarte,couleurcarte,idcolonne
+        from {$this->getNomTable()} c
         JOIN affectationcarte a ON a.idcarte=c.idcarte
         WHERE login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
