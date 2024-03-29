@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Trellotrolle\Tests;
+namespace App\Trellotrolle\Tests\ServicesTest;
 use PHPUnit\Framework\TestCase;
+
 class ServiceCarteTest extends TestCase
 {
     /** recupererAttributs */

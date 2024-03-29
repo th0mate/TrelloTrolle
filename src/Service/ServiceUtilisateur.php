@@ -226,7 +226,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function supprimerUtilisateur($login): void
     {
-        if (is_null("login")) {
+        if (is_null($login)) {
             throw new ServiceException("Login manquant",404);
         }
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
