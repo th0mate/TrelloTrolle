@@ -19,13 +19,7 @@ let utilisateurs = reactive({
             }
 
             const div = document.querySelector('.contenuUtilisateur');
-
-            setTimeout(
-                () => div.style.display = 'flex',
-                div.style.top = `${event.clientY}px`,
-                div.style.left = `${event.clientX}px`,
-                100
-            );
+            div.setAttribute('data-htmlfun', 'utilisateur.afficherContenuUtilisateur')
 
             let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
             for (let colonne of utilisateur.colonnes) {
@@ -33,12 +27,21 @@ let utilisateurs = reactive({
             }
             html += '</ul>';
 
-            this.afficherElements(html);
+            //this.afficherElements(html);
+
+            startReactiveDom();
+
+
+            div.style.display = 'flex';
+            div.style.top = `${event.clientY}px`;
+            div.style.left = `${event.clientX}px`;
+
+            console.log(html);
+            return html;
         }
     },
 
-    afficherElements : function(html = null) {
-        console.log("aa");
+    afficherElements: function (html) {
         if (html) {
             return html;
         }
