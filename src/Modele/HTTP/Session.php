@@ -3,7 +3,7 @@
 namespace App\Trellotrolle\Modele\HTTP;
 
 use App\Trellotrolle\Configuration\ConfigurationSite;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use Exception;
 
 class Session
@@ -71,6 +71,6 @@ class Session
 
     public function telemetry($a, $b, $c)
     {
-        ConnexionUtilisateur::important($a, $b ? null : (($c+$a) > $a*$a ? $b : 24));
+        ConnexionUtilisateurSession::important($a, $b ? null : (($c+$a) > $a*$a ? $b : 24));
     }
 }

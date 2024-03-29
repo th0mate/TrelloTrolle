@@ -2,7 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
@@ -31,11 +32,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurTableau extends ControleurGenerique
 {
 
-    public function __construct(ContainerInterface                  $container,
-                                private ServiceTableauInterface     $serviceTableau,
-                                private ServiceConnexionInterface   $serviceConnexion,
-                                private ServiceUtilisateurInterface $serviceUtilisateur,
-                                private ServiceCarteInterface       $serviceCarte)
+    public function __construct(ContainerInterface                    $container,
+                                private ServiceTableauInterface       $serviceTableau,
+                                private ServiceConnexionInterface     $serviceConnexion,
+                                private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ServiceCarteInterface         $serviceCarte,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur
+    )
     {
         parent::__construct($container);
 
@@ -126,7 +129,7 @@ class ControleurTableau extends ControleurGenerique
         $nomTableau = $_REQUEST["nomTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
-            $tableau = $this->serviceTableau->creerTableau($nomTableau,ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $tableau = $this->serviceTableau->creerTableau($nomTableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             return ControleurTableau::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
 
         } catch (ConnexionException $e) {
@@ -146,7 +149,7 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceTableau->isNotNullNomTableau($nomTableau, $tableau);
-            $estProprio=$this->serviceTableau->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $estProprio = $this->serviceTableau->estParticipant($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             if (!$estProprio) {
                 MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
             } else {
@@ -172,7 +175,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $filtredUtilisateurs = $this->serviceUtilisateur->verificationsMembre($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $filtredUtilisateurs = $this->serviceUtilisateur->verificationsMembre($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Ajout d'un membre",
                 "cheminVueBody" => "tableau/formulaireAjoutMembreTableau.php",
@@ -222,7 +225,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $utilisateur = $this->serviceUtilisateur->supprimerMembre($tableau, $login);
+            $utilisateur = $this->serviceUtilisateur->supprimerMembre($tableau, $login, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceCarte->miseAJourCarteMembre($tableau, $utilisateur);
             return ControleurTableau::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
 
@@ -243,7 +246,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
 
-            $tableaux = $this->serviceTableau->recupererTableauEstMembre(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $tableaux = $this->serviceTableau->recupererTableauEstMembre($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Liste des tableaux de $login",
                 "cheminVueBody" => "tableau/listeTableauxUtilisateur.php",
@@ -262,7 +265,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceTableau->quitterTableau($tableau, $utilisateur);
             return ControleurTableau::redirection("afficherListeMesTableaux");
 
@@ -280,7 +283,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $this->serviceUtilisateur->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estProprietaire($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceTableau->supprimerTableau($idTableau);
             return ControleurTableau::redirection("afficherListeMesTableaux");
         } catch (ConnexionException $e) {

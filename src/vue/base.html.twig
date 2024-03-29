@@ -25,7 +25,7 @@
             <li>
                 <a href="{{ route('accueil') }}">Accueil</a>  <!--TODO into route-->
             </li>
-            {% if idUtilisateurConnecte is null %}
+            {% if connexionUtilisateur.loginUtilisateurConnecte is null %}
 
             <li>
                 <a href="{{route("afficherFormulaireConnexion")}}">  <!--TODO into asset-->
@@ -43,8 +43,8 @@
                 <a href="{{ route('afficherListeMesTableaux')}}">Mes tableaux</a>
             </li>
             <li>
-                <a href="{{ route('afficherDetail',{"login" : idUtilisateurConnecte}) }}">  <!--TODO into route-->
-                    Mon compte (<span>{{ idUtilisateurConnecte }}</span>) <img alt="logout" src="{{ asset("../ressources/img/user.png") }}">  <!--TODO into asset-->
+                <a href="{{ route('afficherDetail',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">  <!--TODO into route-->
+                    Mon compte (<span>{{ connexionUtilisateur.loginUtilisateurConnecte }}</span>) <img alt="logout" src="{{ asset("../ressources/img/user.png") }}">  <!--TODO into asset-->
                 </a>
             </li>
             <li>

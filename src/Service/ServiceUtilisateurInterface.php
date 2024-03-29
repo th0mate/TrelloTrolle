@@ -41,7 +41,7 @@ interface ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login): AbstractDataObject;
+    public function supprimerMembre(Tableau $tableau, $login,$loginConnecte): AbstractDataObject;
 
     /**
      * @throws ServiceException

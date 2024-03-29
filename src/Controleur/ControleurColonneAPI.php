@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -25,10 +26,12 @@ class ControleurColonneAPI
 {
 
     public function __construct(
-        private ServiceConnexionInterface   $serviceConnexion,
-        private ServiceColonneInterface     $serviceColonne,
-        private ServiceUtilisateurInterface $serviceUtilisateur,
-        private ServiceTableauInterface     $serviceTableau
+        private ServiceConnexionInterface     $serviceConnexion,
+        private ServiceColonneInterface       $serviceColonne,
+        private ServiceUtilisateurInterface   $serviceUtilisateur,
+        private ServiceTableauInterface       $serviceTableau,
+        private ConnexionUtilisateurInterface $connexionUtilisateur
+
     )
     {
     }
