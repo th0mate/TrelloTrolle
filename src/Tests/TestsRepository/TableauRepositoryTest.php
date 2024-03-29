@@ -9,6 +9,8 @@ use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonnees;
 use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonneesInterface;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Tests\ConfigurationBDDTestUnitaires;
 use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
@@ -16,6 +18,7 @@ use function PHPUnit\Framework\assertEquals;
 class TableauRepositoryTest extends TestCase
 {
     private static TableauRepositoryInterface  $tableauRepository;
+    private static UtilisateurRepositoryInterface  $utilisateurRepository;
 
     private static ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees;
 
@@ -24,6 +27,7 @@ class TableauRepositoryTest extends TestCase
         parent::setUpBeforeClass();
         self::$connexionBaseDeDonnees = new ConnexionBaseDeDonnees(new ConfigurationBDDTestUnitaires());
         self::$tableauRepository = new TableauRepository(self::$connexionBaseDeDonnees);
+        self::$utilisateurRepository = new UtilisateurRepository(self::$connexionBaseDeDonnees);
     }
 
     protected function setUp(): void
@@ -330,13 +334,41 @@ class TableauRepositoryTest extends TestCase
         $this->assertNull( self::$tableauRepository->recupererParClePrimaire(4));
     }
 
-
     /** Test ajouter */
 
-    /** Test supprimer */
+    public function testAjouter(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab4 = new Tableau(4,'test4', 'test4',$fakeUser2);
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        self::$tableauRepository->ajouter($fakeTab4);
+        $this->assertEquals([$fakeTab3, $fakeTab4], self::$tableauRepository->recupererTableauxUtilisateur('bib420'));
+    }
 
     /** Test mettre à jour */
 
+    public function testMettreAjour(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab1 = new Tableau(1, 'test1', 'test',$fakeUser2);
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        self::$tableauRepository->mettreAJour($fakeTab1);
+        $this->assertEquals([$fakeTab3, $fakeTab1], self::$tableauRepository->recupererTableauxUtilisateur('bib420'));
+        $this->assertEquals('test1', self::$tableauRepository->recupererTableauxUtilisateur('bib420')[1]->getCodeTableau());
+    }
+
+    /** Test supprimer */
+    public function testSupprimer(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+
+        self::$tableauRepository->supprimer(3);
+        $this->assertEquals([], self::$tableauRepository->recupererTableauxUtilisateur('bib420'));
+
+    }
+
     /**Test supprimer utilisateur, supprime tableau aussi*/
+
+    public function testSupprimerUtilisateurSupprimeTableau(){
+        self::$utilisateurRepository->supprimer('bib420');
+        $this->assertNull(self::$tableauRepository->recupererParClePrimaire(3));
+    }
 
 }
