@@ -7,8 +7,13 @@ use App\Trellotrolle\Modele\HTTP\Session;
 class MessageFlash
 {
 
+    /** @var string  */
     private static string $cleFlash = "_messagesFlash";
 
+    /**
+     * @param string $type
+     * @param string $message
+     */
     public static function ajouter(string $type, string $message): void
     {
         $session = Session::getInstance();
