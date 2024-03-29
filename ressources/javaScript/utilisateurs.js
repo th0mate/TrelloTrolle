@@ -27,17 +27,17 @@ let utilisateurs = reactive({
             }
             html += '</ul>';
 
-            //this.afficherElements(html);
-
-            startReactiveDom();
-
-
             div.style.display = 'flex';
             div.style.top = `${event.clientY}px`;
             div.style.left = `${event.clientX}px`;
 
             console.log(html);
+            setTimeout(() => {
+                startReactiveDom();
+            }, 100);
             return html;
+        } else {
+            return "aaa";
         }
     },
 
