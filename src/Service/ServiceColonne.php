@@ -20,11 +20,17 @@ class ServiceColonne implements ServiceColonneInterface
 {
 
 
+    /**
+     * @param ColonneRepositoryInterface $colonneRepository
+     */
     public function __construct(private ColonneRepositoryInterface $colonneRepository)
     {
     }
 
+
     /**
+     * @param $idColonne
+     * @return Colonne
      * @throws ServiceException
      */
     public function recupererColonne($idColonne): Colonne
@@ -43,13 +49,20 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * @param $idTableau
+     * @return array
+     */
     public function recupererColonnesTableau($idTableau): array
     {
         return $this->colonneRepository->recupererColonnesTableau($idTableau);
     }
 
+
     /**
-     * @throws TableauException
+     * @param Tableau $tableau
+     * @param $idColonne
+     * @return array
      */
     public function supprimerColonne(Tableau $tableau, $idColonne): array
     {
@@ -58,7 +71,10 @@ class ServiceColonne implements ServiceColonneInterface
 
     }
 
+
     /**
+     * @param $nomColonne
+     * @return void
      * @throws CreationException
      */
     public function isSetNomColonne($nomColonne): void
@@ -68,7 +84,11 @@ class ServiceColonne implements ServiceColonneInterface
         }
     }
 
+
     /**
+     * @param $idColonne
+     * @param $nomColonne
+     * @return Colonne
      * @throws CreationException
      * @throws ServiceException
      */
@@ -79,6 +99,11 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * @param Tableau $tableau
+     * @param $nomColonne
+     * @return Colonne
+     */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
         $colonne= new Colonne(
@@ -90,16 +115,29 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * @param Colonne $colonne
+     * @return Colonne
+     */
     public function miseAJourColonne(Colonne $colonne): Colonne
     {
         $this->colonneRepository->mettreAJour($colonne);
         return $colonne;
     }
+
+    /**
+     * @return int
+     */
     public function getNextIdColonne(): int
     {
         return $this->colonneRepository->getNextIdColonne();
     }
 
+    /**
+     * @param $idColonne1
+     * @param $idColonne2
+     * @return void
+     */
     public function inverserOrdreColonnes($idColonne1, $idColonne2): void
     {
         $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);

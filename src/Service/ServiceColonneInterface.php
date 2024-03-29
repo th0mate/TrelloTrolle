@@ -10,33 +10,65 @@ use App\Trellotrolle\Service\Exception\TableauException;
 
 interface ServiceColonneInterface
 {
+
     /**
-     * @throws ServiceException
+     * @param $idColonne
+     * @return Colonne
      */
     public function recupererColonne($idColonne): Colonne;
 
+    /**
+     * @param $idTableau
+     * @return array
+     */
     public function recupererColonnesTableau($idTableau): array;
 
+
     /**
-     * @throws TableauException
+     * @param Tableau $tableau
+     * @param $idColonne
+     * @return array
      */
     public function supprimerColonne(Tableau $tableau, $idColonne): array;
 
+
     /**
-     * @throws CreationException
+     * @param $nomColonne
+     * @return void
      */
     public function isSetNomColonne($nomColonne): void;
 
+
     /**
-     * @throws CreationException
-     * @throws ServiceException
+     * @param $idColonne
+     * @param $nomColonne
+     * @return Colonne
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne;
 
+    /**
+     * @param Tableau $tableau
+     * @param $nomColonne
+     * @return Colonne
+     */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne;
 
+    /**
+     * @param Colonne $colonne
+     * @return Colonne
+     */
     public function miseAJourColonne(Colonne $colonne): Colonne;
+
+    /**
+     * @return int
+     */
     public function getNextIdColonne(): int;
+
+    /**
+     * @param $idColonne1
+     * @param $idColonne2
+     * @return void
+     */
     public function inverserOrdreColonnes($idColonne1, $idColonne2): void;
 
 }

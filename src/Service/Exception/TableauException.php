@@ -6,13 +6,22 @@ use Exception;
 
 class TableauException extends ServiceException
 {
+    /**
+     * @var Tableau
+     */
     private Tableau $tableau;
 
-    public function __construct($message,$tableau,$code)
+    /**
+     * @param $message
+     * @param $tableau
+     * @param $code
+     */
+    public function __construct($message, $tableau, $code)
     {
         parent::__construct($message,$code);
         $this->tableau=$tableau;
     }
+
 
     /**
      * @return Tableau

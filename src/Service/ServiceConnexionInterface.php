@@ -7,9 +7,7 @@ use App\Trellotrolle\Service\Exception\ServiceException;
 
 interface ServiceConnexionInterface
 {
-    /**
-     * @throws ConnexionException
-     */
+
     public function pasConnecter();
 
     /**
@@ -22,7 +20,11 @@ interface ServiceConnexionInterface
      */
     public function deconnecter();
 
+
     /**
+     * @param $login
+     * @param $mdp
+     * @return mixed
      * @throws ServiceException
      */
     public function connecter($login, $mdp);

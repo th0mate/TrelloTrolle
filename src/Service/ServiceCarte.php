@@ -23,6 +23,11 @@ class ServiceCarte implements ServiceCarteInterface
 {
 
 
+    /**
+     * @param CarteRepository $carteRepository
+     * @param UtilisateurRepository $utilisateurRepository
+     * @param TableauRepository $tableauRepository
+     */
     public function __construct(private CarteRepository       $carteRepository,
                                 private UtilisateurRepository $utilisateurRepository,
                                 private TableauRepository     $tableauRepository)
@@ -30,6 +35,11 @@ class ServiceCarte implements ServiceCarteInterface
     }
 
 
+    /**
+     * @param int|null $idCarte
+     * @return Carte
+     * @throws ServiceException
+     */
     public function recupererCarte(?int $idCarte): Carte
     {
         //TODO différencier warning de danger pour message flash:
@@ -50,8 +60,11 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
     /**
-     * @throws TableauException
+     * @param Tableau $tableau
+     * @param $idCarte
+     * @return array
      */
     public function supprimerCarte(Tableau $tableau, $idCarte): array
     {
@@ -59,7 +72,12 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $attributs
+     * @param Colonne $colonne
+     * @return Carte
      * @throws CreationException
      */
     public function creerCarte(Tableau $tableau, $attributs, Colonne $colonne): Carte
@@ -85,6 +103,11 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne, $attributs);
     }
 
+    /**
+     * @param Colonne $colonne
+     * @param $attributs
+     * @return Carte
+     */
     public function newCarte(Colonne $colonne, $attributs): Carte
     {
         $carte = new Carte(
@@ -99,6 +122,12 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
+    /**
+     * @param array $attributs
+     * @return void
+     * @throws CreationException
+     */
     public function recupererAttributs(array $attributs): void
     {
         foreach ($attributs as $attribut) {
@@ -108,7 +137,13 @@ class ServiceCarte implements ServiceCarteInterface
         }
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $attributs
+     * @param Carte $carte
+     * @param Colonne $colonne
+     * @return Carte
      * @throws CreationException
      * @throws MiseAJourException
      */
@@ -136,6 +171,12 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+    /**
+     * @param Carte $carte
+     * @param Colonne $colonne
+     * @param $attributs
+     * @return Carte
+     */
     public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
@@ -147,9 +188,13 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
     /**
+     * @param $idCarte
+     * @param Colonne $colonne
+     * @param $attributs
+     * @return Carte
      * @throws CreationException
-     * @throws ServiceException
      */
     public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte
     {
@@ -162,6 +207,11 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+    /**
+     * @param Tableau $tableau
+     * @param Utilisateur $utilisateur
+     * @return void
+     */
     public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void
     {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
@@ -174,12 +224,20 @@ class ServiceCarte implements ServiceCarteInterface
         }
     }
 
+    /**
+     * @return int
+     */
     public function getNextIdCarte(): int
     {
         return $this->carteRepository->getNextIdCarte();
     }
 
-    public function deplacerCarte(Carte $carte,Colonne $colonne): void
+    /**
+     * @param Carte $carte
+     * @param Colonne $colonne
+     * @return void
+     */
+    public function deplacerCarte(Carte $carte, Colonne $colonne): void
     {
         $carte->setColonne($colonne);
         $this->carteRepository->mettreAJour($carte);

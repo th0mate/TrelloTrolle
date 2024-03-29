@@ -51,9 +51,13 @@ interface ServiceCarteInterface
      */
     public function recupererAttributs(array $attributs): void;
 
+
     /**
-     * @throws CreationException
-     * @throws MiseAJourException
+     * @param Tableau $tableau
+     * @param $attributs
+     * @param Carte $carte
+     * @param Colonne $colonne
+     * @return Carte
      */
     public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte;
 
@@ -65,9 +69,12 @@ interface ServiceCarteInterface
      */
     public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte;
 
+
     /**
-     * @throws CreationException
-     * @throws ServiceException
+     * @param $idCarte
+     * @param Colonne $colonne
+     * @param $attributs
+     * @return Carte
      */
     public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte;
 

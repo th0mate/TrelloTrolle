@@ -5,9 +5,17 @@ namespace App\Trellotrolle\Service\Exception;
 class MiseAJourException extends ServiceException
 {
 
+    /**
+     * @var
+     */
     private $typeMessageFlash;
 
-    public function __construct(string $message,$typeMessageFlash,$code)
+    /**
+     * @param string $message
+     * @param $typeMessageFlash
+     * @param $code
+     */
+    public function __construct(string $message, $typeMessageFlash, $code)
     {
         parent::__construct($message,$code);
         $this->typeMessageFlash=$typeMessageFlash;

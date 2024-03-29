@@ -19,13 +19,20 @@ class ServiceConnexion implements ServiceConnexionInterface
 {
 
 
+    /**
+     * @param UtilisateurRepositoryInterface $utilisateurRepository
+     * @param ConnexionUtilisateurInterface $connexionUtilisateurJWT
+     * @param ConnexionUtilisateurInterface $connexionUtilisateurSession
+     */
     public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
-    private ConnexionUtilisateurInterface $connexionUtilisateurJWT,
-    private ConnexionUtilisateurInterface $connexionUtilisateurSession)
+                                private ConnexionUtilisateurInterface  $connexionUtilisateurJWT,
+                                private ConnexionUtilisateurInterface  $connexionUtilisateurSession)
     {
     }
 
+
     /**
+     * @return void
      * @throws ConnexionException
      */
     public function pasConnecter()
@@ -35,7 +42,9 @@ class ServiceConnexion implements ServiceConnexionInterface
         }
     }
 
+
     /**
+     * @return void
      * @throws ConnexionException
      */
     public function dejaConnecter()
@@ -45,8 +54,10 @@ class ServiceConnexion implements ServiceConnexionInterface
         }
     }
 
+
     /**
-     * @throws ServiceException
+     * @return void
+     * @throws ConnexionException
      */
     public function deconnecter()
     {
@@ -57,7 +68,11 @@ class ServiceConnexion implements ServiceConnexionInterface
         $this->connexionUtilisateurJWT->deconnecter();
     }
 
+
     /**
+     * @param $login
+     * @param $mdp
+     * @return void
      * @throws ServiceException
      */
     public function connecter($login, $mdp)

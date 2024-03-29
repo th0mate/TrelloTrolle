@@ -30,16 +30,25 @@ use Symfony\Component\HttpFoundation\Response;
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
 
+    /**
+     * @param UtilisateurRepositoryInterface $utilisateurRepository
+     * @param TableauRepositoryInterface $tableauRepository
+     * @param CarteRepositoryInterface $carteRepository
+     */
     public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
                                 private TableauRepositoryInterface     $tableauRepository,
                                 private CarteRepositoryInterface       $carteRepository)
     {
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $loginConnecte
+     * @return void
      * @throws TableauException
      */
-    public function estParticipant(Tableau $tableau,$loginConnecte): void
+    public function estParticipant(Tableau $tableau, $loginConnecte): void
     {
 
         if (!$this->tableauRepository->estParticipantOuProprietaire($loginConnecte, $tableau)) {
@@ -47,12 +56,20 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+    /**
+     * @param $login
+     * @return AbstractDataObject|null
+     */
     public function recupererUtilisateurParCle($login):AbstractDataObject|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $login
+     * @return void
      * @throws TableauException
      */
     public function estProprietaire(Tableau $tableau, $login): void
@@ -62,7 +79,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
+     * @param $login
+     * @param Tableau $tableau
+     * @param $action
+     * @return void
      * @throws TableauException
      */
     public function isNotNullLogin($login, Tableau $tableau, $action): void
@@ -72,7 +94,11 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
+     * @param $login
+     * @param Tableau $tableau
+     * @return AbstractDataObject
      * @throws TableauException
      */
     public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject
@@ -84,10 +110,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $utilisateur;
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param mixed $login
+     * @param $loginConnecte
+     * @return void
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login,$loginConnecte): void
+    public function ajouterMembre(Tableau $tableau, mixed $login, $loginConnecte): void
     {
         $this->estProprietaire($tableau, $loginConnecte);
         $this->isNotNullLogin($login, $tableau, "ajouter");
@@ -106,10 +137,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $login
+     * @param $loginConnecte
+     * @return AbstractDataObject
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login,$loginConnecte): AbstractDataObject
+    public function supprimerMembre(Tableau $tableau, $login, $loginConnecte): AbstractDataObject
     {
         $this->estProprietaire($tableau,$loginConnecte);
         $this->isNotNullLogin($login, $tableau, "supprimer");
@@ -128,7 +164,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $utilisateur;
     }
 
+
     /**
+     * @param $mail
+     * @return array
      * @throws ServiceException
      */
     public function recupererCompte($mail): array
@@ -143,7 +182,11 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $utilisateurs;
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param $login
+     * @return array
      * @throws TableauException
      */
     public function verificationsMembre(Tableau $tableau, $login): array
@@ -161,7 +204,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $filtredUtilisateurs;
     }
 
+
     /**
+     * @param $attributs
+     * @return void
      * @throws MiseAJourException
      */
     public function mettreAJourUtilisateur($attributs): void
@@ -223,7 +269,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         Cookie::enregistrer("mdp", $attributs["mdp"]);
     }
 
+
     /**
+     * @param $login
+     * @return void
      * @throws ServiceException
      */
     public function supprimerUtilisateur($login): void
@@ -255,9 +304,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         Cookie::supprimer("mdp");
     }
 
+
     /**
+     * @param $attributs
+     * @return void
+     * @throws CreationException
      * @throws ServiceException
-     * @throws \Exception
      */
     public function creerUtilisateur($attributs): void
     {
@@ -298,7 +350,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
+     * @param string|null $recherche
+     * @return array
      * @throws ServiceException
      */
     public function rechercheUtilisateur(?string $recherche): array
@@ -309,12 +364,21 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $this->utilisateurRepository->recherche($recherche);
     }
 
+    /**
+     * @param Tableau $tableau
+     * @return array|null
+     */
     public function getParticipants(Tableau $tableau): ?array
     {
         return $this->tableauRepository->getParticipants($tableau);
     }
 
     //retourne le propriétaire du tableau
+
+    /**
+     * @param Tableau $tableau
+     * @return Utilisateur
+     */
     public function getProprietaireTableau(Tableau $tableau): Utilisateur
     {
         return $this->tableauRepository->getProprietaire($tableau);

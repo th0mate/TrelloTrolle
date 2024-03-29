@@ -27,6 +27,12 @@ class ServiceTableau implements ServiceTableauInterface
 {
 
 
+    /**
+     * @param TableauRepositoryInterface $tableauRepository
+     * @param ColonneRepositoryInterface $colonneRepository
+     * @param CarteRepositoryInterface $carteRepository
+     * @param UtilisateurRepositoryInterface $utilisateurRepository
+     */
     public function __construct(private TableauRepositoryInterface     $tableauRepository,
                                 private ColonneRepositoryInterface     $colonneRepository,
                                 private CarteRepositoryInterface       $carteRepository,
@@ -34,7 +40,10 @@ class ServiceTableau implements ServiceTableauInterface
     {
     }
 
+
     /**
+     * @param $idTableau
+     * @return Tableau
      * @throws ServiceException
      */
     public function recupererTableauParId($idTableau): Tableau
@@ -52,7 +61,10 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
+
     /**
+     * @param $codeTableau
+     * @return Tableau
      * @throws ServiceException
      */
     public function recupererTableauParCode($codeTableau): Tableau
@@ -71,6 +83,10 @@ class ServiceTableau implements ServiceTableauInterface
 
     }
 
+    /**
+     * @param Tableau $tableau
+     * @return array
+     */
     public function recupererCartesColonnes(Tableau $tableau): array
     {
         /**
@@ -94,12 +110,20 @@ class ServiceTableau implements ServiceTableauInterface
         return ["data" => $data, "colonnes" => $colonnes, "participants" => $participants];
     }
 
+    /**
+     * @param $login
+     * @return array
+     */
     public function recupererTableauEstMembre($login): array
     {
         return $this->tableauRepository->recupererTableauxOuUtilisateurEstMembre($login);
     }
 
+
     /**
+     * @param $nomTableau
+     * @param Tableau $tableau
+     * @return void
      * @throws TableauException
      */
     public function isNotNullNomTableau($nomTableau, Tableau $tableau): void
@@ -109,20 +133,30 @@ class ServiceTableau implements ServiceTableauInterface
         }
     }
 
+    /**
+     * @param Tableau $tableau
+     * @return void
+     */
     public function mettreAJourTableau(Tableau $tableau): void
     {
         $this->tableauRepository->mettreAJour($tableau);
     }
 
+
     /**
-     * @throws ServiceException
+     * @param $idTableau
+     * @return void
      */
     public function supprimerTableau($idTableau): void
     {
         $this->tableauRepository->supprimer($idTableau);
     }
 
+
     /**
+     * @param Tableau $tableau
+     * @param AbstractDataObject $utilisateur
+     * @return void
      * @throws ServiceException
      */
     public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur): void
@@ -148,7 +182,11 @@ class ServiceTableau implements ServiceTableauInterface
         }
     }
 
+
     /**
+     * @param $nomTableau
+     * @param $login
+     * @return Tableau
      * @throws ServiceException
      */
     public function creerTableau($nomTableau, $login)
@@ -195,7 +233,12 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
-    public function estParticipant(Tableau $tableau,$login): bool
+    /**
+     * @param Tableau $tableau
+     * @param $login
+     * @return bool
+     */
+    public function estParticipant(Tableau $tableau, $login): bool
     {
         return $this->tableauRepository->estParticipantOuProprietaire($login, $tableau);
     }
