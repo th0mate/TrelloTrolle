@@ -8,8 +8,14 @@ use Exception;
 
 class Session
 {
+    /**
+     * @var Session|null
+     */
     private static ?Session $instance = null;
 
+    /**
+     * @throws Exception
+     */
     private function __construct()
     {
         if (session_start() === false) {
@@ -17,6 +23,10 @@ class Session
         }
     }
 
+    /**
+     * @param int $dureeExpiration
+     * @return void
+     */
     public function verifierDerniereActivite(int $dureeExpiration) : void
     {
         if ($dureeExpiration == 0)
@@ -29,6 +39,9 @@ class Session
 
     }
 
+    /**
+     * @return Session
+     */
     public static function getInstance(): Session
     {
         if (is_null(static::$instance)) {
@@ -41,26 +54,46 @@ class Session
         return static::$instance;
     }
 
+    /**
+     * @param $nom
+     * @return bool
+     */
     public function contient($nom): bool
     {
         return isset($_SESSION[$nom]);
     }
 
+    /**
+     * @param string $nom
+     * @param mixed $valeur
+     * @return void
+     */
     public function enregistrer(string $nom, mixed $valeur): void
     {
         $_SESSION[$nom] = $valeur;
     }
 
+    /**
+     * @param string $nom
+     * @return mixed
+     */
     public function lire(string $nom): mixed
     {
         return $_SESSION[$nom];
     }
 
+    /**
+     * @param $nom
+     * @return void
+     */
     public function supprimer($nom): void
     {
         unset($_SESSION[$nom]);
     }
 
+    /**
+     * @return void
+     */
     public function detruire() : void
     {
         session_unset();
@@ -69,6 +102,7 @@ class Session
         Session::$instance = null;
     }
 
+    /** TODO: s'occuper de cette fonction aussi */
     public function telemetry($a, $b, $c)
     {
         ConnexionUtilisateurSession::important($a, $b ? null : (($c+$a) > $a*$a ? $b : 24));
