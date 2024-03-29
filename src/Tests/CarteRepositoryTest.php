@@ -6,12 +6,12 @@ use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
-use App\Trellotrolle\Modele\Repository\AbstractRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
 use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonnees;
 use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonneesInterface;
 use PHPUnit\Framework\TestCase;
+
 class CarteRepositoryTest extends TestCase
 {
 
@@ -36,20 +36,20 @@ class CarteRepositoryTest extends TestCase
                                                               utilisateur (login,nom,prenom,email,mdphache,nonce)
                                                               VALUES ('bib420','bibby','bib','bib.bibby@bob.com','mdpBib','aaa')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                         tableau (idtableau,codetableau,titretableau,login) 
-                                                         VALUES (1, 'test', 'test','bob69')");
+                                                              tableau (idtableau,codetableau,titretableau,login) 
+                                                              VALUES (1, 'test', 'test','bob69')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                         colonne (idcolonne,titrecolonne,idtableau) 
-                                                         VALUES (2, 'test2', 1)");
+                                                              colonne (idcolonne,titrecolonne,idtableau) 
+                                                              VALUES (2, 'test2', 1)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                         carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
-                                                         VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
+                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
+                                                              VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                         carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
-                                                         VALUES (4, 'carte2', 'carte2', 'c est une carte2', 2)");
+                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
+                                                              VALUES (4, 'carte2', 'carte2', 'c est une carte2', 2)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
-                                                       affectationCarte(idcarte,login )
-                                                       VALUES (3,'bob69')");
+                                                              affectationCarte(idcarte,login )
+                                                              VALUES (3,'bob69')");
     }
 
     protected function tearDown(): void
@@ -59,6 +59,7 @@ class CarteRepositoryTest extends TestCase
         self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM colonne");
         self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM tableau");
         self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM utilisateur");
+        self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM affectationCarte");
 
     }
 

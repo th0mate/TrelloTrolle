@@ -17,10 +17,12 @@ class Tableau extends AbstractDataObject
 
     public static function construireDepuisTableau(array $objetFormatTableau): Tableau
     {
+
         return new Tableau(
             $objetFormatTableau["idtableau"] ?? null,
             $objetFormatTableau["codetableau"] ?? null,
             $objetFormatTableau["titretableau"] ?? null,
+            //new Utilisateur($objetFormatTableau["login"],$objetFormatTableau["nom"],$objetFormatTableau["prenom"],$objetFormatTableau["email"],$objetFormatTableau["mdp"])
             Utilisateur::construireDepuisTableau($objetFormatTableau),
         );
     }

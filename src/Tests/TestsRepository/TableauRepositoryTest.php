@@ -1,0 +1,200 @@
+<?php
+
+namespace App\Trellotrolle\Tests\TestsRepository;
+
+
+use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
+use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonnees;
+use App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonneesInterface;
+use App\Trellotrolle\Modele\Repository\TableauRepository;
+use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
+use App\Trellotrolle\Tests\ConfigurationBDDTestUnitaires;
+use PHPUnit\Framework\TestCase;
+
+class TableauRepositoryTest extends TestCase
+{
+    private static TableauRepositoryInterface  $tableauRepository;
+
+    private static ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees;
+
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+        self::$connexionBaseDeDonnees = new ConnexionBaseDeDonnees(new ConfigurationBDDTestUnitaires());
+        self::$tableauRepository = new TableauRepository(self::$connexionBaseDeDonnees);
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
+                                                              utilisateur (login,nom,prenom,email,mdphache,nonce)
+                                                              VALUES ('bob69','bobby','bob','bob.bobby@bob.com','mdpBob','aaa')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              utilisateur (login,nom,prenom,email,mdphache,nonce)
+                                                              VALUES ('bib420','bibby','bib','bib.bibby@bob.com','mdpBib','aaa')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              utilisateur (login,nom,prenom,email,mdphache,nonce)
+                                                              VALUES ('bob560','zeblouse','agathe','agathe.zeblouze@jfiu.com','mdpAg','aaa')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              utilisateur (login,nom,prenom,email,mdphache,nonce)
+                                                              VALUES ('alTE','terrieur','alain','alain.terrieur@terrieur.com','mdpAl','aaa')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              tableau (idtableau,codetableau,titretableau,login) 
+                                                              VALUES (1, 'test', 'test','bob69')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              tableau (idtableau,codetableau,titretableau,login) 
+                                                              VALUES (2, 'test2', 'test2','bob69')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              tableau (idtableau,codetableau,titretableau,login) 
+                                                              VALUES (3, 'test3', 'test3','bib420')");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              participant (login, idTableau)
+                                                              VALUES ('bob69',3)");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              participant (login, idTableau)
+                                                              VALUES ('bob560',3)");
+
+        /**self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
+                                                              colonne (idcolonne,titrecolonne,idtableau) 
+                                                              VALUES (2, 'test2', 1)");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
+                                                              VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
+                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
+                                                              VALUES (4, 'carte2', 'carte2', 'c est une carte2', 2)");
+        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
+                                                              affectationCarte(idcarte,login )
+                                                              VALUES (3,'bob69')");**/
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown(); // TODO: Change the autogenerated stub
+
+        self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM participant");
+        self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM tableau");
+        self::$connexionBaseDeDonnees->getPdo()->query("DELETE FROM utilisateur");
+
+    }
+
+    /**  Test recupererTableauxUtilisateur prends : string $login retourne : array*/
+
+    /*public function testRecupererTableauxUtilisateurExistantPlusieurs(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $fakeTab2 = new Tableau(2, 'test2', 'test2',$fakeUser);
+
+        $this->assertEquals([$fakeTab1,$fakeTab2], self::$tableauRepository->recupererTableauxUtilisateur('bob69'));
+    }
+
+    public function testRecupererTableauxUtilisateurExistantSeul(){
+
+    }
+
+    public function testRecupererTableauxUtilisateurExistantPasProprietaire(){
+
+    }
+    public function testRecupererTableauxUtilisateurInexistant(){
+
+    }*/
+
+    /**  Test recupererParCodeTableau prends :string $codeTableau retourne: ?AbstractDataObject*/
+
+    public function testrecupererParCodeTableauExistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals($fakeTab3,self::$tableauRepository->recupererParCodeTableau('test3'));
+
+    }
+    public function testrecupererParCodeTableauInexistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertNull(self::$tableauRepository->recupererParCodeTableau('alalalala'));
+    }
+
+    /**  Test recupererTableauxOuUtilisateurEstMembre prends :string $login retourne array*/
+
+    public function testrecupererTableauxOuUtilisateurEstMembre(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $fakeTab2 = new Tableau(2, 'test2', 'test2',$fakeUser);
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals([$fakeTab1,$fakeTab2, $fakeTab3], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('bob69'));
+
+    }
+
+    public function testrecupererTableauxOuUtilisateurEstMembreSeulementParticipant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('bob560'));
+    }
+    public function testrecupererTableauxOuUtilisateurEstMembrePasDeTableau(){
+        $this->assertEquals([], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('alTE'));
+    }
+    public function testrecupererTableauxOuUtilisateurEstMembreInexistant(){
+        $this->assertEquals([], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('george'));
+    }
+
+
+    /**  Test recupererTableauxParticipeUtilisateur prends : string $login retourne : array*/
+
+    public function testRecupererTableauxParticipeUtilisateur(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('bob69'));
+    }
+
+    /**  Test getNextIdTableau retourne: int*/
+
+    public function testGetNextIdTableau(){
+        $this->assertEquals(4, self::$tableauRepository->getNextIdTableau());
+    }
+
+    /**  Test getNombreTableauxTotalUtilisateur prends : string $login returne: int*/
+
+    public function testGetNombreTableauxTotalUtilisateurEnA(){
+        $this->assertEquals(3, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob69'));
+    }
+
+    public function testGetNombreTableauxTotalUtilisateurEnQueParticipant(){
+        $this->assertEquals(1, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob560'));
+    }
+    public function testGetNombreTableauxTotalUtilisateurEnAPas(){
+        $this->assertEquals(0, self::$tableauRepository->getNombreTableauxTotalUtilisateur('alTE'));
+    }
+
+    public function testGetNombreTableauxTotalUtilisateurInexistant(){
+        $this->assertEquals(0, self::$tableauRepository->getNombreTableauxTotalUtilisateur('george'));
+    }
+
+    /**  Test estParticipant prends : string $login, Tableau $tableau retourne: bool*/
+
+    /**  Test estProprietaire prends : $login, Tableau $tableau retourne: bool*/
+
+    /**  Test estParticipantOuProprietaire prends: string $login, Tableau $tableau retourne: bool*/
+
+    /**  Test getParticipants prends Tableau $tableau retourne : ?array*/
+
+    /**  Test setParticipants prends : ?array $participants, Tableau $tableau retourne : void*/
+
+    /**  Test getProprietaire prends : Tableau $tableau retourne: Utilisateur*/
+
+    /**  Test getAllFromTableau prends : int $idTableau retounre : array*/
+
+    /** Test  récuperer */
+
+    /** Test récupererParCléPrimaire */
+
+    /** Test ajouter */
+
+    /** Test supprimer */
+
+    /** Test mettre à jour */
+
+    /**Test supprimer utilisateur, supprime tableau aussi*/
+
+}
