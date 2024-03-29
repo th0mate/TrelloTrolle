@@ -87,7 +87,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'un tableau",
                 "cheminVueBody" => "tableau/formulaireMiseAJourTableau.php",
@@ -204,7 +204,7 @@ class ControleurTableau extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $this->serviceUtilisateur->ajouterMembre($tableau, $login);
+            $this->serviceUtilisateur->ajouterMembre($tableau, $login,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             return ControleurTableau::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);

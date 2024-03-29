@@ -45,7 +45,7 @@ class ControleurCarteAPI
             $this->serviceConnexion->pasConnecter();
             $carte = $this->serviceCarte->recupererCarte($idCarte);
             $tableau = $carte->getColonne()->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceCarte->supprimerCarte($tableau, $idCarte);
             return new JsonResponse('', 200);
         } catch (ServiceException $e) {
@@ -70,7 +70,7 @@ class ControleurCarteAPI
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $carte = $this->serviceCarte->verificationsMiseAJourCarte($idCarte, $colonne, $attributs);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $carte = $this->serviceCarte->miseAJourCarte($tableau, $attributs, $carte, $colonne);
             return new JsonResponse($carte, 200);
         } catch (ServiceException $e) {
@@ -96,7 +96,7 @@ class ControleurCarteAPI
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $this->serviceCarte->recupererAttributs($attributs);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $carte = $this->serviceCarte->creerCarte($tableau, $attributs, $colonne);
             return new JsonResponse($carte, 200);
         } catch (ServiceException $e) {

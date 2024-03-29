@@ -39,10 +39,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estParticipant(Tableau $tableau): void
+    public function estParticipant(Tableau $tableau,$loginConnecte): void
     {
 
-        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+        if (!$this->tableauRepository->estParticipantOuProprietaire($loginConnecte, $tableau)) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
@@ -87,9 +87,9 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login): void
+    public function ajouterMembre(Tableau $tableau, mixed $login,$loginConnecte): void
     {
-        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $this->estProprietaire($tableau, $loginConnecte);
         $this->isNotNullLogin($login, $tableau, "ajouter");
         $utilisateurs=[];
         foreach ($login as $user) {
