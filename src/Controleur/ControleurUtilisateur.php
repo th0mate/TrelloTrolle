@@ -2,7 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Carte;
@@ -39,10 +40,12 @@ class ControleurUtilisateur extends ControleurGenerique
      */
 
 
-    public function __construct(ContainerInterface         $container,
-                                private ServiceConnexionInterface   $serviceConnexion,
-                                private ServiceUtilisateurInterface $serviceUtilisateur)
-    {
+    public function __construct(ContainerInterface                    $container,
+                                private ServiceConnexionInterface     $serviceConnexion,
+                                private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur
+    )
+   {
         parent::__construct($container);
 
     }
@@ -69,14 +72,14 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();
+            $login = $this->connexionUtilisateur->getLoginUtilisateurConnecte();
             $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($login);
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "utilisateur" => $utilisateur,
                 "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
                 "cheminVueBody" => "utilisateur/detail.php"
             ]);*/
-            return $this->afficherTwig('utilisateur/detail.html.twig',[ "utilisateur"=>$utilisateur]);
+            return $this->afficherTwig('utilisateur/detail.html.twig', ["utilisateur" => $utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -124,16 +127,16 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->dejaConnecter();
             $this->serviceUtilisateur->creerUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
-            return ControleurUtilisateur::redirection( "afficherFormulaireConnexion");
+            return ControleurUtilisateur::redirection("afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
-            MessageFlash::ajouter("info",$e->getMessage());
+            MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("afficherListeMesTableaux");
         } catch (CreationException $e) {
-            MessageFlash::ajouter("danger",$e->getMessage());
+            MessageFlash::ajouter("danger", $e->getMessage());
             return self::redirection("afficherFormulaireCreation");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection( "afficherFormulaireCreation");
+            return self::redirection("afficherFormulaireCreation");
         }
     }
 
@@ -147,13 +150,13 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Mise à jour du profil",
                 "cheminVueBody" => "utilisateur/formulaireMiseAJour.php",
                 "utilisateur" => $utilisateur,
             ]);*/
-            return $this->afficherTwig('utilisateur/formulaireMiseAjour.html.twig',["utilisateur" => $utilisateur]);
+            return $this->afficherTwig('utilisateur/formulaireMiseAjour.html.twig', ["utilisateur" => $utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         }
@@ -180,11 +183,11 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été modifié !");
-            return self::redirection( "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (MiseAJourException $e) {
-            MessageFlash::ajouter($e->getTypeMessageFlash(),$e->getMessage());
+            MessageFlash::ajouter($e->getTypeMessageFlash(), $e->getMessage());
             return self::redirection("afficherFormulaireMiseAJourUtilisateur");
         }
     }
@@ -202,12 +205,13 @@ class ControleurUtilisateur extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $this->serviceUtilisateur->supprimerUtilisateur($login);
+            $this->serviceConnexion->deconnecter();
             MessageFlash::ajouter("success", "Votre compte a bien été supprimé !");
-            return self::redirection( "afficherFormulaireConnexion");
+            return self::redirection("afficherFormulaireConnexion");
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
+            MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection("afficherDetail");
         }
     }
@@ -230,7 +234,7 @@ class ControleurUtilisateur extends ControleurGenerique
             return $this->afficherTwig("utilisateur/formulaireConnexion.html.twig");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection( "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         }
     }
 
@@ -249,12 +253,12 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->dejaConnecter();
             $this->serviceConnexion->connecter($login, $mdp);
             MessageFlash::ajouter("success", "Connexion effectuée.");
-          return  self::redirection( "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         } catch (ConnexionException $e) {
-           return self::redirection("afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         } catch (ServiceException $e) {
-            MessageFlash::ajouter("warning",$e->getMessage());
-            return self::redirection( "afficherFormulaireConnexion");
+            MessageFlash::ajouter("warning", $e->getMessage());
+            return self::redirection("afficherFormulaireConnexion");
         }
     }
 
@@ -264,16 +268,16 @@ class ControleurUtilisateur extends ControleurGenerique
      *
      * fonction qui permet de se deconnecter
      */
-    #[Route('/deconnexion', name: 'deconnexion',methods: "GET")]
+    #[Route('/deconnexion', name: 'deconnexion', methods: "GET")]
     public function deconnecter(): Response
     {
         try {
             $this->serviceConnexion->deconnecter();
             MessageFlash::ajouter("success", "L'utilisateur a bien été déconnecté.");
-            return self::redirection( "accueil");
+            return self::redirection("accueil");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection( "accueil");
+            return self::redirection("accueil");
         }
     }
 
@@ -295,7 +299,7 @@ class ControleurUtilisateur extends ControleurGenerique
             return $this->afficherTwig('utilisateur/resetCompte.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection( "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         }
     }
 
@@ -317,13 +321,13 @@ class ControleurUtilisateur extends ControleurGenerique
                 "cheminVueBody" => "utilisateur/resultatResetCompte.php",
                 "utilisateurs" => $utilisateurs
             ]);*/
-            return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig',["utilisateurs" => $utilisateurs]);
+            return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig', ["utilisateurs" => $utilisateurs]);
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
-            return self::redirection( "afficherListeMesTableaux");
+            return self::redirection("afficherListeMesTableaux");
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection( "afficherFormulaireConnexion");
+            return self::redirection("afficherFormulaireConnexion");
         }
     }
 }

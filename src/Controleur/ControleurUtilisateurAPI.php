@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
@@ -19,8 +20,10 @@ class ControleurUtilisateurAPI
      *
      * fonction qui permet de construire le controleur de l'utilisateur avec l'API
      */
-    public function __construct(private ServiceUtilisateurInterface $serviceUtilisateur)
-    {
+    public function __construct(private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur
+    )
+   {
     }
 
     /**
@@ -29,17 +32,17 @@ class ControleurUtilisateurAPI
      *
      * fonction qui permet de rechercher un utilisateur avec l'API via une requête de recherche
      */
-    #[Route("/api/utilisateur/recherche",name: "rechercheUtilisateurAPI",methods: "POST")]
-    public function rechercheUtilisateur(Request $request):Response
+    #[Route("/api/utilisateur/recherche", name: "rechercheUtilisateurAPI", methods: "POST")]
+    public function rechercheUtilisateur(Request $request): Response
     {
-        $corps=$request->getContent();
-        $jsondecode=json_decode($corps);
-        $recherche=$jsondecode->recherche ??null;
-        try{
-            $resultats=$this->serviceUtilisateur->rechercheUtilisateur($recherche);
-            return new JsonResponse($resultats,200);
-        }catch (ServiceException $e){
-            return new JsonResponse(["error"=>$e->getMessage()],$e->getCode());
+        $corps = $request->getContent();
+        $jsondecode = json_decode($corps);
+        $recherche = $jsondecode->recherche ?? null;
+        try {
+            $resultats = $this->serviceUtilisateur->rechercheUtilisateur($recherche);
+            return new JsonResponse($resultats, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
 }

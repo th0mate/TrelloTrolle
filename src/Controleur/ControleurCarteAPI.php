@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -38,7 +39,8 @@ class ControleurCarteAPI
         private ServiceUtilisateurInterface $serviceUtilisateur,
         private ServiceConnexionInterface   $serviceConnexion,
         private ServiceCarteInterface       $serviceCarte,
-        private ServiceColonneInterface     $serviceColonne
+        private ServiceColonneInterface     $serviceColonne,
+        private ConnexionUtilisateurInterface $connexionUtilisateur
     )
     {
     }

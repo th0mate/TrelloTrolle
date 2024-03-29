@@ -1,6 +1,6 @@
 <?php
 use App\Trellotrolle\Modele\HTTP\Cookie;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\Conteneur;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\UrlHelper;
