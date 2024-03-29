@@ -87,6 +87,12 @@ class ControleurTableauAPI
         }
     }
 
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     *
+     *  fonction qui permet de recuperer les membres d'un tableau avec l'API
+     */
     #[Route('/api/tableau/membre/getPourTableau', name: 'getMembresTableau', methods: "POST")]
     public function getMembresTableau(Request $request)
     {
@@ -101,6 +107,14 @@ class ControleurTableauAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+/**
+     * @param Request $request
+     * @return JsonResponse
+     *
+     *  fonction qui permet de recuperer le proprietaire d'un tableau avec l'API
+     */
+
 
     #[Route('/api/tableau/membre/getProprio', name: 'getProprietaireTableau', methods: "POST")]
     public function getProprietaireTableau(Request $request)
