@@ -59,7 +59,7 @@ class ControleurTableauAPI
             try {
                 $this->serviceConnexion->pasConnecter();
                 $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-                $this->serviceUtilisateur->ajouterMembre($tableau, $login);
+                $this->serviceUtilisateur->ajouterMembre($tableau, $login,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
                 return new JsonResponse('', 200);
             } catch (ServiceException $e) {
                 return new JsonResponse(["error" => $e->getMessage()], $e->getCode());

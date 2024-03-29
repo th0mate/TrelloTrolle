@@ -61,7 +61,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceColonne->isSetNomColonne($nomColonne);
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             return new JsonResponse($colonne, 200);
@@ -86,7 +86,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceColonne->supprimerColonne($tableau, $idColonne);
             return new JsonResponse('', 200);
         } catch (ServiceException $e) {
@@ -111,7 +111,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne->setTitreColonne($nomColonne);
             $colonne = $this->serviceColonne->miseAJourColonne($colonne);
             return new JsonResponse($colonne, 200);
