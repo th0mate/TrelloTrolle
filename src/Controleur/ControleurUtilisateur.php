@@ -145,7 +145,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/{login}/supprimer', name: 'supprimer', methods: "POST")]
+    #[Route('/{login}/supprimer', name: 'supprimer', methods: "GET")]
     public function supprimer(): Response
     {
         $login = ConnexionUtilisateur::getLoginUtilisateurConnecte();

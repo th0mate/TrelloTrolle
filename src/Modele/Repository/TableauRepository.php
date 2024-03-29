@@ -63,7 +63,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->getAllFromTableau($objetFormatTableau);
+            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
@@ -80,7 +80,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->construireDepuisTableau($objetFormatTableau);
+            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
