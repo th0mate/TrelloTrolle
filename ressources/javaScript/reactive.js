@@ -170,9 +170,11 @@ function startReactiveDom(subDom = document) {
 
 
     for (let rel of document.querySelectorAll("[data-onload]")) {
+        //dès que l'objet est chargé. On ne lance qu'une fois
         const [obj, fun, arg] = rel.dataset.onload.split(/[.()]+/);
         if (objectByName.get(obj) !== undefined) {
             objectByName.get(obj)[fun](arg);
+            rel.removeAttribute('data-onload');
         }
     }
 }

@@ -12,6 +12,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+.waiting {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 50px;
+    display: flex;
+}
+
+
 body {
     background: linear-gradient(to right bottom, #54438b, #9a5284);
     margin: 0;

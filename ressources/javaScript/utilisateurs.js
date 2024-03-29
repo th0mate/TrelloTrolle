@@ -16,7 +16,8 @@ let utilisateurs = reactive({
 
         utilisateursReactifs = [];
 
-        document.body.style.cursor = 'wait';
+        document.querySelector('.waiting').style.display = 'block';
+
 
         this.drapeau = true;
 
@@ -99,8 +100,7 @@ let utilisateurs = reactive({
 
             console.log(utilisateursReactifs);
 
-            document.body.style.cursor = 'default';
-
+            document.querySelector('.waiting').style.display = 'none';
             this.drapeau = false;
         }
     },

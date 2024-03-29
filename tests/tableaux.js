@@ -445,7 +445,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
 
 
     if (pourModifier) {
-        document.body.style.cursor = 'wait';
+        document.querySelector('.waiting').style.display = 'block';
         let response = await fetch(apiBase + '/carte/getCarte', {
             method: 'POST',
             headers: {
@@ -519,7 +519,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.modifierCarte`);
 
 
-            document.body.style.cursor = 'default';
+            document.querySelector('.waiting').style.display = 'none';
             let html = '';
             for (let affectation of affectations) {
                 html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
