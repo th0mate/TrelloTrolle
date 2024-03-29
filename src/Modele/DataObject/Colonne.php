@@ -4,6 +4,11 @@ namespace App\Trellotrolle\Modele\DataObject;
 
 class Colonne extends AbstractDataObject implements \JsonSerializable
 {
+    /**
+     * @param int|null $idColonne
+     * @param string|null $titreColonne
+     * @param Tableau|null $tableau
+     */
     public function __construct(
         private ?int     $idColonne,
         private ?string  $titreColonne,
