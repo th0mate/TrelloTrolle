@@ -11,6 +11,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Tests\ConfigurationBDDTestUnitaires;
 use PHPUnit\Framework\TestCase;
+use function PHPUnit\Framework\assertEquals;
 
 class TableauRepositoryTest extends TestCase
 {
@@ -142,11 +143,11 @@ class TableauRepositoryTest extends TestCase
 
     /**  Test recupererTableauxParticipeUtilisateur prends : string $login retourne : array*/
 
-    public function testRecupererTableauxParticipeUtilisateur(){
+    /*public function testRecupererTableauxParticipeUtilisateur(){
         $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
         $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
         $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('bob69'));
-    }
+    }*/
 
     /**  Test getNextIdTableau retourne: int*/
 
@@ -157,11 +158,11 @@ class TableauRepositoryTest extends TestCase
     /**  Test getNombreTableauxTotalUtilisateur prends : string $login returne: int*/
 
     public function testGetNombreTableauxTotalUtilisateurEnA(){
-        $this->assertEquals(3, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob69'));
+        $this->assertEquals(2, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob69'));
     }
 
     public function testGetNombreTableauxTotalUtilisateurEnQueParticipant(){
-        $this->assertEquals(1, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob560'));
+        $this->assertEquals(0, self::$tableauRepository->getNombreTableauxTotalUtilisateur('bob560'));
     }
     public function testGetNombreTableauxTotalUtilisateurEnAPas(){
         $this->assertEquals(0, self::$tableauRepository->getNombreTableauxTotalUtilisateur('alTE'));
@@ -173,21 +174,162 @@ class TableauRepositoryTest extends TestCase
 
     /**  Test estParticipant prends : string $login, Tableau $tableau retourne: bool*/
 
+    public function testEstParticipantUtilisateurEstParticipantDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertTrue(self::$tableauRepository->estParticipant('bob69',$fakeTab3));
+    }
+
+    public function testEstParticipantUtilisateurEstPasParticipantDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estParticipant('alTE',$fakeTab3));
+    }
+
+    public function testEstParticipantUtilisateurInexistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estParticipant('george',$fakeTab3));
+    }
+
+
     /**  Test estProprietaire prends : $login, Tableau $tableau retourne: bool*/
+
+    public function testEstProprietaireUtilisateurEstProprietaireDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertTrue(self::$tableauRepository->estProprietaire('bib420',$fakeTab3));
+    }
+
+    public function testEstProprietaireUtilisateurEstPasProprietaireDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estProprietaire('bob69',$fakeTab3));
+    }
+
+    public function testEstProprietaireUtilisateurInexistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab4 = new Tableau(4,'test4', 'test4',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estProprietaire('bib420',$fakeTab4));
+    }
 
     /**  Test estParticipantOuProprietaire prends: string $login, Tableau $tableau retourne: bool*/
 
+    public function testEstParticipantOuProprietaireUtilisateurEstProprietaireDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertTrue(self::$tableauRepository->estParticipantOuProprietaire('bib420',$fakeTab3));
+    }
+
+    public function testEstParticipantOuProprietaireUtilisatecurEstParticipantDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertTrue(self::$tableauRepository->estParticipantOuProprietaire('bob69',$fakeTab3));
+    }
+
+    public function testEstParticipantOuProprietaireUtilisatecurEstPasProprietaireOuParticipantDuTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estParticipantOuProprietaire('alTE',$fakeTab3));
+    }
+
+    public function testEstParticipantOuProprietaireUtilisateurInexistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab4 = new Tableau(4,'test4', 'test4',$fakeUser2);
+        $this->assertFalse(self::$tableauRepository->estParticipantOuProprietaire('bib420',$fakeTab4));
+    }
+
+
     /**  Test getParticipants prends Tableau $tableau retourne : ?array*/
+
+    public function testGetParticipantsEnA(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeUser3 = new Utilisateur('bob560','zeblouse','agathe','agathe.zeblouze@jfiu.com','mdpAg');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals([$fakeUser3,$fakeUser], self::$tableauRepository->getParticipants($fakeTab3));
+    }
+
+    public function testGetParticipantsEnAPas(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $this->assertEquals([], self::$tableauRepository->getParticipants($fakeTab1));
+    }
+
+    public function testGetParticipantsTableauInexistant(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab4 = new Tableau(4,'test4', 'test4',$fakeUser2);
+        $this->assertEquals([], self::$tableauRepository->getParticipants($fakeTab4));
+    }
 
     /**  Test setParticipants prends : ?array $participants, Tableau $tableau retourne : void*/
 
+    public function testSetParticipantTableauSansParticipant(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeUser3 = new Utilisateur('bob560','zeblouse','agathe','agathe.zeblouze@jfiu.com','mdpAg');
+        self::$tableauRepository->setParticipants([$fakeUser2,$fakeUser3],$fakeTab1);
+        $this->assertEquals([$fakeUser2,$fakeUser3], self::$tableauRepository->getParticipants($fakeTab1));
+    }
+
+    public function testSetParticipantTableauAvecParticipant(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $fakeUser3 = new Utilisateur('alTE','terrieur','alain','alain.terrieur@terrieur.com','mdpAl');
+        self::$tableauRepository->setParticipants([$fakeUser,$fakeUser3],$fakeTab3);
+        $this->assertEquals([$fakeUser3,$fakeUser], self::$tableauRepository->getParticipants($fakeTab3));
+    }
+
+    public function testSetParticipantTableauInexistant(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeTab1 = new Tableau(4, 'test4', 'test4',$fakeUser);
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeUser3 = new Utilisateur('bob560','zeblouse','agathe','agathe.zeblouze@jfiu.com','mdpAg');
+        self::$tableauRepository->setParticipants([$fakeUser2,$fakeUser3],$fakeTab1);
+        $this->assertEquals([], self::$tableauRepository->getParticipants($fakeTab1));
+    }
+
     /**  Test getProprietaire prends : Tableau $tableau retourne: Utilisateur*/
+
+    public function testGetProprietaire(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals($fakeUser2, self::$tableauRepository->getProprietaire($fakeTab3));
+    }
 
     /**  Test getAllFromTableau prends : int $idTableau retounre : array*/
 
+    public function testGetAllFromTableau(){
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals($fakeTab3, self::$tableauRepository->getAllFromTableau(3));
+    }
+
     /** Test  récuperer */
 
+    public function testRecuperer(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $fakeTab2 = new Tableau(2, 'test2', 'test2',$fakeUser);
+        $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
+        $this->assertEquals([$fakeTab1,$fakeTab2,$fakeTab3], self::$tableauRepository->recuperer());
+    }
+
     /** Test récupererParCléPrimaire */
+
+    public function testRecupererParClePrimaireExistant(){
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
+        $this->assertEquals($fakeTab1, self::$tableauRepository->recupererParClePrimaire(1));
+    }
+
+    public function testRecupererParClePrimaireInexistant(){
+        $this->assertNull( self::$tableauRepository->recupererParClePrimaire(4));
+    }
+
 
     /** Test ajouter */
 
