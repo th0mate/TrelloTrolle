@@ -1,4 +1,5 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+let utilisateursReactifs = [];
 
 let utilisateurs = reactive({
     prenom: "",
@@ -7,11 +8,15 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
-    creerUtilisateurDepuisBaseDeDonnees: async function () {
+    MAJUtilisateursDepuisBaseDeDonnees: async function () {
 
         if (this.drapeau) {
             return;
         }
+
+        utilisateursReactifs = [];
+
+        document.body.style.cursor = 'wait';
 
         this.drapeau = true;
 
@@ -63,64 +68,14 @@ let utilisateurs = reactive({
                 if (nbCartes.status !== 200) {
                     console.error(nbCartes.json());
                 } else {
-                    /**
-                     * Retourne
-                     * "loginUtilisateur": {
-                     *         "colonnes": {
-                     *             "idColonne": [
-                     *                 "titreColonne",
-                     *                 nbCartes
-                     *             ]
-                     *         }
-                     *     },
-                     */
                     let nbCartesJson = await nbCartes.json();
-
-                    //console.log(JSON.stringify(nbCartesJson, null, 2));
                     listeAffectationsColonnes.push(nbCartesJson);
                 }
             }
-            /**
-             * Contenu de listeAffectationsColonnes :
-             * [
-             *   {
-             *     "Bouah": {
-             *       "colonnes": {
-             *         "47": [
-             *           "iuefhlsd",
-             *           1
-             *         ]
-             *       }
-             *     },
-             *     "touzer": {
-             *       "colonnes": {
-             *         "47": [
-             *           "iuefhlsd",
-             *           1
-             *         ]
-             *       }
-             *     },
-             *     "ffb": {
-             *       "colonnes": {
-             *         "47": [
-             *           "iuefhlsd",
-             *           1
-             *         ]
-             *       }
-             *     }
-             *   },
-             *   {
-             *     "Bouah": {
-             *       "colonnes": {
-             *         "49": [
-             *           "tests",
-             *           1
-             *         ]
-             *       }
-             *     }...
-             */
+
 
             for (let membre of tousMembres) {
+                console.log(membre);
                 let utilisateur = Object.create(this);
                 utilisateur.prenom = membre.prenom;
                 utilisateur.nom = membre.nom;
@@ -139,10 +94,12 @@ let utilisateurs = reactive({
                         }
                     }
                 }
-
-                console.log(utilisateur);
-
+                utilisateursReactifs.push(utilisateur);
             }
+
+            console.log(utilisateursReactifs);
+
+            document.body.style.cursor = 'default';
 
             this.drapeau = false;
         }

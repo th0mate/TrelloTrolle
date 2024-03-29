@@ -311,6 +311,9 @@ function addEventsBullets(element) {
     });
 }
 
+/**
+ * Evenement permettant de fermer le menu des colonnes
+ */
 document.querySelector('.close').addEventListener('click', function () {
     document.querySelector('.menuColonnes').style.display = "none";
 });
@@ -343,13 +346,18 @@ document.querySelector('.deleteColumn').addEventListener('click', async function
     }
 });
 
+/**
+ * Evenement permettant d'afficher le formulaire de mise à jour d'une colonne
+ */
 document.querySelector('.updateColumn').addEventListener('click', function () {
     const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
     document.querySelector('.menuColonnes').style.display = "none";
     afficherFormulaireModificationColonne();
 });
 
-
+/**
+ * Met à jour les colonnes
+ */
 document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.draggable').forEach(el => {
         addEventsBullets(el);
@@ -534,9 +542,6 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
         document.querySelector('.boutonCreation').setAttribute('data-onclick', `formulaireAjoutCarte.envoyerFormulaire`);
     }
     window.startReactiveDom();
-    //on empêche le fait d'envoyer plusieurs fois le formulaire
-
-
     document.querySelector('.formulaireCreationCarte').style.display = "flex";
 
     document.querySelectorAll('.all').forEach(el => {
@@ -612,24 +617,39 @@ function addListenersModificationColonne() {
  */
 
 /**
- * Retourne une couleur aléatoire
+ * Retourne une couleur aléatoire sombre
  */
 function randomColor() {
-    let letters = '0123456789ABCDEF';
+    let letters = '012345678';
     let color = '#';
-    for (let i = 0; i < 3; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * letters.length)];
     }
     return color;
 }
 
+/**
+ * Met une couleur aléatoire sombre pour chaque utilisateur différent dans la page
+ */
 document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.user').forEach(el => {
-        el.style.backgroundColor = randomColor();
-    });
+    document.querySelectorAll('[data-user]').forEach(el => {
+        const listeLoginDejaPasses = [];
+        document.querySelectorAll(`[data-user="${el.getAttribute('data-user')}"]`).forEach(el2 => {
+            if (!listeLoginDejaPasses.includes(el2.getAttribute('data-user'))) {
+                el2.style.backgroundColor = randomColor();
+                listeLoginDejaPasses.push(el2.getAttribute('data-user'));
+                listeLoginDejaPasses.push(el2.style.backgroundColor);
+            } else {
+                el2.style.backgroundColor = listeLoginDejaPasses[listeLoginDejaPasses.indexOf(el2.getAttribute('data-user')) + 1];
+            }
+        });
+    })
 });
 
 
+/**
+ * Défini l'événement de clic pour ajouter des participants à un tableau
+ */
 document.querySelector('.invite').addEventListener('click', function () {
     document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
     document.querySelectorAll('.all').forEach(el => {
@@ -637,6 +657,9 @@ document.querySelector('.invite').addEventListener('click', function () {
     });
 });
 
+/**
+ * Défini l'événement de clic pour fermer le formulaire d'ajout de membre
+ */
 function listenerFermerAjoutMembre() {
     document.querySelector('.formulaireAjoutMembreTableau').style.display = "none";
     document.querySelectorAll('.all').forEach(el => {
