@@ -13,8 +13,10 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 use \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+
 use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
@@ -47,7 +49,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
-    public function recupererUtilisateurParCle($login): AbstractDataObject
+    public function recupererUtilisateurParCle($login):AbstractDataObject|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }

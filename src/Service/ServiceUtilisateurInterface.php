@@ -16,7 +16,7 @@ interface ServiceUtilisateurInterface
      */
     public function estParticipant(Tableau $tableau): void;
 
-    public function recupererUtilisateurParCle($login): AbstractDataObject;
+    public function recupererUtilisateurParCle($login): ?AbstractDataObject;
 
     /**
      * @throws TableauException
