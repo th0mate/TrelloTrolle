@@ -496,7 +496,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             let carte = await response.json();
             window.affectationsCarte = loginAffectations;
             document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
-            document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte}, ${carte.titreCarte}, ${carte.descriptifCarte}, ${carte.couleurCarte}`);
+            document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte},${carte.titreCarte},${carte.descriptifCarte},${carte.couleurCarte}`);
             document.querySelector('.inputCreationCarte').value = carte.titreCarte;
             document.querySelector('.desc').value = carte.descriptifCarte;
             document.querySelector('input[type="color"]').value = carte.couleurCarte;
