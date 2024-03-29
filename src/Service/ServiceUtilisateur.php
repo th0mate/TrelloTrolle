@@ -47,7 +47,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
-    public function recupererUtilisateurParCle($login):AbstractDataObject|null
+    public function recupererUtilisateurParCle($login):Utilisateur|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }
@@ -87,12 +87,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login,$loginConnecte): void
+    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter,$loginConnecte): void
     {
         $this->estProprietaire($tableau, $loginConnecte);
-        $this->isNotNullLogin($login, $tableau, "ajouter");
+        $this->isNotNullLogin($membresAAjouter, $tableau, "ajouter");
         $utilisateurs=[];
-        foreach ($login as $user) {
+        foreach ($membresAAjouter as $user) {
             $utilisateur = $this->utilisateurExistant($user, $tableau);
             if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau)) {
                 throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
@@ -102,8 +102,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $participants = $this->tableauRepository->getParticipants($tableau);
         $participants=array_merge($participants,$utilisateurs);
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
-
     }
 
     /**

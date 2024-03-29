@@ -16,7 +16,7 @@ interface ServiceUtilisateurInterface
      */
     public function estParticipant(Tableau $tableau,$loginConnecte): void;
 
-    public function recupererUtilisateurParCle($login): ?AbstractDataObject;
+    public function recupererUtilisateurParCle($login): ?Utilisateur;
 
     /**
      * @throws TableauException
@@ -36,7 +36,7 @@ interface ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login,$loginConnecte): void;
+    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter,$loginConnecte): void;
 
     /**
      * @throws TableauException
