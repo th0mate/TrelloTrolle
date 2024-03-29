@@ -9,13 +9,22 @@ use PDO;
 
 class ConnexionBaseDeDonnees implements ConnexionBaseDeDonneesInterface
 {
+    /**
+     * @var PDO
+     */
     private PDO $pdo;
 
+    /**
+     * @return PDO
+     */
     public function getPdo(): PDO
     {
         return $this->pdo;
     }
 
+    /**
+     * @param ConfigurationBaseDeDonneesInterface $configurationBDD
+     */
     public function __construct(ConfigurationBaseDeDonneesInterface $configurationBDD)
     {
 

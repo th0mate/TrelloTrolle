@@ -11,16 +11,25 @@ use Exception;
 class CarteRepository extends AbstractRepository implements CarteRepositoryInterface
 {
 
+    /**
+     * @return string
+     */
     protected function getNomTable(): string
     {
         return "carte";
     }
 
+    /**
+     * @return string
+     */
     protected function getNomCle(): string
     {
         return "idcarte";
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNomsColonnes(): array
     {
         return [
@@ -28,15 +37,27 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         ];
     }
 
+    /**
+     * @param array $objetFormatTableau
+     * @return Carte
+     */
     protected function construireDepuisTableau(array $objetFormatTableau): Carte
     {
         return Carte::construireDepuisTableau($objetFormatTableau);
     }
 
+    /**
+     * @param int $idcolonne
+     * @return array
+     */
     public function recupererCartesColonne(int $idcolonne): array {
         return $this->recupererPlusieursPar("idcolonne", $idcolonne);
     }
 
+    /**
+     * @param int $idTableau
+     * @return array
+     */
     public function recupererCartesTableau(int $idTableau): array {
         $sql = "SELECT c.idcarte, titrecarte, descriptifcarte, couleurcarte, c.idcolonne
         FROM {$this->getNomTable()} c 
@@ -68,6 +89,10 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         return $objets;
     }
 
+    /**
+     * @param string $login
+     * @return int
+     */
     public function getNombreCartesTotalUtilisateur(string $login) : int {
         $query = "SELECT COUNT(*) FROM {$this->getNomTable()} WHERE login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
@@ -76,10 +101,17 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         return $obj[0];
     }
 
+    /**
+     * @return int
+     */
     public function getNextIdCarte() : int {
         return $this->getNextId("idcarte");
     }
 
+    /**
+     * @param Carte $carte
+     * @return array|null
+     */
     public function getAffectationsCarte(Carte $carte): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
@@ -96,6 +128,11 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         return $obj;
     }
 
+    /**
+     * @param array|null $affectationsCarte
+     * @param Carte $carte
+     * @return void
+     */
     public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void
     {
         $query = "DELETE FROM affectationcarte WHERE idcarte=:idcarte";
@@ -108,6 +145,10 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         }
     }
 
+    /**
+     * @param int $idCarte
+     * @return Carte
+     */
     public function getAllFromCartes(int $idCarte): Carte
     {
         $query = "SELECT * FROM {$this->getNomTable()} ca 

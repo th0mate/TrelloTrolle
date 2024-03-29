@@ -7,16 +7,38 @@ use PDOException;
 
 abstract class AbstractRepository implements AbstractRepositoryInterface
 {
-    
+
+    /**
+     * @param ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees
+     */
     public function __construct(protected ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees)
     {
     }
 
+    /**
+     * @return string
+     */
     protected abstract function getNomTable(): string;
+
+    /**
+     * @return string
+     */
     protected abstract function getNomCle(): string;
+
+    /**
+     * @return array
+     */
     protected abstract function getNomsColonnes(): array;
+
+    /**
+     * @param array $objetFormatTableau
+     * @return AbstractDataObject
+     */
     protected abstract function construireDepuisTableau(array $objetFormatTableau) : AbstractDataObject;
 
+    /**
+     * @return string
+     */
     protected function formatNomsColonnes() : string {
         return join(",",$this->getNomsColonnes());
     }
@@ -89,6 +111,11 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         return $objets;
     }
 
+    /**
+     * @param string $nomAttribut
+     * @param $valeur
+     * @return AbstractDataObject|null
+     */
     protected function recupererPar(string $nomAttribut, $valeur): ?AbstractDataObject
     {
         $nomTable = $this->getNomTable();
@@ -103,11 +130,19 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         return null;
     }
 
+    /**
+     * @param string $valeurClePrimaire
+     * @return AbstractDataObject|null
+     */
     public function recupererParClePrimaire(string $valeurClePrimaire): ?AbstractDataObject
     {
         return $this->recupererPar($this->getNomCle(), $valeurClePrimaire);
     }
 
+    /**
+     * @param string $valeurClePrimaire
+     * @return bool
+     */
     public function supprimer(string $valeurClePrimaire): bool
     {
         $nomTable = $this->getNomTable();
@@ -119,6 +154,10 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         return ($deleteCount > 0);
     }
 
+    /**
+     * @param AbstractDataObject $object
+     * @return void
+     */
     public function mettreAJour(AbstractDataObject $object): void
     {
         $nomTable = $this->getNomTable();
@@ -139,6 +178,10 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
 
     }
 
+    /**
+     * @param AbstractDataObject $object
+     * @return bool
+     */
     public function ajouter(AbstractDataObject $object): bool
     {
         $nomTable = $this->getNomTable();
@@ -168,6 +211,10 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         }
     }
 
+    /**
+     * @param string $type
+     * @return int
+     */
     protected function getNextId(string $type) : int {
         $nomTable = $this->getNomTable();
         $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM $nomTable");

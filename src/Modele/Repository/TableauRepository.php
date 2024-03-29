@@ -11,31 +11,52 @@ use Exception;
 class TableauRepository extends AbstractRepository implements TableauRepositoryInterface
 {
 
+    /**
+     * @return string
+     */
     protected function getNomTable(): string
     {
         return "tableau";
     }
 
+    /**
+     * @return string
+     */
     protected function getNomCle(): string
     {
         return "idtableau";
     }
 
+    /**
+     * @return string[]
+     */
     protected function getNomsColonnes(): array
     {
         return ["idtableau", "codetableau", "titretableau", "login"];
     }
 
+    /**
+     * @param array $objetFormatTableau
+     * @return AbstractDataObject
+     */
     protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
     {
         return Tableau::construireDepuisTableau($objetFormatTableau);
     }
 
+    /**
+     * @param string $login
+     * @return array
+     */
     public function recupererTableauxUtilisateur(string $login): array
     {
         return $this->recupererPlusieursPar("login", $login);
     }
 
+    /**
+     * @param string $codeTableau
+     * @return AbstractDataObject|null
+     */
     public function recupererParCodeTableau(string $codeTableau): ?AbstractDataObject
     {
         $query = "SELECT idtableau,codetableau,titretableau,t.login, nom,prenom,email,mdphache FROM {$this->getNomTable()} t
@@ -85,11 +106,18 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return $objets;
     }
 
+    /**
+     * @return int
+     */
     public function getNextIdTableau(): int
     {
         return $this->getNextId("idtableau");
     }
 
+    /**
+     * @param string $login
+     * @return int
+     */
     public function getNombreTableauxTotalUtilisateur(string $login): int
     {
         $query = "SELECT COUNT(DISTINCT idtableau) FROM {$this->getNomTable()} WHERE login=:login";
@@ -100,6 +128,11 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
     }
 
 
+    /**
+     * @param string $login
+     * @param Tableau $tableau
+     * @return bool
+     */
     public function estParticipant(string $login, Tableau $tableau): bool
     {
         for ($i = 0; $i < count($this->getParticipants($tableau)); $i++) {
@@ -110,6 +143,11 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return false;
     }
 
+    /**
+     * @param $login
+     * @param Tableau $tableau
+     * @return bool
+     */
     public function estProprietaire($login, Tableau $tableau): bool
     {
         $query = "SELECT login FROM {$this->getNomTable()} WHERE 
@@ -124,11 +162,20 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         }
     }
 
+    /**
+     * @param string $login
+     * @param Tableau $tableau
+     * @return bool
+     */
     public function estParticipantOuProprietaire(string $login, Tableau $tableau): bool
     {
         return $this->estProprietaire($login, $tableau) || $this->estParticipant($login, $tableau);
     }
 
+    /**
+     * @param Tableau $tableau
+     * @return array|null
+     */
     public function getParticipants(Tableau $tableau): ?array
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
@@ -144,6 +191,11 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return $obj;
     }
 
+    /**
+     * @param array|null $participants
+     * @param Tableau $tableau
+     * @return void
+     */
     public function setParticipants(?array $participants, Tableau $tableau): void
     {
         $query = "DELETE FROM participant WHERE idtableau=:idtableau";
@@ -156,6 +208,10 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         }
     }
 
+    /**
+     * @param Tableau $tableau
+     * @return Utilisateur
+     */
     public function getProprietaire(Tableau $tableau) : Utilisateur
     {
         $query = "SELECT u.login,nom,prenom,email,mdphache
@@ -168,6 +224,10 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
+    /**
+     * @param int $idTableau
+     * @return array
+     */
     public function getAllFromTableau(int $idTableau): array
     {
         $query = "SELECT * FROM {$this->getNomTable()} ta

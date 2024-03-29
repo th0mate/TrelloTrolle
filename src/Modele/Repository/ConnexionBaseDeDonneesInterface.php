@@ -6,5 +6,8 @@ use PDO;
 
 interface ConnexionBaseDeDonneesInterface
 {
+    /**
+     * @return PDO
+     */
     public function getPdo(): PDO;
 }
