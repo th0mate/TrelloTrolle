@@ -525,7 +525,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
             document.querySelector('.waiting').style.display = 'none';
             let html = '';
             for (let affectation of affectations) {
-                html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
+                html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
                 <label for="participant${affectation.login}" data-participant="${affectation.login}"><span class="user">${affectation.prenom[0]}${affectation.nom[0]}</span></label>`;
             }
 
@@ -538,7 +538,7 @@ async function afficherFormulaireCreationCarte(id, pourModifier = false, idCarte
                     }
                 }
                 if (!trouve) {
-                    html += `<input data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
+                    html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${user.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
                 <label for="participant${user.login}" data-participant="${user.login}"><span class="user">${user.prenom[0]}${user.nom[0]}</span></label>`;
                 }
             }

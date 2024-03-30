@@ -9,6 +9,12 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
+    /**
+     * Supprime une carte d'une colonne d'un utilisateur
+     * @param idCarte l'id de la carte en question
+     * @param idUtilisateur l'id de l'utilisateur correspondant
+     * @param idColonne l'id de la colonne correspondante
+     */
     supprimerCarteUtilisateur: function (idCarte, idUtilisateur, idColonne) {
         const utilisateur = objectByName.get(idUtilisateur);
         let carte = document.querySelector(`[data-carte="${idCarte}"]`);
@@ -20,22 +26,32 @@ let utilisateurs = reactive({
         }
     },
 
+    /**
+     * Ajoute une carte à une colonne d'un utilisateur
+     * @param idCarte l'id de la carte
+     * @param idUtilisateur l'id de l'utilisateur
+     * @param idColonne l'id de la colonne
+     */
     ajouterCarteUtilisateur: function (idCarte, idUtilisateur, idColonne) {
         const utilisateur = objectByName.get(idUtilisateur);
         let carte = document.querySelector(`[data-carte="${idCarte}"]`);
-        let colonne = document.querySelector(`[data-columns="${idColonne}"] .draggable`);
-        let colonneUtilisateur = utilisateur.colonnes.find(colonne => colonne.idColonne === idColonne);
+        let colonne = document.querySelector(`[data-columns="${idColonne}"]`);
+        let colonneUtilisateur = utilisateur.colonnes.find(colonne=> colonne.idColonne === idColonne);
         if (colonneUtilisateur) {
             colonneUtilisateur.nbCartes++;
         } else {
             utilisateur.colonnes.push({
                 idColonne: idColonne,
-                titreColonne: colonne.querySelector('.titre').innerText,
+                titreColonne: colonne.querySelector('.main').innerText,
                 nbCartes: 1
             });
         }
     },
 
+    /**
+     * Affiche les informations d'un utilisateur
+     * @param loginUtilisateur le login de l'utilisateur
+     */
     afficherContenuUtilisateur: function (loginUtilisateur) {
         if (utilisateursReactifs.length > 0) {
             const utilisateur = objectByName.get(loginUtilisateur);
@@ -54,12 +70,20 @@ let utilisateurs = reactive({
         }
     },
 
+    /**
+     * Cache le contenu d'un utilisateur
+     * @param loginUtilisateur le login de l'utilisateur
+     */
     cacherContenuUtilisateur: function (loginUtilisateur) {
         const div = document.querySelector('.' + loginUtilisateur);
         div.style.display = 'none';
     },
 
-
+    /**
+     * Rempli le htmlfun d'une div spécifique avec les informations de l'utilisateur concerné
+     * @param idUtilisateur l'id de l'utilisateur
+     * @returns {string} le contenu HTML de la div à afficher
+     */
     afficherElements: function (idUtilisateur) {
         const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
         let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
@@ -172,6 +196,7 @@ let utilisateurs = reactive({
     },
 
 }, "utilisateur");
+
 
 window.majUtilisateurs = function () {
     document.querySelector('.waiting').setAttribute('data-onload', 'utilisateur.MAJUtilisateursDepuisBaseDeDonnees()');
