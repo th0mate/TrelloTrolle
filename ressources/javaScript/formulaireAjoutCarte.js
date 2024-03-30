@@ -167,14 +167,20 @@ let formulaireAjoutCarte = reactive({
             <div class="features">`;
 
             //TODO : n'importe quoi mdr
-            for (let participant of this.participants) {
-                html += `<span class="user" data-user="${participant}">${participant}</span>`;
+
+            const tousMembres = await getTousMembresTableaux(document.querySelector('.adder').getAttribute('data-tableau'));
+
+            for (let participant of tousMembres) {
+                if (this.participants.includes(participant.login)) {
+                    html += `<span class="user" data-user="${participant.login}">${participant.prenom[0]}${participant.nom[0]}</span>`;
+                }
             }
 
             html += `</div>`;
 
             document.querySelector(`[data-card="${this.idCarte}"]`).innerHTML = html;
 
+            randomColorsPourUsersDifferents();
             updateDraggables();
             updateCards();
 

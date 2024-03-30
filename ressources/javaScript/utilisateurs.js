@@ -38,7 +38,7 @@ let utilisateurs = reactive({
         const utilisateur = objectByName.get(idUtilisateur);
         let carte = document.querySelector(`[data-carte="${idCarte}"]`);
         let colonne = document.querySelector(`[data-columns="${idColonne}"]`);
-        let colonneUtilisateur = utilisateur.colonnes.find(colonne=> colonne.idColonne === idColonne);
+        let colonneUtilisateur = utilisateur.colonnes.find(colonne => colonne.idColonne === idColonne);
         if (colonneUtilisateur) {
             colonneUtilisateur.nbCartes++;
         } else {
@@ -49,6 +49,49 @@ let utilisateurs = reactive({
             });
         }
     },
+
+    /**
+     * Supprime un utilisateur d'un tableau
+     * @param idUtilisateur l'id de l'utilisateur à supprimer
+     * @returns {Promise<void>} La promesse habituelle
+     */
+    supprimerUtilisateur: async function (idUtilisateur) {
+        utilisateursReactifs = utilisateursReactifs.filter(utilisateur => utilisateur.login !== idUtilisateur);
+        document.querySelectorAll(`[data-user="${idUtilisateur}"]`).forEach(element => element.remove());
+
+        let response = await fetch(apiBase + '/tableau/membre/supprimer', {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                idTableau: document.querySelector('.adder').getAttribute('data-tableau'),
+                login: idUtilisateur
+            })
+        });
+
+        if (response.status !== 200) {
+            console.error("Erreur lors de la suppression de l'utilisateur");
+        }
+    },
+
+
+    /**
+     * Ajoute un utilisateur à un tableau (l'appel à la BD a déjà été fait au préalable)
+     * @param user l'utilisateur à ajouter
+     */
+    ajouterUtilisateur: function (user) {
+        let utilisateur = {};
+        utilisateur.prenom = user.prenom;
+        utilisateur.nom = user.nom;
+        utilisateur.login = user.login;
+        utilisateur.colonnes = [];
+        utilisateur.drapeau = false;
+        utilisateur = reactive(utilisateur, user.login);
+        utilisateursReactifs.push(utilisateur);
+    },
+
 
     /**
      * Affiche les informations d'un utilisateur
