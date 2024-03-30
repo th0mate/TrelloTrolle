@@ -135,7 +135,7 @@ class ServiceUtilisateurTest extends TestCase
 
     /** CREER UTILISATEUR */
 
-    public fu,
+    //public fu,
 
     /** SUPPRIMER UTILISATEUR */
 
