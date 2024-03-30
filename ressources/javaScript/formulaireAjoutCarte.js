@@ -18,6 +18,7 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
+        console.log('envoyerFormulaire');
 
         if (this.estEnvoye) {
             return;
@@ -63,6 +64,7 @@ let formulaireAjoutCarte = reactive({
      */
     ajouterCarte: async function (idColonne) {
         if (this) {
+            //TODO : Ajouter les participants de façon normale
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
@@ -151,9 +153,19 @@ let formulaireAjoutCarte = reactive({
 
     modifierCarte: async function (idColonneIdCarte = null) {
         if (this.titre !== '') {
-            document.querySelector(`[data-card="${this.idCarte}"]`).innerHTML = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
+
+            let html = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
-            <div class="features"></div>`;
+            <div class="features">`;
+
+            for (let participant of this.participants) {
+                //TODO : Ajouter les participants de façon normale
+                html += `<span class="user" data-user="${participant}">${participant}</span>`;
+            }
+
+            html += `</div>`;
+
+            document.querySelector(`[data-card="${this.idCarte}"]`).innerHTML = html;
 
             updateDraggables();
             updateCards();
