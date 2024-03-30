@@ -480,12 +480,12 @@ class ServiceUtilisateurTest extends TestCase
 
     /** FONCTIONS UTILITAIRES */
 
-    public function createFakeUser($login = "test"): Utilisateur
+    private function createFakeUser($login = "test"): Utilisateur
     {
         return new Utilisateur($login, 'test', "test", 'test@t.t', MotDePasse::hacher("test"));
     }
 
-    public function createFakeTableau($utilisateur = null, $idTableau = 1): Tableau
+    private function createFakeTableau($utilisateur = null, $idTableau = 1): Tableau
     {
         if (is_null($utilisateur)) {
             $utilisateur = $this->createFakeUser();
@@ -493,7 +493,7 @@ class ServiceUtilisateurTest extends TestCase
         return new Tableau($idTableau, "code", "titre", $utilisateur);
     }
 
-    public function createFakeCarte($idCarte = 1): Carte
+    private function createFakeCarte($idCarte = 1): Carte
     {
         return new Carte($idCarte, "titre", "descriptif", "bleu", new Colonne(null, null, null));
     }
