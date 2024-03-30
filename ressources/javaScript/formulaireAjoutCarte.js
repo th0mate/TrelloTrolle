@@ -83,6 +83,10 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
+    /**
+     * Affiche les checkbox des participants d'un tableau pour le formulaire de création/modification de carte pour ajouter un membre à une carte
+     * @returns {Promise<string>} la promesse habituelle et le contenu HTML à placer dans le htmlfun correspondant
+     */
     afficherCheckBoxParticipants: async function () {
         const idTableau = document.querySelector('.adder').getAttribute('data-tableau');
         const estModif = document.querySelector('.formulaireCreationCarte').getAttribute('data-modif');
@@ -149,6 +153,10 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
+    /**
+     * Fonction qui récupère les paramètres pour modifier une carte
+     * @param parametres
+     */
     setParametresPourModifier: function (parametres) {
         let [id, idCarte, titreCarte, descriptifCarte, couleurCarte] = parametres.split(',');
         this.idColonne = id;
@@ -159,14 +167,17 @@ let formulaireAjoutCarte = reactive({
         this.participants = window.affectationsCarte;
     },
 
+    /**
+     * Modifie une carte en front et dans l'API
+     * @param idColonneIdCarte l'id de la colonne et de la carte à modifier
+     * @returns {Promise<void>} une promesse
+     */
     modifierCarte: async function (idColonneIdCarte = null) {
         if (this.titre !== '') {
 
             let html = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
-
-            //TODO : n'importe quoi mdr
 
             const tousMembres = await getTousMembresTableaux(document.querySelector('.adder').getAttribute('data-tableau'));
 
@@ -213,6 +224,10 @@ let formulaireAjoutCarte = reactive({
     },
 
 
+    /**
+     * Ajoute un participant à une carte
+     * @param idUtilisateur l'id de l'utilisateur à ajouter
+     */
     ajouterParticipantCarte: function (idUtilisateur) {
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
@@ -223,6 +238,10 @@ let formulaireAjoutCarte = reactive({
         }
     },
 
+    /**
+     * Supprime un participant d'une carte
+     * @param idUtilisateur l'id de l'utilisateur à supprimer
+     */
     supprimerParticipantCarte: function (idUtilisateur) {
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
@@ -233,6 +252,11 @@ let formulaireAjoutCarte = reactive({
 }, "formulaireAjoutCarte");
 
 
+/**
+ * Fonction qui récupère tous les membres d'un tableau
+ * @param idTableau l'id du tableau
+ * @returns {Promise<*>} une promesse
+ */
 async function getTousMembresTableaux(idTableau) {
     let response = await fetch(apiBase + `/tableau/membre/getPourTableau`, {
         method: 'POST',
@@ -288,6 +312,9 @@ async function getNextIdCarte() {
     return idCarte.idCarte - 1;
 }
 
+/**
+ * Ferme le formulaire de création de carte et réinitialise les champs
+ */
 function closeForm() {
     document.querySelector('.formulaireCreationCarte').style.display = "none";
     document.querySelector('.inputCreationCarte').value = '';
