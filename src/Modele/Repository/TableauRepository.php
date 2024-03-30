@@ -74,8 +74,8 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
     public function recupererTableauxParticipeUtilisateur(string $login): array
     {
         $sql = "SELECT DISTINCT p.idtableau, codetableau, titretableau, t.login
-                from {$this->getNomTable()} t JOIN participant p ON t.idtableau = p.idtableau
-                WHERE p.login = :login";
+                from {$this->getNomTable()} where {$this->getNomCle()} in 
+                (select idtableau from participant p where p.login=:login)";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
