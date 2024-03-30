@@ -181,9 +181,9 @@ class ServiceUtilisateurTest extends TestCase
     public function testRecupererCompte()
     {
         $fakeUtilisateur = $this->createFakeUser();
-        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($fakeUtilisateur);
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn([$fakeUtilisateur]);
         $user = $this->serviceUtilisateur->recupererCompte("1");
-        assertEquals($fakeUtilisateur, $user);
+        assertEquals([$fakeUtilisateur], $user);
     }
 
     /** IS NOT NULL LOGIN */
@@ -431,23 +431,41 @@ class ServiceUtilisateurTest extends TestCase
 
     public function testSupprimerMembreProprietaire()
     {
-        $fakeTableau = $this->createFakeTableau();
-        $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
-//TODO
+        $this->expectException(TableauException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("Vous ne pouvez pas vous supprimer du tableau");
+        $fakeUser=$this->createFakeUser();
+        $fakeTableau = $this->createFakeTableau($fakeUser);
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "login");
     }
 
     public function testSupprimerMembreNonParticipant()
     {
-        $fakeTableau = $this->createFakeTableau();
+        $this->expectException(TableauException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("Cet utilisateur n'est pas membre du tableau");
+        $fakeUser=$this->createFakeUser();
+        $fakeTableau = $this->createFakeTableau($fakeUser);
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->tableauRepository->method("estParticipant")->willReturn(false);
         $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
-//TODO
     }
 
     public function testSupprimerMembreValide()
     {
-        $fakeTableau = $this->createFakeTableau();
+        $fakeUser=$this->createFakeUser();
+        $fakeTableau = $this->createFakeTableau($fakeUser);
+        $this->tableauRepository->method("estProprietaire")->willReturn(true);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->tableauRepository->method("estParticipant")->willReturn(true);
+        $this->tableauRepository->method("getParticipants")->willReturn([$fakeUser]);
+        $this->tableauRepository->method("setParticipants")->willReturnCallback(function ($participants,$tableau){
+            self::assertEmpty($participants);
+        });
         $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
-//TODO
     }
 
     /** RECUPERER UTILISATEUR PAR CLE */

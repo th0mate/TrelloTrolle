@@ -112,8 +112,8 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->estProprietaire($tableau,$loginConnecte);
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estProprietaire($login, $tableau)) {
-            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,Response::HTTP_UNAUTHORIZED);
+        if ($login==$loginConnecte) {
+            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,403);
         }
         if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
             throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
@@ -122,7 +122,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             return $u->getLogin() !== $utilisateur->getLogin();
         });
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
         return $utilisateur;
     }
 
