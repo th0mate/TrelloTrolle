@@ -246,8 +246,6 @@ class ControleurTableau extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-
-            var_dump($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $tableaux = $this->serviceTableau->recupererTableauEstMembre($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Liste des tableaux de $login",
