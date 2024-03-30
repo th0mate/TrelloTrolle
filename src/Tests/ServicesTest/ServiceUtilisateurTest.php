@@ -161,7 +161,30 @@ class ServiceUtilisateurTest extends TestCase
 
     /** RECUPER COMPTE */
 
-    //TODO
+    public function testRecupererCompteEmailManquant()
+    {
+        $this->expectExceptionMessage("Adresse email manquante");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->serviceUtilisateur->recupererCompte(null);
+    }
+
+    public function testRecupererCompteInexistant()
+    {
+        $this->expectExceptionMessage("Aucun compte associé à cette adresse email");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn([]);
+        $this->serviceUtilisateur->recupererCompte("1");
+    }
+
+    public function testRecupererCompte()
+    {
+        $fakeUtilisateur = $this->createFakeUser();
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($fakeUtilisateur);
+        $user = $this->serviceUtilisateur->recupererCompte("1");
+        assertEquals($fakeUtilisateur, $user);
+    }
 
     /** IS NOT NULL LOGIN */
 
@@ -408,17 +431,22 @@ class ServiceUtilisateurTest extends TestCase
 
     public function testSupprimerMembreProprietaire()
     {
+        $fakeTableau = $this->createFakeTableau();
+        $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
 //TODO
     }
 
     public function testSupprimerMembreNonParticipant()
     {
-
-        //TODO
+        $fakeTableau = $this->createFakeTableau();
+        $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
+//TODO
     }
 
     public function testSupprimerMembreValide()
     {
+        $fakeTableau = $this->createFakeTableau();
+        $this->serviceUtilisateur->supprimerMembre($fakeTableau, "login", "loginConnecte");
 //TODO
     }
 

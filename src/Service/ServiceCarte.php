@@ -85,7 +85,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne, $attributs);
     }
 
-    public function newCarte(Colonne $colonne, $attributs): Carte
+    private function newCarte(Colonne $colonne, $attributs): Carte
     {
         $carte = new Carte(
             $this->carteRepository->getNextIdCarte(),
@@ -136,7 +136,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
+    private function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);
