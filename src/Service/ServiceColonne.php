@@ -38,7 +38,7 @@ class ServiceColonne implements ServiceColonneInterface
          **/
         $colonne = $this->colonneRepository->recupererParClePrimaire(strval($idColonne));
         if (!$colonne) {
-            throw new ServiceException("Colonne inexistante",401);
+            throw new ServiceException("Colonne inexistante",404);
         }
         return $colonne;
     }
