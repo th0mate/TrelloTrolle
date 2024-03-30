@@ -247,7 +247,6 @@ async function cardDrop(e) {
             if (this.children.length > 0) {
                 let targetCard = document.elementFromPoint(e.clientX, e.clientY).closest('.card');
                 if (targetCard) {
-                    //SUR AUTRE CARTE
                     this.insertBefore(draggedCard, targetCard);
                     let rect = targetCard.getBoundingClientRect();
                     let x = rect.left + rect.width / 2;
@@ -262,7 +261,6 @@ async function cardDrop(e) {
                     this.appendChild(draggedCard);
                 }
             } else {
-                //SUR STOCKAGE
                 this.appendChild(draggedCard);
             }
             draggedCard = null;
@@ -639,7 +637,7 @@ function randomColor() {
 /**
  * Met une couleur aléatoire sombre pour chaque utilisateur différent dans la page
  */
-document.addEventListener('DOMContentLoaded', function () {
+function randomColorsPourUsersDifferents() {
     document.querySelectorAll('[data-user]').forEach(el => {
         const listeLoginDejaPasses = [];
         document.querySelectorAll(`[data-user="${el.getAttribute('data-user')}"]`).forEach(el2 => {
@@ -652,7 +650,32 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     })
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    randomColorsPourUsersDifferents();
 });
+
+
+/**
+ * Repasse sur toute la page pour mettre à jour les couleurs de chaque user différent, sans changer les couleurs déjà attribuées, sauf si l'utilisateur n'a pas de couleur
+ */
+function changeCouleursPourUtilisateursSansCouleur() {
+    document.querySelectorAll('[data-user]').forEach(el => {
+        const listeLoginDejaPasses = [];
+        document.querySelectorAll(`[data-user="${el.getAttribute('data-user')}"]`).forEach(el2 => {
+            if (!el2.style.backgroundColor) {
+                if (!listeLoginDejaPasses.includes(el2.getAttribute('data-user'))) {
+                    el2.style.backgroundColor = randomColor();
+                    listeLoginDejaPasses.push(el2.getAttribute('data-user'));
+                    listeLoginDejaPasses.push(el2.style.backgroundColor);
+                } else {
+                    el2.style.backgroundColor = listeLoginDejaPasses[listeLoginDejaPasses.indexOf(el2.getAttribute('data-user')) + 1];
+                }
+            }
+        });
+    })
+}
 
 
 /**

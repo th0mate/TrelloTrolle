@@ -1,4 +1,4 @@
-import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
 
 /**
  * Objet réactif formulaireAjoutCarte
@@ -18,8 +18,6 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-        console.log('envoyerFormulaire');
-
         if (this.estEnvoye) {
             return;
         }
@@ -49,7 +47,6 @@ let formulaireAjoutCarte = reactive({
 
             if (response.status !== 200) {
                 console.error("Erreur lors de la création de la carte dans l'API");
-                //TODO: Afficher un message d'erreur
             }
             this.estEnvoye = false;
         } else {
@@ -64,19 +61,30 @@ let formulaireAjoutCarte = reactive({
      */
     ajouterCarte: async function (idColonne) {
         if (this) {
-            //TODO : Ajouter les participants de façon normale
-            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
+            const tousMembres = await getTousMembresTableaux(document.querySelector('.adder').getAttribute('data-tableau'));
+
+            let html = `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
-            <div class="features"></div>
-            </div>`;
+            <div class="features">`;
+
+            for (let participant of tousMembres) {
+                if (this.participants.includes(participant.login)) {
+                    html += `<span class="user" data-user="${participant.login}">${participant.prenom[0]}${participant.nom[0]}</span>`;
+                }
+            }
+
+            html += `</div>`;
+
+            document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += html;
             updateDraggables();
+            changeCouleursPourUtilisateursSansCouleur();
+
         }
     },
 
     afficherCheckBoxParticipants: async function () {
         const idTableau = document.querySelector('.adder').getAttribute('data-tableau');
-
         const estModif = document.querySelector('.formulaireCreationCarte').getAttribute('data-modif');
 
 
@@ -85,6 +93,7 @@ let formulaireAjoutCarte = reactive({
             //TODO : Récupérer les participants de la carte
             console.error("Pas encore implémenté");
         } else {
+            this.idCarte = await getNextIdCarte();
 
             let response = await fetch(apiBase + `/tableau/membre/getPourTableau`, {
                 method: 'POST',
@@ -99,7 +108,6 @@ let formulaireAjoutCarte = reactive({
 
             if (response.status !== 200) {
                 console.error(response.error);
-                return 'aaa';
 
             } else {
 
@@ -202,6 +210,9 @@ let formulaireAjoutCarte = reactive({
     ajouterParticipantCarte: function (idUtilisateur) {
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
+            if (this.idColonne === '') {
+                this.idColonne = document.querySelector('.idColonne').value;
+            }
             window.ajouterCarteUtilisateur(this.idCarte, idUtilisateur, this.idColonne);
         }
     },
@@ -214,6 +225,41 @@ let formulaireAjoutCarte = reactive({
     }
 
 }, "formulaireAjoutCarte");
+
+
+async function getTousMembresTableaux(idTableau) {
+    let response = await fetch(apiBase + `/tableau/membre/getPourTableau`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            idTableau: idTableau
+        })
+    });
+
+    let response2 = await fetch(apiBase + `/tableau/membre/getProprio`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+            idTableau: idTableau
+        })
+    });
+
+    if (response.status !== 200 || response2.status !== 200) {
+        console.error("Erreur lors de la récupération des membres du tableau");
+    } else {
+        const proprio = await response2.json();
+        let membres = await response.json();
+        return membres.concat(proprio);
+    }
+
+
+}
 
 
 /**
@@ -233,7 +279,7 @@ async function getNextIdCarte() {
     }
 
     let idCarte = await response.json();
-    return idCarte.idCarte;
+    return idCarte.idCarte - 1;
 }
 
 function closeForm() {

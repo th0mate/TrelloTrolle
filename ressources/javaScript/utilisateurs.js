@@ -20,9 +20,11 @@ let utilisateurs = reactive({
         let carte = document.querySelector(`[data-carte="${idCarte}"]`);
         let colonne = document.querySelector(`[data-columns="${idColonne}"] .draggable`);
         let colonneUtilisateur = utilisateur.colonnes.find(colonne => colonne.idColonne === idColonne);
-        colonneUtilisateur.nbCartes--;
-        if (colonneUtilisateur.nbCartes === 0) {
-            utilisateur.colonnes = utilisateur.colonnes.filter(colonne => colonne.idColonne !== idColonne);
+        if (colonneUtilisateur) {
+            colonneUtilisateur.nbCartes--;
+            if (colonneUtilisateur.nbCartes === 0) {
+                utilisateur.colonnes = utilisateur.colonnes.filter(colonne => colonne.idColonne !== idColonne);
+            }
         }
     },
 
