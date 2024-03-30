@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Tests\ServicesTest;
 
 use App\Trellotrolle\Modele\DataObject\Colonne;
+use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -54,6 +55,22 @@ class ServiceColonneTest extends TestCase
     /** recupererColonneTableau */
 
     /** supprimerColonne */
+
+    public function testSupprimerColonneErreur()
+    {
+        $this->expectExceptionCode(400);
+        $this->expectExceptionMessage("Erreur lors de la suppression d'une carte");
+        $fakeTableau=new Tableau(1,"code","titre",null);
+        $this->colonneRepository->method("supprimer")->willReturn(false);
+        $this->serviceColonne->supprimerColonne($fakeTableau,"2");
+    }
+    public function testSupprimerColonneValide()
+    {
+        $this->expectNotToPerformAssertions();
+        $fakeTableau=new Tableau(1,"code","titre",null);
+        $this->colonneRepository->method("supprimer")->willReturn(true);
+        $this->serviceColonne->supprimerColonne($fakeTableau,"2");
+    }
 
     /** isSetNomColonne */
 
