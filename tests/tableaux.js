@@ -672,6 +672,9 @@ function changeCouleursPourUtilisateursSansCouleur() {
                 } else {
                     el2.style.backgroundColor = listeLoginDejaPasses[listeLoginDejaPasses.indexOf(el2.getAttribute('data-user')) + 1];
                 }
+            } else {
+                listeLoginDejaPasses.push(el2.getAttribute('data-user'));
+                listeLoginDejaPasses.push(el2.style.backgroundColor);
             }
         });
     })
