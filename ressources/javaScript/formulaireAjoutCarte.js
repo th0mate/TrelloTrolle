@@ -166,8 +166,8 @@ let formulaireAjoutCarte = reactive({
             ${this.titre}
             <div class="features">`;
 
+            //TODO : n'importe quoi mdr
             for (let participant of this.participants) {
-                //TODO : Ajouter les participants de façon normale
                 html += `<span class="user" data-user="${participant}">${participant}</span>`;
             }
 
