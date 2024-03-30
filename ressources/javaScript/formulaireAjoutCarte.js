@@ -190,12 +190,14 @@ let formulaireAjoutCarte = reactive({
     ajouterParticipantCarte: function (idUtilisateur) {
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
+            window.ajouterCarteUtilisateur(this.idCarte, idUtilisateur, this.idColonne);
         }
     },
 
     supprimerParticipantCarte: function (idUtilisateur) {
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
+            window.supprimerCarteUtilisateur(this.idCarte, idUtilisateur, this.idColonne);
         }
     }
 

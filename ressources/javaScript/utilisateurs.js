@@ -9,6 +9,33 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
+    supprimerCarteUtilisateur: function (idCarte, idUtilisateur, idColonne) {
+        const utilisateur = objectByName.get(idUtilisateur);
+        let carte = document.querySelector(`[data-carte="${idCarte}"]`);
+        let colonne = document.querySelector(`[data-columns="${idColonne}"] .draggable`);
+        let colonneUtilisateur = utilisateur.colonnes.find(colonne => colonne.idColonne === idColonne);
+        colonneUtilisateur.nbCartes--;
+        if (colonneUtilisateur.nbCartes === 0) {
+            utilisateur.colonnes = utilisateur.colonnes.filter(colonne => colonne.idColonne !== idColonne);
+        }
+    },
+
+    ajouterCarteUtilisateur: function (idCarte, idUtilisateur, idColonne) {
+        const utilisateur = objectByName.get(idUtilisateur);
+        let carte = document.querySelector(`[data-carte="${idCarte}"]`);
+        let colonne = document.querySelector(`[data-columns="${idColonne}"] .draggable`);
+        let colonneUtilisateur = utilisateur.colonnes.find(colonne => colonne.idColonne === idColonne);
+        if (colonneUtilisateur) {
+            colonneUtilisateur.nbCartes++;
+        } else {
+            utilisateur.colonnes.push({
+                idColonne: idColonne,
+                titreColonne: colonne.querySelector('.titre').innerText,
+                nbCartes: 1
+            });
+        }
+    },
+
     afficherContenuUtilisateur: function (loginUtilisateur) {
         if (utilisateursReactifs.length > 0) {
             const utilisateur = objectByName.get(loginUtilisateur);
@@ -149,6 +176,14 @@ let utilisateurs = reactive({
 window.majUtilisateurs = function () {
     document.querySelector('.waiting').setAttribute('data-onload', 'utilisateur.MAJUtilisateursDepuisBaseDeDonnees()');
     startReactiveDom();
+};
+
+window.supprimerCarteUtilisateur = function (idCarte, idUtilisateur, idColonne) {
+    utilisateurs.supprimerCarteUtilisateur(idCarte, idUtilisateur, idColonne);
+};
+
+window.ajouterCarteUtilisateur = function (idCarte, idUtilisateur, idColonne) {
+    utilisateurs.ajouterCarteUtilisateur(idCarte, idUtilisateur, idColonne);
 };
 
 applyAndRegister({});
