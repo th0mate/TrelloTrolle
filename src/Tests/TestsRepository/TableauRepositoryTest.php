@@ -60,19 +60,6 @@ class TableauRepositoryTest extends TestCase
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                               participant (login, idTableau)
                                                               VALUES ('bob560',3)");
-
-        /**self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
-                                                              colonne (idcolonne,titrecolonne,idtableau) 
-                                                              VALUES (2, 'test2', 1)");
-        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
-                                                              VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
-        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
-                                                              VALUES (4, 'carte2', 'carte2', 'c est une carte2', 2)");
-        self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO
-                                                              affectationCarte(idcarte,login )
-                                                              VALUES (3,'bob69')");**/
     }
 
     protected function tearDown(): void
