@@ -133,7 +133,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         $whereString = "$nomClePrimaire = :{$nomClePrimaire}Tag";
 
         $sql = "UPDATE $nomTable SET $setString WHERE $whereString";
-        $req_prep = $this->connexionBaseDeDonnees->getPDO()->query($sql);
+        $req_prep = $this->connexionBaseDeDonnees->getPDO()->prepare($sql);
 
         $objetFormatTableau = $object->formatTableau();
         $req_prep->execute($objetFormatTableau);
