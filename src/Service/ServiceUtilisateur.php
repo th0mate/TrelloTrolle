@@ -247,7 +247,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $this->tableauRepository->setParticipants($participants, $tableau);
         }
         $this->utilisateurRepository->supprimer($login);
-        ConnexionUtilisateur::deconnecter();
     }
 
     /**
