@@ -2,7 +2,8 @@
 
 namespace App\Trellotrolle\Configuration;
 
-class ConfigurationBaseDeDonnees {
+class ConfigurationBaseDeDonnees implements ConfigurationBaseDeDonneesInterface
+{
 
 	//Informations de connexion pour le serveur PostgreSQL SAE de l'IUT
     private array $configurationBaseDeDonnees = array(
@@ -32,5 +33,14 @@ class ConfigurationBaseDeDonnees {
     public function getMotDePasse() : string {
         return $this->configurationBaseDeDonnees['motDePasse'];
     }
+    public function getDSN()
+    {
+        return "pgsql:host=162.38.222.142;port=5673;dbname=iut";
 
+    }
+
+    public function getOptions()
+    {
+        return [];
+    }
 }

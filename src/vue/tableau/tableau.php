@@ -5,7 +5,7 @@
 /** @var array $participants */
 
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -24,7 +24,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
         <div class="utilisateur icons_menu">
             <span><?= htmlspecialchars(TableauRepository::getUtilisateur($tableau)->getPrenom()) ?> <?= htmlspecialchars(TableauRepository::getUtilisateur($tableau)->getNom()) ?></span>
             <?php
-                if(ConnexionUtilisateur::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
             ?>
             <span><a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourTableau', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">
                     <img class="icon" src="<?=$assistantUrl->getAbsoluteUrl('../ressources/img/editer.png');?>" alt="Éditer le tableau">
@@ -43,7 +43,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                             <div class="icons_menu_stick">
                                 <?= $participant->getPrenom() ?> <?= $participant->getNom() ?>
                                 <?php
-                                if(ConnexionUtilisateur::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                                if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                                 ?>
                                 <span class="actions">
                                     <a href="<?= $generateurUrl->generate('supprimerMembre', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau(), 'login' => $participant->getLogin()])?>">
@@ -54,7 +54,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                         </li>
                     <?php }?>
                     <?php
-                    if(ConnexionUtilisateur::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                    if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                     ?>
                     <li><a href="<?= $generateurUrl->generate('afficherFormulaireAjoutMembre', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">Ajouter un membre</a></li>
                     <?php } ?>
@@ -85,7 +85,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
             <div class="titre icons_menu">
                 <?= $tableau->getTitreTableau() ?>
                 <?php
-                if(ConnexionUtilisateur::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                     ?>
                     <span class="actions">
                             <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourTableau', ['controleur' => 'tableau', 'idTableau' => $tableau->getIdTableau()])?>">
@@ -100,7 +100,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                     <div class="titre icons_menu">
                         <span><?= $colonnes[$i]->getTitreColonne() ?></span>
                         <?php
-                            if(ConnexionUtilisateur::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                            if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <span class="actions">
                             <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourColonne', ['controleur' => 'colonne', 'idColonne' => $colonnes[$i]->getIdColonne()])?>">
@@ -116,7 +116,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                             <div class="titre icons_menu">
                                 <span><?= htmlspecialchars($carte->getTitreCarte()) ?></span>
                                 <?php
-                                    if(ConnexionUtilisateur::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                                    if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                                 ?>
                                 <span class="actions">
                                     <a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourCarte', ['controleur' => 'carte', 'idCarte' => $carte->getIdCarte()])?>">
@@ -138,7 +138,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                         </div>
                         <?php }?>
                         <?php
-                            if(ConnexionUtilisateur::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                            if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <a class="ajout-tableau" href="<?= $generateurUrl->generate('afficherFormulaireCreationCarte', ['controleur' => 'carte', 'idColonne' => $colonnes[$i]->getIdColonne()])?>">
                             <div>
@@ -152,7 +152,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 </div>
                 <?php }?>
                 <?php
-                    if(ConnexionUtilisateur::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                    if(ConnexionUtilisateurSession::estConnecte() && TableauRepository::estParticipantOuProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                 ?>
                     <a class="ajout-tableau" href="<?= $generateurUrl->generate('afficherFormulaireCreationColonne', ['controleur' => 'colonne', 'idTableau' => $tableau->getIdTableau()])?>">
                         <div class="colonne">

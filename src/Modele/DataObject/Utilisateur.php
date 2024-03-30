@@ -6,20 +6,21 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
 {
     public function __construct(
         private ?string $login ,
-        private ?string $nom,
-        private ?string $prenom,
-        private ?string $email,
-        private ?string $mdpHache,
+        private string $nom,
+        private string $prenom,
+        private string $email,
+        private string $mdpHache,
     )
     {}
 
     public static function construireDepuisTableau(array $objetFormatTableau) : Utilisateur {
+
         return new Utilisateur(
-            $objetFormatTableau["login"] ?? null,
-            $objetFormatTableau["nom"] ?? null,
-            $objetFormatTableau["prenom"] ?? null,
-            $objetFormatTableau["email"] ?? null,
-            $objetFormatTableau["mdphache"] ?? null,
+            $objetFormatTableau["login"] ,
+            $objetFormatTableau["nom"] ,
+            $objetFormatTableau["prenom"],
+            $objetFormatTableau["email"],
+            $objetFormatTableau["mdphache"],
         );
     }
 

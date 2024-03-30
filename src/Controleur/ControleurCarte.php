@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -29,7 +30,8 @@ class ControleurCarte extends ControleurGenerique
                                 private ServiceConnexionInterface   $serviceConnexion,
                                 private ServiceCarteInterface      $serviceCarte,
                                 private ServiceUtilisateurInterface $serviceUtilisateur,
-                                private ServiceColonneInterface     $serviceColonne)
+                                private ServiceColonneInterface     $serviceColonne,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur)
     {
         parent::__construct($container);
     }
@@ -48,7 +50,7 @@ class ControleurCarte extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $carte = $this->serviceCarte->recupererCarte($idCarte);
             $tableau = $carte->getColonne()->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $cartes = $this->serviceCarte->supprimerCarte($tableau, $idCarte);
             if (count($cartes) > 0) {
                 return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
@@ -74,7 +76,7 @@ class ControleurCarte extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'une carte",
@@ -110,7 +112,7 @@ class ControleurCarte extends ControleurGenerique
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $this->serviceCarte->recupererAttributs($attributs);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceCarte->creerCarte($tableau, $attributs, $colonne);
             return ControleurCarte::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
@@ -135,7 +137,7 @@ class ControleurCarte extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $carte = $this->serviceCarte->recupererCarte($idCarte);
             $tableau = $carte->getColonne()->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonnes = $this->serviceColonne->recupererColonnesTableau($tableau->getIdTableau());
             return $this->afficherTwig('carte/formulaireMiseAJourCarte.html.twig',[ "carte" => $carte,
                 "colonnes" => $colonnes]);
@@ -166,7 +168,7 @@ class ControleurCarte extends ControleurGenerique
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $carte = $this->serviceCarte->verificationsMiseAJourCarte($idCarte, $colonne, $attributs);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceCarte->miseAJourCarte($tableau, $attributs, $carte, $colonne);
             return ControleurCarte::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {

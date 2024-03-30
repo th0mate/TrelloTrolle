@@ -12,7 +12,7 @@
     "symfony/dependency-injection": "6.4",
     "twig/twig": "^3.8",
     "symfony/yaml": "6.4",
-    "ext-http": "*"
+    "firebase/php-jwt": "^6.10"
   },
   "require-dev": {
     "phpunit/phpunit": "10"

@@ -17,13 +17,14 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurUtilisateurAPI
 {
 
-    public function __construct(private ServiceUtilisateurInterface $serviceUtilisateur,
-    private ServiceConnexionInterface $serviceConnexion)
+    public function __construct(private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ServiceConnexionInterface $serviceConnexion
+    )
     {
     }
 
-    #[Route("/api/utilisateur/recherche",name: "rechercheUtilisateurAPI",methods: "POST")]
-    public function rechercheUtilisateur(Request $request):Response
+    #[Route("/api/utilisateur/recherche", name: "rechercheUtilisateurAPI", methods: "POST")]
+    public function rechercheUtilisateur(Request $request): Response
     {
         $corps=$request->getContent();
         $jsondecode=json_decode($corps);

@@ -15,6 +15,7 @@ use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\HTTP\Cookie;
 use App\Trellotrolle\Modele\Repository\CarteRepository;
+
 use App\Trellotrolle\Modele\Repository\CarteRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\TableauRepository;
@@ -39,15 +40,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function estParticipant(Tableau $tableau): void
+    public function estParticipant(Tableau $tableau,$loginConnecte): void
     {
 
-        if (!$this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+        if (!$this->tableauRepository->estParticipantOuProprietaire($loginConnecte, $tableau)) {
             throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
         }
     }
 
-    public function recupererUtilisateurParCle($login): AbstractDataObject
+    public function recupererUtilisateurParCle($login):Utilisateur|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }
@@ -87,12 +88,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws TableauException
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login): void
+    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter,$loginConnecte): void
     {
-        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
-        $this->isNotNullLogin($login, $tableau, "ajouter");
+        $this->estProprietaire($tableau, $loginConnecte);
+        $this->isNotNullLogin($membresAAjouter, $tableau, "ajouter");
         $utilisateurs=[];
-        foreach ($login as $user) {
+        foreach ($membresAAjouter as $user) {
             $utilisateur = $this->utilisateurExistant($user, $tableau);
             if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau)) {
                 throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
@@ -102,20 +103,18 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $participants = $this->tableauRepository->getParticipants($tableau);
         $participants=array_merge($participants,$utilisateurs);
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
-
     }
 
     /**
      * @throws TableauException
      */
-    public function supprimerMembre(Tableau $tableau, $login): AbstractDataObject
+    public function supprimerMembre(Tableau $tableau, $login,$loginConnecte): AbstractDataObject
     {
-        $this->estProprietaire($tableau, ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $this->estProprietaire($tableau,$loginConnecte);
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($this->tableauRepository->estProprietaire($login, $tableau)) {
-            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,Response::HTTP_UNAUTHORIZED);
+        if ($login==$loginConnecte) {
+            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,403);
         }
         if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
             throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
@@ -124,7 +123,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             return $u->getLogin() !== $utilisateur->getLogin();
         });
         $this->tableauRepository->setParticipants($participants, $tableau);
-        $this->tableauRepository->mettreAJour($tableau);
         return $utilisateur;
     }
 
@@ -228,7 +226,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function supprimerUtilisateur($login): void
     {
-        if (is_null("login")) {
+        if (is_null($login)) {
             throw new ServiceException("Login manquant",404);
         }
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
