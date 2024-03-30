@@ -19,7 +19,6 @@ use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
-use App\Trellotrolle\Tests\fu;
 use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 
