@@ -95,7 +95,6 @@ let formulaireAjoutCarte = reactive({
 
         if (estModif === 'true') {
             let idCarte = document.querySelector('.formulaireCreationCarte').getAttribute('data-carte');
-            //TODO : Récupérer les participants de la carte
             console.error("Pas encore implémenté");
         } else {
             this.idCarte = await getNextIdCarte();
