@@ -125,6 +125,19 @@ let utilisateurs = reactive({
     },
 
     /**
+     * Affiche la div de suppression d'un utilisateur
+     * @param loginUtilisateur le login de l'utilisateur
+     */
+    afficherSupprimer: function (loginUtilisateur) {
+        const div = document.querySelector('.divSupprimerUtilisateur');
+        div.style.display = 'flex';
+        div.style.top = `${event.clientY}px`;
+        div.style.left = `((${event.clientX})-50)px`;
+        div.querySelector('span').setAttribute('data-onclick', `utilisateur.supprimerUtilisateur(${loginUtilisateur})`);
+        startReactiveDom();
+    },
+
+    /**
      * Rempli le htmlfun d'une div spécifique avec les informations de l'utilisateur concerné
      * @param idUtilisateur l'id de l'utilisateur
      * @returns {string} le contenu HTML de la div à afficher

@@ -25,14 +25,18 @@
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
                 <span class="user"
+                      data-onrightclick="utilisateur.afficherSupprimer({{ tableau.utilisateur.login }})"
                       data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-onleave="utilisateur.cacherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-user="{{ tableau.utilisateur.login }}"
                       data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
                 <div class="contenuUtilisateur {{ tableau.utilisateur.login }}"></div>
+                <div class="divSupprimerUtilisateur"><span>Supprimer<img src="{{ asset('../tests/bin.png') }}"
+                                                                         alt=""></span></div>
 
                 {% for participant in collaborateurs %}
                     <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
+                          data-onrightclick="utilisateur.afficherSupprimer({{ participant.login }})"
                           data-onleave="utilisateur.cacherContenuUtilisateur({{ participant.login }})"
                           data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
                     <div class="contenuUtilisateur {{ participant.login }}"></div>

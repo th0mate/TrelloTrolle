@@ -296,14 +296,11 @@ body {
                     }
 
 
-
-
                 }
 
                 .card:hover {
                     border: 2px solid #4792ff;
                 }
-
 
 
                 &::-webkit-scrollbar {
@@ -888,12 +885,12 @@ body {
     width: 98%;
     padding-top: 10px;
 
-    *{
+    * {
         flex-shrink: 0;
     }
 
     label {
-        width: auto!important;
+        width: auto !important;
     }
 
     input[type="checkbox"] {
@@ -938,4 +935,35 @@ body {
     color: white;
     background-color: #23272b;
     padding: 10px;
+}
+
+.divSupprimerUtilisateur {
+    position: absolute;
+    height: 50px;
+    width: 100px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #23272b;
+
+    span {
+        width: 98%;
+        height: 98%;
+        cursor: pointer;
+        transition: background-color 200ms ease-in-out;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+
+        img {
+            width: 20px;
+        }
+    }
+
+    span:hover {
+        background-color: #3e474f;
+    }
 }
