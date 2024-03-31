@@ -114,6 +114,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         }
     }
 
+
     public function getAllFromTable(int|string $idCle): ?Carte
     {
         $query = "SELECT * FROM {$this->getNomTable()} ca 

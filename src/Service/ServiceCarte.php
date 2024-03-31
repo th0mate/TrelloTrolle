@@ -154,7 +154,7 @@ class ServiceCarte implements ServiceCarteInterface
      */
     public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte
     {
-        $carte = $this->carteRepository->getAllFromCartes($idCarte);
+        $carte = $this->carteRepository->getAllFromTable($idCarte);
         $this->recupererAttributs($attributs);
         $originalColonne = $carte->getColonne();
         if ($originalColonne->getTableau()->getIdTableau() !== $colonne->getTableau()->getIdTableau()) {

@@ -210,7 +210,7 @@ let formulaireAjoutCarte = reactive({
                     affectationsCarte: this.participants
                 })
             });
-
+            console.log(await response.json());
 
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
