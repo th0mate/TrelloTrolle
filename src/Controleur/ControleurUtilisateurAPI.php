@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceColonneInterface;
 use App\Trellotrolle\Service\ServiceConnexion;
@@ -15,23 +16,23 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurUtilisateurAPI
 {
 
-    public function __construct(private ServiceUtilisateurInterface $serviceUtilisateur,
-    private ServiceColonneInterface $serviceColonne)
+    public function __construct(private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur
+    )
     {
     }
 
-    //TODO /utils/?filtre=
-    #[Route("/api/utilisateur/recherche",name: "rechercheUtilisateurAPI",methods: "POST")]
-    public function rechercheUtilisateur(Request $request):Response
+    #[Route("/api/utilisateur/recherche", name: "rechercheUtilisateurAPI", methods: "POST")]
+    public function rechercheUtilisateur(Request $request): Response
     {
-        $corps=$request->getContent();
-        $jsondecode=json_decode($corps);
-        $recherche=$jsondecode->recherche ??null;
-        try{
-            $resultats=$this->serviceUtilisateur->rechercheUtilisateur($recherche);
-            return new JsonResponse($resultats,200);
-        }catch (ServiceException $e){
-            return new JsonResponse(["error"=>$e->getMessage()],$e->getCode());
+        $corps = $request->getContent();
+        $jsondecode = json_decode($corps);
+        $recherche = $jsondecode->recherche ?? null;
+        try {
+            $resultats = $this->serviceUtilisateur->rechercheUtilisateur($recherche);
+            return new JsonResponse($resultats, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
 

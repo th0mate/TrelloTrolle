@@ -9,6 +9,13 @@ services:
     class: App\Trellotrolle\Modele\Repository\ConnexionBaseDeDonnees
     arguments: ['@configuration_base_de_donnees']
 
+  #ConnexionUtilisateur
+  connexion_utilisateur_session:
+    class: App\Trellotrolle\Lib\ConnexionUtilisateurSession
+
+  connexion_utilisateur_jwt:
+    class: App\Trellotrolle\Lib\ConnexionUtilisateurJWT
+
   #Repository
   carte_repository:
     class: App\Trellotrolle\Modele\Repository\CarteRepository
@@ -45,24 +52,24 @@ services:
 
   service_connexion:
     class: App\Trellotrolle\Service\ServiceConnexion
-    arguments: ['@utilisateur_repository']
+    arguments: ['@utilisateur_repository','@connexion_utilisateur_jwt','@connexion_utilisateur_session']
 
   #Controleurs
   controleur_carte:
     class: App\Trellotrolle\Controleur\ControleurCarte
-    arguments: ['@container','@service_connexion','@service_carte','@service_utilisateur','@service_colonne']
+    arguments: ['@container','@service_connexion','@service_carte','@service_utilisateur','@service_colonne','@connexion_utilisateur_session']
 
   controleur_colonne:
     class: App\Trellotrolle\Controleur\ControleurColonne
-    arguments: ['@container','@service_connexion','@service_colonne','@service_utilisateur','@service_tableau']
+    arguments: ['@container','@service_connexion','@service_colonne','@service_utilisateur','@service_tableau','@connexion_utilisateur_session']
 
   controleur_tableau:
     class: App\Trellotrolle\Controleur\ControleurTableau
-    arguments: ['@container','@service_tableau','@service_connexion','@service_utilisateur','@service_carte']
+    arguments: ['@container','@service_tableau','@service_connexion','@service_utilisateur','@service_carte','@connexion_utilisateur_session']
 
   controleur_utilisateur:
     class: App\Trellotrolle\Controleur\ControleurUtilisateur
-    arguments: ['@container','@service_connexion','@service_utilisateur']
+    arguments: ['@container','@service_connexion','@service_utilisateur','@connexion_utilisateur_session']
 
   controleur_base:
     class: App\Trellotrolle\Controleur\ControleurBase
@@ -96,14 +103,14 @@ services:
   #API
   controleur_carte_api:
     class: App\Trellotrolle\Controleur\ControleurCarteAPI
-    arguments: ['@service_utilisateur','@service_connexion','@service_carte','@service_colonne']
+    arguments: ['@service_utilisateur','@service_connexion','@service_carte','@service_colonne','@connexion_utilisateur_jwt']
 
   controleur_colonne_api:
     class: App\Trellotrolle\Controleur\ControleurColonneAPI
-    arguments: ['@service_connexion','@service_colonne','@service_utilisateur','@service_tableau']
+    arguments: ['@service_connexion','@service_colonne','@service_utilisateur','@service_tableau','@connexion_utilisateur_jwt']
   controleur_tableau_api:
     class: App\Trellotrolle\Controleur\ControleurTableauAPI
-    arguments: ['@service_connexion','@service_tableau','@service_utilisateur','@service_carte']
+    arguments: ['@service_connexion','@service_tableau','@service_utilisateur','@service_carte','@connexion_utilisateur_jwt']
   controleur_utilisateur_api:
     class: App\Trellotrolle\Controleur\ControleurUtilisateurAPI
-    arguments: ['@service_utilisateur','@service_colonne']
+    arguments: ['@service_utilisateur','@connexion_utilisateur_jwt']

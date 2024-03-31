@@ -56,14 +56,15 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
      */
     public function recupererTableauxOuUtilisateurEstMembre(string $login): array
     {
-        $sql = "select * from {$this->getNomTable()} t where {$this->getNomCle()} in 
+        $sql = "select idtableau from {$this->getNomTable()} t where {$this->getNomCle()} in 
                 (select idtableau from participant p where p.login=:login) 
                 or t.login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->construireDepuisTableau($objetFormatTableau);
+
+            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
@@ -73,14 +74,14 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
      */
     public function recupererTableauxParticipeUtilisateur(string $login): array
     {
-        $sql = "SELECT DISTINCT {$this->formatNomsColonnes()}
+        $sql = "SELECT DISTINCT idTableau
                 from {$this->getNomTable()} t JOIN participant p ON t.idtableau = p.idtableau
                 WHERE p.idlogin = :login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->construireDepuisTableau($objetFormatTableau);
+            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
@@ -168,18 +169,14 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
-    public function getAllFromTableau(int $idTableau): array
+    public function getAllFromTableau(int $idTableau): Tableau
     {
         $query = "SELECT * FROM {$this->getNomTable()} ta
         JOIN utilisateur u ON ta.login=u.login
-        WHERE idcarte=:idTableau";
+        WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
-        $obj = [];
-        foreach($pdoStatement as $objetFormatTableau) {
-            $obj[] = $objetFormatTableau;
-        }
-        return $obj;
+        return $this->construireDepuisTableau($pdoStatement->fetch());
     }
 
 }

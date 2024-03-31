@@ -1,4 +1,4 @@
-{# BESOIN DE : idUtilisateurConnecte #}
+{# BESOIN DE : connexionUtilisateur.loginUtilisateurConnecte #}
 {% extends "base.html.twig" %}
 
 {% block page_title %}Trollé{% endblock %}
@@ -16,10 +16,10 @@
             <input type="text" disabled value="{{ utilisateur.prenom }}">
         </p>
 
-    {% if idUtilisateurConnecte == utilisateur.login %}
-    <div class="btn btn_maj"><a href="{{ route('afficherFormulaireMiseAJourUtilisateur',{"login" : idUtilisateurConnecte}) }}">Mettre
+    {% if connexionUtilisateur.loginUtilisateurConnecte == utilisateur.login %}
+    <div class="btn btn_maj"><a href="{{ route('afficherFormulaireMiseAJourUtilisateur',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">Mettre
             à jour le compte</a></div>
-    <div class="btn btn_suppr"><a href="{{ route('supprimer',{"login" : idUtilisateurConnecte}) }}">Supprimer le compte</a></div>
+    <div class="btn btn_suppr"><a href="{{ route('supprimer',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">Supprimer le compte</a></div>
     {% endif %}
     </form>
     </p>

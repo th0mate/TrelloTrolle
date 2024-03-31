@@ -4,7 +4,6 @@ namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
@@ -86,7 +85,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne, $attributs);
     }
 
-    public function newCarte(Colonne $colonne, $attributs): Carte
+    private function newCarte(Colonne $colonne, $attributs): Carte
     {
         $carte = new Carte(
             $this->carteRepository->getNextIdCarte(),
@@ -127,7 +126,7 @@ class ServiceCarte implements ServiceCarteInterface
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
                 if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau", "danger", 400);
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau", "danger", 403);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -137,7 +136,7 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
+    private function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);
@@ -167,11 +166,10 @@ class ServiceCarte implements ServiceCarteInterface
     {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
-            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
+            $affectations = array_filter($this->carteRepository->getAffectationsCarte($carte), function ($u) use ($utilisateur) {
                 return $u->getLogin() != $utilisateur->getLogin();
             });
             $this->carteRepository->setAffectationsCarte($affectations, $carte);
-            $this->carteRepository->mettreAJour($carte);
         }
     }
 

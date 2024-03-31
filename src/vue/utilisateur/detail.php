@@ -1,7 +1,7 @@
 <?php
 /** @var Utilisateur $utilisateur */
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Lib\Conteneur;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -37,7 +37,7 @@ $nomHTML = htmlspecialchars($utilisateur->getNom());
 
 
 
-<?php if(ConnexionUtilisateur::estUtilisateur($utilisateur->getLogin())) { ?>
+<?php if(ConnexionUtilisateurSession::estUtilisateur($utilisateur->getLogin())) { ?>
         <div class="btn btn_maj"><a href="<?= $generateurUrl->generate('afficherFormulaireMiseAJourUtilisateur', ['login' => $loginURL])?>">Mettre
             à jour le compte</a></div>
         <div class="btn btn_suppr"><a href="<?= $generateurUrl->generate('supprimer', [ 'login' => $loginURL])?>">Supprimer le compte</a></div>

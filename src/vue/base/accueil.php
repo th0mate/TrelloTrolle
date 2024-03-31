@@ -1,5 +1,5 @@
 <?php
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\Conteneur;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\HttpFoundation\UrlHelper;
@@ -19,7 +19,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
 
 <div><p>Bienvenue sur <strong>Trello-Trollé</strong>!</p></div>
 <div>
-    <?php if (ConnexionUtilisateur::estConnecte()) { ?>
+    <?php if (ConnexionUtilisateurSession::estConnecte()) { ?>
         <span><a href="<?=$generateurUrl->generate('afficherListeMesTableaux')?>">Consulter mes tableaux</a></span>
     <?php } else { ?>
         <p>

@@ -79,7 +79,7 @@ class ControleurGenerique {
     protected function redirectionConnectionFlash(ConnexionException $e): Response
     {
         MessageFlash::ajouter("info", $e->getMessage());
-        return self::redirection("utilisateur", "afficherFormulaireConnexion");
+        return self::redirection("afficherFormulaireConnexion");
     }
     protected function afficherTwig(string $cheminVue, array $parametres = []): Response
     {

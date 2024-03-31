@@ -5,7 +5,6 @@ namespace App\Trellotrolle\Service;
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurColonne;
 use App\Trellotrolle\Controleur\ControleurTableau;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
@@ -131,8 +130,8 @@ class ServiceTableau implements ServiceTableauInterface
         if ($this->tableauRepository->estProprietaire($utilisateur->getLogin(), $tableau)) {;
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
         }
-        if (!$this->tableauRepository->estParticipant(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
-            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_UNAUTHORIZED);
+        if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
+            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_FORBIDDEN);
         }
 
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
@@ -152,9 +151,9 @@ class ServiceTableau implements ServiceTableauInterface
     /**
      * @throws ServiceException
      */
-    public function creerTableau($nomTableau): Tableau
+    public function creerTableau($nomTableau, $login)
     {
-        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire(ConnexionUtilisateur::getLoginUtilisateurConnecte());
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
         if (is_null($nomTableau)) {
             throw new ServiceException("Nom de tableau manquant", 404);
         }
@@ -172,7 +171,7 @@ class ServiceTableau implements ServiceTableauInterface
         $tableau = new Tableau(
             $idTableau,
             $codeTableau,
-            $_REQUEST["nomTableau"],
+            $nomTableau,
             $utilisateur
         );
 
@@ -196,8 +195,8 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
-    public function estParticipant(Tableau $tableau): bool
+    public function estParticipant(Tableau $tableau,$login): bool
     {
-        return $this->tableauRepository->estParticipantOuProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau);
+        return $this->tableauRepository->estParticipantOuProprietaire($login, $tableau);
     }
 }

@@ -2,7 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
@@ -31,11 +32,13 @@ use Symfony\Component\HttpFoundation\Request;
 class ControleurColonne extends ControleurGenerique
 {
 
-    public function __construct(ContainerInterface         $container,
-                                private ServiceConnexionInterface   $serviceConnexion,
-                                private ServiceColonneInterface     $serviceColonne,
-                                private ServiceUtilisateurInterface $serviceUtilisateur,
-                                private ServiceTableauInterface     $serviceTableau)
+    public function __construct(ContainerInterface                    $container,
+                                private ServiceConnexionInterface     $serviceConnexion,
+                                private ServiceColonneInterface       $serviceColonne,
+                                private ServiceUtilisateurInterface   $serviceUtilisateur,
+                                private ServiceTableauInterface       $serviceTableau,
+                                private ConnexionUtilisateurInterface $connexionUtilisateur
+    )
     {
         parent::__construct($container);
 
@@ -54,21 +57,21 @@ class ControleurColonne extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $nbColonnes = $this->serviceColonne->supprimerColonne($tableau, $idColonne);
             if ($nbColonnes > 0) {
-                return ControleurColonne::redirection( "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+                return ControleurColonne::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
             } else {
-                return ControleurCarte::redirection(  "afficherListeMesTableaux");
+                return ControleurCarte::redirection("afficherListeMesTableaux");
             }
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection( "accueil");
+            return self::redirection("accueil");
         }
     }
 
@@ -79,22 +82,22 @@ class ControleurColonne extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
-            return self::redirection( "accueil");
+            return self::redirection("accueil");
         }
         /*return ControleurTableau::afficherVue('vueGenerale.php', [
             "pagetitle" => "Création d'une colonne",
             "cheminVueBody" => "colonne/formulaireCreationColonne.php",
             "idTableau" => $_REQUEST["idTableau"],
         ]);*/
-        return $this->afficherTwig('colonne/formulaireCreationColonne.html.twig',["idTableau" => $_REQUEST["idTableau"]]);
+        return $this->afficherTwig('colonne/formulaireCreationColonne.html.twig', ["idTableau" => $_REQUEST["idTableau"]]);
     }
 
     #[Route('/colonne/nouveau', name: 'creerColonne', methods: "POST")]
@@ -106,18 +109,18 @@ class ControleurColonne extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceColonne->isSetNomColonne($nomColonne);
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
-            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
+            return ControleurColonne::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection( "afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
+            return ControleurColonne::redirection("afficherFormulaireCreationColonne", ["idTableau" => $_REQUEST["idTableau"]]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return self::redirection("afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             return self::redirection("accueil");
@@ -132,14 +135,14 @@ class ControleurColonne extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Modification d'une colonne",
                 "cheminVueBody" => "colonne/formulaireMiseAJourColonne.php",
                 "idColonne" => $idColonne,
                 "nomColonne" => $colonne->getTitreColonne()
             ]);*/
-            return $this->afficherTwig('colonne/formulaireMiseAJourColonne.html.twig',[
+            return $this->afficherTwig('colonne/formulaireMiseAJourColonne.html.twig', [
                 "idColonne" => $idColonne,
                 "nomColonne" => $colonne->getTitreColonne()
             ]);
@@ -147,10 +150,10 @@ class ControleurColonne extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurColonne::redirection("afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return self::redirection( "accueil");
+            return self::redirection("accueil");
         }
 
     }
@@ -164,7 +167,7 @@ class ControleurColonne extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne->setTitreColonne($nomColonne);
             $this->serviceColonne->miseAJourColonne($colonne);
             return ControleurColonne::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
@@ -172,10 +175,10 @@ class ControleurColonne extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         } catch (CreationException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection( "afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
+            return ControleurColonne::redirection("afficherFormulaireMiseAJourColonne", ["idColonne" => $idColonne]);
         } catch (TableauException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
-            return ControleurColonne::redirection(  "afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
+            return ControleurColonne::redirection("afficherTableau", ["codeTableau" => $e->getTableau()->getCodeTableau()]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("danger", $e->getMessage());
             return self::redirection("accueil");

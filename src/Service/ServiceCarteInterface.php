@@ -57,13 +57,6 @@ interface ServiceCarteInterface
      */
     public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte;
 
-    /**
-     * @param Carte $carte
-     * @param $colonne
-     * @param $attributs
-     * @return Carte
-     */
-    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte;
 
     /**
      * @throws CreationException
@@ -83,12 +76,6 @@ interface ServiceCarteInterface
      */
     public function getNextIdCarte(): int;
 
-    /**
-     * @param Colonne $colonne
-     * @param $attributs
-     * @return Carte
-     */
-    public function newCarte(Colonne $colonne, $attributs): Carte;
 
     /**
      * @param Carte $carte

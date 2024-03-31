@@ -1,7 +1,7 @@
 <?php
 /** @var Tableau[] $tableaux */
 
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Modele\DataObject\Tableau;
 use App\Trellotrolle\Lib\Conteneur;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -27,7 +27,7 @@ $assistantUrl = Conteneur::recupererService("assistantUrl");
                 </div>
                 <div>
                     <?php
-                    if ((new TableauRepository())->estProprietaire(ConnexionUtilisateur::getLoginUtilisateurConnecte(), $tableau)) {
+                    if ((new TableauRepository())->estProprietaire(ConnexionUtilisateurSession::getLoginUtilisateurConnecte(), $tableau)) {
                         ?>
                         <a href="<?=$generateurUrl->generate('supprimerTableau', ['idTableau' => $tableau->getIdTableau()])?>">Supprimer
                             le tableau</a>

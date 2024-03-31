@@ -3,7 +3,8 @@
 namespace App\Trellotrolle\Service;
 
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
-use App\Trellotrolle\Lib\ConnexionUtilisateur;
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
+use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Lib\MotDePasse;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
@@ -18,7 +19,9 @@ class ServiceConnexion implements ServiceConnexionInterface
 {
 
 
-    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository)
+    public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
+    private ConnexionUtilisateurInterface $connexionUtilisateurJWT,
+    private ConnexionUtilisateurInterface $connexionUtilisateurSession)
     {
     }
 
@@ -27,7 +30,7 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function pasConnecter()
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
+        if (!$this->connexionUtilisateurJWT->estConnecte() && !$this->connexionUtilisateurSession->estConnecte()) {
             throw new ConnexionException("Veuillez vous connecter", Response::HTTP_FORBIDDEN);
         }
     }
@@ -37,7 +40,7 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function dejaConnecter()
     {
-        if (ConnexionUtilisateur::estConnecte()) {
+        if ($this->connexionUtilisateurJWT->estConnecte() && $this->connexionUtilisateurSession->estConnecte()) {
             throw new ConnexionException("Vous êtes déjà connecter",Response::HTTP_FORBIDDEN);
         }
     }
@@ -47,10 +50,11 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function deconnecter()
     {
-        if (!ConnexionUtilisateur::estConnecte()) {
+        if (!$this->connexionUtilisateurSession->estConnecte() && !$this->connexionUtilisateurJWT->estConnecte()) {
             throw new ConnexionException("Utilisateur non connecté",Response::HTTP_FORBIDDEN);
         }
-        ConnexionUtilisateur::deconnecter();
+        $this->connexionUtilisateurSession->deconnecter();
+        $this->connexionUtilisateurJWT->deconnecter();
     }
 
     /**
@@ -73,7 +77,8 @@ class ServiceConnexion implements ServiceConnexionInterface
             throw new ServiceException("Mot de passe incorrect.",Response::HTTP_UNAUTHORIZED);
         }
 
-        ConnexionUtilisateur::connecter($utilisateur->getLogin());
+        $this->connexionUtilisateurJWT->connecter($utilisateur->getLogin());
+        $this->connexionUtilisateurSession->connecter($utilisateur->getLogin());
         Cookie::enregistrer("login", $login);
         Cookie::enregistrer("mdp", $mdp);
     }
