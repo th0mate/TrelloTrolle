@@ -13,6 +13,7 @@ use App\Trellotrolle\Modele\Repository\TableauRepositoryInterface;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
+use App\Trellotrolle\Service\Exception\MiseAJourException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceCarte;
 use App\Trellotrolle\Service\ServiceCarteInterface;
@@ -120,13 +121,101 @@ class ServiceCarteTest extends TestCase
 
     /** miseAJourCarteMembre */
 
-
-
-    /** carteUpdate */
+    public function testMiseAJourCarteMembre()
+    {
+        $fakeUser=new Utilisateur("login","nom","prenom","email@e.com","mdp");
+        $fakeTableau=$this->createFakeTableau($fakeUser);
+        $fakeCarte=$this->createFakeCarte();
+        $this->carteRepository->method("recupererCartesTableau")->willReturn([$fakeCarte]);
+        $this->carteRepository->method("getAffectationsCarte")->willReturn([$fakeUser]);
+        $this->carteRepository->method("setAffectationsCarte")->willReturnCallback(function ($affectations,$carte)use ($fakeCarte){
+           self::assertEquals([],$affectations);
+           self::assertEquals($fakeCarte,$carte);
+        });
+        $this->serviceCarte->miseAJourCarteMembre($fakeTableau,$fakeUser);
+    }
 
     /** miseAJourCarte */
 
+    public function testMiseAJourCarteMembreInexistant()
+    {
+        $attributs = [
+            "titreCarte" =>"titre",
+            "descriptifCarte" => "desc",
+            "couleurCarte" => "couleur",
+            "affectationsCarte" => ["1","2"],
+        ];
+        $fakeTableau=$this->createFakeTableau();
+        $fakeCarte=$this->createFakeCarte();
+        $fakeColonne=$this->createFakeColonne();
+        $this->expectExceptionCode(404);
+        $this->expectException(CreationException::class);
+        $this->expectExceptionMessage("Un des membres affecté à la tâche n'existe pas");
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->serviceCarte->miseAJourCarte($fakeTableau,$attributs,$fakeCarte,$fakeColonne);
+    }
+    public function testMiseAJourCarteMembrePasAffecte()
+    {
+        $attributs = [
+            "titreCarte" =>"titre",
+            "descriptifCarte" => "desc",
+            "couleurCarte" => "couleur",
+            "affectationsCarte" => ["1","2"],
+        ];
+        $fakeTableau=$this->createFakeTableau();
+        $fakeCarte=$this->createFakeCarte();
+        $fakeColonne=$this->createFakeColonne();
+        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp");
+        $this->expectExceptionCode(403);
+        $this->expectException(MiseAJourException::class);
+        $this->expectExceptionMessage("Un des membres affecté à la tâche n'est pas affecté au tableau");
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(false);
+        $this->serviceCarte->miseAJourCarte($fakeTableau,$attributs,$fakeCarte,$fakeColonne);
+    }
+    public function testMiseAJourCarteValide()
+    {
+        $attributs = [
+            "titreCarte" =>"titreCarte",
+            "descriptifCarte" => "descr",
+            "couleurCarte" => "coul",
+            "affectationsCarte" => ["1","2"],
+        ];
+        $fakeTableau=$this->createFakeTableau();
+        $fakeCarte=$this->createFakeCarte();
+        $fakeColonne=$this->createFakeColonne();
+        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp");
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
+        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
+        $this->carteRepository->method("mettreAJour")->willReturnCallback(function ($carte)use ($fakeCarte,$fakeColonne){
+            self::assertEquals("titreCarte",$carte->getTitreCarte());
+            self::assertEquals($fakeCarte->getIdCarte(),$carte->getIdCarte());
+            self::assertEquals("descr",$carte->getDescriptifCarte());
+            self::assertEquals("coul",$carte->getCouleurCarte());
+            self::assertEquals($fakeColonne,$carte->getColonne());
+        });
+        $this->serviceCarte->miseAJourCarte($fakeTableau,$attributs,$fakeCarte,$fakeColonne);
+    }
+
     /** verificationsMiseAJourCarte */
+
+    public function testVerificationsMiseAJourCarteConflictTableau()
+    {
+        //TODO a finir
+        $attributs = [
+            "titreCarte" =>"titreCarte",
+            "descriptifCarte" => "descr",
+            "couleurCarte" => "coul",
+            "affectationsCarte" => ["1","2"],
+        ];
+        $fakeColonne=$this->createFakeColonne();
+        $this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
+    }
+
+    public function testVerificationsMiseAJourCarteValide()
+    {
+        //TODO
+    }
 
     /** creerCarte */
 
