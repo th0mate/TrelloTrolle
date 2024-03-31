@@ -130,7 +130,7 @@ class CarteRepositoryTest extends TestCase
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
-        $this->assertEquals('bob69',self::$carteRepository->getAffectationsCarte($carte));
+        $this->assertEquals([$utilisateur],self::$carteRepository->getAffectationsCarte($carte));
     }
 
     public function testGetAffectatonsCarteAPaslogin(){
@@ -138,8 +138,9 @@ class CarteRepositoryTest extends TestCase
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne);
-        $this->assertNull(self::$carteRepository->getAffectationsCarte($carte));
+        $this->assertEquals([],self::$carteRepository->getAffectationsCarte($carte));
     }
+
     public function testGetAffectatonsCarteInexistante(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
@@ -154,7 +155,7 @@ class CarteRepositoryTest extends TestCase
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
-        $this->assertEquals($carte,self::$carteRepository->getAllFromCartes(3));
+        $this->assertEquals($carte,self::$carteRepository->getAllFromTable(3));
     }
 
     /** Test setAffectationCarte, prend en argument: array affectationCarte, carte instance */
@@ -163,8 +164,8 @@ class CarteRepositoryTest extends TestCase
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
-        self::$carteRepository->setAffectationsCarte(['bib420'],$carte);
-        $this->assertEquals('bib420',self::$carteRepository->getAffectationsCarte($carte));
+        self::$carteRepository->setAffectationsCarte([$utilisateur],$carte);
+        $this->assertEquals([$utilisateur],self::$carteRepository->getAffectationsCarte($carte));
     }
 
     /** Test récuperer */

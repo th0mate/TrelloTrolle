@@ -85,7 +85,10 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
 
     public function getAffectationsCarte(Carte $carte): ?array
     {
-        $query = "SELECT u.login,nom,prenom,email,mdphache
+        if(!$this->getAllFromTable($carte->getIdCarte())) {
+            return null;
+        }
+        $query = "SELECT u.login, nom, prenom, email, mdphache
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
         JOIN utilisateur u ON u.login=a.login 
