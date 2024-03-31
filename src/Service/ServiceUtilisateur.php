@@ -48,7 +48,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
-    public function recupererUtilisateurParCle($login):Utilisateur|null
+    public function recupererUtilisateurParCle($login):AbstractDataObject|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }

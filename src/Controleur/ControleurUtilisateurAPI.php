@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Service\Exception\ConnexionException;
 use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\ServiceConnexionInterface;
@@ -32,7 +33,7 @@ class ControleurUtilisateurAPI
         $jsondecode = json_decode($corps);
         $recherche = $jsondecode->recherche ?? null;
         try {
-            $this->serviceConnexion->pasConnecter();
+            $this->connexionUtilisateur->estConnecte();
             $resultats = $this->serviceUtilisateur->rechercheUtilisateur($recherche);
             return new JsonResponse($resultats, 200);
         } catch (ServiceException $e) {

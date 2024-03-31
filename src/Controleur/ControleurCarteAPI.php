@@ -123,7 +123,7 @@ class ControleurCarteAPI
             $colonne=$this->serviceColonne->recupererColonne($idColonne);
             $carte=$this->serviceCarte->recupererCarte($idCarte);
             $tableau=$colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau);
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $carte->setColonne($colonne);
             $this->serviceCarte->deplacerCarte($carte,$colonne);
             return new JsonResponse('',200);
