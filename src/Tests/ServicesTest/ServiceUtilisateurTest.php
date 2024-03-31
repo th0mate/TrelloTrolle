@@ -19,7 +19,6 @@ use App\Trellotrolle\Service\Exception\ServiceException;
 use App\Trellotrolle\Service\Exception\TableauException;
 use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
-use App\Trellotrolle\Tests\fu;
 use PHPUnit\Framework\TestCase;
 use function PHPUnit\Framework\assertEquals;
 
@@ -389,16 +388,8 @@ class ServiceUtilisateurTest extends TestCase
         $fakeUser = $this->createFakeUser();
         $this->carteRepository->method("recupererCartesUtilisateur")->willReturn($cartes);
         $this->carteRepository->method("getAffectationsCarte")->willReturn($fakeParticipants);
-        $this->carteRepository->method("setAffectationsCarte")->willReturnCallback(function () {
-        });
-        $this->carteRepository->method("mettreAJour")->willReturnCallback(function () {
-        });
         $this->tableauRepository->method("recupererTableauxParticipeUtilisateur")->willReturn([$this->createFakeTableau()]);
         $this->tableauRepository->method("getParticipants")->willReturn($fakeParticipants);
-        $this->tableauRepository->method("setParticipants")->willReturnCallback(function () {
-        });
-        $this->tableauRepository->method("mettreAJour")->willReturnCallback(function () {
-        });
         $this->utilisateurRepository->method("supprimer")->willReturnCallback(function ($login) use ($fakeUser) {
             self::assertEquals($login, $fakeUser->getLogin());
             return true;
