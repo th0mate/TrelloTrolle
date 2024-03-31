@@ -17,7 +17,8 @@ class ControleurUtilisateurAPI
 {
 
     public function __construct(private ServiceUtilisateurInterface   $serviceUtilisateur,
-                                private ConnexionUtilisateurInterface $connexionUtilisateur
+                                private ConnexionUtilisateurInterface $connexionUtilisateur,
+                                private ServiceColonneInterface $serviceColonne
     )
     {
     }
