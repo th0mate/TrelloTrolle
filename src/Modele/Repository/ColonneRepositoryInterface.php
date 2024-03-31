@@ -6,7 +6,7 @@ use App\Trellotrolle\Modele\DataObject\Colonne;
 
 interface ColonneRepositoryInterface
 {
-    public function recupererColonnesTableau(int $idTableau): array;
+    public function recupererColonnesTableau(int $idTableau): ?array;
 
     public function getNextIdColonne(): int;
 

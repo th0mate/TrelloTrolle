@@ -133,7 +133,7 @@ class ColonneRepositoryTest extends TestCase
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
-        assertEquals($fakeColonne1,self::$colonneRepository->getAllFromColonne(1));
+        assertEquals($fakeColonne1,self::$colonneRepository->getAllFromTable(1));
 
     }
 
