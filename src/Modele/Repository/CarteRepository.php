@@ -38,15 +38,15 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     public function recupererCartesTableau(int $idTableau): array {
-        $sql = "SELECT c.idcarte, titrecarte, descriptifcarte, couleurcarte, c.idcolonne
+        $sql = "SELECT {$this->getNomCle()}
         FROM {$this->getNomTable()} c 
         JOIN colonne co ON c.idcolonne=co.idcolonne
-        WHERE co.idtableau=:idTableau";
+        WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute(["idTableau" => $idTableau]);
         $obj = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $obj[] = $this->construireDepuisTableau($objetFormatTableau);
+            $obj[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
         }
         return $obj;
     }
@@ -56,7 +56,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
      */
     public function recupererCartesUtilisateur(string $login): array
     {
-        $sql = "SELECT c.idcarte, titrecarte, descriptifcarte, couleurcarte, c.idcolonne
+        $sql = "SELECT c.idcarte
         from {$this->getNomTable()} c
         JOIN affectationcarte a ON a.idcarte=c.idcarte
         WHERE login=:login";
@@ -70,7 +70,9 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     public function getNombreCartesTotalUtilisateur(string $login) : int {
-        $query = "SELECT COUNT(*) FROM {$this->getNomTable()} WHERE login=:login";
+        $query = "SELECT COUNT(*) FROM {$this->getNomTable()} c 
+        JOIN affectationcarte a ON a.idcarte=c.idcarte
+        WHERE login=:login";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["login" => $login]);
         $obj = $pdoStatement->fetch();

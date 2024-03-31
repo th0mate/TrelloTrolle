@@ -82,7 +82,8 @@ class CarteRepositoryTest extends TestCase
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
-        $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne)];
+        $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne),
+            new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne)];
         $this->assertEquals($array, self::$carteRepository->recupererCartesTableau(1));
     }
     public function testRecupererCartesTableauNonExistant(){
@@ -95,7 +96,7 @@ class CarteRepositoryTest extends TestCase
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
-        $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne), new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne)];
+        $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne)];
         $this->assertEquals($array, self::$carteRepository->recupererCartesUtilisateur('bob69'));
     }
     public function testRecupererCartesUtilisateurNonExistant(){
@@ -113,7 +114,7 @@ class CarteRepositoryTest extends TestCase
     }
 
     public function testgetNombreCartesTotalUtilisateurInexistant(){
-        $this->assertEquals(1,self::$carteRepository->getNombreCartesTotalUtilisateur('george'));
+        $this->assertEquals(0,self::$carteRepository->getNombreCartesTotalUtilisateur('george'));
     }
     /** Test getNextIdCarte */
 
