@@ -9,6 +9,7 @@ let utilisateurs = reactive({
     colonnes: [],
     drapeau: false,
 
+
     /**
      * Supprime une carte d'une colonne d'un utilisateur
      * @param idCarte l'id de la carte en question
@@ -27,6 +28,7 @@ let utilisateurs = reactive({
             }
         }
     },
+
 
     /**
      * Ajoute une carte à une colonne d'un utilisateur
@@ -49,6 +51,7 @@ let utilisateurs = reactive({
             });
         }
     },
+
 
     /**
      * Supprime un utilisateur d'un tableau
@@ -115,6 +118,7 @@ let utilisateurs = reactive({
         }
     },
 
+
     /**
      * Cache le contenu d'un utilisateur
      * @param loginUtilisateur le login de l'utilisateur
@@ -123,6 +127,7 @@ let utilisateurs = reactive({
         const div = document.querySelector('.' + loginUtilisateur);
         div.style.display = 'none';
     },
+
 
     /**
      * Affiche la div de suppression d'un utilisateur
@@ -136,6 +141,7 @@ let utilisateurs = reactive({
         div.querySelector('span').setAttribute('data-onclick', `utilisateur.supprimerUtilisateur(${loginUtilisateur})`);
         startReactiveDom();
     },
+
 
     /**
      * Rempli le htmlfun d'une div spécifique avec les informations de l'utilisateur concerné
