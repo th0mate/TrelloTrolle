@@ -38,6 +38,5 @@ interface TableauRepositoryInterface
 
     public function getProprietaire(Tableau $tableau) : Utilisateur;
 
-    public function getAllFromTableau(int $idTableau): Tableau;
 
 }

@@ -14,5 +14,4 @@ interface ColonneRepositoryInterface
 
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void;
 
-    public function getAllFromColonne(int $idColonne): Colonne;
 }

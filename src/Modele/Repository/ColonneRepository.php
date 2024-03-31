@@ -57,15 +57,19 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         $pdoStatement->execute(["idColonne1" => $idColonne1, "idColonne2" => $idColonne2]);
     }
 
-    public function getAllFromColonne(int $idColonne): Colonne
+    public function getAllFromTable(int|string $idCle): ?Colonne
     {
         $query = "SELECT * FROM {$this->getNomTable()} co
         JOIN tableau ta ON co.idtableau=ta.idtableau
         JOIN utilisateur u ON ta.login=u.login
         WHERE idcolonne=:idColonne";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idColonne" => $idColonne]);
-        return $this->construireDepuisTableau($pdoStatement->fetch());
+        $pdoStatement->execute(["idColonne" => $idCle]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if (!$objetFormatTableau) {
+            return null;
+        }
+        return $this->construireDepuisTableau($objetFormatTableau);
     }
 
 

@@ -295,7 +295,7 @@ class TableauRepositoryTest extends TestCase
     public function testGetAllFromTableau(){
         $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
         $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
-        $this->assertEquals($fakeTab3, self::$tableauRepository->getAllFromTableau(3));
+        $this->assertEquals($fakeTab3, self::$tableauRepository->getAllFromTable(3));
     }
 
     /** Test  récuperer */
@@ -338,8 +338,8 @@ class TableauRepositoryTest extends TestCase
         $fakeTab1 = new Tableau(1, 'test1', 'test',$fakeUser2);
         $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
         self::$tableauRepository->mettreAJour($fakeTab1);
-        $this->assertEquals([$fakeTab3, $fakeTab1], self::$tableauRepository->recupererTableauxUtilisateur('bib420'));
-        $this->assertEquals('test1', self::$tableauRepository->recupererTableauxUtilisateur('bib420')[1]->getCodeTableau());
+        $this->assertEquals([$fakeTab1,$fakeTab3], self::$tableauRepository->recupererTableauxUtilisateur('bib420'));
+        $this->assertEquals('test1', self::$tableauRepository->recupererTableauxUtilisateur('bib420')[0]->getCodeTableau());
     }
 
     /** Test supprimer */

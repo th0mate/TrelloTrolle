@@ -16,6 +16,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     protected abstract function getNomCle(): string;
     protected abstract function getNomsColonnes(): array;
     protected abstract function construireDepuisTableau(array $objetFormatTableau) : AbstractDataObject;
+    protected abstract function getAllFromTable(int|string $idCle) : ?AbstractDataObject;
 
 
     protected function formatNomsColonnes() : string {
@@ -28,11 +29,11 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     public function recuperer(): array
     {
         $nomTable = $this->getNomTable();
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query("SELECT DISTINCT {$this->formatNomsColonnes()} 
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query("SELECT DISTINCT {$this->getNomCle()} 
         FROM $nomTable");
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->construireDepuisTableau($objetFormatTableau);
+            $objets[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
         }
 
         return $objets;
@@ -55,25 +56,28 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     }
 
     /**
-     * @return AbstractDataObject[]
+     * @param string $nomAttribut
+     * @param $valeur
+     * @return array|null
      */
-    protected function recupererPlusieursPar(string $nomAttribut, $valeur): array
+    protected function recupererPlusieursPar(string $nomAttribut, $valeur): ?array
     {
         $nomTable = $this->getNomTable();
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare("SELECT DISTINCT {$this->formatNomsColonnes()} FROM $nomTable WHERE $nomAttribut='$valeur'");
+        $sql = "SELECT DISTINCT {$this->getNomCle()} from $nomTable WHERE $nomAttribut='$valeur'";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute();
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->construireDepuisTableau($objetFormatTableau);
+            $objets[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
         }
-
         return $objets;
+
     }
 
     /**
      * @return AbstractDataObject[]
      */
-    protected function recupererPlusieursParOrdonne(string $nomAttribut, $valeur, $attributs, $sens = "ASC"): array
+    protected function recupererPlusieursParOrdonne(string $nomAttribut, $valeur, $attributs, $sens = "ASC"): ?array
     {
         $nomTable = $this->getNomTable();
         $attributsTexte = join(",", $attributs);
@@ -90,23 +94,30 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         return $objets;
     }
 
-    protected function recupererPar(string $nomAttribut, $valeur): ?AbstractDataObject
+    //TODO: Disuter de l'utilité de cette fonction car c'est la même chose que recupererPlusieursPar sauf qu'a
+    // la base c'était une fonction qui devait retourner qu'un seul objet car on partait du principe qu'elle était appelé que
+    // par recupererParClePrimaire
+    /*protected function recupererPar(string $nomAttribut, $valeur): ?array
     {
         $nomTable = $this->getNomTable();
-        $sql = "SELECT DISTINCT {$this->formatNomsColonnes()} from $nomTable WHERE $nomAttribut='$valeur'";
+        $sql = "SELECT DISTINCT {$this->getNomCle()} from $nomTable WHERE $nomAttribut='$valeur'";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
         $pdoStatement->execute();
-        $objetFormatTableau = $pdoStatement->fetch();
-
-        if ($objetFormatTableau !== false) {
-            return $this->construireDepuisTableau($objetFormatTableau);
+        $objets = [];
+        foreach ($pdoStatement as $objetFormatTableau) {
+            $objets[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
+        }
+        if ($objets) {
+            return $objets;
         }
         return null;
-    }
+    }*/
+
+
 
     public function recupererParClePrimaire(string $valeurClePrimaire): ?AbstractDataObject
     {
-        return $this->recupererPar($this->getNomCle(), $valeurClePrimaire);
+        return $this->recupererPlusieursPar($this->getNomCle(), $valeurClePrimaire)[0];
     }
 
     public function supprimer(string $valeurClePrimaire): bool

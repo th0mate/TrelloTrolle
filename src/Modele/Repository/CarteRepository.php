@@ -64,7 +64,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->getAllFromCartes($objetFormatTableau["idcarte"]);
+            $objets[] = $this->getAllFromTable($objetFormatTableau["idcarte"]);
         }
         return $objets;
     }
@@ -109,7 +109,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         }
     }
 
-    public function getAllFromCartes(int $idCarte): Carte
+    public function getAllFromTable(int|string $idCle): ?Carte
     {
         $query = "SELECT * FROM {$this->getNomTable()} ca 
         JOIN colonne co ON ca.idcolonne=co.idcolonne
@@ -117,7 +117,11 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         JOIN utilisateur u ON ta.login=u.login
         WHERE idcarte=:idcarte";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idcarte" => $idCarte]);
-        return $this->construireDepuisTableau($pdoStatement->fetch());
+        $pdoStatement->execute(["idcarte" => $idCle]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if (!$objetFormatTableau) {
+            return null;
+        }
+        return $this->construireDepuisTableau($objetFormatTableau);
     }
 }

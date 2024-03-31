@@ -24,5 +24,4 @@ interface CarteRepositoryInterface
 
     public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void;
 
-    public function getAllFromCartes(int $idCarte): Carte;
 }

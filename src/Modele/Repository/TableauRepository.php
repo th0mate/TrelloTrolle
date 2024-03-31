@@ -63,7 +63,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
+            $objets[] = $this->getAllFromTable($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
@@ -80,7 +80,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         $pdoStatement->execute(["login" => $login]);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->getAllFromTableau($objetFormatTableau["idtableau"]);
+            $objets[] = $this->getAllFromTable($objetFormatTableau["idtableau"]);
         }
         return $objets;
     }
@@ -168,14 +168,18 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
-    public function getAllFromTableau(int $idTableau): Tableau
+    public function getAllFromTable(int|string $idCle): ?Tableau
     {
         $query = "SELECT * FROM {$this->getNomTable()} ta
         JOIN utilisateur u ON ta.login=u.login
         WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idTableau" => $idTableau]);
-        return $this->construireDepuisTableau($pdoStatement->fetch());
+        $pdoStatement->execute(["idTableau" => $idCle]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if (!$objetFormatTableau) {
+            return null;
+        }
+        return $this->construireDepuisTableau($objetFormatTableau);
     }
 
 }
