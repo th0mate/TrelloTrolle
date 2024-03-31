@@ -151,7 +151,7 @@ class ServiceCarte implements ServiceCarteInterface
      * @throws CreationException
      * @throws ServiceException
      */
-    public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte
+    public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte
     {
         $carte = $this->carteRepository->getAllFromCartes($idCarte);
         $this->recupererAttributs($attributs);
@@ -182,5 +182,10 @@ class ServiceCarte implements ServiceCarteInterface
     {
         $carte->setColonne($colonne);
         $this->carteRepository->mettreAJour($carte);
+    }
+
+    public function getAffectations(Carte $carte) :array
+    {
+        return $this->carteRepository->getAffectationsCarte($carte);
     }
 }

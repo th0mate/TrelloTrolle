@@ -73,4 +73,6 @@ interface ServiceUtilisateurInterface
     public function getParticipants(Tableau $tableau): ?array;
 
     public function getProprietaireTableau(Tableau $tableau): Utilisateur;
+    public function recupererAffectationsColonne($colonne, $login);
+
 }

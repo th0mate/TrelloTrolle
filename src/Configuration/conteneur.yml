@@ -113,4 +113,4 @@ services:
     arguments: ['@service_connexion','@service_tableau','@service_utilisateur','@service_carte','@connexion_utilisateur_jwt']
   controleur_utilisateur_api:
     class: App\Trellotrolle\Controleur\ControleurUtilisateurAPI
-    arguments: ['@service_utilisateur','@connexion_utilisateur_jwt']
+    arguments: ['@service_utilisateur','@connexion_utilisateur_jwt', '@service_colonne']

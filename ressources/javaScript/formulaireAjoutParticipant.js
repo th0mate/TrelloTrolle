@@ -5,6 +5,10 @@ let formulaireAjoutParticipant = reactive({
     adresseMailARechercher: "",
     participants: [],
 
+    /**
+     * Recherche les utilisateurs dont l'adresse mail/login/nom/prénom commence par le texte entré
+     * @returns {Promise<void>} La promesse habituelle
+     */
     rechercherDebutAdresseMail: async function () {
         this.idTableau = document.querySelector('.formulaireAjoutMembreTableau').getAttribute('data-tableau');
         if (this.adresseMailARechercher !== '' && this.adresseMailARechercher.length > 2) {
@@ -34,6 +38,10 @@ let formulaireAjoutParticipant = reactive({
     },
 
 
+    /**
+     * Supprime un participant du formulaire
+     * @param idUtilisateur l'id de l'utilisateur à supprimer
+     */
     supprimerParticipant: function (idUtilisateur) {
         console.log(this.participants);
         let elements = document.querySelectorAll(`[data-participant="${idUtilisateur}"]`);
@@ -46,6 +54,11 @@ let formulaireAjoutParticipant = reactive({
         console.log(this.participants);
     },
 
+    /**
+     * Ajoute un checkbox pour un utilisateur
+     * @param parametres les paramètres de l'utilisateur
+     * @returns {string} le code html du checkbox placé dans le htmlfun correspondant
+     */
     ajouterCheckboxPourUtilisateur: function (parametres = null) {
 
         if (parametres !== null) {
@@ -59,6 +72,7 @@ let formulaireAjoutParticipant = reactive({
 
                 setTimeout(() => {
                     startReactiveDom();
+                    randomColorsNewUsers();
                 }, 100);
 
                 return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
@@ -81,6 +95,11 @@ let formulaireAjoutParticipant = reactive({
         }
     },
 
+
+    /**
+     * Ajoute le ou les membres au tableau en front et via l'API
+     * @returns {Promise<void>} La promesse habituelle
+     */
     envoyerFormulaireAjoutMembre: async function () {
         if (this && this.participants) {
             let response = await fetch(apiBase + `/tableau/membre/ajouter`, {
