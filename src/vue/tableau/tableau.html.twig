@@ -37,6 +37,8 @@
                           data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
                     <div class="contenuUtilisateur {{ participant.login }}"></div>
                 {% endfor %}
+                <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
+
             </div>
         </div>
 

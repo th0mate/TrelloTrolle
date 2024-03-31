@@ -18,7 +18,8 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-        if (this.estEnvoye) {
+        console.log('envoyerFormulaire');
+        if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true'){
             return;
         }
         this.estEnvoye = true;
@@ -173,8 +174,8 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     modifierCarte: async function (idColonneIdCarte = null) {
-        if (this.titre !== '') {
-
+        if (this.titre !== '' && document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
+            console.log('modifierCarte');
             let html = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
@@ -218,6 +219,7 @@ let formulaireAjoutCarte = reactive({
                 console.error("Erreur lors de la modification de la carte dans l'API");
             }
             closeForm();
+            document.querySelector('.formulaireCreationCarte').removeAttribute('data-modif');
         } else {
             closeForm();
         }

@@ -157,6 +157,7 @@ function updateCards() {
 
         if (!card.hasAttribute('data-click-listener-added')) {
             card.addEventListener('click', function (e) {
+                document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
                 afficherFormulaireCreationCarte(card.closest('.stockage').getAttribute('data-columns'), true, card.getAttribute('data-card'));
             });
             card.setAttribute('data-click-listener-added', 'true');
