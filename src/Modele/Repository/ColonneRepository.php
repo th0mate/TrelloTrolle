@@ -34,15 +34,18 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         return Colonne::construireDepuisTableau($objetFormatTableau);
     }
 
-    public function recupererColonnesTableau(int $idTableau): array {
+    public function recupererColonnesTableau(int $idTableau): array
+    {
         return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["idcolonne"]);
     }
 
-    public function getNextIdColonne() : int {
+    public function getNextIdColonne(): int
+    {
         return $this->getNextId("idcolonne");
     }
 
-    public function getNombreColonnesTotalTableau(int $idTableau) : int {
+    public function getNombreColonnesTotalTableau(int $idTableau): int
+    {
         $query = "SELECT COUNT(DISTINCT idcolonne) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
@@ -52,7 +55,8 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
 
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
     {
-        $query = "UPDATE {$this->getNomTable()} SET idcolonne = CASE idcolonne WHEN :idColonne1 THEN :idColonne2 WHEN :idColonne2 THEN :idColonne1 END WHERE idcolonne IN (:idColonne1, :idColonne2)";
+        $query = "UPDATE {$this->getNomTable()} SET idcolonne = 
+CASE idcolonne WHEN :idColonne1 THEN :idColonne2 WHEN :idColonne2 THEN :idColonne1 END WHERE idcolonne IN (:idColonne1, :idColonne2)";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idColonne1" => $idColonne1, "idColonne2" => $idColonne2]);
     }
