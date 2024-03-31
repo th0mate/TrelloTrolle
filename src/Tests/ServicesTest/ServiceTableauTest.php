@@ -104,7 +104,6 @@ class ServiceTableauTest extends TestCase
 
     /** quitterTableau */
 
-    //TODO finir testQuitterTableau après merge car appel BD manquant par rapport à la version avec appels repository
     public function testQuitterTableauEstProprietaire()
     {
         $this->expectException(ServiceException::class);
@@ -152,7 +151,6 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererCartesColonnes()
     {
-        //TODO Pas fini
         $tableau=$this->creerTableauEtUtilisateurFake();
         $fakeColonne=new Colonne("-1","fake",$tableau);
         $carte=new Carte("1","titre","desc","couleur",$fakeColonne);
@@ -168,7 +166,6 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererTableauEstMembre()
     {
-        //TODO sans doute à revoir
         $utilisateur=new Utilisateur("test","test","test","test@test.fr","test","test");
         $fakesTableaux=[$this->creerTableauEtUtilisateurFake($utilisateur),$this->creerTableauEtUtilisateurFake($utilisateur,2)];
         $this->tableauRepository->method("recupererTableauxOuUtilisateurEstMembre")->willReturn($fakesTableaux);
