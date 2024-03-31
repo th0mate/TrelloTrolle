@@ -576,7 +576,7 @@ body {
 }
 
 .menuColonnes {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 180px;
@@ -939,8 +939,8 @@ body {
 
 .divSupprimerUtilisateur {
     position: absolute;
-    height: 50px;
-    width: 100px;
+    height: 30px;
+    width: 150px;
     display: none;
     justify-content: center;
     align-items: center;
@@ -957,9 +957,10 @@ body {
         justify-content: space-between;
         align-items: center;
         padding: 5px;
+        border-radius: 3px;
 
         img {
-            width: 20px;
+            width: 15px;
         }
     }
 

@@ -138,6 +138,7 @@ let utilisateurs = reactive({
         div.style.display = 'flex';
         div.style.top = `${event.clientY}px`;
         div.style.left = `((${event.clientX})-50)px`;
+        document.querySelector('body').addEventListener('click', () => div.style.display = 'none');
         div.querySelector('span').setAttribute('data-onclick', `utilisateur.supprimerUtilisateur(${loginUtilisateur})`);
         startReactiveDom();
     },
