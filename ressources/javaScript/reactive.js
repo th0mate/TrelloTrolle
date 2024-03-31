@@ -80,6 +80,10 @@ function registerEffect(target, key) {
  * Démarre le reactiveDom en ajoutant les écouteurs d'événements et en appliquant les effets
  */
 function startReactiveDom(subDom = document) {
+
+    /**
+     * Pour le clic gauche sur un élément
+     */
     for (let elementClickable of document.querySelectorAll("[data-onclick]")) {
         const [nomObjet, methode, argument] = elementClickable.dataset.onclick.split(/[.()]+/);
         elementClickable.addEventListener('click', (event) => {
@@ -91,18 +95,29 @@ function startReactiveDom(subDom = document) {
         elementClickable.removeAttribute('data-onclick');
     }
 
+    /**
+     * Pour le contenu texte d'un élément
+     */
     for (let rel of document.querySelectorAll("[data-textfun]")) {
         const [obj, fun, arg] = rel.dataset.textfun.split(/[.()]+/);
         applyAndRegister(() => {
             rel.textContent = objectByName.get(obj)[fun](arg)
         });
     }
+
+    /**
+     * Pour le contenu texte d'un élément
+     */
     for (let rel of document.querySelectorAll("[data-textvar]")) {
         const [obj, prop] = rel.dataset.textvar.split('.');
         applyAndRegister(() => {
             rel.textContent = objectByName.get(obj)[prop]
         });
     }
+
+    /**
+     * Pour le style d'un élément
+     */
     for (let rel of document.querySelectorAll("[data-stylefun]")) {
         const [obj, fun, arg] = rel.dataset.stylefun.split(/[.()]+/);
         applyAndRegister(() => {
@@ -112,6 +127,10 @@ function startReactiveDom(subDom = document) {
             }
         });
     }
+
+    /**
+     * Pour le contenu des inputs
+     */
     for (let rel of document.querySelectorAll("[data-reactiveInput]")) {
         const [obj, prop] = rel.dataset.reactiveinput.split('.');
         rel.addEventListener('input', (event) => {
@@ -119,6 +138,9 @@ function startReactiveDom(subDom = document) {
         });
     }
 
+    /**
+     * Pour le contenu html d'un élément
+     */
     for (let rel of subDom.querySelectorAll("[data-htmlfun]")) {
         const [obj, fun, arg] = rel.dataset.htmlfun.split(/[.()]+/);
         applyAndRegister(() => {
@@ -132,7 +154,9 @@ function startReactiveDom(subDom = document) {
         });
     }
 
-
+    /**
+     * Lors du cochage d'une checkbox
+     */
     for (let rel of document.querySelectorAll("[data-oncheck]")) {
         const [obj, fun, arg] = rel.dataset.oncheck.split(/[.()]+/);
         rel.addEventListener('change', (event) => {
@@ -142,6 +166,9 @@ function startReactiveDom(subDom = document) {
         });
     }
 
+    /**
+     * Lors du décochage d'une checkbox
+     */
     for (let rel of document.querySelectorAll("[data-onUncheck]")) {
         const [obj, fun, arg] = rel.dataset.onuncheck.split(/[.()]+/);
         rel.addEventListener('change', (event) => {
@@ -151,6 +178,9 @@ function startReactiveDom(subDom = document) {
         });
     }
 
+    /**
+     * Au changement fait dans un élément input
+     */
     for (let rel of document.querySelectorAll("[data-onChange]")) {
         const [obj, fun, arg] = rel.dataset.onchange.split(/[.()]+/);
         rel.addEventListener('input', (event) => {
@@ -159,6 +189,9 @@ function startReactiveDom(subDom = document) {
         rel.removeAttribute('data-onChange');
     }
 
+    /**
+     * Lors de l'appui sur la touche entrée dans un input
+     */
     for (let rel of document.querySelectorAll("[data-onEnter]")) {
         const [obj, fun, arg] = rel.dataset.onenter.split(/[.()]+/);
         rel.addEventListener('keydown', (event) => {
@@ -169,7 +202,9 @@ function startReactiveDom(subDom = document) {
         rel.removeAttribute('data-onEnter');
     }
 
-
+    /**
+     * Au chargement de l'élément dans la page
+     */
     for (let rel of document.querySelectorAll("[data-onload]")) {
         const [obj, fun, arg] = rel.dataset.onload.split(/[.()]+/);
         if (objectByName.get(obj) !== undefined) {
@@ -177,7 +212,10 @@ function startReactiveDom(subDom = document) {
             rel.removeAttribute('data-onload');
         }
     }
-    //TODO : il y a sept appels à l'événement
+
+    /**
+     * Au survol avec la souris de l'élément
+     */
     for (let rel of document.querySelectorAll("[data-onhover]")) {
         const [obj, fun, arg] = rel.dataset.onhover.split(/[.()]+/);
         rel.addEventListener('mouseenter', (event) => {
@@ -187,7 +225,10 @@ function startReactiveDom(subDom = document) {
             }
         });
     }
-    //pareil mais pour le mouseleave
+
+    /**
+     * Lorsque la souris quitte le survol de l'élément
+     */
     for (let rel of document.querySelectorAll("[data-onleave]")) {
         const [obj, fun, arg] = rel.dataset.onleave.split(/[.()]+/);
         rel.addEventListener('mouseleave', (event) => {
@@ -196,6 +237,18 @@ function startReactiveDom(subDom = document) {
                 rel.removeAttribute('data-onleave');
             }
         });
+    }
+
+    /**
+     * Au clic droit sur l'élément
+     */
+    for (let rel of document.querySelectorAll("[data-onrightclick]")) {
+        const [obj, fun, arg] = rel.dataset.onrightclick.split(/[.()]+/);
+        rel.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+            objectByName.get(obj)[fun](arg);
+        });
+        rel.removeAttribute('data-onrightclick');
     }
 }
 

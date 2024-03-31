@@ -212,8 +212,6 @@ let formulaireAjoutCarte = reactive({
                 })
             });
 
-            console.log(response.json());
-            console.log(this);
 
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
@@ -315,7 +313,7 @@ async function getNextIdCarte() {
 }
 
 /**
- * Ferme le formulaire de création de carte et réinitialise les champs
+ * Ferme le formulaire de création/modification de carte et réinitialise les champs
  */
 function closeForm() {
     document.querySelector('.formulaireCreationCarte').style.display = "none";
