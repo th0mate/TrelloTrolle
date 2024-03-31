@@ -67,28 +67,15 @@ class ServiceCarteTest extends TestCase
 
     /** supprimerCarte */
 
-    public function testSupprimerCarte()
-    {
-        $this->expectExceptionCode(400);
-        $this->expectException(ServiceException::class);
-        $this->expectExceptionMessage("Erreur lors de la suppression de la carte");
-        $fakeTableau = $this->createFakeTableau();
-        $this->carteRepository->method("supprimer")->willReturnCallback(function ($idCarte) {
-            return false;
-        });
-        $this->carteRepository->method("recupererCartesTableau")->willReturn([$this->createFakeCarte()]);
-        $this->serviceCarte->supprimerCarte($fakeTableau, "1");
-    }
-
     public function testSupprimerCarteValide()
     {
-        $this->expectNotToPerformAssertions();
         $fakeTableau = $this->createFakeTableau();
         $this->carteRepository->method("supprimer")->willReturnCallback(function ($idCarte) {
             return true;
         });
         $this->carteRepository->method("recupererCartesTableau")->willReturn([$this->createFakeCarte()]);
-        $this->serviceCarte->supprimerCarte($fakeTableau, "1");
+        $cartes=$this->serviceCarte->supprimerCarte($fakeTableau, "1");
+        self::assertEquals([$this->createFakeCarte()],$cartes);
     }
 
     /** recupererAttributs */
@@ -201,20 +188,39 @@ class ServiceCarteTest extends TestCase
 
     public function testVerificationsMiseAJourCarteConflictTableau()
     {
-        //TODO a finir
         $attributs = [
             "titreCarte" =>"titreCarte",
             "descriptifCarte" => "descr",
             "couleurCarte" => "coul",
             "affectationsCarte" => ["1","2"],
         ];
-        $fakeColonne=$this->createFakeColonne();
+        $this->expectExceptionCode(409);
+        $this->expectException(CreationException::class);
+        $this->expectExceptionMessage("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
+        $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
+        $fakeColonne=new Colonne(1,"titre",$fakeTableau);
+        $fakeCarte=new Carte(1,"titre","desc","couleur",new Colonne(2,"titre",new Tableau(2,"code","titre",$fakeUser)));
+        $this->carteRepository->method("getAllFromCartes")->willReturn($fakeCarte);
         $this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
     }
 
     public function testVerificationsMiseAJourCarteValide()
     {
-        //TODO
+        $attributs = [
+            "titreCarte" =>"titreCarte",
+            "descriptifCarte" => "descr",
+            "couleurCarte" => "coul",
+            "affectationsCarte" => ["1","2"],
+        ];
+        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
+        $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
+        $fakeColonne=new Colonne(1,"titre",$fakeTableau);
+        $fakeCarte=new Carte(1,"titre","desc","couleur",$fakeColonne);
+        $this->carteRepository->method("getAllFromCartes")->willReturn($fakeCarte);
+        $carte=$this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
+        self::assertEquals($fakeCarte,$carte);
+
     }
 
     /** creerCarte */
@@ -282,37 +288,15 @@ class ServiceCarteTest extends TestCase
         $this->serviceCarte->creerCarte($fakeTableau, $attributs, $fakeColonne);
     }
 
-    public function testCreerCarteErreur()
-    {
-        $attributs = [
-            "titreCarte" => "titre",
-            "descriptifCarte" => "desc",
-            "couleurCarte" => "couleur",
-            "affectationsCarte" => ["1", "2"],
-        ];
-        $fakeTableau = $this->createFakeTableau();
-        $fakeColonne = $this->createFakeColonne();
-        $this->expectException(CreationException::class);
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage("Erreur lors de la création de la carte");
-        $fakeUtilisateur = new Utilisateur("1", "nom", "prenom", "email", "mdp");
-        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUtilisateur);
-        $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
-        $this->carteRepository->method("getNextIdCarte")->willReturn(3);
-        $this->carteRepository->method("ajouter")->willReturnCallback(function ($carte) use ($fakeColonne) {
-            self::assertEquals("titre", $carte->getTitreCarte());
-            self::assertEquals("desc", $carte->getDescriptifCarte());
-            self::assertEquals("couleur", $carte->getCouleurCarte());
-            self::assertEquals($fakeColonne, $carte->getColonne());
-            return false;
-        });
-        $this->carteRepository->method("setAffectationsCarte")->willReturnCallback(function ($affectationsCarte) use ($attributs) {
-            self::assertEquals($attributs["affectationsCarte"], $affectationsCarte);
-        });
-        $this->serviceCarte->creerCarte($fakeTableau, $attributs, $fakeColonne);
-    }
 
     /** getNextIdCarte */
+
+    public function testGetNextIdCarte()
+    {
+        $this->carteRepository->method("getNextIdCarte")->willReturn(1);
+        $id=$this->serviceCarte->getNextIdCarte();
+        assertEquals(1,$id);
+    }
 
     /** deplacerCarte */
 

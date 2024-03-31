@@ -76,7 +76,7 @@ class ServiceCarte implements ServiceCarteInterface
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
                 if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
-                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.", 400);
+                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.", 403);
                 }
                 $affectations[] = $utilisateur;
             }

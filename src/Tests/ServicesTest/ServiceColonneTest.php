@@ -55,14 +55,26 @@ class ServiceColonneTest extends TestCase
     }
     /** recupererColonneTableau */
 
+    public function testRecupererColonnesTableau()
+    {
+        $fakeTableau=new Tableau(1,"code","titre",null);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau);
+        $fakeColonne2=new Colonne("2","titre",$fakeTableau);
+        $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne,$fakeColonne2]);
+        $colonnes=$this->serviceColonne->recupererColonnesTableau(1);
+        self::assertEquals([$fakeColonne,$fakeColonne2],$colonnes);
+    }
+
     /** supprimerColonne */
 
     public function testSupprimerColonneValide()
     {
-        $this->expectNotToPerformAssertions();
         $fakeTableau=new Tableau(1,"code","titre",null);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau);
         $this->colonneRepository->method("supprimer")->willReturn(true);
-        $this->serviceColonne->supprimerColonne($fakeTableau,"2");
+        $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
+        $colonnes=$this->serviceColonne->supprimerColonne($fakeTableau,"2");
+        self::assertEquals([$fakeColonne],$colonnes);
     }
 
     /** isSetNomColonne */
