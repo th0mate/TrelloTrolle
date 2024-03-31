@@ -77,7 +77,7 @@ class ServiceCarte implements ServiceCarteInterface
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
                 if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
-                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.", 400);
+                    throw new CreationException("Un des membres affecté à la tâche n'est pas affecté au tableau.", 403);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -127,7 +127,7 @@ class ServiceCarte implements ServiceCarteInterface
                     throw new CreationException("Un des membres affecté à la tâche n'existe pas", 404);
                 }
                 if (!$this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(),$tableau)) {
-                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau", "danger", 400);
+                    throw new MiseAJourException("Un des membres affecté à la tâche n'est pas affecté au tableau", "danger", 403);
                 }
                 $affectations[] = $utilisateur;
             }
@@ -167,11 +167,10 @@ class ServiceCarte implements ServiceCarteInterface
     {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
-            $affectations = array_filter($carte->getAffectationsCarte(), function ($u) use ($utilisateur) {
+            $affectations = array_filter($this->carteRepository->getAffectationsCarte($carte), function ($u) use ($utilisateur) {
                 return $u->getLogin() != $utilisateur->getLogin();
             });
             $this->carteRepository->setAffectationsCarte($affectations, $carte);
-            $this->carteRepository->mettreAJour($carte);
         }
     }
 

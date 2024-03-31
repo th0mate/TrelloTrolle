@@ -4,6 +4,7 @@ namespace App\Trellotrolle\Tests\ServicesTest;
 
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\ColonneRepository;
 use App\Trellotrolle\Modele\Repository\ColonneRepositoryInterface;
 use App\Trellotrolle\Service\Exception\CreationException;
@@ -54,22 +55,26 @@ class ServiceColonneTest extends TestCase
     }
     /** recupererColonneTableau */
 
+    public function testRecupererColonnesTableau()
+    {
+        $fakeTableau=new Tableau(1,"code","titre",null);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau);
+        $fakeColonne2=new Colonne("2","titre",$fakeTableau);
+        $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne,$fakeColonne2]);
+        $colonnes=$this->serviceColonne->recupererColonnesTableau(1);
+        self::assertEquals([$fakeColonne,$fakeColonne2],$colonnes);
+    }
+
     /** supprimerColonne */
 
-    public function testSupprimerColonneErreur()
-    {
-        $this->expectExceptionCode(400);
-        $this->expectExceptionMessage("Erreur lors de la suppression d'une carte");
-        $fakeTableau=new Tableau(1,"code","titre",null);
-        $this->colonneRepository->method("supprimer")->willReturn(false);
-        $this->serviceColonne->supprimerColonne($fakeTableau,"2");
-    }
     public function testSupprimerColonneValide()
     {
-        $this->expectNotToPerformAssertions();
         $fakeTableau=new Tableau(1,"code","titre",null);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau);
         $this->colonneRepository->method("supprimer")->willReturn(true);
-        $this->serviceColonne->supprimerColonne($fakeTableau,"2");
+        $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
+        $colonnes=$this->serviceColonne->supprimerColonne($fakeTableau,"2");
+        self::assertEquals([$fakeColonne],$colonnes);
     }
 
     /** isSetNomColonne */
@@ -90,11 +95,71 @@ class ServiceColonneTest extends TestCase
 
     /** recupererColonneAndNomColonne */
 
+public function testRecupererColonneManquantAndNomColonne()
+    {
+        $this->expectExceptionMessage("Identifiant de colonne manquant");
+        $this->expectException(ServiceException::class);
+        $this->expectExceptionCode(404);
+        $this->serviceColonne->recupererColonneAndNomColonne(null,"nomColonne");
+    }
+    public function testRecupererColonneInexistanteAndNomColonne()
+    {
+        $this->expectExceptionMessage("Colonne inexistante");
+        $this->expectException(ServiceException::class);
+        $this->expectExceptionCode(404);
+        $this->colonneRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->serviceColonne->recupererColonneAndNomColonne(1,null);
+    }
+    public function testRecupererColonneAndNomColonneManquant()
+    {
+        $this->expectExceptionMessage("Nom de colonne manquant");
+        $this->expectException(CreationException::class);
+        $this->expectExceptionCode(404);
+        $this->colonneRepository->method("recupererParClePrimaire")->willReturn($this->createFakeColonne());
+        $this->serviceColonne->recupererColonneAndNomColonne(1,null);
+    }
+    public function testRecupererColonneAndNomColonneValide()
+    {
+        $this->colonneRepository->method("recupererParClePrimaire")->willReturn($this->createFakeColonne());
+        $colonne=$this->serviceColonne->recupererColonneAndNomColonne(1,"nomColonne");
+        self::assertEquals($this->createFakeColonne(),$colonne);
+    }
+
     /** creerColonne */
+
+    public function testCreerColonne()
+    {
+        $fakeTableau=new Tableau("1","code","titre",null);
+        $this->colonneRepository->method("getNextIdColonne")->willReturn(2);
+        $this->colonneRepository->method("ajouter")->willReturnCallback(function ($colonne)use ($fakeTableau){
+            self::assertEquals(2,$colonne->getIdColonne());
+            self::assertEquals("nomColonne",$colonne->getTitreColonne());
+            self::assertEquals($fakeTableau,$colonne->getTableau());
+            return true;
+        });
+        $this->serviceColonne->creerColonne($fakeTableau,"nomColonne");
+    }
 
     /** miseAJourColonne */
 
+    public function testMiseAJourColonne()
+    {
+        $fakeColonne=$this->createFakeColonne();
+        $this->colonneRepository->method("mettreAJour")->willReturnCallback(function ($colonne)use ($fakeColonne){
+            self::assertEquals($fakeColonne,$colonne);
+        });
+        $colonne=$this->serviceColonne->miseAJourColonne($fakeColonne);
+        self::assertEquals($fakeColonne,$colonne);
+    }
+
     /** getNextIdColonne */
+
+    public function testGetNextIdColonne()
+    {
+        $this->colonneRepository->method("getNextIdColonne")->willReturn(0);
+        $id=$this->serviceColonne->getNextIdColonne();
+        self::assertEquals("0",$id);
+    }
 
     /** inverserOrdreColonnes */
 

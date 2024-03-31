@@ -43,14 +43,15 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
             return null;
         }
         return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["idcolonne"]);
-
     }
 
-    public function getNextIdColonne() : int {
+    public function getNextIdColonne(): int
+    {
         return $this->getNextId("idcolonne");
     }
 
-    public function getNombreColonnesTotalTableau(int $idTableau) : int {
+    public function getNombreColonnesTotalTableau(int $idTableau): int
+    {
         $query = "SELECT COUNT(DISTINCT idcolonne) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
