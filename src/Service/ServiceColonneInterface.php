@@ -15,7 +15,7 @@ interface ServiceColonneInterface
      * @param $idColonne
      * @return Colonne
      */
-    public function recupererColonne($idColonne): Colonne;
+    public function recupererColonne(int $idColonne): Colonne;
 
     /**
      * @param $idTableau

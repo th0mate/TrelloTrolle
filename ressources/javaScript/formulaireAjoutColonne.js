@@ -5,11 +5,13 @@ let formulaireAjoutColonne = reactive({
     idColonne: "",
     titre: "",
 
+    /**
+     * Crée une colonne en front et via l'API
+     * @returns {Promise<void>} La promesse habituelle
+     */
     envoyerFormulaireCreerColonne: async function () {
 
         if (this.titre !== '') {
-
-
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 
             let response1 = await fetch(apiBase + '/colonne/nextid', {

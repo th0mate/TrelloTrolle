@@ -37,8 +37,8 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
      * @param array $objetFormatTableau
      * @return AbstractDataObject
      */
-    protected function construireDepuisTableau(array $objetFormatTableau): AbstractDataObject
-    {
+    protected function construireDepuisTableau(array $objetFormatTableau): Utilisateur
+     {
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
@@ -64,7 +64,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
      * @param $recherche
      * @return array
      */
-    public function recherche($recherche)
+    public function recherche($recherche): array
     {
         $recherche = strtolower($recherche) . "%";
         $sql = "SELECT {$this->formatNomsColonnes()} FROM {$this->getNomTable()} WHERE LOWER(login) LIKE :tagLogin OR LOWER(nom) LIKE :tagNom OR LOWER(prenom) LIKE :tagPrenom OR LOWER(email) LIKE :tagMail";
@@ -76,5 +76,20 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
             $utlisateurs[] = $this->construireDepuisTableau($utilisateur);
         }
         return $utlisateurs;
+    }
+
+
+    public function getAllFromTable(int|string $idCle): ?Utilisateur
+    {
+        $query = "SELECT * FROM {$this->getNomTable()}
+        WHERE login=:login";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["login" => $idCle]);
+        $objetFormatTableau = $pdoStatement->fetch();
+        if (!$objetFormatTableau) {
+            return null;
+        }
+        return $this->construireDepuisTableau($objetFormatTableau);
+
     }
 }

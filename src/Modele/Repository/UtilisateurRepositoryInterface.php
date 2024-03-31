@@ -2,7 +2,7 @@
 
 namespace App\Trellotrolle\Modele\Repository;
 
-interface UtilisateurRepositoryInterface
+interface UtilisateurRepositoryInterface extends AbstractRepositoryInterface
 {
     /**
      * @param string $email
@@ -20,4 +20,5 @@ interface UtilisateurRepositoryInterface
      * @return mixed
      */
     public function recherche($recherche);
+
 }

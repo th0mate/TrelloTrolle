@@ -43,7 +43,7 @@ class ControleurGenerique {
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
-    protected function redirection( string $action = "accueil", array $query = []) : RedirectResponse
+    protected function redirection(string $route = "accueil", array $parameters = []) : RedirectResponse
     {
 //        $queryString = [];
 //        if ($action != "") {
@@ -60,7 +60,7 @@ class ControleurGenerique {
 //        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
 //        header($url);
         $generateurUrl= $this->container->get("url_generator");
-        $url = $generateurUrl->generate($action, $query);
+        $url = $generateurUrl->generate($route, $parameters);
         var_dump($url);
         return new RedirectResponse($url);
     }
@@ -115,7 +115,7 @@ class ControleurGenerique {
     protected function redirectionConnectionFlash(ConnexionException $e): Response
     {
         MessageFlash::ajouter("info", $e->getMessage());
-        return self::redirection("utilisateur", "afficherFormulaireConnexion");
+        return self::redirection("afficherFormulaireConnexion");
     }
     protected function afficherTwig(string $cheminVue, array $parametres = []): Response
     {

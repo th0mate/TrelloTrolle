@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Trellotrolle\Tests;
+namespace App\Trellotrolle\Tests\ServicesTest;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -130,12 +130,21 @@ class ServiceTableauTest extends TestCase
 
     public function testQuitterTableauValide()
     {
-
         $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
         $tableau=new Tableau(1,"code","titre",$utilisateur);
+        $carte=new Carte("1","titre","desc","couleur",new Colonne("1","titre",$tableau));
         $this->tableauRepository->method("estProprietaire")->willReturn(false);
         $this->tableauRepository->method("estParticipant")->willReturn(true);
-        //TODO besoin de
+        $this->tableauRepository->method("getParticipants")->willReturn([$utilisateur]);
+        $this->tableauRepository->method("setParticipants")->willReturnCallback(function ($participants,$tableau){
+            assertEquals([],$participants);
+        });
+        $this->carteRepository->method("recupererCartesTableau")->willReturn([$carte]);
+        $this->carteRepository->method("getAffectationsCarte")->willReturn([$utilisateur]);
+        $this->carteRepository->method("setAffectationsCarte")->willReturnCallback(function ($affectations,$carte){
+           assertEquals([],$affectations);
+
+        });
         $this->serviceTableau->quitterTableau($tableau,$utilisateur);
     }
 
@@ -146,9 +155,13 @@ class ServiceTableauTest extends TestCase
         //TODO Pas fini
         $tableau=$this->creerTableauEtUtilisateurFake();
         $fakeColonne=new Colonne("-1","fake",$tableau);
+        $carte=new Carte("1","titre","desc","couleur",$fakeColonne);
         $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
+        $this->carteRepository->method("recupererCartesColonne")->willReturn([$carte]);
+        $this->carteRepository->method("getAffectationsCarte")->willReturn([$tableau->getUtilisateur()]);
         $colonnes=$this->serviceTableau->recupererCartesColonnes($tableau);
-        self::assertEquals([$fakeColonne],$colonnes);
+        $recuperer=["data"=>[[$carte]],"colonnes"=>[$fakeColonne],"participants"=>[1=>[$tableau->getUtilisateur()]]];
+        self::assertEquals($recuperer,$colonnes);
     }
 
     /** recupererTableauEstMembre */
@@ -222,7 +235,6 @@ class ServiceTableauTest extends TestCase
 
     public function testRecupererTableauIdValide()
     {
-        $this->expectNotToPerformAssertions();
         $fakeTableau=$this->creerTableauEtUtilisateurFake();
         $this->tableauRepository->method("recupererParClePrimaire")->willReturn($fakeTableau);
         $tableau=$this->serviceTableau->recupererTableauParId("1");
@@ -233,13 +245,15 @@ class ServiceTableauTest extends TestCase
 
     public function testEstParticipantTrue()
     {
+        $tableau=$this->creerTableauEtUtilisateurFake();
         $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
-        self::assertTrue($this->serviceTableau->estParticipant("loginConnecte"));
+        self::assertTrue($this->serviceTableau->estParticipant($tableau,"loginConnecte"));
     }
     public function testEstParticipantFalse()
     {
+        $fakeTableau=$this->creerTableauEtUtilisateurFake();
         $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(false);
-        self::assertFalse($this->serviceTableau->estParticipant("loginConnecte"));
+        self::assertFalse($this->serviceTableau->estParticipant($fakeTableau,"loginConnecte"));
     }
 
 

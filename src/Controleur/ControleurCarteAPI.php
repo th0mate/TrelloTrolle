@@ -79,14 +79,15 @@ class ControleurCarteAPI
     #[Route("/api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
     public function modifierCarte(Request $request): Response
     {
+
         $jsondecode = json_decode($request->getContent());
         $idCarte = $jsondecode->idCarte ?? null;
-        $idColonne = $jdondecode->idColonne ?? null;
+        $idColonne = $jsondecode->idColonne ?? null;
         $attributs = [
-            "titreCarte" => $jdondecode->titreCarte ?? null,
-            "descriptifCarte" => $jdondecode->descriptifCarte ?? null,
-            "couleurCarte" => $jdondecode->couleurCarte ?? null,
-            "affectationsCarte" => $jdondecode->affectationsCarte ?? null,
+            "titreCarte" => $jsondecode->titreCarte ?? null,
+            "descriptifCarte" => $jsondecode->descriptifCarte ?? null,
+            "couleurCarte" => $jsondecode->couleurCarte ?? null,
+            "affectationsCarte" => $jsondecode->affectationsCarte ?? null,
         ];
         try {
             $this->serviceConnexion->pasConnecter();
@@ -158,11 +159,28 @@ class ControleurCarteAPI
             $this->serviceConnexion->pasConnecter();
             $colonne=$this->serviceColonne->recupererColonne($idColonne);
             $carte=$this->serviceCarte->recupererCarte($idCarte);
+            $tableau=$colonne->getTableau();
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $carte->setColonne($colonne);
             $this->serviceCarte->deplacerCarte($carte,$colonne);
             return new JsonResponse('',200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
+    #[Route("/api/carte/affectations",name: "getAffectationsCarteAPI",methods:"POST")]
+    public function getAffectations(Request $request):Response
+    {
+        $josndecode=json_decode($request->getContent());
+        $idCarte=$josndecode->idCarte ??null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $carte=$this->serviceCarte->recupererCarte($idCarte);
+            $affectations=$this->serviceCarte->getAffectations($carte);
+            return new JsonResponse($affectations,200);
+        }catch (ServiceException $e){
+            return new JsonResponse(["error"=>$e->getMessage()],$e->getCode());
         }
     }
 

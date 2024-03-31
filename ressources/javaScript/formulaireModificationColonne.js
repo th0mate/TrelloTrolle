@@ -4,6 +4,10 @@ let formulaireModificationColonne = reactive({
     titre: "",
     idColonne: "",
 
+    /**
+     * Modifie le titre de la colonne en front et via l'API
+     * @returns {Promise<void>} La promesse habituelle
+     */
     modifierColonne: async function () {
         if (this.titre !== '') {
             document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = this.titre;

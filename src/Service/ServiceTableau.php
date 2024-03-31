@@ -165,7 +165,7 @@ class ServiceTableau implements ServiceTableauInterface
             throw new ServiceException("Vous ne pouvez pas quitter ce tableau",Response::HTTP_FORBIDDEN);
         }
         if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
-            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_UNAUTHORIZED);
+            throw new ServiceException("Vous n'appartenez pas à ce tableau",Response::HTTP_FORBIDDEN);
         }
 
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {

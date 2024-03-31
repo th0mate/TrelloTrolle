@@ -2,6 +2,7 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -61,13 +62,6 @@ interface ServiceCarteInterface
      */
     public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte;
 
-    /**
-     * @param Carte $carte
-     * @param $colonne
-     * @param $attributs
-     * @return Carte
-     */
-    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte;
 
 
     /**
@@ -76,26 +70,20 @@ interface ServiceCarteInterface
      * @param $attributs
      * @return Carte
      */
-    public function verificationsMiseAJourCarte($idCarte, Colonne $colonne, $attributs): Carte;
+    public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte;
 
     /**
      * @param $tableau
      * @param $utilisateur
      * @return mixed
      */
-    public function miseAJourCarteMembre(Tableau $tableau, Utilisateur $utilisateur): void;
+    public function miseAJourCarteMembre(Tableau $tableau, AbstractDataObject $utilisateur): void;
 
     /**
      * @return mixed
      */
     public function getNextIdCarte(): int;
 
-    /**
-     * @param Colonne $colonne
-     * @param $attributs
-     * @return Carte
-     */
-    public function newCarte(Colonne $colonne, $attributs): Carte;
 
     /**
      * @param Carte $carte

@@ -2,13 +2,15 @@
 
 namespace App\Trellotrolle\Modele\Repository;
 
+use App\Trellotrolle\Modele\DataObject\Colonne;
+
 interface ColonneRepositoryInterface
 {
     /**
      * @param int $idTableau
      * @return array
      */
-    public function recupererColonnesTableau(int $idTableau): array;
+    public function recupererColonnesTableau(int $idTableau): ?array;
 
     /**
      * @return int

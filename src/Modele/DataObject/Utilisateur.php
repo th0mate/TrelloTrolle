@@ -25,12 +25,13 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
      * @return Utilisateur
      */
     public static function construireDepuisTableau(array $objetFormatTableau) : Utilisateur {
+
         return new Utilisateur(
-            $objetFormatTableau["login"] ??null,
-            $objetFormatTableau["nom"]??null,
-            $objetFormatTableau["prenom"]??null,
-            $objetFormatTableau["email"]??null,
-            $objetFormatTableau["mdphache"]??null,
+            $objetFormatTableau["login"] ?? null,
+            $objetFormatTableau["nom"] ?? null,
+            $objetFormatTableau["prenom"] ?? null,
+            $objetFormatTableau["email"] ?? null,
+            $objetFormatTableau["mdphache"] ?? null,
         );
     }
 

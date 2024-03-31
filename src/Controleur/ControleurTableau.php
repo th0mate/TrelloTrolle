@@ -82,6 +82,7 @@ class ControleurTableau extends ControleurGenerique
 
         //$codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
+            $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);
             $colaborateurs = $this->serviceUtilisateur->getParticipants($tableau);
@@ -197,7 +198,7 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceTableau->isNotNullNomTableau($nomTableau, $tableau);
-            $estProprio = $this->serviceTableau->estParticipant($this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $estProprio = $this->serviceTableau->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
             if (!$estProprio) {
                 MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
             } else {
@@ -315,7 +316,6 @@ class ControleurTableau extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-
             $tableaux = $this->serviceTableau->recupererTableauEstMembre($this->connexionUtilisateur->getLoginUtilisateurConnecte());
             /*return ControleurTableau::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Liste des tableaux de $login",

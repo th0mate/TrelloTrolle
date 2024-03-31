@@ -11,9 +11,11 @@
         let apiBase = siteBase + "/api";</script>
 
     <script>
-        let bulletsImageUrl = "{{ asset('../tests/bullets.png') }}";
-        let plusImageUrl = "{{ asset('../tests/plus.png') }}";
+        let bulletsImageUrl = "{{ asset('../ressources/img/bullets.png') }}";
+        let plusImageUrl = "{{ asset('../ressources/img/plus.png') }}";
     </script>
+
+    <img src="{{ asset('../ressources/img/wait.gif') }}" class="waiting" alt="">
 
     <p>{{ tableau.utilisateur.nom is null }}</p>
     <div class="all">
@@ -22,13 +24,28 @@
             <h3>{{ tableau.titreTableau }}</h3>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
-                <span class="user"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
+                <span class="user"
+                      data-onrightclick="utilisateur.afficherSupprimer({{ tableau.utilisateur.login }})"
+                      data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
+                      data-onleave="utilisateur.cacherContenuUtilisateur({{ tableau.utilisateur.login }})"
+                      data-user="{{ tableau.utilisateur.login }}"
+                      data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
+                <div class="contenuUtilisateur {{ tableau.utilisateur.login }}"></div>
+                <div class="divSupprimerUtilisateur"><span>Supprimer<img src="{{ asset('../ressources/img/bin.png') }}"
+                                                                         alt=""></span></div>
+
                 {% for participant in collaborateurs %}
-                    <span class="user">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
+                    <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
+                          data-onrightclick="utilisateur.afficherSupprimer({{ participant.login }})"
+                          data-onleave="utilisateur.cacherContenuUtilisateur({{ participant.login }})"
+                          data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
+                    <div class="contenuUtilisateur {{ participant.login }}"></div>
                 {% endfor %}
-                <div class="invite">Partager <img src="{{ asset('../tests/inviter.png') }}" alt=""></div>
+                <div class="invite">Partager <img src="{{ asset('../ressources/img/inviter.png') }}" alt=""></div>
+
             </div>
         </div>
+
 
         <div class="ul">
 
@@ -37,7 +54,7 @@
                     <!-- Entete de la colonne avec son titre et ses bullets -->
                     <div class="entete">
                         <h5 class="main" draggable="true">{{ colonnes[i].titreColonne }}</h5>
-                        <div class="bullets"><img src="{{ asset('../tests/bullets.png') }}" alt=""></div>
+                        <div class="bullets"><img src="{{ asset('../ressources/img/bullets.png') }}" alt=""></div>
                     </div>
 
                     <!-- Stockage des cartes -->
@@ -51,7 +68,8 @@
                                     {% for idCarte,utilisateurs in participants %}
                                         {% if idCarte == carte.idCarte %}
                                             {% for utilisateur in utilisateurs %}
-                                                <span class="user">{{ utilisateur.prenom|slice(0,1) }}{{ utilisateur.nom|slice(0,1) }}</span>
+                                                <span class="user"
+                                                      data-user="{{ utilisateur.login }}">{{ utilisateur.prenom|slice(0,1) }}{{ utilisateur.nom|slice(0,1) }}</span>
                                             {% endfor %}
                                         {% endif %}
                                     {% endfor %}
@@ -61,7 +79,7 @@
                     </div>
 
                     <div class="add" data-columns="{{ colonnes[i].idColonne }}">
-                        <img src="{{ asset('../tests/plus.png') }}" alt="">
+                        <img src="{{ asset('../ressources/img/plus.png') }}" alt="">
                         Ajouter une carte
                     </div>
                 </div>
@@ -70,7 +88,7 @@
             <!-- Pour ajouter de nouvelles colonnes -->
             <div class="adder" data-tableau="{{ tableau.idTableau }}">
                 <label>
-                    <input type="text" maxlength="30" data-reactiveInput="formulaireAjoutColonne.titre"
+                    <input type="text" maxlength="20" data-reactiveInput="formulaireAjoutColonne.titre"
                            data-onEnter="formulaireAjoutColonne.envoyerFormulaireCreerColonne" class="input"
                            placeholder="Ajouter une colonne"/>
                 </label>
@@ -80,32 +98,33 @@
 
         <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
         <div class="menuColonnes">
-            <img src="{{ asset('../tests/close.png') }}" alt="" class="close">
+            <img src="{{ asset('../ressources/img/close.png') }}" alt="" class="close">
             <div class="deleteColumn">
                 <h5>Supprimer</h5>
-                <img src="{{ asset('../tests/bin.png') }}" alt="">
+                <img src="{{ asset('../ressources/img/bin.png') }}" alt="">
             </div>
             <div class="updateColumn">
                 <h5>Modifier</h5>
-                <img src="{{ asset('../tests/edition.png') }}" alt="">
+                <img src="{{ asset('../ressources/img/edition.png') }}" alt="">
             </div>
         </div>
 
     </div>
 
-    <div class="formulaireCreationCarte">
-        <div class="wrap"><h2>Création d'une carte</h2> <img class="closeCard" src="{{ asset('../tests/close.png') }}"
-                                                             alt="">
+    <div class="formulaireCreationCarte" data-modif="">
+        <div class="wrap"><h2 class="titreCreationCarte">Création d'une carte</h2> <img class="closeCard"
+                                                                                        src="{{ asset('../ressources/img/close.png') }}"
+                                                                                        alt="">
         </div>
         <input type="hidden" class="idColonne" value="">
         <div class="content"><h4>Titre de la carte :</h4>
-            <input maxlength="50" required
+            <input maxlength="30" required
                    data-reactiveInput="formulaireAjoutCarte.titre" type="text"
                    class="inputCreationCarte"
                    placeholder="Entrez le titre de la carte">
         </div>
         <div class="content"><h4>Description de la carte :</h4>
-            <textarea maxlength="255"
+            <textarea maxlength="200"
                       data-reactiveInput="formulaireAjoutCarte.description"
                       class="desc"
                       placeholder="Description de la carte...">
@@ -119,14 +138,15 @@
             <div class="listeParticipants" data-htmlfun="formulaireAjoutCarte.afficherCheckBoxParticipants">
 
             </div>
+            <div class="listeNouveauxParticipants"></div>
         </div>
-        <div class="boutonCreation" data-onclick="formulaireAjoutCarte.envoyerFormulaire">Créer</div>
+        <div class="boutonCreation" data-onclick="formulaireAjoutCarte">Créer</div>
     </div>
 
 
     <div class="formulaireAjoutMembreTableau" data-tableau="{{ tableau.idTableau }}">
         <div class="wrap"><h2>Ajout de Collaborateurs</h2> <img onclick="listenerFermerAjoutMembre()" class="closeCard"
-                                                                src="{{ asset('../tests/close.png') }}"
+                                                                src="{{ asset('../ressources/img/close.png') }}"
                                                                 alt="">
         </div>
         <div class="content"><h4>Adresse mail du collaborateur :</h4>
@@ -145,7 +165,7 @@
     <div class="formulaireModificationColonne">
         <div class="wrap">
             <h2>Modification de la colonne</h2>
-            <img class="closeColumn" src="{{ asset('../tests/close.png') }}" alt="">
+            <img class="closeColumn" src="{{ asset('../ressources/img/close.png') }}" alt="">
         </div>
         <div class="content">
             <h4>Nouveau titre :</h4>

@@ -49,8 +49,8 @@ class ServiceConnexion implements ServiceConnexionInterface
      */
     public function dejaConnecter()
     {
-        if ($this->connexionUtilisateurJWT->estConnecte() || $this->connexionUtilisateurSession->estConnecte()) {
-            throw new ConnexionException("Vous êtes déjà connecter",Response::HTTP_FORBIDDEN);
+        if ($this->connexionUtilisateurJWT->estConnecte() && $this->connexionUtilisateurSession->estConnecte()) {
+            throw new ConnexionException("Vous êtes déjà connecté",Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -94,7 +94,5 @@ class ServiceConnexion implements ServiceConnexionInterface
 
         $this->connexionUtilisateurJWT->connecter($utilisateur->getLogin());
         $this->connexionUtilisateurSession->connecter($utilisateur->getLogin());
-        Cookie::enregistrer("login", $login);
-        Cookie::enregistrer("mdp", $mdp);
     }
 }

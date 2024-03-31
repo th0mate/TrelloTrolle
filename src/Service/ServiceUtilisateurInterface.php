@@ -58,8 +58,8 @@ interface ServiceUtilisateurInterface
      * @param $loginConnecte
      * @return void
      */
-    public function ajouterMembre(Tableau $tableau, mixed $login, $loginConnecte): void;
 
+    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter,$loginConnecte): void;
 
     /**
      * @param Tableau $tableau
@@ -127,4 +127,6 @@ interface ServiceUtilisateurInterface
      * @return Utilisateur
      */
     public function getProprietaireTableau(Tableau $tableau): Utilisateur;
+    public function recupererAffectationsColonne($colonne, $login);
+
 }

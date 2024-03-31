@@ -6,13 +6,15 @@
     <title>{% block page_title %}Trollé{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset("../ressources/css/navstyle.css") }}"> <!--TODO into asset-->
     <link rel="stylesheet" href="{{ asset("../ressources/css/trellostyle.css") }}">  <!--TODO into asset-->
-    <link rel="stylesheet" href="{{ asset("../tests/tests.css") }}">  <!--TODO into asset-->
+    <link rel="stylesheet" href="{{ asset("../ressources/css/tableaux.css") }}">  <!--TODO into asset-->
 
-    <script type="text/javascript" src="{{ asset('../tests/tableaux.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/toHTML.js') }}" defer></script>
+    <script type="text/javascript" src="{{ asset('../ressources/javaScript/tableaux.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutCarte.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutParticipant.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutColonne.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireModificationColonne.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/utilisateurs.js') }}" defer></script>
 
 
 </head>
