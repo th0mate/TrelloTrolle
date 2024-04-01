@@ -1,7 +1,7 @@
 {# Tableau $tableau  Colonne[] $colonnes,  Carte[][] $data, array $participants #}
 {% extends "base.html.twig" %}
 
-{% block page_title %}Trollé{% endblock %}
+{% block page_title %} {{ tableau.titreTableau|capitalize }} - Trollé{% endblock %}
 
 {% block page_content %}
 
@@ -35,14 +35,14 @@
                         alt=""></span></div>
 
         <div class="infos">
-            <h3>{{ tableau.titreTableau }}</h3>
+            <h3>{{ tableau.titreTableau|capitalize }}</h3>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
                 <span class="user"
                       data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-onleave="utilisateur.cacherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-user="{{ tableau.utilisateur.login }}"
-                      data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1) }}{{ tableau.utilisateur.nom|slice(0,1) }}</span>
+                      data-onload="utilisateur.MAJUtilisateursDepuisBaseDeDonnees"> {{ tableau.utilisateur.prenom|slice(0,1)|capitalize }}{{ tableau.utilisateur.nom|slice(0,1)|capitalize }}</span>
                 <div class="contenuUtilisateur {{ tableau.utilisateur.login }}"></div>
                 <div class="divSupprimerUtilisateur"><span>Supprimer<img src="{{ asset('../ressources/img/bin.png') }}"
                                                                          alt=""></span></div>
@@ -54,7 +54,7 @@
                               data-onrightclick="utilisateur.afficherSupprimer({{ participant.login }})"
                           {% endif %}
                           data-onleave="utilisateur.cacherContenuUtilisateur({{ participant.login }})"
-                          data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
+                          data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1)|capitalize }}{{ participant.nom|slice(0,1)|capitalize }}</span>
                     <div class="contenuUtilisateur {{ participant.login }}"></div>
                 {% endfor %}
 
@@ -72,7 +72,7 @@
                 <div class="draggable" data-columns="{{ colonnes[i].idColonne }}" draggable="true">
                     <!-- Entete de la colonne avec son titre et ses bullets -->
                     <div class="entete">
-                        <h5 class="main" draggable="true">{{ colonnes[i].titreColonne }}</h5>
+                        <h5 class="main" draggable="true">{{ colonnes[i].titreColonne|capitalize }}</h5>
                         <div class="bullets"><img src="{{ asset('../ressources/img/bullets.png') }}" alt=""></div>
                     </div>
 
@@ -87,7 +87,7 @@
                                     {% endif %}
                                  data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
-                                {{ carte.titreCarte }}
+                                {{ carte.titreCarte|capitalize }}
                                 <div class="features">
                                     {% for idCarte,utilisateurs in participants %}
                                         {% if idCarte == carte.idCarte %}

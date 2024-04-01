@@ -71,7 +71,7 @@ if (window.location.href.includes('tableau/')) {
      * Permet d'échanger le contenu de deux éléments `.draggable`
      * @param e
      */
-    function handleDrop(e) {
+    async function handleDrop(e) {
         if (sourceIsMainOrDraggable) {
             e.stopPropagation();
             for (let el of document.querySelectorAll('.draggable')) {
@@ -85,6 +85,25 @@ if (window.location.href.includes('tableau/')) {
                 dragSrcEl.innerHTML = droppedHTML;
                 targetDraggable.innerHTML = draggedHTML;
                 sourceIsMainOrDraggable = false;
+
+                console.log(dragSrcEl.getAttribute('data-columns'),
+                    targetDraggable.getAttribute('data-columns'));
+
+                let response = await fetch(apiBase + '/colonne/inverser', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+
+
+                    body: JSON.stringify({
+                        idColonne1: dragSrcEl.getAttribute('data-columns'),
+                        idColonne2: targetDraggable.getAttribute('data-columns')
+                    })
+                });
+
+                console.log(await response.json());
                 updateDraggables();
                 addEventsBullets(dragSrcEl);
                 addEventsBullets(targetDraggable);
