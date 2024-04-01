@@ -1030,3 +1030,31 @@ body {
         background-color: #626b73;
     }
 }
+
+@media (max-width: 650px) {
+
+    .infos {
+        flex-direction: column;
+        min-height: 100px!important;
+        justify-content: space-between;
+        align-items: center;
+
+        .allUsers {
+            justify-content: center;
+            max-width: 98%!important;
+        }
+
+        .invite {
+            max-height: 30px;
+        }
+
+        *{
+            flex-shrink: 0;
+        }
+    }
+
+    .formulaireCreationCarte, .formulaireAjoutMembreTableau, .formulaireModificationColonne {
+        max-width: 90%;
+        min-height: 50%;
+    }
+}
