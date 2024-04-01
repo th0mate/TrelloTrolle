@@ -973,6 +973,7 @@ body {
 .divSupprimerCarte {
     z-index: 10;
     position: absolute;
+    color: white;
     height: 30px;
     width: 150px;
     display: none;

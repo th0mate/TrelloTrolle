@@ -49,6 +49,7 @@ let formulaireAjoutCarte = reactive({
             if (response.status !== 200) {
                 console.error("Erreur lors de la création de la carte dans l'API");
             }
+            console.log(await response.json());
             this.estEnvoye = false;
         } else {
             console.error("idColonne manquant.");
@@ -57,12 +58,11 @@ let formulaireAjoutCarte = reactive({
 
 
     supprimerCarte: async function (idCarte) {
-        console.log(idCarte);
         const div = document.querySelector('.divSupprimerCarte');
 
         console.log(event.clientX, event.clientY);
-        div.style.left = event.clientX + 'px';
-        div.style.top = event.clientY + 'px';
+        div.style.left = (event.clientX + window.scrollX) + 'px';
+        div.style.top = (event.clientY + window.scrollY) + 'px';
         div.style.display = 'flex';
 
         document.addEventListener('click', function (e) {
@@ -88,7 +88,6 @@ let formulaireAjoutCarte = reactive({
             if (response.status !== 200) {
                 console.error(response.error);
             } else {
-                console.log(await response.json());
             }
 
         });

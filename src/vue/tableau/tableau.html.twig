@@ -5,6 +5,7 @@
 
 {% block page_content %}
 
+
     {# TODO : appliquer les droits d'accès en fonction des utilisateurs ! #}
 
     <script type="text/javascript">let siteBase = "{{ asset('.') }}";
@@ -20,6 +21,12 @@
     <p>{{ tableau.utilisateur.nom is null }}</p>
     <div class="all">
 
+        <div class="divSupprimerCarte"><span>Supprimer<img
+                        src="{{ asset('../ressources/img/bin.png') }}"
+                        alt=""></span></div><div class="divSupprimerCarte"><span>Supprimer<img
+                        src="{{ asset('../ressources/img/bin.png') }}"
+                        alt=""></span></div>
+
         <div class="infos">
             <h3>{{ tableau.titreTableau }}</h3>
             <div class="allUsers">
@@ -33,6 +40,8 @@
                 <div class="contenuUtilisateur {{ tableau.utilisateur.login }}"></div>
                 <div class="divSupprimerUtilisateur"><span>Supprimer<img src="{{ asset('../ressources/img/bin.png') }}"
                                                                          alt=""></span></div>
+
+
 
                 {% for participant in collaborateurs %}
                     <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
@@ -57,9 +66,7 @@
                         <div class="bullets"><img src="{{ asset('../ressources/img/bullets.png') }}" alt=""></div>
                     </div>
 
-                    <div class="divSupprimerCarte"><span>Supprimer<img
-                                    src="{{ asset('../ressources/img/bin.png') }}"
-                                    alt=""></span></div>
+
                     <!-- Stockage des cartes -->
                     <div class="stockage" data-columns="{{ colonnes[i].idColonne }}">
 
