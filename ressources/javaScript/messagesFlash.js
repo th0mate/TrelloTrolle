@@ -11,7 +11,7 @@ function creerMessageFlash(message, type) {
     //la source de l'image est une variable créée dans le html, ayant le même nom que le type
     img.src = window[type];
     img.alt = type;
-    var txt = document.createElement('h5');
+    var txt = document.createElement('p');
     txt.innerHTML = message;
     div.appendChild(img);
     div.appendChild(txt);

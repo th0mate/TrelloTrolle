@@ -18,7 +18,6 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-        console.log('envoyerFormulaire');
         if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
             return;
         }
@@ -60,7 +59,6 @@ let formulaireAjoutCarte = reactive({
     supprimerCarte: async function (idCarte) {
         const div = document.querySelector('.divSupprimerCarte');
 
-        console.log(idCarte);
         div.style.left = (event.clientX + window.scrollX) + 'px';
         div.style.top = (event.clientY + window.scrollY) + 'px';
         div.style.display = 'flex';

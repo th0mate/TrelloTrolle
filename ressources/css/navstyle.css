@@ -54,7 +54,7 @@ footer p {
 
 
 .alert {
-    font-weight: normal;
+    font-weight: lighter;
     padding: 5px;
     border: 1px solid transparent;
     border-radius: 10px;
@@ -78,7 +78,7 @@ footer p {
     cursor: pointer;
 }
 
-.alert > h5 {
+.alert > p {
     font-size: 1em;
     margin-left: 5%;
     line-height: 1em;

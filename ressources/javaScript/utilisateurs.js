@@ -83,22 +83,6 @@ let utilisateurs = reactive({
 
 
     /**
-     * Ajoute un utilisateur à un tableau (l'appel à la BD a déjà été fait au préalable)
-     * @param user l'utilisateur à ajouter
-     */
-    ajouterUtilisateur: function (user) {
-        let utilisateur = {};
-        utilisateur.prenom = user.prenom;
-        utilisateur.nom = user.nom;
-        utilisateur.login = user.login;
-        utilisateur.colonnes = [];
-        utilisateur.drapeau = false;
-        utilisateur = reactive(utilisateur, user.login);
-        utilisateursReactifs.push(utilisateur);
-    },
-
-
-    /**
      * Affiche les informations d'un utilisateur
      * @param loginUtilisateur le login de l'utilisateur
      */
@@ -240,6 +224,21 @@ let utilisateurs = reactive({
                 utilisateur.login = membre.login;
                 utilisateur.colonnes = [];
                 utilisateur.drapeau = false;
+
+                if (!document.querySelector(`[data-user="${membre.login}"]`)) {
+                    if (estProprio) {
+                        document.querySelector('.invite').remove();
+                    }
+                    let html = `<span class="user" data-onhover="utilisateur.afficherContenuUtilisateur(${membre.login})" data-onrightclick="utilisateur.afficherSupprimer(${membre.login})" data-onleave="utilisateur.cacherContenuUtilisateur(${membre.login})" data-user="${membre.login}">${membre.prenom[0].toUpperCase()}${membre.nom[0].toUpperCase()}</span><div class="contenuUtilisateur ${membre.login}"></div>`;
+                    document.querySelector('.allUsers').innerHTML += html;
+
+                    if (estProprio) {
+                        document.querySelector('.allUsers').innerHTML += `<div class="invite">Partager <img src="${inviterImageUrl}" alt=""></div>`;
+                    }
+
+                    randomColorsPourUsersDifferents();
+                    startReactiveDom();
+                }
 
                 for (let affectation of listeAffectationsColonnes) {
                     if (affectation[membre.login] !== undefined) {

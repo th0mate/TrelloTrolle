@@ -117,6 +117,7 @@ let formulaireAjoutParticipant = reactive({
             } else {
                 afficherMessageFlash("Membre(s) ajouté(s) avec succès au tableau", "success")
             }
+            window.majUtilisateurs();
             document.querySelector('.formulaireAjoutMembreTableau').style.display = 'none';
             document.querySelector('.all').style.opacity = '1';
         }
