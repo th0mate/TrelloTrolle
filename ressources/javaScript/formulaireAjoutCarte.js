@@ -47,11 +47,12 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la création de la carte dans l'API");
+                afficherMessageFlash('Erreur lors de la création de la carte.', 'danger');
             }
             this.estEnvoye = false;
+            afficherMessageFlash('Carte créée avec succès.', 'success');
         } else {
-            console.error("idColonne manquant.");
+            afficherMessageFlash('Erreur : informations manquantes pour la création de la carte.', 'danger');
         }
     },
 
@@ -85,8 +86,9 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la suppression de la carte.', 'danger');
             } else {
+                afficherMessageFlash('Carte supprimée avec succès.', 'success');
             }
 
         });
@@ -151,7 +153,7 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la récupération des membres du tableau.', 'danger');
 
             } else {
 
@@ -167,7 +169,7 @@ let formulaireAjoutCarte = reactive({
                 });
 
                 if (response2.status !== 200) {
-                    console.error(response2.error);
+                    afficherMessageFlash('Erreur lors de la récupération du propriétaire du tableau.', 'danger');
                 } else {
 
 
@@ -251,7 +253,9 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la modification de la carte dans l'API");
+                afficherMessageFlash('Erreur lors de la modification de la carte.', 'danger');
+            } else {
+                afficherMessageFlash('Carte modifiée avec succès.', 'success');
             }
             closeForm();
             document.querySelector('.formulaireCreationCarte').removeAttribute('data-modif');
@@ -318,7 +322,7 @@ async function getTousMembresTableaux(idTableau) {
     });
 
     if (response.status !== 200 || response2.status !== 200) {
-        console.error("Erreur lors de la récupération des membres du tableau");
+        afficherMessageFlash('Erreur lors du chargement initial de la base de données.', 'danger')
     } else {
         const proprio = await response2.json();
         let membres = await response.json();
@@ -342,7 +346,7 @@ async function getNextIdCarte() {
     });
 
     if (response.status !== 200) {
-        console.error((await response).json());
+        afficherMessageFlash('Erreur lors de la récupération de l\'id de la future carte.', 'danger');
     }
 
     let idCarte = await response.json();

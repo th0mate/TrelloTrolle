@@ -352,7 +352,9 @@ if (window.location.href.includes('tableau/')) {
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la suppression de la colonne.', 'danger');
+            } else {
+                afficherMessageFlash('Colonne supprimée.', 'success');
             }
         });
     }

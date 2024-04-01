@@ -29,15 +29,7 @@
 
 <body>
 
-<script>afficherMessageFlash('Salut ! ', 'info');</script>
 
-{% if app.request.cookies.get('flash_message') is not null and app.request.cookies.get('flash_message_type') is not null %}
-    <script>afficherMessageFlash({{ app.request.cookies.get('flash_message') }}, {{ app.request.cookies.get('flash_message_type') }})</script>
-    {{ app.request.cookies.remove('flash_message') }}
-    {{ app.request.cookies.remove('flash_message_type') }}
-    {% do app.request.cookies.set('flash_message', '', { expires: "now"|date_modify("-1 hour") }) %}
-    {% do app.request.cookies.set('flash_message_type', '', { expires: "now"|date_modify("-1 hour") }) %}
-{% endif %}
 
 <header>
     <nav>
@@ -85,7 +77,7 @@
 
         {% for type in ['success','info', 'warning', 'danger'] %}
             {% for messageFlash in messagesFlash.lireMessages(type) %}
-                <div class="alert alert-{{ type }}">{{ messageFlash }}</div>
+                <script>afficherMessageFlash('{{ messageFlash }}', '{{ type }}');</script>
             {% endfor %}
         {% endfor %}
     </div>

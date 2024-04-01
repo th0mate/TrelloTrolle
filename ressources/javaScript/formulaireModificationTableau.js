@@ -17,7 +17,9 @@ let formulaireModificationTableau = reactive({
         });
 
         if (response.status !== 200) {
-            console.error(await response.json());
+            afficherMessageFlash("Erreur lors de la modification du tableau", "danger")
+        } else {
+            afficherMessageFlash("Tableau modifié avec succès", "success")
         }
     }
 

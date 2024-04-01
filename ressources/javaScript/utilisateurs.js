@@ -75,7 +75,9 @@ let utilisateurs = reactive({
         });
 
         if (response.status !== 200) {
-            console.error("Erreur lors de la suppression de l'utilisateur");
+            afficherMessageFlash("Erreur lors de la suppression de l'utilisateur du tableau", "danger")
+        } else {
+            afficherMessageFlash("Utilisateur supprimé du tableau avec succès", "success")
         }
     },
 
@@ -201,7 +203,7 @@ let utilisateurs = reactive({
         });
 
         if (membresTableau.status !== 200 || proprioTableau.status !== 200) {
-            console.error("Erreur lors de la récupération des membres du tableau");
+            afficherMessageFlash("Erreur lors de la récupération des membres du tableau", "danger");
 
         } else {
             let membres = await membresTableau.json();
@@ -224,7 +226,7 @@ let utilisateurs = reactive({
                 });
 
                 if (nbCartes.status !== 200) {
-                    console.error(nbCartes.json());
+                    afficherMessageFlash("Erreur lors de la récupération des affectations de colonnes", "danger");
                 } else {
                     let nbCartesJson = await nbCartes.json();
                     listeAffectationsColonnes.push(nbCartesJson);
