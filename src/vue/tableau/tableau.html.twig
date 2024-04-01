@@ -16,6 +16,12 @@
         let plusImageUrl = "{{ asset('../ressources/img/plus.png') }}";
     </script>
 
+    {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
+        <script>let estProprio = true;</script>
+    {% else %}
+        <script>let estProprio = false;</script>
+    {% endif %}
+
     <img src="{{ asset('../ressources/img/wait.gif') }}" class="waiting" alt="">
 
     <p>{{ tableau.utilisateur.nom is null }}</p>
@@ -23,7 +29,8 @@
 
         <div class="divSupprimerCarte"><span>Supprimer<img
                         src="{{ asset('../ressources/img/bin.png') }}"
-                        alt=""></span></div><div class="divSupprimerCarte"><span>Supprimer<img
+                        alt=""></span></div>
+        <div class="divSupprimerCarte"><span>Supprimer<img
                         src="{{ asset('../ressources/img/bin.png') }}"
                         alt=""></span></div>
 
@@ -32,7 +39,6 @@
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
                 <span class="user"
-                      data-onrightclick="utilisateur.afficherSupprimer({{ tableau.utilisateur.login }})"
                       data-onhover="utilisateur.afficherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-onleave="utilisateur.cacherContenuUtilisateur({{ tableau.utilisateur.login }})"
                       data-user="{{ tableau.utilisateur.login }}"
@@ -42,15 +48,19 @@
                                                                          alt=""></span></div>
 
 
-
                 {% for participant in collaborateurs %}
                     <span class="user" data-onhover="utilisateur.afficherContenuUtilisateur({{ participant.login }})"
-                          data-onrightclick="utilisateur.afficherSupprimer({{ participant.login }})"
+                          {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
+                              data-onrightclick="utilisateur.afficherSupprimer({{ participant.login }})"
+                          {% endif %}
                           data-onleave="utilisateur.cacherContenuUtilisateur({{ participant.login }})"
                           data-user="{{ participant.login }}">{{ participant.prenom|slice(0,1) }}{{ participant.nom|slice(0,1) }}</span>
                     <div class="contenuUtilisateur {{ participant.login }}"></div>
                 {% endfor %}
-                <div class="invite">Partager <img src="{{ asset('../ressources/img/inviter.png') }}" alt=""></div>
+
+                {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
+                    <div class="invite">Partager <img src="{{ asset('../ressources/img/inviter.png') }}" alt=""></div>
+                {% endif %}
 
             </div>
         </div>
@@ -72,7 +82,9 @@
 
                         {% for carte in data[i] %}
                             <div class="card"
-                                 data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }})"
+                                    {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
+                                        data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }})"
+                                    {% endif %}
                                  data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
                                 {{ carte.titreCarte }}
@@ -111,10 +123,12 @@
         <!-- Menu pour modifier/supprimer une colonne (appelé depuis les bullets) -->
         <div class="menuColonnes">
             <img src="{{ asset('../ressources/img/close.png') }}" alt="" class="close">
-            <div class="deleteColumn">
-                <h5>Supprimer</h5>
-                <img src="{{ asset('../ressources/img/bin.png') }}" alt="">
-            </div>
+            {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
+                <div class="deleteColumn">
+                    <h5>Supprimer</h5>
+                    <img src="{{ asset('../ressources/img/bin.png') }}" alt="">
+                </div>
+            {% endif %}
             <div class="updateColumn">
                 <h5>Modifier</h5>
                 <img src="{{ asset('../ressources/img/edition.png') }}" alt="">
