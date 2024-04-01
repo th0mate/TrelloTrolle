@@ -173,16 +173,16 @@ class ServiceUtilisateurTest extends TestCase
         $this->expectExceptionMessage("Aucun compte associé à cette adresse email");
         $this->expectExceptionCode(404);
         $this->expectException(ServiceException::class);
-        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn([]);
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn(null);
         $this->serviceUtilisateur->recupererCompte("1");
     }
 
     public function testRecupererCompte()
     {
         $fakeUtilisateur = $this->createFakeUser();
-        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn([$fakeUtilisateur]);
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($fakeUtilisateur);
         $user = $this->serviceUtilisateur->recupererCompte("1");
-        assertEquals([$fakeUtilisateur], $user);
+        assertEquals($fakeUtilisateur, $user);
     }
 
     /** IS NOT NULL LOGIN */

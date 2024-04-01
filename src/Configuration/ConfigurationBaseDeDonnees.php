@@ -45,6 +45,6 @@ class ConfigurationBaseDeDonnees implements ConfigurationBaseDeDonneesInterface
     }
 
     public static function getAbsoluteURL():string{
-        return "https://webinfo.iutmontp.univ-montp2.fr/~vergnesl/TrelloTrolle/trellotrolle/web/frontController.php";
+        return "https://webinfo.iutmontp.univ-montp2.fr/~vergnesl/TrelloTrolle/trellotrolle/web/controleurFrontal.php";
     }
 }

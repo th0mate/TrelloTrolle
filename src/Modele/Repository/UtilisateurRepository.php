@@ -30,9 +30,9 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
 
-    public function recupererUtilisateursParEmail(string $email): array
+    public function recupererUtilisateursParEmail(string $email): ?Utilisateur
     {
-        return $this->recupererPlusieursPar("email", $email);
+        return $this->recupererPlusieursPar("email", $email)[0];
     }
 
     public function recupererUtilisateursOrderedPrenomNom(): array

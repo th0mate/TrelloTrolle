@@ -48,7 +48,8 @@ services:
 
   service_utilisateur:
     class: App\Trellotrolle\Service\ServiceUtilisateur
-    arguments: ['@utilisateur_repository','@tableau_repository','@carte_repository']
+    arguments: ['@utilisateur_repository','@tableau_repository','@carte_repository','@verification_email']
+
 
   service_connexion:
     class: App\Trellotrolle\Service\ServiceConnexion
@@ -99,6 +100,9 @@ services:
   controleur_generique:
     class: App\Trellotrolle\Controleur\ControleurGenerique
     arguments: [ "@container" ]
+  verification_email:
+    class : App\Trellotrolle\Lib\VerificationEmail
+    arguments: [ "@url_generator" ]
 
   #API
   controleur_carte_api:

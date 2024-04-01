@@ -46,7 +46,7 @@ interface ServiceUtilisateurInterface
     /**
      * @throws ServiceException
      */
-    public function recupererCompte($mail): array;
+    public function recupererCompte(String $mail): void;
 
     /**
      * @throws TableauException

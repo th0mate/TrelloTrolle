@@ -2,6 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\SAE\Lib\ConnexionUtilisateur;
+use App\SAE\Model\Repository\EntrepriseRepository;
 use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
@@ -231,16 +233,17 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperation', name: 'recupererCompte', methods: "POST")]
     public function recupererCompte(): Response
     {
-        $mail = $_REQUEST["email"] ?? null;
+        $mail = $_REQUEST["email"];
         try {
             $this->serviceConnexion->dejaConnecter();
-            $utilisateurs = $this->serviceUtilisateur->recupererCompte($mail);
+            $this->serviceUtilisateur->recupererCompte($mail);
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
                 "cheminVueBody" => "utilisateur/resultatResetCompte.php",
                 "utilisateurs" => $utilisateurs
             ]);*/
-            return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig', ["utilisateurs" => $utilisateurs]);
+            MessageFlash::ajouter("success", "Un e-mail a été envoyé à l'adresse indiquée.");
+            return $this->afficherTwig('base.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("afficherListeMesTableaux");
@@ -249,4 +252,43 @@ class ControleurUtilisateur extends ControleurGenerique
             return self::redirection("afficherFormulaireConnexion");
         }
     }
+
+    #[Route('/recuperation/{login}/{nonce}', name: 'changerMotDePasse', methods: "GET")]
+    public function verifNonce(): Response
+    {
+        try {
+            $this->serviceConnexion->dejaConnecter();
+            $this->serviceUtilisateur->verifNonce();
+            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig');
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
+            return self::redirection("afficherFormulaireConnexion");
+        }
+    }
+
+    /**
+     * Réinitialise le mot de passe d'une entreprise.
+     *
+     * @return Response
+     * @throws ServiceException
+     */
+    #[Route('/recuperation', name: 'validerMDP', methods: "POST")]
+    public function resetPassword(): Response
+    {
+        $login = $_REQUEST["login"];
+        $mdp = $_REQUEST["mdp"];
+        $mdp2 = $_REQUEST["mdp2"];
+        try {
+            $this->serviceConnexion->dejaConnecter();
+            $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
+            MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
+            return self::redirection("utilisateur/formulaireConnexion.html.twig");
+        } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info", $e->getMessage());
+            return self::redirection("accueil");
+        }
+    }
+
+
+
 }

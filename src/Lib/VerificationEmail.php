@@ -8,12 +8,17 @@ use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
 use App\Trellotrolle\Modele\DataObject\Utilisateur;
 use App\Trellotrolle\Modele\Repository\UtilisateurRepository;
+use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * La classe VerificationEmail gère l'envoi d'e-mails de changement de mot de passe.
  */
 class VerificationEmail
 {
+    public function __construct(private URLGenerator $absolutURL )
+    {
+    }
+
 
     /**
      * Envoie un e-mail de changement de mot de passe.
@@ -22,11 +27,10 @@ class VerificationEmail
      * @param string $mail L'adresse e-mail à laquelle envoyer l'e-mail.
      * @return void
      */
-    public static function envoiEmailChangementPassword(Utilisateur $utilisateur): void{
+    public function envoiEmailChangementPassword(Utilisateur $utilisateur): void{
         $loginURL = rawurlencode($utilisateur->getLogin());
         $nonceURL = rawurlencode($utilisateur->getNonce());
-        $absoluteURL = ConfigurationBaseDeDonnees::getAbsoluteURL();
-        $lienChangementPassword = "$absoluteURL?action=verifNonce&controller=Entreprise&siret=$loginURL&nonce=$nonceURL";
+        $lienChangementPassword = $this->absolutURL->generate('changerMotDePasse', ['login' => $loginURL, 'nonce' => $nonceURL]);
         $message = '
 <!DOCTYPE html>
 <html lang="fr">
