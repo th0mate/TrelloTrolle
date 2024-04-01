@@ -358,7 +358,7 @@ class ServiceUtilisateurTest extends TestCase
 
     public function testcreerUtilisateurValide()
     {
-        $utilisateur = new Utilisateur("test", "nom", "prenom", "null@test.fr", MotDePasse::hacher("ee"));
+        $utilisateur = new Utilisateur("test", "nom", "prenom", "null@test.fr", MotDePasse::hacher("ee"),null);
         $attributs = ["login" => "test", "nom" => "nom", "prenom" => "prenom", "mdp" => "ee", "mdp2" => "ee", "email" => "null@test.fr"];
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
         $this->utilisateurRepository->method("ajouter")->willReturnCallback(function ($userACreer) use ($utilisateur) {
@@ -518,7 +518,7 @@ class ServiceUtilisateurTest extends TestCase
 
     private function createFakeUser($login = "test"): Utilisateur
     {
-        return new Utilisateur($login, 'test', "test", 'test@t.t', MotDePasse::hacher("test"));
+        return new Utilisateur($login, 'test', "test", 'test@t.t', MotDePasse::hacher("test"),null);
     }
 
     private function createFakeTableau($utilisateur = null, $idTableau = 1): Tableau
