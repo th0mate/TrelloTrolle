@@ -21,7 +21,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
 
     protected function getNomsColonnes(): array
     {
-        return ["login", "nom", "prenom", "email", "mdphache"];
+        return ["login", "nom", "prenom", "email", "mdphache", "nonce"];
     }
 
     protected function construireDepuisTableau(array $objetFormatTableau): Utilisateur

@@ -282,6 +282,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $attributs["prenom"],
             $attributs["email"],
             $mdpHache,
+            ""
         );
         $succesSauvegarde=$this->utilisateurRepository->ajouter($utilisateur);
         if (!$succesSauvegarde) {

@@ -10,6 +10,7 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
         private ?string $prenom,
         private ?string $email,
         private ?string $mdpHache,
+        private ?string $nonce
     )
     {}
 
@@ -21,6 +22,7 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
             $objetFormatTableau["prenom"] ?? null,
             $objetFormatTableau["email"] ?? null,
             $objetFormatTableau["mdphache"] ?? null,
+            $objetFormatTableau["nonce"] ?? null,
         );
     }
 
@@ -74,6 +76,19 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
         $this->email = $email;
     }
 
+    public function getNonce(): ?string
+    {
+        return $this->nonce;
+    }
+
+    public function setNonce(?string $nonce): void
+    {
+        $this->nonce = $nonce;
+    }
+
+
+
+
     public function formatTableau(): array
     {
         return array(
@@ -82,6 +97,7 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
             "prenomTag" => $this->prenom,
             "emailTag" => $this->email,
             "mdphacheTag" => $this->mdpHache,
+            "nonceTag" => $this->nonce,
         );
     }
 
