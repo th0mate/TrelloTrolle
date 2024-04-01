@@ -101,7 +101,9 @@ let formulaireAjoutCarte = reactive({
         if (this) {
             const tousMembres = await getTousMembresTableaux(document.querySelector('.adder').getAttribute('data-tableau'));
 
-            let html = `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
+            const id = await getNextIdCarte();
+
+            let html = `<div class="card" draggable="true" data-onrightclick="formulaireAjoutCarte.supprimerCarte(${id})" data-card="${id}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
@@ -116,6 +118,7 @@ let formulaireAjoutCarte = reactive({
 
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += html;
             updateDraggables();
+            startReactiveDom();
             changeCouleursPourUtilisateursSansCouleur();
 
         }
@@ -211,7 +214,6 @@ let formulaireAjoutCarte = reactive({
      */
     modifierCarte: async function (idColonneIdCarte = null) {
         if (this.titre !== '' && document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
-            console.log('modifierCarte');
             let html = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
@@ -247,7 +249,6 @@ let formulaireAjoutCarte = reactive({
                     affectationsCarte: this.participants
                 })
             });
-            console.log(await response.json());
 
             if (response.status !== 200) {
                 console.error("Erreur lors de la modification de la carte dans l'API");
