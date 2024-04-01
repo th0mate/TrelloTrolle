@@ -35,7 +35,10 @@
                         alt=""></span></div>
 
         <div class="infos">
-            <h3>{{ tableau.titreTableau|capitalize }}</h3>
+            <div class="titre">
+                <h3>{{ tableau.titreTableau|capitalize }}</h3>
+                <img src="{{ asset('../ressources/img/bullets.png') }}" alt="" class="bullets">
+            </div>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
                 <span class="user"

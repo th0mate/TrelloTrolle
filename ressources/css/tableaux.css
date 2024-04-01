@@ -21,6 +21,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+
 body {
     background: linear-gradient(to right bottom, #54438b, #9a5284);
     margin: 0;
@@ -51,6 +52,31 @@ body {
             padding: 1%;
             margin-bottom: 10px;
             color: white;
+
+            .titre {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-width: 120px;
+
+                .bullets {
+                    margin-left: 10px;
+                    width: 30px;
+                    height: 30px;
+                    padding: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease-in-out;
+                }
+
+                .bullets:hover {
+                    background-color: #23272b;
+                }
+
+            }
 
             .allUsers {
                 display: flex;
