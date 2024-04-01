@@ -4,7 +4,7 @@ namespace App\Trellotrolle\Modele\DataObject;
 
 use App\Trellotrolle\Modele\Repository\TableauRepository;
 
-class Tableau extends AbstractDataObject
+class Tableau extends AbstractDataObject implements \JsonSerializable
 {
     public function __construct(
         private ?int         $idTableau,
@@ -78,4 +78,17 @@ class Tableau extends AbstractDataObject
     }
 
 
+    public function jsonSerialize():mixed
+    {
+        return [
+            "idTableau"=>$this->idTableau,
+            "codeTableau"=>$this->codeTableau,
+            "titreTableau"=>$this->titreTableau,
+            "utilisateur"=>[
+                "login"=>$this->utilisateur->getLogin(),
+                "nom"=>$this->utilisateur->getNom(),
+                "prenom"=>$this->utilisateur->getPrenom()
+            ]
+        ];
+    }
 }

@@ -18,6 +18,7 @@ use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ControleurTableauAPI
@@ -99,6 +100,24 @@ class ControleurTableauAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    #[Route("/api/tableau/modifier",name: "modifierTableauAPI",methods: "PATCH")]
+    public function modifierTableau(Request $request):Response
+    {
+        $jsondecode=json_decode($request->getContent());
+        $idTableau=$jsondecode->idTableau ??null;
+        $nomTableau=$jsondecode->nomTableau ??null;
+        try{
+            $this->serviceConnexion->pasConnecter();
+            $tableau=$this->serviceTableau->recupererTableauParId($idTableau);
+            $this->serviceTableau->isNotNullNomTableau($nomTableau,$tableau);
+            $tableau->setTitreTableau($nomTableau);
+            $this->serviceTableau->mettreAJourTableau($tableau);
+            return new JsonResponse($tableau,200);
+        }catch (ServiceException $e){
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+{}    }
 
 
 
