@@ -19,7 +19,7 @@ let formulaireAjoutCarte = reactive({
      */
     envoyerFormulaire: async function () {
         console.log('envoyerFormulaire');
-        if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true'){
+        if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
             return;
         }
         this.estEnvoye = true;
@@ -53,6 +53,45 @@ let formulaireAjoutCarte = reactive({
         } else {
             console.error("idColonne manquant.");
         }
+    },
+
+
+    supprimerCarte: async function (idCarte) {
+        console.log(idCarte);
+        const div = document.querySelector('.divSupprimerCarte');
+
+        console.log(event.clientX, event.clientY);
+        div.style.left = event.clientX + 'px';
+        div.style.top = event.clientY + 'px';
+        div.style.display = 'flex';
+
+        document.addEventListener('click', function (e) {
+            if (e.target !== div) {
+                div.style.display = 'none';
+            }
+        });
+
+        div.querySelector('span').addEventListener('click', async function () {
+            document.querySelector(`[data-card="${idCarte}"], .card`).remove();
+            div.style.display = 'none';
+            let response = await fetch(apiBase + '/carte/supprimer', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCarte: idCarte
+                })
+            });
+
+            if (response.status !== 200) {
+                console.error(response.error);
+            } else {
+                console.log(await response.json());
+            }
+
+        });
     },
 
 

@@ -938,6 +938,7 @@ body {
 }
 
 .divSupprimerUtilisateur {
+    z-index: 10;
     position: absolute;
     height: 30px;
     width: 150px;
@@ -946,7 +947,7 @@ body {
     align-items: center;
     border-radius: 5px;
     padding: 5px;
-    background-color: #23272b;
+    background-color: #3e474f;
 
     span {
         width: 98%;
@@ -965,6 +966,40 @@ body {
     }
 
     span:hover {
-        background-color: #3e474f;
+        background-color: #626b73;
+    }
+}
+
+.divSupprimerCarte {
+    z-index: 10;
+    position: absolute;
+    height: 30px;
+    width: 150px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #3e474f;
+
+    span {
+        width: 98%;
+        height: 98%;
+        cursor: pointer;
+        transition: background-color 200ms ease-in-out;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+        border-radius: 3px;
+        font-weight: normal;
+
+        img {
+            width: 15px;
+        }
+    }
+
+    span:hover {
+        background-color: #626b73;
     }
 }

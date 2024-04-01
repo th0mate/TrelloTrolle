@@ -43,7 +43,6 @@ let formulaireAjoutParticipant = reactive({
      * @param idUtilisateur l'id de l'utilisateur à supprimer
      */
     supprimerParticipant: function (idUtilisateur) {
-        console.log(this.participants);
         let elements = document.querySelectorAll(`[data-participant="${idUtilisateur}"]`);
         for (let element of elements) {
             element.remove();
@@ -51,7 +50,6 @@ let formulaireAjoutParticipant = reactive({
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }
-        console.log(this.participants);
     },
 
     /**

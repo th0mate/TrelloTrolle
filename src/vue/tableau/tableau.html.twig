@@ -57,11 +57,16 @@
                         <div class="bullets"><img src="{{ asset('../ressources/img/bullets.png') }}" alt=""></div>
                     </div>
 
+                    <div class="divSupprimerCarte"><span>Supprimer<img
+                                    src="{{ asset('../ressources/img/bin.png') }}"
+                                    alt=""></span></div>
                     <!-- Stockage des cartes -->
                     <div class="stockage" data-columns="{{ colonnes[i].idColonne }}">
 
                         {% for carte in data[i] %}
-                            <div class="card" data-card="{{ carte.idCarte }}">
+                            <div class="card"
+                                 data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }})"
+                                 data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
                                 {{ carte.titreCarte }}
                                 <div class="features">
