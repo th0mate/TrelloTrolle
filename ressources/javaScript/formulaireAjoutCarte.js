@@ -49,7 +49,6 @@ let formulaireAjoutCarte = reactive({
             if (response.status !== 200) {
                 console.error("Erreur lors de la création de la carte dans l'API");
             }
-            console.log(await response.json());
             this.estEnvoye = false;
         } else {
             console.error("idColonne manquant.");
@@ -60,7 +59,7 @@ let formulaireAjoutCarte = reactive({
     supprimerCarte: async function (idCarte) {
         const div = document.querySelector('.divSupprimerCarte');
 
-        console.log(event.clientX, event.clientY);
+        console.log(idCarte);
         div.style.left = (event.clientX + window.scrollX) + 'px';
         div.style.top = (event.clientY + window.scrollY) + 'px';
         div.style.display = 'flex';
@@ -72,7 +71,7 @@ let formulaireAjoutCarte = reactive({
         });
 
         div.querySelector('span').addEventListener('click', async function () {
-            document.querySelector(`[data-card="${idCarte}"], .card`).remove();
+            document.querySelector(`[data-card="${idCarte}"]`).remove();
             div.style.display = 'none';
             let response = await fetch(apiBase + '/carte/supprimer', {
                 method: 'DELETE',
