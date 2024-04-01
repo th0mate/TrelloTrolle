@@ -24,7 +24,7 @@ let formulaireAjoutColonne = reactive({
             });
 
             if (response1.status !== 200) {
-                console.error("Erreur lors de la création de la colonne dans l'API");
+                afficherMessageFlash("Erreur lors de la récupération de l'id de la colonne", "danger")
             }
             this.idColonne = await response1.json();
             this.idColonne = this.idColonne.idColonne;
@@ -58,7 +58,9 @@ let formulaireAjoutColonne = reactive({
             });
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la création de la colonne dans l'API");
+                afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger")
+            } else {
+                afficherMessageFlash("Colonne créée avec succès", "success")
             }
             document.querySelector('.input').value = '';
         }

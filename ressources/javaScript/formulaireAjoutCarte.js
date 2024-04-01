@@ -18,8 +18,7 @@ let formulaireAjoutCarte = reactive({
      * @returns {Promise<void>} une promesse
      */
     envoyerFormulaire: async function () {
-        console.log('envoyerFormulaire');
-        if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true'){
+        if (this.estEnvoye || document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
             return;
         }
         this.estEnvoye = true;
@@ -47,12 +46,50 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la création de la carte dans l'API");
+                afficherMessageFlash('Erreur lors de la création de la carte.', 'danger');
             }
             this.estEnvoye = false;
+            afficherMessageFlash('Carte créée avec succès.', 'success');
         } else {
-            console.error("idColonne manquant.");
+            afficherMessageFlash('Erreur : informations manquantes pour la création de la carte.', 'danger');
         }
+    },
+
+
+    supprimerCarte: async function (idCarte) {
+        const div = document.querySelector('.divSupprimerCarte');
+
+        div.style.left = (event.clientX + window.scrollX) + 'px';
+        div.style.top = (event.clientY + window.scrollY) + 'px';
+        div.style.display = 'flex';
+
+        document.addEventListener('click', function (e) {
+            if (e.target !== div) {
+                div.style.display = 'none';
+            }
+        });
+
+        div.querySelector('span').addEventListener('click', async function () {
+            document.querySelector(`[data-card="${idCarte}"]`).remove();
+            div.style.display = 'none';
+            let response = await fetch(apiBase + '/carte/supprimer', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idCarte: idCarte
+                })
+            });
+
+            if (response.status !== 200) {
+                afficherMessageFlash('Erreur lors de la suppression de la carte.', 'danger');
+            } else {
+                afficherMessageFlash('Carte supprimée avec succès.', 'success');
+            }
+
+        });
     },
 
 
@@ -64,7 +101,9 @@ let formulaireAjoutCarte = reactive({
         if (this) {
             const tousMembres = await getTousMembresTableaux(document.querySelector('.adder').getAttribute('data-tableau'));
 
-            let html = `<div class="card" draggable="true" data-card="${await getNextIdCarte()}" data-colmuns="${idColonne}">
+            const id = await getNextIdCarte();
+
+            let html = `<div class="card" draggable="true" data-onrightclick="formulaireAjoutCarte.supprimerCarte(${id})" data-card="${id}" data-colmuns="${idColonne}">
             <span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
@@ -79,6 +118,7 @@ let formulaireAjoutCarte = reactive({
 
             document.querySelector(`[data-columns="${idColonne}"] .stockage`).innerHTML += html;
             updateDraggables();
+            startReactiveDom();
             changeCouleursPourUtilisateursSansCouleur();
 
         }
@@ -111,7 +151,7 @@ let formulaireAjoutCarte = reactive({
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la récupération des membres du tableau.', 'danger');
 
             } else {
 
@@ -127,7 +167,7 @@ let formulaireAjoutCarte = reactive({
                 });
 
                 if (response2.status !== 200) {
-                    console.error(response2.error);
+                    afficherMessageFlash('Erreur lors de la récupération du propriétaire du tableau.', 'danger');
                 } else {
 
 
@@ -174,7 +214,6 @@ let formulaireAjoutCarte = reactive({
      */
     modifierCarte: async function (idColonneIdCarte = null) {
         if (this.titre !== '' && document.querySelector('.formulaireCreationCarte').getAttribute('data-modif') === 'true') {
-            console.log('modifierCarte');
             let html = `<span class="color" style="border: 5px solid ${this.couleur}"></span>
             ${this.titre}
             <div class="features">`;
@@ -210,10 +249,11 @@ let formulaireAjoutCarte = reactive({
                     affectationsCarte: this.participants
                 })
             });
-            console.log(await response.json());
 
             if (response.status !== 200) {
-                console.error("Erreur lors de la modification de la carte dans l'API");
+                afficherMessageFlash('Erreur lors de la modification de la carte.', 'danger');
+            } else {
+                afficherMessageFlash('Carte modifiée avec succès.', 'success');
             }
             closeForm();
             document.querySelector('.formulaireCreationCarte').removeAttribute('data-modif');
@@ -280,7 +320,7 @@ async function getTousMembresTableaux(idTableau) {
     });
 
     if (response.status !== 200 || response2.status !== 200) {
-        console.error("Erreur lors de la récupération des membres du tableau");
+        afficherMessageFlash('Erreur lors du chargement initial de la base de données.', 'danger')
     } else {
         const proprio = await response2.json();
         let membres = await response.json();
@@ -304,7 +344,7 @@ async function getNextIdCarte() {
     });
 
     if (response.status !== 200) {
-        console.error((await response).json());
+        afficherMessageFlash('Erreur lors de la récupération de l\'id de la future carte.', 'danger');
     }
 
     let idCarte = await response.json();

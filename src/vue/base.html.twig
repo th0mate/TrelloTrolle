@@ -2,24 +2,34 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block page_title %}Trollé{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset("../ressources/css/navstyle.css") }}"> <!--TODO into asset-->
     <link rel="stylesheet" href="{{ asset("../ressources/css/trellostyle.css") }}">  <!--TODO into asset-->
     <link rel="stylesheet" href="{{ asset("../ressources/css/tableaux.css") }}">  <!--TODO into asset-->
 
-    <script type="module" src="{{ asset('../ressources/javaScript/toHTML.js') }}" defer></script>
+    <script type="text/javascript" src="{{ asset('../ressources/javaScript/messagesFlash.js') }}"></script>
     <script type="text/javascript" src="{{ asset('../ressources/javaScript/tableaux.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutCarte.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutParticipant.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireAjoutColonne.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/formulaireModificationColonne.js') }}" defer></script>
     <script type="module" src="{{ asset('../ressources/javaScript/utilisateurs.js') }}" defer></script>
+    <script type="module" src="{{ asset('../ressources/javaScript/formulaireModificationTableau.js') }}" defer></script>
+
+    <script>
+        window.danger = "{{ asset('../ressources/img/danger.png') }}";
+        window.success = "{{ asset('../ressources/img/success.png') }}";
+        window.warning = "{{ asset('../ressources/img/warning.png') }}";
+        window.info = "{{ asset('../ressources/img/info.png') }}";
+    </script>
 
 
 </head>
 
 <body>
+
+
 
 <header>
     <nav>
@@ -29,31 +39,36 @@
             </li>
             {% if connexionUtilisateur.loginUtilisateurConnecte is null %}
 
-            <li>
-                <a href="{{route("afficherFormulaireConnexion")}}">  <!--TODO into asset-->
-                    Connexion <img alt="login" src="{{ asset("../ressources/img/enter.png") }}" >
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('afficherFormulaireCreation') }}">  <!--TODO into route-->
-                    Inscription <img alt="S'inscrire" title="S'inscrire" src="{{ asset("../ressources/img/add-user.png") }}" >  <!--TODO into asset-->
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route("afficherFormulaireConnexion") }}">  <!--TODO into asset-->
+                        Connexion <img alt="login" src="{{ asset("../ressources/img/enter.png") }}">
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('afficherFormulaireCreation') }}">  <!--TODO into route-->
+                        Inscription <img alt="S'inscrire" title="S'inscrire"
+                                         src="{{ asset("../ressources/img/add-user.png") }}">  <!--TODO into asset-->
+                    </a>
+                </li>
             {% else %}
 
-            <li>
-                <a href="{{ route('afficherListeMesTableaux')}}">Mes tableaux</a>
-            </li>
-            <li>
-                <a href="{{ route('afficherDetail',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">  <!--TODO into route-->
-                    Mon compte (<span>{{ connexionUtilisateur.loginUtilisateurConnecte }}</span>) <img alt="logout" src="{{ asset("../ressources/img/user.png") }}">  <!--TODO into asset-->
-                </a>
-            </li>
-            <li>
-                <a href="{{ route('deconnexion') }}"> <!--TODO into route-->
-                    Déconnexion <img alt="logout" src="{{ asset("../ressources/img/logout.png") }}"> <!--TODO into asset-->
-                </a>
-            </li>
+                <li>
+                    <a href="{{ route('afficherListeMesTableaux') }}">Mes tableaux</a>
+                </li>
+                <li>
+                    <a href="{{ route('afficherDetail',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">
+                        <!--TODO into route-->
+                        Mon compte (<span>{{ connexionUtilisateur.loginUtilisateurConnecte }}</span>) <img alt="logout"
+                                                                                                           src="{{ asset("../ressources/img/user.png") }}">
+                        <!--TODO into asset-->
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('deconnexion') }}"> <!--TODO into route-->
+                        Déconnexion <img alt="logout" src="{{ asset("../ressources/img/logout.png") }}">
+                        <!--TODO into asset-->
+                    </a>
+                </li>
             {% endif %}
             <?php %} ?>
         </ul>
@@ -62,7 +77,7 @@
 
         {% for type in ['success','info', 'warning', 'danger'] %}
             {% for messageFlash in messagesFlash.lireMessages(type) %}
-            <div class="alert alert-{{ type }}">{{ messageFlash }}</div>
+                <script>afficherMessageFlash('{{ messageFlash }}', '{{ type }}');</script>
             {% endfor %}
         {% endfor %}
     </div>

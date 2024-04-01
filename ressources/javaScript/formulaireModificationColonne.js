@@ -33,7 +33,9 @@ let formulaireModificationColonne = reactive({
             });
 
             if (response.status !== 200) {
-                console.error(response.error.json());
+                afficherMessageFlash("Erreur lors de la modification de la colonne", "danger")
+            } else {
+                afficherMessageFlash("Colonne modifiée avec succès", "success")
             }
         }
     }

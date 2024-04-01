@@ -25,7 +25,7 @@ let formulaireAjoutParticipant = reactive({
             });
 
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash("Erreur lors de la recherche d'un utilisateur.", "danger")
             } else {
                 let collaborateurs = await response.json();
                 document.querySelector('.listeAjouter').innerHTML = '';
@@ -43,7 +43,6 @@ let formulaireAjoutParticipant = reactive({
      * @param idUtilisateur l'id de l'utilisateur à supprimer
      */
     supprimerParticipant: function (idUtilisateur) {
-        console.log(this.participants);
         let elements = document.querySelectorAll(`[data-participant="${idUtilisateur}"]`);
         for (let element of elements) {
             element.remove();
@@ -51,7 +50,6 @@ let formulaireAjoutParticipant = reactive({
         if (this && this.participants) {
             this.participants = this.participants.filter(participant => participant !== idUtilisateur);
         }
-        console.log(this.participants);
     },
 
     /**
@@ -114,10 +112,12 @@ let formulaireAjoutParticipant = reactive({
                 })
             });
 
-            console.log(response.json());
             if (response.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash("Erreur lors de l'ajout de membres au tableau", "danger")
+            } else {
+                afficherMessageFlash("Membre(s) ajouté(s) avec succès au tableau", "success")
             }
+            window.majUtilisateurs();
             document.querySelector('.formulaireAjoutMembreTableau').style.display = 'none';
             document.querySelector('.all').style.opacity = '1';
         }
