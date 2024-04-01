@@ -67,7 +67,7 @@ class CarteRepositoryTest extends TestCase
     /** Test récupererCartesColonne, prend en argument: idColonne */
 
     public function testRecupererCartesColonneExistante(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne), new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne)];
@@ -80,7 +80,7 @@ class CarteRepositoryTest extends TestCase
     /** Test récupererCartesTableau, prend en argument: idTableau */
 
     public function testRecupererCartesTableauExistant(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne),
@@ -94,7 +94,7 @@ class CarteRepositoryTest extends TestCase
     /** Test récupererCartesUtilisateur, prend en argument: login */
 
     public function testRecupererCartesUtilisateurExistant(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne)];
@@ -126,7 +126,7 @@ class CarteRepositoryTest extends TestCase
     /** Test getAffectatonsCarte, prend en argument: une carte idcle */
 
     public function testGetAffectatonsCarteAlogin(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
@@ -134,7 +134,7 @@ class CarteRepositoryTest extends TestCase
     }
 
     public function testGetAffectatonsCarteAPaslogin(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne);
@@ -142,7 +142,7 @@ class CarteRepositoryTest extends TestCase
     }
 
     public function testGetAffectatonsCarteInexistante(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(8, 'carte8', 'carte8', 'c est une carte8', $colonne);
@@ -151,7 +151,7 @@ class CarteRepositoryTest extends TestCase
 
     /**Test getAllFromCarte*/
     public function testGetALLFromCarte(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
@@ -160,7 +160,7 @@ class CarteRepositoryTest extends TestCase
 
     /** Test setAffectationCarte, prend en argument: array affectationCarte, carte instance */
     public function testSetAffectatonsCarteAlogin(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
@@ -171,7 +171,7 @@ class CarteRepositoryTest extends TestCase
     /** Test récuperer */
 
     public function testRecuperer(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte1 = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
@@ -182,7 +182,7 @@ class CarteRepositoryTest extends TestCase
 
     /** Test récupérerparcléprimaire */
     public function testRecupererParClePrimaire(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte1 = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
@@ -191,7 +191,7 @@ class CarteRepositoryTest extends TestCase
 
     /** Test ajouter */
     public function testAjouter(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte1 = new Carte(8, 'carte8', 'carte8', 'c est une carte8', $colonne);
@@ -203,7 +203,7 @@ class CarteRepositoryTest extends TestCase
     /** Test mettreAJour */
 
     public function testMettreAJour(){
-        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
         $colonne = new Colonne(2, 'test2',  $tableau);
         $carte1 = new Carte(3, 'CAAAAAARTE', 'carte1', 'c est une carte1', $colonne);
