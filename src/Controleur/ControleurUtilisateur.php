@@ -243,7 +243,7 @@ class ControleurUtilisateur extends ControleurGenerique
                 "utilisateurs" => $utilisateurs
             ]);*/
             MessageFlash::ajouter("success", "Un e-mail a été envoyé à l'adresse indiquée.");
-            return $this->afficherTwig('base.html.twig');
+            return self::redirection();
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("afficherListeMesTableaux");
@@ -253,7 +253,7 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
-    #[Route('/recuperation/{login}/{nonce}', name: 'changerMotDePasse', methods: "GET")]
+    #[Route('/recuperationMdp', name: 'changerMotDePasse', methods: "GET")]
     public function verifNonce(): Response
     {
         try {
