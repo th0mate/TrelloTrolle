@@ -219,6 +219,7 @@ if (window.location.href.includes('tableau/')) {
         }
     }
 
+
     /**
      * Permet de prévenir le comportement par défaut de l'événement `dragover` et `drop` pour permettre le drop
      * @param e
