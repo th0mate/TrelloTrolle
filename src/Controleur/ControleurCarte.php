@@ -28,11 +28,11 @@ class ControleurCarte extends ControleurGenerique
 
     /**
      * ControleurCarte constructor.
-     * @param ContainerInterface $container
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceCarteInterface $serviceCarte
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
-     * @param ServiceColonneInterface $serviceColonne
+     * @param ContainerInterface $container le conteneur de dépendances
+     * @param ServiceConnexionInterface $serviceConnexion le service de connexion
+     * @param ServiceCarteInterface $serviceCarte le service de carte
+     * @param ServiceUtilisateurInterface $serviceUtilisateur le service d'utilisateur
+     * @param ServiceColonneInterface $serviceColonne le service de colonne
      *
      * fonction qui permet de construire le controleur de carte
      */
@@ -48,9 +48,9 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @param string $messageErreur
-     * @param string $controleur
-     * @return Response
+     * @param string $messageErreur le message d'erreur
+     * @param string $controleur le controleur
+     * @return Response l'affichage de l'erreur
      *
      * fonction permettant d'afficher une erreur avec un message et un controleur donné
      */
@@ -60,7 +60,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection vers une route
      *
      * fonction permettant de supprimer une carte
      */
@@ -93,7 +93,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection vers une route
      *
      * fonction permettant d'afficher le formulaire de création d'une carte
      */
@@ -128,7 +128,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection vers une route
      *
      * fonction permettant de créer une carte
      */
@@ -166,7 +166,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection vers une route
      *
      * fonction permettant d'afficher le formulaire de mise à jour d'une carte
      */
@@ -195,7 +195,7 @@ class ControleurCarte extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection vers une route
      *
      * fonction permettant de mettre à jour une carte
      */

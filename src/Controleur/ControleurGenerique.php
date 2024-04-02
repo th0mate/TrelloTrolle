@@ -9,13 +9,16 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class ControleurGenerique {
 
 
     /**
      * ControleurGenerique constructor.
-     * @param ContainerInterface $container
+     * @param ContainerInterface $container le conteneur de dépendances
      * fonction qui permet de construire le controleur generique
      */
 
@@ -24,9 +27,9 @@ class ControleurGenerique {
     }
 
     /**
-     * @param string $cheminVue
-     * @param array $parametres
-     * @return Response
+     * @param string $cheminVue le chemin de la vue
+     * @param array $parametres les parametres de la vue
+     * @return Response la réponse
      *
      * fonction qui permet d'afficher une vue via le chemin de la vue et les parametres
      */
@@ -43,6 +46,13 @@ class ControleurGenerique {
     }
 
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
+
+    /**
+     * @param string $route le nom de route
+     * @param array $parameters les parametres de la route
+     * @return RedirectResponse
+     * fonction qui permet de rediriger vers une route avec des parametres
+     */
     protected function redirection(string $route = "accueil", array $parameters = []) : RedirectResponse
     {
         $generateurUrl= $this->container->get("url_generator");
@@ -52,9 +62,9 @@ class ControleurGenerique {
     }
 
     /**
-     * @param string $messageErreur
-     * @param string $controleur
-     * @return Response
+     * @param string $messageErreur le message d'erreur
+     * @param string $controleur le nom du controleur
+     * @return Response la page d'erreur
      *
      * fonction qui permet d'afficher une erreur en indiquant le message d'erreur et le controleur
      */
@@ -71,8 +81,8 @@ class ControleurGenerique {
 
 
     /**
-     * @param array $requestParams
-     * @return bool
+     * @param array $requestParams les parametres de la requete
+     * @return bool vrai si les parametres sont bien definis et non null
      *
      * fonction qui permet de verifier si les parametres de la requete sont bien definis et non null
      */
@@ -87,8 +97,8 @@ class ControleurGenerique {
     }
 
     /**
-     * @param ConnexionException $e
-     * @return Response
+     * @param ConnexionException $e l'exception de connexion
+     * @return Response la redirection vers la page de connexion avec un message flash
      *
      * fonction qui permet de rediriger vers la page de connexion avec un message flash
      */
@@ -98,6 +108,17 @@ class ControleurGenerique {
         MessageFlash::ajouter("info", $e->getMessage());
         return self::redirection("afficherFormulaireConnexion");
     }
+
+    /**
+     * @param string $cheminVue le chemin de la vue
+     * @param array $parametres les parametres de la vue
+     * @return Response la réponse
+     * @throws LoaderError si le chargement de la vue a échoué
+     * @throws RuntimeError si une erreur est survenue lors de l'exécution du code
+     * @throws SyntaxError si une erreur de syntaxe est survenue
+     *
+     * fonction qui permet d'afficher une vue twig via le chemin de la vue et les parametres
+     */
     protected function afficherTwig(string $cheminVue, array $parametres = []): Response
     {
         /** @var Environment $twig */

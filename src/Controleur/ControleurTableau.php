@@ -35,11 +35,11 @@ class ControleurTableau extends ControleurGenerique
 
     /**
      * ControleurTableau constructor.
-     * @param ContainerInterface $container
-     * @param ServiceTableauInterface $serviceTableau
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
-     * @param ServiceCarteInterface $serviceCarte
+     * @param ContainerInterface $container le conteneur de dépendances
+     * @param ServiceTableauInterface $serviceTableau le service de tableau
+     * @param ServiceConnexionInterface $serviceConnexion le service de connexion
+     * @param ServiceUtilisateurInterface $serviceUtilisateur le service utilisateur
+     * @param ServiceCarteInterface $serviceCarte le service de carte
      *
      * fonction qui permet de construire le controleur de tableau
      */
@@ -56,9 +56,9 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @param string $messageErreur
-     * @param string $controleur
-     * @return Response
+     * @param string $messageErreur le message d'erreur
+     * @param string $controleur le controleur
+     * @return Response l'affichage de l'erreur
      *
      * fonction qui permet d'afficher une erreur
      */
@@ -69,8 +69,8 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @param $codeTableau
-     * @return Response
+     * @param $codeTableau le code du tableau
+     * @return Response la redirection
      *
      * fonction qui permet d'afficher un tableau avec son code
      */
@@ -95,7 +95,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet d'afficher un formulaire de mise à jour d'un tableau
      */
@@ -122,7 +122,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet d'afficher un formulaire de création d'un tableau
      */
@@ -138,7 +138,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet de creer un tableau
      */
@@ -159,7 +159,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet de mettre à jour un tableau
      */
@@ -191,7 +191,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet d'afficher un formulaire d'ajout d'un membre
      */
@@ -224,7 +224,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet d'ajouter un membre
      */
@@ -250,7 +250,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet de supprimer un membre
      */
@@ -279,7 +279,7 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet d'afficher la liste des tableaux
      */
@@ -299,7 +299,7 @@ class ControleurTableau extends ControleurGenerique
 
     /**
      * @param $idTableau
-     * @return Response
+     * @return Response la redirection
      *
      * fonction qui permet de quitter un tableau via son id
      */
@@ -323,8 +323,8 @@ class ControleurTableau extends ControleurGenerique
     }
 
     /**
-     * @param $idTableau
-     * @return Response
+     * @param $idTableau l'id du tableau
+     * @return Response la redirection
      *
      * fonction qui permet de supprimer un tableau via son id
      */

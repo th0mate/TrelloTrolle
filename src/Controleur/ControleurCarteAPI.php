@@ -27,10 +27,10 @@ class ControleurCarteAPI
 
     /**
      * ControleurCarteAPI constructor.
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceCarteInterface $serviceCarte
-     * @param ServiceColonneInterface $serviceColonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceCarteInterface $serviceCarte Le service de carte
+     * @param ServiceColonneInterface $serviceColonne  Le service de colonne
      *
      * fonction qui permet de construire le controleur de carte avec l'API
      */
@@ -47,8 +47,8 @@ class ControleurCarteAPI
 
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param Request $request la requête
+     * @return Response La réponse JSON
      *
      * fonction qui permet de supprimer une carte avec l'API
      */
@@ -71,8 +71,8 @@ class ControleurCarteAPI
     }
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param Request $request la requête
+     * @return Response La réponse JSON
      *
      * fonction qui permet de modifier une carte avec l'API
      */
@@ -103,8 +103,8 @@ class ControleurCarteAPI
     }
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param Request $request la requête
+     * @return Response La réponse JSON
      *
      * fonction qui permet de creer une carte avec l'API
      */
@@ -137,8 +137,8 @@ class ControleurCarteAPI
 
 
     /**
-     * @param Request $request
-     * @return Response
+     * @param Request $request la requête
+     * @return Response La réponse JSON
      *
      * fonction qui permet de recuperer l'ID d'une carte avec l'API
      */
@@ -149,6 +149,11 @@ class ControleurCarteAPI
         return new JsonResponse(["idCarte" => $idCarte], 200);
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de deplacer une carte avec l'API
+     */
     #[Route("/api/carte/deplacer",name: "deplacerCarteAPI",methods: "PATCH")]
     public function deplacerCarte(Request $request): Response
     {
@@ -169,6 +174,11 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de recuperer les affectations d'une carte avec l'API
+     */
     #[Route("/api/carte/affectations",name: "getAffectationsCarteAPI",methods:"POST")]
     public function getAffectations(Request $request):Response
     {
@@ -184,6 +194,11 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de recuperer une carte avec l'API
+     */
     #[Route("/api/carte/getCarte", name: "getCarteAPI", methods: "POST")]
     public function getCarte(Request $request): Response
     {

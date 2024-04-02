@@ -32,9 +32,9 @@ class ControleurUtilisateur extends ControleurGenerique
 
     /**
      * ControleurUtilisateur constructor.
-     * @param ContainerInterface $container
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
+     * @param ContainerInterface $container le conteneur de dépendances
+     * @param ServiceConnexionInterface $serviceConnexion le service de connexion
+     * @param ServiceUtilisateurInterface $serviceUtilisateur le service utilisateur
      *
      * fonction qui permet de construire le controleur de l'utilisateur
      */
@@ -51,7 +51,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response l'affichage de l'erreur
      *
      * fonction qui permet d'afficher la page d'erreur
      */
@@ -62,7 +62,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet d'afficher les détails de l'utilisateur
      */
@@ -86,7 +86,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet d'afficher le formulaire d'incription
      */
@@ -107,7 +107,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de creer un utilisateur grâce au formulaire
      */
@@ -141,7 +141,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet d'afficher le formulaire de mise à jour de l'utilisateur
      */
@@ -163,7 +163,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de mettre à jour l'utilisateur
      */
@@ -193,7 +193,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de supprimer l'utilisateur
      */
@@ -216,7 +216,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet d'afficher le formulaire de connexion
      */
@@ -234,7 +234,7 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de se connecter
      */
@@ -259,7 +259,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de se deconnecter
      */
@@ -278,7 +278,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet d'afficher le formulaire de recuperation de compte
      */
@@ -296,7 +296,7 @@ class ControleurUtilisateur extends ControleurGenerique
 
 
     /**
-     * @return Response
+     * @return Response La redirection
      *
      * fonction qui permet de recuperer le compte
      */

@@ -26,10 +26,10 @@ class ControleurTableauAPI
 
     /**
      * ControleurTableauAPI constructor.
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceTableauInterface $serviceTableau
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
-     * @param ServiceCarteInterface $serviceCarte
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceTableauInterface $serviceTableau Le service de tableau
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceCarteInterface $serviceCarte Le service de carte
      *
      * fonction qui permet de construire le controleur de tableau avec l'API
      */
@@ -46,7 +46,7 @@ class ControleurTableauAPI
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse La réponse JSON
      *
      * fonction qui permet de creer un tableau avec l'API
      */
@@ -69,7 +69,7 @@ class ControleurTableauAPI
     }
 
     /**
-     * @return JsonResponse
+     * @return JsonResponse La réponse JSON
      *
      * fonction qui permet de supprimer un membre avec l'API
      */
@@ -93,8 +93,8 @@ class ControleurTableauAPI
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
+     * @param Request $request la requête
+     * @return JsonResponse La réponse JSON
      *
      *  fonction qui permet de recuperer les membres d'un tableau avec l'API
      */
@@ -114,8 +114,8 @@ class ControleurTableauAPI
     }
 
 /**
-     * @param Request $request
-     * @return JsonResponse
+     * @param Request $request la requête
+     * @return JsonResponse La réponse JSON
      *
      *  fonction qui permet de recuperer le proprietaire d'un tableau avec l'API
      */

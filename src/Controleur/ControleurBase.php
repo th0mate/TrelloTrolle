@@ -10,7 +10,7 @@ class ControleurBase extends ControleurGenerique
 
     /**
      * ControleurBase constructor.
-     * @param ContainerInterface $container
+     * @param ContainerInterface $container le conteneur de dépendances
      *
      * fonction qui permet de construire le controleur de base
      */
@@ -22,7 +22,7 @@ class ControleurBase extends ControleurGenerique
     }
 
     /**
-     * @return Response
+     * @return Response l'affichage de la page d'accueil du site en twig
      *
      * fonction qui permet d'afficher la page d'accueil
      */

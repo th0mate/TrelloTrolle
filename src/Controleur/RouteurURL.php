@@ -48,8 +48,8 @@ class RouteurURL
 {
 
     /**
-     * @param Request $requete
-     * @return Response
+     * @param Request $requete la requête
+     * @return Response la réponse
      * @throws \Exception
      *
      * fonction qui permet de traiter la requete pour afficher la page demandée

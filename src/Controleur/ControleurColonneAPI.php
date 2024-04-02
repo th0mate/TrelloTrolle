@@ -27,10 +27,10 @@ class ControleurColonneAPI
 
     /**
      * ControleurColonneAPI constructor.
-     * @param ServiceConnexionInterface $serviceConnexion
-     * @param ServiceColonneInterface $serviceColonne
-     * @param ServiceUtilisateurInterface $serviceUtilisateur
-     * @param ServiceTableauInterface $serviceTableau
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceColonneInterface $serviceColonne Le service de colonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceTableauInterface $serviceTableau Le service de tableau
      *
      * fonction qui permet de construire le controleur de colonne avec l'API
      */
@@ -47,7 +47,7 @@ class ControleurColonneAPI
     }
 
     /**
-     * @return Response
+     * @return Response La réponse JSON
      *
      * fonction qui permet de creer une colonne avec l'API
      */
@@ -71,8 +71,8 @@ class ControleurColonneAPI
     }
 
     /**
-     * @param $idColonne
-     * @return Response
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
      *
      * fonction qui permet de supprimer une colonne avec l'API
      */
@@ -95,8 +95,8 @@ class ControleurColonneAPI
     }
 
     /**
-     * @param $idColonne
-     * @return Response
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
      *
      * fonction qui permet de modifier une colonne avec l'API
      */
@@ -121,7 +121,7 @@ class ControleurColonneAPI
     }
 
 /**
-     * @return Response
+     * @return Response La réponse JSON
      *
      * fonction qui permet de recuperer le prochain id de colonne avec l'API
      */
