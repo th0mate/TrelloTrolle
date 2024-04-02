@@ -37,7 +37,6 @@ class ControleurGenerique {
     protected function afficherVue(string $cheminVue, array $parametres = []): Response
     {
         extract($parametres);
-//        $messagesFlash = $_REQUEST["messagesFlash"] ?? [];
         $messagesFlash = MessageFlash::lireTousMessages();
         ob_start();
         require __DIR__ . "/../vue/$cheminVue";
@@ -45,7 +44,6 @@ class ControleurGenerique {
         return new Response($corpsReponse);
     }
 
-    // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
 
     /**
      * @param string $route le nom de route

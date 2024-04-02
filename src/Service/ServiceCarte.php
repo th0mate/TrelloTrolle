@@ -46,11 +46,8 @@ class ServiceCarte implements ServiceCarteInterface
      */
     public function recupererCarte(?int $idCarte): Carte
     {
-        //TODO différencier warning de danger pour message flash:
-        //Pk ici c'est différent mais pas pour recupererColonne, voir afficherFormulaireCreationCarte
-        //Dans la fonction mettreAJourCarte(), les deux sont des warnings contrairement à supprimerCarte()
+
         if (is_null($idCarte)) {
-            //warning
             throw new ServiceException("Code de carte manquant", Response::HTTP_NOT_FOUND);
         }
         /**
@@ -58,7 +55,6 @@ class ServiceCarte implements ServiceCarteInterface
          */
         $carte = $this->carteRepository->recupererParClePrimaire($idCarte);
         if (!$carte) {
-            //danger
             throw new ServiceException("Carte inexistante", Response::HTTP_NOT_FOUND);
         }
         return $carte;

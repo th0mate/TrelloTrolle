@@ -5,7 +5,6 @@ namespace App\Trellotrolle\Configuration;
 class ConfigurationBaseDeDonnees implements ConfigurationBaseDeDonneesInterface
 {
 
-	//Informations de connexion pour le serveur PostgreSQL SAE de l'IUT
     private array $configurationBaseDeDonnees = array(
         'nomHote' => '162.38.222.142',
         'nomBaseDeDonnees' => 'iut',

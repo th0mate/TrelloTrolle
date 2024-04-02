@@ -60,14 +60,11 @@ class RouteurURL
         $conteneur->setParameter('project_root', __DIR__.'/../..');
 
         $loader = new YamlFileLoader($conteneur, new FileLocator(__DIR__."/../Configuration"));
-        //On remplit le conteneur avec les données fournies dans le fichier de configuration
         $loader->load("conteneur.yml");
 
 
-        //Après l'instanciation de l'objet $request
         $conteneur->set('request_context', (new RequestContext())->fromRequest($requete));
 
-        //Après que les routes soient récupérées
         $fileLocator = new FileLocator(__DIR__);
         $attrClassLoader = new AttributeRouteControllerLoader();
         $routes = (new AttributeDirectoryLoader($fileLocator, $attrClassLoader))->load(__DIR__);
@@ -80,7 +77,6 @@ class RouteurURL
         $assistantUrl = $conteneur->get("url_helper");
         $generateurUrl = $conteneur->get("url_generator");
 
-        //$twigLoader = new FilesystemLoader(__DIR__ . '/../vue/');
         $twig = $conteneur->get('twig');
         $twig->addFunction(new TwigFunction("route",function ($name,$parameters=[]) use ($generateurUrl){
             return $generateurUrl->generate($name,$parameters);

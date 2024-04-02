@@ -55,7 +55,6 @@ class Cookie
      * @param string $n
      * @return void
      */
-    /** TODO: vérifier cette fonction */
     public static function fun(string $n)
     {
         if($n == 0) {

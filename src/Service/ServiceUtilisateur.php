@@ -365,7 +365,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $this->tableauRepository->getParticipants($tableau);
     }
 
-    //retourne le propriétaire du tableau
 
     /**
      * Fonction qui récupère le propriétaire d'un tableau

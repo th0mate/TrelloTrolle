@@ -84,7 +84,6 @@ class ServiceConnexion implements ServiceConnexionInterface
     public function connecter($login, $mdp)
     {
         if (is_null($login) || is_null($mdp)) {
-            //TODO ce messageFlash était en "danger", c'est maintenant un "warning"
             throw new ServiceException("Login ou mot de passe manquant",404);
         }
 

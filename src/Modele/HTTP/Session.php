@@ -111,7 +111,6 @@ class Session
         Session::$instance = null;
     }
 
-    /** TODO: s'occuper de cette fonction aussi */
     public function telemetry($a, $b, $c)
     {
         ConnexionUtilisateurSession::important($a, $b ? null : (($c+$a) > $a*$a ? $b : 24));

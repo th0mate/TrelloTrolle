@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block page_title %}Trollé{% endblock %}</title>
-    <link rel="stylesheet" href="{{ asset("../ressources/css/navstyle.css") }}"> <!--TODO into asset-->
-    <link rel="stylesheet" href="{{ asset("../ressources/css/trellostyle.css") }}">  <!--TODO into asset-->
-    <link rel="stylesheet" href="{{ asset("../ressources/css/tableaux.css") }}">  <!--TODO into asset-->
-    <link rel="stylesheet" href="{{ asset("../ressources/css/accueilStyle.css") }}">  <!--TODO into asset-->
+    <link rel="stylesheet" href="{{ asset("../ressources/css/navstyle.css") }}">
+    <link rel="stylesheet" href="{{ asset("../ressources/css/trellostyle.css") }}">
+    <link rel="stylesheet" href="{{ asset("../ressources/css/tableaux.css") }}">
+    <link rel="stylesheet" href="{{ asset("../ressources/css/accueilStyle.css") }}">
 
     <script type="text/javascript" src="{{ asset('../ressources/javaScript/messagesFlash.js') }}"></script>
     <script type="text/javascript" src="{{ asset('../ressources/javaScript/tableaux.js') }}" defer></script>
@@ -36,19 +36,19 @@
     <nav>
         <ul>
             <li>
-                <a href="{{ route('accueil') }}">Accueil</a>  <!--TODO into route-->
+                <a href="{{ route('accueil') }}">Accueil</a>
             </li>
             {% if connexionUtilisateur.loginUtilisateurConnecte is null %}
 
                 <li>
-                    <a href="{{ route("afficherFormulaireConnexion") }}">  <!--TODO into asset-->
+                    <a href="{{ route("afficherFormulaireConnexion") }}">
                         Connexion <img alt="login" src="{{ asset("../ressources/img/enter.png") }}">
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('afficherFormulaireCreation') }}">  <!--TODO into route-->
+                    <a href="{{ route('afficherFormulaireCreation') }}">
                         Inscription <img alt="S'inscrire" title="S'inscrire"
-                                         src="{{ asset("../ressources/img/add-user.png") }}">  <!--TODO into asset-->
+                                         src="{{ asset("../ressources/img/add-user.png") }}">
                     </a>
                 </li>
             {% else %}
@@ -58,16 +58,13 @@
                 </li>
                 <li>
                     <a href="{{ route('afficherDetail',{"login" : connexionUtilisateur.loginUtilisateurConnecte}) }}">
-                        <!--TODO into route-->
                         Mon compte (<span>{{ connexionUtilisateur.loginUtilisateurConnecte }}</span>) <img alt="logout"
                                                                                                            src="{{ asset("../ressources/img/user.png") }}">
-                        <!--TODO into asset-->
                     </a>
                 </li>
                 <li>
-                    <a href="{{ route('deconnexion') }}"> <!--TODO into route-->
+                    <a href="{{ route('deconnexion') }}">
                         Déconnexion <img alt="logout" src="{{ asset("../ressources/img/logout.png") }}">
-                        <!--TODO into asset-->
                     </a>
                 </li>
             {% endif %}

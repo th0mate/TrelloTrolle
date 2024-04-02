@@ -14,17 +14,17 @@ class ConfigurationBDDTestUnitaires implements ConfigurationBaseDeDonneesInterfa
 
     public function getNomBaseDeDonnees(): string
     {
-        // TODO: Implement getNomBaseDeDonnees() method.
+
     }
 
     public function getPort(): string
     {
-        // TODO: Implement getPort() method.
+
     }
 
     public function getNomHote(): string
     {
-        // TODO: Implement getNomHote() method.
+
     }
 
     public function getMotDePasse(): string
