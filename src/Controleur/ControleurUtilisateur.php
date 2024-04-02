@@ -243,7 +243,7 @@ class ControleurUtilisateur extends ControleurGenerique
                 "utilisateurs" => $utilisateurs
             ]);*/
             MessageFlash::ajouter("success", "Un e-mail a été envoyé à l'adresse indiquée.");
-            return $this->afficherTwig('base.html.twig');
+            return $this->afficherTwig('accueil.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("afficherListeMesTableaux");
