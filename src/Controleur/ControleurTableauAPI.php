@@ -136,6 +136,24 @@ class ControleurTableauAPI
         }
     }
 
+    #[Route("/api/tableau/modifier",name: "modifierTableauAPI",methods: "PATCH")]
+    public function modifierTableau(Request $request):Response
+    {
+        $jsondecode=json_decode($request->getContent());
+        $idTableau=$jsondecode->idTableau ??null;
+        $nomTableau=$jsondecode->nomTableau ??null;
+        try{
+            $this->serviceConnexion->pasConnecter();
+            $tableau=$this->serviceTableau->recupererTableauParId($idTableau);
+            $this->serviceTableau->isNotNullNomTableau($nomTableau,$tableau);
+            $tableau->setTitreTableau($nomTableau);
+            $this->serviceTableau->mettreAJourTableau($tableau);
+            return new JsonResponse($tableau,200);
+        }catch (ServiceException $e){
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+{}    }
+
 
 
 }

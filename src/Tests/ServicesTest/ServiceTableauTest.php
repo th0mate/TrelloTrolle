@@ -71,7 +71,7 @@ class ServiceTableauTest extends TestCase
     {
         $utilisateur=new Utilisateur("loginConnecte","nom","prenom","test@test.fr",'mdp',null);
         $tableau=new Tableau(1, hash("sha256", $utilisateur->getLogin() ."1"),"nomTableau",$utilisateur);
-        $colonne=new Colonne("1","TODO",$tableau);
+        $colonne=new Colonne("1","TODO",$tableau,null);
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($utilisateur);
         $this->tableauRepository->method("getNextIdTableau")->willReturn(1);
         $this->colonneRepository->method("getNextIdColonne")->willReturn(1);
@@ -131,7 +131,7 @@ class ServiceTableauTest extends TestCase
     {
         $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test",null);
         $tableau=new Tableau(1,"code","titre",$utilisateur);
-        $carte=new Carte("1","titre","desc","couleur",new Colonne("1","titre",$tableau));
+        $carte=new Carte("1","titre","desc","couleur",new Colonne("1","titre",$tableau,null));
         $this->tableauRepository->method("estProprietaire")->willReturn(false);
         $this->tableauRepository->method("estParticipant")->willReturn(true);
         $this->tableauRepository->method("getParticipants")->willReturn([$utilisateur]);
@@ -152,7 +152,7 @@ class ServiceTableauTest extends TestCase
     public function testRecupererCartesColonnes()
     {
         $tableau=$this->creerTableauEtUtilisateurFake();
-        $fakeColonne=new Colonne("-1","fake",$tableau);
+        $fakeColonne=new Colonne("-1","fake",$tableau,null);
         $carte=new Carte("1","titre","desc","couleur",$fakeColonne);
         $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
         $this->carteRepository->method("recupererCartesColonne")->willReturn([$carte]);

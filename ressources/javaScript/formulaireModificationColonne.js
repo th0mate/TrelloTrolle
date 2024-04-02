@@ -10,7 +10,7 @@ let formulaireModificationColonne = reactive({
      */
     modifierColonne: async function () {
         if (this.titre !== '') {
-            document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = this.titre;
+            document.querySelector(`[data-columns="${document.querySelector('.menuColonnes').getAttribute('data-columns')}"] .main`).innerText = escapeHtml(this.titre);
             updateDraggables();
         }
 
@@ -27,7 +27,7 @@ let formulaireModificationColonne = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    nomColonne: this.titre,
+                    nomColonne: escapeHtml(this.titre),
                     idColonne: document.querySelector('.menuColonnes').getAttribute('data-columns')
                 })
             });

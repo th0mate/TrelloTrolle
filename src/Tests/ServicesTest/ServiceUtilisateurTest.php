@@ -676,7 +676,7 @@ class ServiceUtilisateurTest extends TestCase
 
     private function createFakeCarte($idCarte = 1): Carte
     {
-        return new Carte($idCarte, "titre", "descriptif", "bleu", new Colonne(null, null, null));
+        return new Carte($idCarte, "titre", "descriptif", "bleu", new Colonne(null, null, null,null));
     }
 
 

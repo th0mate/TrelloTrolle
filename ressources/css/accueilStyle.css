@@ -1,0 +1,116 @@
+.accueil {
+    width: 90%;
+    height: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    .bonjour {
+        width: 50%;
+        height: 98%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        border-radius: 10px;
+        background-color: #101204;
+        color: white;
+        text-align: center;
+
+        img {
+            width: 60%;
+        }
+    }
+
+    .interactions {
+        width: 450px;
+        height: 98%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+
+        .goto {
+            width: 98%;
+            min-height: 100px;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 10px;
+            background-color: #101204;
+            color: white;
+            text-decoration: none;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: box-shadow 0.2s ease-in-out;
+            position: relative;
+
+            .fleche {
+                height: 50px;
+                position: relative;
+                right: 100px;
+                transition: right 0.5s ease-in-out;
+            }
+        }
+
+        .goto:hover {
+            box-shadow: 0 0 10px 5px #8100ff ;
+        }
+
+        .goto:hover > .fleche {
+            right: 10px;
+        }
+
+
+    }
+
+}
+
+@media (max-width: 1200px) {
+    .accueil {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        overflow-y: auto;
+
+        .bonjour {
+            width: 90%;
+            min-height: 500px;
+            margin-bottom: 20px;
+        }
+
+        .interactions {
+            width: 90%;
+            min-height: 50%;
+            justify-content: space-around;
+
+            .goto {
+                width: 98%;
+                height: 100px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+@media (max-width: 800px) {
+
+    .accueil {
+        width: 100%;
+    }
+
+    .bonjour {
+        width: 98%;
+    }
+
+    .interactions {
+        width: 98%;
+    }
+
+    .fleche {
+        right: 50px!important;
+    }
+    
+}

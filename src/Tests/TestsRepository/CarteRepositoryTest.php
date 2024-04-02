@@ -69,7 +69,7 @@ class CarteRepositoryTest extends TestCase
     public function testRecupererCartesColonneExistante(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne), new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne)];
         $this->assertEquals($array, self::$carteRepository->recupererCartesColonne(2));
     }
@@ -82,7 +82,7 @@ class CarteRepositoryTest extends TestCase
     public function testRecupererCartesTableauExistant(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne),
             new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne)];
         $this->assertEquals($array, self::$carteRepository->recupererCartesTableau(1));
@@ -96,7 +96,7 @@ class CarteRepositoryTest extends TestCase
     public function testRecupererCartesUtilisateurExistant(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $array = [new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne)];
         $this->assertEquals($array, self::$carteRepository->recupererCartesUtilisateur('bob69'));
     }
@@ -128,7 +128,7 @@ class CarteRepositoryTest extends TestCase
     public function testGetAffectatonsCarteAlogin(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
         $this->assertEquals([$utilisateur],self::$carteRepository->getAffectationsCarte($carte));
     }
@@ -136,7 +136,7 @@ class CarteRepositoryTest extends TestCase
     public function testGetAffectatonsCarteAPaslogin(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte = new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne);
         $this->assertEquals([],self::$carteRepository->getAffectationsCarte($carte));
     }
@@ -144,7 +144,7 @@ class CarteRepositoryTest extends TestCase
     public function testGetAffectatonsCarteInexistante(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte = new Carte(8, 'carte8', 'carte8', 'c est une carte8', $colonne);
         $this->assertNull(self::$carteRepository->getAffectationsCarte($carte));
     }
@@ -153,7 +153,7 @@ class CarteRepositoryTest extends TestCase
     public function testGetALLFromCarte(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
         $this->assertEquals($carte,self::$carteRepository->getAllFromTable(3));
     }
@@ -162,7 +162,7 @@ class CarteRepositoryTest extends TestCase
     public function testSetAffectatonsCarteAlogin(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
         self::$carteRepository->setAffectationsCarte([$utilisateur],$carte);
         $this->assertEquals([$utilisateur],self::$carteRepository->getAffectationsCarte($carte));
@@ -173,7 +173,7 @@ class CarteRepositoryTest extends TestCase
     public function testRecuperer(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte1 = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
         $carte2 = new Carte(4, 'carte2', 'carte2', 'c est une carte2', $colonne);
         $this->assertEquals([$carte1,$carte2], self::$carteRepository->recuperer());
@@ -184,7 +184,7 @@ class CarteRepositoryTest extends TestCase
     public function testRecupererParClePrimaire(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte1 = new Carte(3, 'carte1', 'carte1', 'c est une carte1', $colonne);
         $this->assertEquals($carte1,self::$carteRepository->recupererParClePrimaire(3));
     }
@@ -193,7 +193,7 @@ class CarteRepositoryTest extends TestCase
     public function testAjouter(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte1 = new Carte(8, 'carte8', 'carte8', 'c est une carte8', $colonne);
         self::$carteRepository->ajouter($carte1);
         $this->assertEquals($carte1, self::$carteRepository->recupererParClePrimaire(8));
@@ -205,7 +205,7 @@ class CarteRepositoryTest extends TestCase
     public function testMettreAJour(){
         $utilisateur = new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $tableau = new Tableau(1, 'test', 'test',$utilisateur);
-        $colonne = new Colonne(2, 'test2',  $tableau);
+        $colonne = new Colonne(2, 'test2',  $tableau,0);
         $carte1 = new Carte(3, 'CAAAAAARTE', 'carte1', 'c est une carte1', $colonne);
         self::$carteRepository->mettreAJour($carte1);
         $this->assertEquals('CAAAAAARTE',self::$carteRepository->recupererParClePrimaire(3)->getTitreCarte());

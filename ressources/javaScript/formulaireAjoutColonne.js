@@ -10,8 +10,7 @@ let formulaireAjoutColonne = reactive({
      * @returns {Promise<void>} La promesse habituelle
      */
     envoyerFormulaireCreerColonne: async function () {
-
-        if (this.titre !== '') {
+        if (this.titre !== '' && this.titre !== null && this.titre !== undefined && this.titre !== ' ') {
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 
             let response1 = await fetch(apiBase + '/colonne/nextid', {
@@ -34,8 +33,8 @@ let formulaireAjoutColonne = reactive({
             newElement.setAttribute('draggable', 'true');
             newElement.setAttribute('data-columns', this.idColonne);
 
-            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${this.titre}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
-                <img src="${plusImageUrl}" alt="">
+            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${escapeHtml(this.titre)}</h5><div class="bullets"><img src="${encodeURIComponent(bulletsImageUrl)}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
+                <img src="${encodeURIComponent(plusImageUrl)}" alt="">
                 Ajouter une carte
             </div>`;
             let ul = document.querySelector('.ul');
@@ -52,15 +51,15 @@ let formulaireAjoutColonne = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    idTableau: this.idTableau,
-                    nomColonne: this.titre
+                    idTableau: escapeHtml(this.idTableau),
+                    nomColonne: escapeHtml(this.titre)
                 })
             });
 
             if (response.status !== 200) {
-                afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger")
+                afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger");
             } else {
-                afficherMessageFlash("Colonne créée avec succès", "success")
+                afficherMessageFlash("Colonne créée avec succès", "success");
             }
             document.querySelector('.input').value = '';
         }

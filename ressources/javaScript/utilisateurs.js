@@ -46,7 +46,7 @@ let utilisateurs = reactive({
         } else {
             utilisateur.colonnes.push({
                 idColonne: idColonne,
-                titreColonne: colonne.querySelector('.main').innerText,
+                titreColonne: escapeHtml(colonne.querySelector('.main').innerText),
                 nbCartes: 1
             });
         }
@@ -77,6 +77,7 @@ let utilisateurs = reactive({
         if (response.status !== 200) {
             afficherMessageFlash("Erreur lors de la suppression de l'utilisateur du tableau", "danger")
         } else {
+            window.majUtilisateursListeParticipants();
             afficherMessageFlash("Utilisateur supprimé du tableau avec succès", "success")
         }
     },
@@ -137,9 +138,9 @@ let utilisateurs = reactive({
      */
     afficherElements: function (idUtilisateur) {
         const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
-        let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
+        let html = `<h4>${escapeHtml(utilisateur.prenom)} ${escapeHtml(utilisateur.nom)}</h4><ul>`;
         for (let colonne of utilisateur.colonnes) {
-            html += `<li>${colonne.titreColonne} : ${colonne.nbCartes}</li>`;
+            html += `<li>${escapeHtml(colonne.titreColonne)} : ${colonne.nbCartes}</li>`;
         }
         html += '</ul>';
         return html;
@@ -245,7 +246,7 @@ let utilisateurs = reactive({
                         for (let [idColonne, [titreColonne, nbCartes]] of Object.entries(affectation[membre.login].colonnes)) {
                             utilisateur.colonnes.push({
                                 idColonne: idColonne,
-                                titreColonne: titreColonne,
+                                titreColonne: escapeHtml(titreColonne),
                                 nbCartes: nbCartes
                             });
                         }
@@ -276,6 +277,36 @@ window.supprimerCarteUtilisateur = function (idCarte, idUtilisateur, idColonne) 
 window.ajouterCarteUtilisateur = function (idCarte, idUtilisateur, idColonne) {
     utilisateurs.ajouterCarteUtilisateur(idCarte, idUtilisateur, idColonne);
 };
+
+
+async function recupererUtilisateursDepuisLogin(logins) {
+    for (let login of logins) {
+        let response = await fetch(apiBase + '/utilisateur/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                login: login
+            })
+        });
+
+        if (response.status !== 200) {
+            afficherMessageFlash("Erreur lors de la récupération des utilisateurs", "danger");
+        } else {
+            let utilisateur = await response.json();
+            let utilisateurReac = reactive({
+                prenom: utilisateur.prenom,
+                nom: utilisateur.nom,
+                login: utilisateur.login,
+                colonnes: [],
+                drapeau: false
+            }, utilisateur.login);
+            utilisateursReactifs.push(utilisateurReac);
+        }
+    }
+}
 
 applyAndRegister({});
 

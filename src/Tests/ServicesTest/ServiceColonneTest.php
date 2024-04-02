@@ -58,8 +58,8 @@ class ServiceColonneTest extends TestCase
     public function testRecupererColonnesTableau()
     {
         $fakeTableau=new Tableau(1,"code","titre",null);
-        $fakeColonne=new Colonne("1","titre",$fakeTableau);
-        $fakeColonne2=new Colonne("2","titre",$fakeTableau);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau,null);
+        $fakeColonne2=new Colonne("2","titre",$fakeTableau,null);
         $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne,$fakeColonne2]);
         $colonnes=$this->serviceColonne->recupererColonnesTableau(1);
         self::assertEquals([$fakeColonne,$fakeColonne2],$colonnes);
@@ -70,7 +70,7 @@ class ServiceColonneTest extends TestCase
     public function testSupprimerColonneValide()
     {
         $fakeTableau=new Tableau(1,"code","titre",null);
-        $fakeColonne=new Colonne("1","titre",$fakeTableau);
+        $fakeColonne=new Colonne("1","titre",$fakeTableau,null);
         $this->colonneRepository->method("supprimer")->willReturn(true);
         $this->colonneRepository->method("recupererColonnesTableau")->willReturn([$fakeColonne]);
         $colonnes=$this->serviceColonne->supprimerColonne($fakeTableau,"2");
@@ -167,6 +167,6 @@ public function testRecupererColonneManquantAndNomColonne()
 
     private function createFakeColonne($idColonne=1):Colonne
     {
-        return  new Colonne($idColonne,"titre",null);
+        return  new Colonne($idColonne,"titre",null,null);
     }
 }

@@ -107,7 +107,6 @@ if (window.location.href.includes('tableau/')) {
                 if (response.status !== 200) {
                     afficherMessageFlash('Erreur lors de l\'inversion des colonnes.', 'danger')
                 }
-                console.log(await response.json())
 
                 document.querySelector('.waiting').style.display = 'none';
 
@@ -308,7 +307,7 @@ if (window.location.href.includes('tableau/')) {
                 window.majUtilisateurs();
 
                 if (response.status !== 200) {
-                    console.error(response.json());
+                    afficherMessageFlash('Erreur lors du déplacement de la carte.', 'danger');
                 }
 
             }
@@ -351,6 +350,16 @@ if (window.location.href.includes('tableau/')) {
         document.querySelector('.menuColonnes').style.display = "none";
     });
 
+
+    function supprimerToutesColonnesSansTitres() {
+        document.querySelectorAll('.draggable').forEach(el => {
+            if (!el.querySelector('.main').textContent) {
+                el.remove();
+            }
+        });
+    }
+
+    supprimerToutesColonnesSansTitres();
 
     /**
      * Evenement permettant de supprimer une colonne
@@ -446,7 +455,7 @@ if (window.location.href.includes('tableau/')) {
             card.classList.add('card');
             card.setAttribute('draggable', 'true');
             card.setAttribute('data-colmuns', id);
-            card.innerHTML = `<span class="color" style="border: 5px solid ${color}"></span>${value}<div class="features"></div>`;
+            card.innerHTML = `<span class="color" style="border: 5px solid ${color}"></span>${escapeHtml(value)}<div class="features"></div>`;
             stockageParent.appendChild(card);
 
             let rect = card.getBoundingClientRect();
@@ -461,9 +470,25 @@ if (window.location.href.includes('tableau/')) {
             addEventListeners();
             addListenersAjoutCard();
         } else {
-            console.error('Aucune colonne avec l\'id ' + id + ' n\'a été trouvée');
+            afficherMessageFlash('Erreur lors de l\'ajout de la carte.', 'danger');
         }
     }
+
+    /**
+     * Echappe les caractères spéciaux pour le HTML
+     * @param text {string} Le texte à échapper
+     * @returns {*} Le texte échappé
+     */
+    function escapeHtml(text) {
+        // https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equivalent-in-javascript
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
 
     /**
      * Affiche le formulaire de création de carte/ ou de modification de carte pour la colonne avec l'id `id`
@@ -536,12 +561,12 @@ if (window.location.href.includes('tableau/')) {
             const allUsers = users.concat(users2);
 
             if (response.status !== 200 || response2.status !== 200 || response3.status !== 200 || response4.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la récupération des données.', 'danger')
             } else {
                 let carte = await response.json();
                 window.affectationsCarte = loginAffectations;
                 document.querySelector('.formulaireCreationCarte').setAttribute('data-modif', 'true');
-                document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte},${carte.titreCarte},${carte.descriptifCarte},${carte.couleurCarte}`);
+                document.querySelector('.formulaireCreationCarte').setAttribute('data-onload', `formulaireAjoutCarte.setParametresPourModifier(${id},${idCarte},${escapeHtml(carte.titreCarte)},${escapeHtml(carte.descriptifCarte)},${escapeHtml(carte.couleurCarte)}`);
                 document.querySelector('.inputCreationCarte').value = carte.titreCarte;
                 document.querySelector('.desc').value = carte.descriptifCarte;
                 document.querySelector('input[type="color"]').value = carte.couleurCarte;
@@ -555,8 +580,8 @@ if (window.location.href.includes('tableau/')) {
                 document.querySelector('.waiting').style.display = 'none';
                 let html = '';
                 for (let affectation of affectations) {
-                    html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${affectation.login}">
-                <label for="participant${affectation.login}" data-participant="${affectation.login}"><span class="user">${affectation.prenom[0]}${affectation.nom[0]}</span></label>`;
+                    html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${affectation.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${affectation.login})" type="checkbox" data-participant="${affectation.login}" id="participant${affectation.login}" name="participant${affectation.login}" checked value="${escapeHtml(affectation.login)}">
+                <label for="participant${affectation.login}" data-participant="${affectation.login}"><span class="user">${escapeHtml(affectation.prenom[0])}${escapeHtml(affectation.nom[0])}</span></label>`;
                 }
 
                 for (let user of allUsers) {
@@ -568,8 +593,8 @@ if (window.location.href.includes('tableau/')) {
                         }
                     }
                     if (!trouve) {
-                        html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${user.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${user.login}">
-                <label for="participant${user.login}" data-participant="${user.login}"><span class="user">${user.prenom[0]}${user.nom[0]}</span></label>`;
+                        html += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${user.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${user.login})" type="checkbox" data-participant="${user.login}" id="participant${user.login}" name="participant${user.login}" value="${escapeHtml(user.login)}">
+                <label for="participant${user.login}" data-participant="${user.login}"><span class="user">${escapeHtml(user.prenom[0])}${escapeHtml(user.nom[0])}</span></label>`;
                     }
                 }
 

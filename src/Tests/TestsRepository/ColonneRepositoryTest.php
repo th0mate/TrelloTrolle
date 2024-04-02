@@ -82,8 +82,8 @@ class ColonneRepositoryTest extends TestCase
     public function testRecupererColonnesTableauEnA(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
-        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
+        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
+        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,1);
         $this->assertEquals([$fakeColonne1,$fakeColonne2],self::$colonneRepository->recupererColonnesTableau(1));
     }
     public function testRecupererColonnesTableauEnAPAS(){
@@ -132,7 +132,7 @@ class ColonneRepositoryTest extends TestCase
     public function testGetAllFromColonne(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
+        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
         assertEquals($fakeColonne1,self::$colonneRepository->getAllFromTable(1));
 
     }
@@ -144,9 +144,9 @@ class ColonneRepositoryTest extends TestCase
         $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeTab2 = new Tableau(3, 'test3', 'test3',$fakeUser2);
-        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
-        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
-        $fakeColonne3= new Colonne(3, 'colonne3',$fakeTab2);
+        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
+        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,1);
+        $fakeColonne3= new Colonne(3, 'colonne3',$fakeTab2,2);
         $this->assertEquals([$fakeColonne1,$fakeColonne2,$fakeColonne3], self::$colonneRepository->recuperer());
     }
 
@@ -155,7 +155,7 @@ class ColonneRepositoryTest extends TestCase
     public function testRecupererParClePrimaireExistant(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
+        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
         self::assertEquals($fakeColonne1,self::$colonneRepository->recupererParClePrimaire(1));
     }
 
@@ -169,9 +169,9 @@ class ColonneRepositoryTest extends TestCase
     public function testAjouter(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakecolonneAADD = new Colonne(5,'colonne5',$fakeTab1);
-        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
-        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
+        $fakecolonneAADD = new Colonne(5,'colonne5',$fakeTab1,2);
+        $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
+        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,1);
         self::$colonneRepository->ajouter($fakecolonneAADD);
         $this->assertEquals([$fakeColonne1,$fakeColonne2,$fakecolonneAADD],self::$colonneRepository->recupererColonnesTableau(1));
     }
@@ -181,7 +181,7 @@ class ColonneRepositoryTest extends TestCase
     public function testMettreAJour(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeColonne1= new Colonne(1, 'coloooooonne1',$fakeTab1);
+        $fakeColonne1= new Colonne(1, 'coloooooonne1',$fakeTab1,0);
         self::$colonneRepository->mettreAJour($fakeColonne1);
         $this->assertEquals('coloooooonne1', self::$colonneRepository->recupererParClePrimaire(1)->getTitreColonne());
     }
@@ -191,7 +191,7 @@ class ColonneRepositoryTest extends TestCase
     public function testSupprimer(){
         $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
+        $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,1);
         self::$colonneRepository->supprimer(1);
         $this->assertEquals([$fakeColonne2], self::$colonneRepository->recupererColonnesTableau(1));
     }

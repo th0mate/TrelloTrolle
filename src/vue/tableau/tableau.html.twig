@@ -37,8 +37,9 @@
 
         <div class="infos">
             <div class="titre">
-                <h3>{{ tableau.titreTableau|capitalize }}</h3>
-                <img src="{{ asset('../ressources/img/bullets.png') }}" alt="" class="bullets">
+                <h3 class="titreTableau">{{ tableau.titreTableau|capitalize }}</h3>
+                <img src="{{ asset('../ressources/img/bullets.png') }}" alt="" class="bullets"
+                     data-onclick="formulaireModificationTableau.afficherFormulaireModificationTableau">
             </div>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
@@ -87,7 +88,7 @@
                         {% for carte in data[i] %}
                             <div class="card"
                                     {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
-                                        data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }})"
+                                        data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }}, {{ colonnes[i].idColonne }})"
                                     {% endif %}
                                  data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>
@@ -204,6 +205,23 @@
                    placeholder="Entrez le nouveau titre">
         </div>
         <div class="boutonModification" data-onclick="formulaireModificationColonne.modifierColonne">Modifier</div>
+    </div>
+
+
+    <div class="formulaireModificationTableau">
+        <div class="wrap">
+            <h2>Modification du tableau</h2>
+            <img class="closeTable" src="{{ asset('../ressources/img/close.png') }}" alt="">
+        </div>
+        <div class="content">
+            <h4>Nouveau titre :</h4>
+            <input maxlength="30" required type="text"
+                   class="inputModificationTableau" data-reactiveInput="formulaireModificationTableau.titreTableau"
+                   placeholder="Entrez le nouveau titre">
+        </div>
+        <div class="boutonModification"
+             data-onclick="formulaireModificationTableau.modifierTableau({{ tableau.idTableau }})">Modifier
+        </div>
     </div>
 
 
