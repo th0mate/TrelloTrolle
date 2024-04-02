@@ -25,6 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurColonneAPI
 {
 
+    /**
+     * ControleurColonneAPI constructor.
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceColonneInterface $serviceColonne Le service de colonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceTableauInterface $serviceTableau Le service de tableau
+     *
+     * fonction qui permet de construire le controleur de colonne avec l'API
+     */
+
     public function __construct(
         private ServiceConnexionInterface     $serviceConnexion,
         private ServiceColonneInterface       $serviceColonne,
@@ -36,9 +46,14 @@ class ControleurColonneAPI
     {
     }
 
+    /**
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de creer une colonne avec l'API
+     */
     #[Route("/api/colonne/creer", name: "creerColonneAPI", methods: "PUT")]
     public function creerColonne(Request $request): Response
-    {
+     {
         $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
         $nomColonne = $jsondecode->nomColonne ?? null;
@@ -46,31 +61,44 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceColonne->isSetNomColonne($nomColonne);
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
-            //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             return new JsonResponse($colonne, 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
 
+    /**
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de supprimer une colonne avec l'API
+     */
+
     #[Route("/api/colonne/supprimer", name: "supprimerColonneAPI", methods: "DELETE")]
     public function supprimerColonne(Request $request): Response
-    {
+     {
         $jsondecode = json_decode($request->getContent());
         $idColonne = $jsondecode->idColonne ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceColonne->supprimerColonne($tableau, $idColonne);
             return new JsonResponse('', 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    /**
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de modifier une colonne avec l'API
+     */
 
     #[Route("/api/colonne/modifier", name: "modifierColonneAPI", methods: "PATCH")]
     public function modifierColonne(Request $request): Response
@@ -82,7 +110,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne->setTitreColonne($nomColonne);
             $colonne = $this->serviceColonne->miseAJourColonne($colonne);
             return new JsonResponse($colonne, 200);
@@ -91,10 +119,36 @@ class ControleurColonneAPI
         }
     }
 
+/**
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de recuperer le prochain id de colonne avec l'API
+     */
+
+
     #[Route("/api/colonne/nextid", name: "getNextIdColonneAPI", methods: "POST")]
     public function getNextIdColonne(): Response
     {
         $idColonne = $this->serviceColonne->getNextIdColonne();
         return new JsonResponse(["idColonne" => $idColonne], 200);
+    }
+
+    #[Route("/api/colonne/inverser", name: "inverserOrdreColonnesAPI", methods: "PATCH")]
+    public function inverserOrdreColonnes(Request $request): Response
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idColonne1 = $jsondecode->idColonne1 ?? null;
+        $idColonne2 = $jsondecode->idColonne2 ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $colonne1 = $this->serviceColonne->recupererColonne($idColonne1);
+            $colonne2 = $this->serviceColonne->recupererColonne($idColonne2);
+            $tableau = $colonne1->getTableau();
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceColonne->inverserOrdreColonnes($idColonne1, $idColonne2);
+            return new JsonResponse('', 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
     }
 }

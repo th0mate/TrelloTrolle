@@ -19,13 +19,25 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurUtilisateurAPI
 {
 
+    /**
+     * ControleurUtilisateurAPI constructor.
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     *
+     * fonction qui permet de construire le controleur de l'utilisateur avec l'API
+     */
     public function __construct(private ServiceUtilisateurInterface   $serviceUtilisateur,
                                 private ConnexionUtilisateurInterface $connexionUtilisateur,
                                 private ServiceColonneInterface $serviceColonne
     )
-    {
+   {
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de rechercher un utilisateur avec l'API via une requête de recherche
+     */
     #[Route("/api/utilisateur/recherche", name: "rechercheUtilisateurAPI", methods: "POST")]
     public function rechercheUtilisateur(Request $request): Response
     {
@@ -41,6 +53,12 @@ class ControleurUtilisateurAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de recuperer les affectations des colonnes avec l'API
+     */
     #[Route('/api/utilisateur/affectations',name: "affectationsColonnesAPI",methods: "POST")]
     public function getAffectationsColonnes(Request $request):Response
     {

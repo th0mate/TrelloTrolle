@@ -5,14 +5,29 @@
 
 {% block page_content %}
     <div>
-        <p>Voici les identifiants des comptes concernés :</p>
-        <ul>
-            {% for utilisateur in utilisateurs %}
-
-            <li><strong>{{utilisateur.login}} : {{ utilisateur.mdp }}</strong></li>
-            {% end for %}
-        </ul>
-        <p>Pensez à noter vos mots de passe sur un bout de papier !</p>
-        <p>Conseil : pour faciliter la mémorisation, réeutilissez le même mot de passe sur tous les sites visités et gardez le simple (par exemple : azerty)</p>
+        <form method="post" action="{{ route("validerMDP",{"login": login}) }}">
+            <fieldset>
+                <h3>Réinitialisation du Mot de Passe</h3>
+                <p>
+                    <label for="mdp_id">Mot de passe&#42;</label>
+                    <label for="mdp_id"><strong>6 à 50 caractères, au moins une minusle, une majuscule et un caractère
+                            spécial</strong></label>
+                    <input type="password" minlength="6" maxlength="50"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_=+\-]).{6,50}" value="" placeholder=""
+                           name="mdp" id="mdp_id" required>
+                </p>
+                <p>
+                    <label for="mdp2_id">Vérification du mot de passe&#42;</label>
+                    <input type="password" minlength="6" maxlength="50"
+                           pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*_=+\-]).{6,50}" value="" placeholder=""
+                           name="mdp2" id="mdp2_id"
+                           required>
+                </p>
+                <p>
+                    <input type="submit" value="Valider"/>
+                </p>
+                <p>Pensez à noter vos mots de passe sur un bout de papier !</p>
+            </fieldset>
+        </form>
     </div>
 {% endblock %}

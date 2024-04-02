@@ -24,6 +24,12 @@ class ServiceCarte implements ServiceCarteInterface
 {
 
 
+    /**
+     * ServiceCarte constructor.
+     * @param CarteRepository $carteRepository Repository des cartes
+     * @param UtilisateurRepository $utilisateurRepository Repository des utilisateurs
+     * @param TableauRepository $tableauRepository Repository des tableaux
+     */
     public function __construct(private CarteRepository       $carteRepository,
                                 private UtilisateurRepository $utilisateurRepository,
                                 private TableauRepository     $tableauRepository)
@@ -31,6 +37,13 @@ class ServiceCarte implements ServiceCarteInterface
     }
 
 
+    /**
+     * Fonction permettant de récupérer une carte par son id
+     * @param int|null $idCarte L'id de la carte à récupérer
+     * @return Carte La carte récupérée
+     * @throws ServiceException Si le code de la carte est manquant
+     * ou si la carte est inexistante
+     */
     public function recupererCarte(?int $idCarte): Carte
     {
         //TODO différencier warning de danger pour message flash:
@@ -51,8 +64,12 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction permettant de supprimer une carte par son id
+     * @param Tableau $tableau Le tableau auquel appartient la carte
+     * @param $idCarte L'id de la carte à supprimer
+     * @return array Les cartes du tableau après suppression de la carte donnée
      */
     public function supprimerCarte(Tableau $tableau, $idCarte): array
     {
@@ -60,8 +77,15 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
     }
 
+
     /**
-     * @throws CreationException
+     * Fonction permettant de créer une carte
+     * @param Tableau $tableau Le tableau dans lequel la carte va être créée
+     * @param $attributs, Les attributs de la carte à créer
+     * @param Colonne $colonne La colonne dans laquelle la carte va être créée
+     * @return Carte La carte créée
+     * @throws CreationException Si un membre à affecter n'existe pas ou
+     * s'il n'est pas collaborateur du tableau
      */
     public function creerCarte(Tableau $tableau, $attributs, Colonne $colonne): Carte
     {
@@ -86,8 +110,14 @@ class ServiceCarte implements ServiceCarteInterface
         return $this->newCarte($colonne, $attributs);
     }
 
-    private function newCarte(Colonne $colonne, $attributs): Carte
-    {
+    /**
+     * Fonction permettant de créer une carte
+     * @param Colonne $colonne La colonne dans laquelle la carte va être créée
+     * @param $attributs, Les attributs de la carte à créer
+     * @return Carte La carte créée
+     */
+    public function newCarte(Colonne $colonne, $attributs): Carte
+     {
         $carte = new Carte(
             $this->carteRepository->getNextIdCarte(),
             $attributs["titreCarte"],
@@ -100,6 +130,13 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
+    /**
+     * Fonction qui récupère les attributs de la carte
+     * @param array $attributs Les attributs à vérifier
+     * @return void
+     * @throws CreationException Si les attributs sont manquants
+     */
     public function recupererAttributs(array $attributs): void
     {
         foreach ($attributs as $attribut) {
@@ -109,9 +146,16 @@ class ServiceCarte implements ServiceCarteInterface
         }
     }
 
+
     /**
-     * @throws CreationException
-     * @throws MiseAJourException
+     * Fonction permettant de mettre à jour une carte
+     * @param Tableau $tableau Le tableau auquel appartient la carte
+     * @param $attributs, Les attributs de la carte à mettre à jour
+     * @param Carte $carte La carte à mettre à jour
+     * @param Colonne $colonne La colonne de la carte
+     * @return Carte La carte mise à jour
+     * @throws CreationException Si un membre à affecter n'existe pas
+     * @throws MiseAJourException Si un membre affecté à la tâche n'est pas affecté au tableau
      */
     public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte
     {
@@ -137,7 +181,14 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
-    private function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
+    /**
+     * Fonction permettant de mettre à jour une carte
+     * @param Carte $carte La carte à mettre à jour
+     * @param Colonne $colonne La colonne de la carte
+     * @param $attributs, Les attributs de la carte à mettre à jour
+     * @return Carte La carte mise à jour
+     */
+    public function carteUpdate(Carte $carte, Colonne $colonne, $attributs): Carte
     {
         $carte->setColonne($colonne);
         $carte->setTitreCarte($attributs["titreCarte"]);
@@ -148,9 +199,15 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+
     /**
-     * @throws CreationException
-     * @throws ServiceException
+     * Fonction permettant de vérifier si une carte peut être mise à jour
+     * @param $idCarte L'id de la carte à mettre à jour
+     * @param Colonne $colonne La colonne de la carte
+     * @param $attributs, attributs de la carte à mettre à jour
+     * @return Carte La carte à mettre à jour
+     * @throws CreationException Si le tableau de la colonne de la carte n'est pas
+     * le même que celui dont la carte est issue
      */
     public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte
     {
@@ -163,8 +220,14 @@ class ServiceCarte implements ServiceCarteInterface
         return $carte;
     }
 
+    /**
+     * Fonction permettant de mettre à jour les affectations d'une carte
+     * @param Tableau $tableau Le tableau auquel appartient la carte
+     * @param Utilisateur $utilisateur L'utilisateur à mettre à jour
+     * @return void
+     */
     public function miseAJourCarteMembre(Tableau $tableau, AbstractDataObject $utilisateur): void
-    {
+   {
         $cartes = $this->carteRepository->recupererCartesTableau($tableau->getIdTableau());
         foreach ($cartes as $carte) {
             $affectations = array_filter($this->carteRepository->getAffectationsCarte($carte), function ($u) use ($utilisateur) {
@@ -174,17 +237,32 @@ class ServiceCarte implements ServiceCarteInterface
         }
     }
 
+    /**
+     * Fonction permettant de récupérer le prochain id de carte
+     * @return int L'id de la prochaine carte
+     */
     public function getNextIdCarte(): int
     {
         return $this->carteRepository->getNextIdCarte();
     }
 
-    public function deplacerCarte(Carte $carte,Colonne $colonne): void
+    /**
+     * Fonction permettant de déplacer une carte
+     * @param Carte $carte La carte à déplacer
+     * @param Colonne $colonne La colonne dans laquelle la carte va être déplacée
+     * @return void
+     */
+    public function deplacerCarte(Carte $carte, Colonne $colonne): void
     {
         $carte->setColonne($colonne);
         $this->carteRepository->mettreAJour($carte);
     }
 
+    /**
+     * Fonction permettant de récupérer les affectations d'une carte
+     * @param Carte $carte La carte dont on veut récupérer les affectations
+     * @return array Les affectations de la carte
+     */
     public function getAffectations(Carte $carte) :array
     {
         return $this->carteRepository->getAffectationsCarte($carte);

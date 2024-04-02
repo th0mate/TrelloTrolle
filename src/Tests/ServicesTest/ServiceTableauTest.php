@@ -69,7 +69,7 @@ class ServiceTableauTest extends TestCase
 
     public function testCreerTableauValide()
     {
-        $utilisateur=new Utilisateur("loginConnecte","nom","prenom","test@test.fr",'mdp');
+        $utilisateur=new Utilisateur("loginConnecte","nom","prenom","test@test.fr",'mdp',null);
         $tableau=new Tableau(1, hash("sha256", $utilisateur->getLogin() ."1"),"nomTableau",$utilisateur);
         $colonne=new Colonne("1","TODO",$tableau,null);
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($utilisateur);
@@ -109,7 +109,7 @@ class ServiceTableauTest extends TestCase
         $this->expectException(ServiceException::class);
         $this->expectExceptionMessage("Vous ne pouvez pas quitter ce tableau");
         $this->expectExceptionCode(403);
-        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test",null);
         $tableau=new Tableau(1,"code","titre",$utilisateur);
         $this->tableauRepository->method("estProprietaire")->willReturn(true);
         $this->serviceTableau->quitterTableau($tableau,$utilisateur);
@@ -120,7 +120,7 @@ class ServiceTableauTest extends TestCase
         $this->expectException(ServiceException::class);
         $this->expectExceptionMessage("Vous n'appartenez pas à ce tableau");
         $this->expectExceptionCode(403);
-        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test",null);
         $tableau=new Tableau(1,"code","titre",$utilisateur);
         $this->tableauRepository->method("estProprietaire")->willReturn(false);
         $this->tableauRepository->method("estParticipant")->willReturn(false);
@@ -129,7 +129,7 @@ class ServiceTableauTest extends TestCase
 
     public function testQuitterTableauValide()
     {
-        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test");
+        $utilisateur=new Utilisateur("test","test","test",'test@t.com',"test",null);
         $tableau=new Tableau(1,"code","titre",$utilisateur);
         $carte=new Carte("1","titre","desc","couleur",new Colonne("1","titre",$tableau,null));
         $this->tableauRepository->method("estProprietaire")->willReturn(false);
@@ -264,6 +264,7 @@ class ServiceTableauTest extends TestCase
                 "fake",
                 "fake@fake.fr",
                 "fake",
+                null,
             );
         }
         return new Tableau(

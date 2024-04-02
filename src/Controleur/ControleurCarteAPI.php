@@ -25,6 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurCarteAPI
 {
 
+    /**
+     * ControleurCarteAPI constructor.
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceCarteInterface $serviceCarte Le service de carte
+     * @param ServiceColonneInterface $serviceColonne  Le service de colonne
+     *
+     * fonction qui permet de construire le controleur de carte avec l'API
+     */
+
     public function __construct(
         private ServiceUtilisateurInterface $serviceUtilisateur,
         private ServiceConnexionInterface   $serviceConnexion,
@@ -35,6 +45,13 @@ class ControleurCarteAPI
     {
     }
 
+
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de supprimer une carte avec l'API
+     */
 
     #[Route("/api/carte/supprimer", name: "supprimerCarteAPI", methods: "DELETE")]
     public function supprimerCarte(Request $request): Response
@@ -53,6 +70,12 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de modifier une carte avec l'API
+     */
     #[Route("/api/carte/modifier", name: "modifierCarteAPI", methods: "PATCH")]
     public function modifierCarte(Request $request): Response
     {
@@ -78,6 +101,13 @@ class ControleurCarteAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de creer une carte avec l'API
+     */
 
     #[Route("/api/carte/creer", name: "creerCarteAPI", methods: "POST")]
     public function creerCarte(Request $request): Response
@@ -105,13 +135,25 @@ class ControleurCarteAPI
         }
     }
 
+
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de recuperer l'ID d'une carte avec l'API
+     */
     #[Route("/api/carte/nextid", name: "getNextIdCarteAPI", methods: "POST")]
     public function getNextIdCarte(): Response
-    {
+   {
         $idCarte = $this->serviceCarte->getNextIdCarte();
         return new JsonResponse(["idCarte" => $idCarte], 200);
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de deplacer une carte avec l'API
+     */
     #[Route("/api/carte/deplacer",name: "deplacerCarteAPI",methods: "PATCH")]
     public function deplacerCarte(Request $request): Response
     {
@@ -132,6 +174,11 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de recuperer les affectations d'une carte avec l'API
+     */
     #[Route("/api/carte/affectations",name: "getAffectationsCarteAPI",methods:"POST")]
     public function getAffectations(Request $request):Response
     {
@@ -147,6 +194,11 @@ class ControleurCarteAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return Response La réponse JSON
+     * fonction qui permet de recuperer une carte avec l'API
+     */
     #[Route("/api/carte/getCarte", name: "getCarteAPI", methods: "POST")]
     public function getCarte(Request $request): Response
     {
