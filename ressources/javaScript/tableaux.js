@@ -1,4 +1,3 @@
-
 if (window.location.href.includes('tableau/')) {
 
     /**
@@ -108,7 +107,6 @@ if (window.location.href.includes('tableau/')) {
                 if (response.status !== 200) {
                     afficherMessageFlash('Erreur lors de l\'inversion des colonnes.', 'danger')
                 }
-                console.log(await response.json())
 
                 document.querySelector('.waiting').style.display = 'none';
 
@@ -309,7 +307,7 @@ if (window.location.href.includes('tableau/')) {
                 window.majUtilisateurs();
 
                 if (response.status !== 200) {
-                    console.error(response.json());
+                    afficherMessageFlash('Erreur lors du déplacement de la carte.', 'danger');
                 }
 
             }
@@ -472,7 +470,7 @@ if (window.location.href.includes('tableau/')) {
             addEventListeners();
             addListenersAjoutCard();
         } else {
-            console.error('Aucune colonne avec l\'id ' + id + ' n\'a été trouvée');
+            afficherMessageFlash('Erreur lors de l\'ajout de la carte.', 'danger');
         }
     }
 
@@ -563,7 +561,7 @@ if (window.location.href.includes('tableau/')) {
             const allUsers = users.concat(users2);
 
             if (response.status !== 200 || response2.status !== 200 || response3.status !== 200 || response4.status !== 200) {
-                console.error(response.error);
+                afficherMessageFlash('Erreur lors de la récupération des données.', 'danger')
             } else {
                 let carte = await response.json();
                 window.affectationsCarte = loginAffectations;

@@ -77,6 +77,7 @@ let utilisateurs = reactive({
         if (response.status !== 200) {
             afficherMessageFlash("Erreur lors de la suppression de l'utilisateur du tableau", "danger")
         } else {
+            window.majUtilisateursListeParticipants();
             afficherMessageFlash("Utilisateur supprimé du tableau avec succès", "success")
         }
     },
@@ -87,7 +88,6 @@ let utilisateurs = reactive({
      * @param loginUtilisateur le login de l'utilisateur
      */
     afficherContenuUtilisateur: function (loginUtilisateur) {
-        console.log('aaa');
         if (utilisateursReactifs.length > 0) {
             const utilisateur = objectByName.get(loginUtilisateur);
 

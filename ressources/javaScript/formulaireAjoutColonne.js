@@ -10,7 +10,6 @@ let formulaireAjoutColonne = reactive({
      * @returns {Promise<void>} La promesse habituelle
      */
     envoyerFormulaireCreerColonne: async function () {
-        console.log(this.titre);
         if (this.titre !== '' && this.titre !== null && this.titre !== undefined && this.titre !== ' ') {
             this.idTableau = document.querySelector('.adder').getAttribute('data-tableau');
 

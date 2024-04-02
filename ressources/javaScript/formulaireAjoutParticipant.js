@@ -120,6 +120,7 @@ let formulaireAjoutParticipant = reactive({
             window.majUtilisateurs();
             document.querySelector('.formulaireAjoutMembreTableau').style.display = 'none';
             document.querySelector('.all').style.opacity = '1';
+            window.majUtilisateursListeParticipants();
         }
     }
 

@@ -143,7 +143,6 @@ let formulaireAjoutCarte = reactive({
 
         if (estModif === 'true') {
             let idCarte = document.querySelector('.formulaireCreationCarte').getAttribute('data-carte');
-            console.error("Pas encore implémenté");
         } else {
             this.idCarte = await getNextIdCarte();
 
@@ -376,6 +375,16 @@ function closeForm() {
     document.querySelectorAll('.all').forEach(el => {
         el.style.opacity = '1';
     });
+}
+
+/**
+ * Met à jour la liste des utilisateurs dans le formulaire de création de carte
+ */
+window.majUtilisateursListeParticipants =  function() {
+    document.querySelector('.listeParticipants').removeAttribute('data-htmlfun');
+    document.querySelector('.listeParticipants').setAttribute('data-htmlfun', 'formulaireAjoutCarte.afficherCheckBoxParticipants');
+    startReactiveDom();
+    randomColorsPourUsersDifferents();
 }
 
 applyAndRegister(() => {
