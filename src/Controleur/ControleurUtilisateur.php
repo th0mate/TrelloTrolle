@@ -177,9 +177,6 @@ class ControleurUtilisateur extends ControleurGenerique
             "nom" => $_REQUEST["nom"] ?? null,
             "prenom" => $_REQUEST["prenom"] ?? null,
             "email" => $_REQUEST["email"] ?? null,
-            "mdp" => $_REQUEST["mdp"] ?? null,
-            "mdp2" => $_REQUEST["mdp2"] ?? null,
-            "mdpAncien" => $_REQUEST["mdpAncien"] ?? null
         ];
         try {
             $this->serviceConnexion->pasConnecter();
@@ -346,10 +343,9 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * Réinitialise le mot de passe d'une entreprise.
+     * Réinitialise le mot de passe d'un utilisateur.
      *
      * @return Response
-     * @throws ServiceException
      */
     #[Route('/recuperationMdp', name: 'validerMDP', methods: "POST")]
     public function resetPassword(): Response
@@ -357,14 +353,30 @@ class ControleurUtilisateur extends ControleurGenerique
         $login = $_REQUEST["login"] ?? null;
         $mdp = $_REQUEST["mdp"] ?? null;
         $mdp2 = $_REQUEST["mdp2"] ?? null;
+        $oldmdp = $_REQUEST["mdpAncien"] ?? null;
         try {
-            $this->serviceConnexion->dejaConnecte();
+            if ($this->connexionUtilisateur->getLoginUtilisateurConnecte()!=$login){
+                MessageFlash::ajouter("warning","Ce login n'est pas le votre" );
+                return self::redirection("afficherFormulaireConnexion");
+            }
+            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($login);
+            if (!(MotDePasse::verifier($oldmdp, $utilisateur->getMdpHache()))) {
+                MessageFlash::ajouter("warning","l'ancien mot de passe est erroné" );
+                return self::redirection("changerMotDePasse",["login"=>$login]);
+            }
             $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
             MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
+            if($this->connexionUtilisateur->estConnecte()) {
+                return self::redirection("afficherListeMesTableaux");
+            }
             return self::redirection("connecter");
+
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("accueil");
+        } catch (ServiceException $e){
+            MessageFlash::ajouter("warning", $e->getMessage());
+            return self::redirection("changerMotDePasse",["login"=>$login]);
         }
     }
 
