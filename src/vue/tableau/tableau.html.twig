@@ -88,7 +88,7 @@
                         {% for carte in data[i] %}
                             <div class="card"
                                     {% if tableau.utilisateur.login == connexionUtilisateur.loginUtilisateurConnecte %}
-                                        data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }})"
+                                        data-onrightclick="formulaireAjoutCarte.supprimerCarte({{ carte.idCarte }}, {{ colonnes[i].idColonne }})"
                                     {% endif %}
                                  data-card="{{ carte.idCarte }}">
                                 <span class="color" style="border : 5px solid {{ carte.couleurCarte }}"></span>

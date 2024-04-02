@@ -1,4 +1,4 @@
-import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {applyAndRegister, objectByName, reactive, startReactiveDom} from "./reactive.js";
 /**
  * Objet réactif formulaireAjoutCarte
  * @type {*|Object|boolean} un objet réactif
@@ -55,7 +55,10 @@ let formulaireAjoutCarte = reactive({
     },
 
 
-    supprimerCarte: async function (idCarte) {
+    supprimerCarte: async function (idCarteidColonne) {
+
+        let[idCarte, idColonne] = idCarteidColonne.split(',');
+
         const div = document.querySelector('.divSupprimerCarte');
 
         div.style.left = (event.clientX + window.scrollX) + 'px';
@@ -68,7 +71,12 @@ let formulaireAjoutCarte = reactive({
             }
         });
 
+        this.idCarte = idCarte;
+        this.idColonne = idColonne;
+
+
         div.querySelector('span').addEventListener('click', async function () {
+
             document.querySelector(`[data-card="${idCarte}"]`).remove();
             div.style.display = 'none';
             let response = await fetch(apiBase + '/carte/supprimer', {
@@ -86,6 +94,7 @@ let formulaireAjoutCarte = reactive({
                 afficherMessageFlash('Erreur lors de la suppression de la carte.', 'danger');
             } else {
                 afficherMessageFlash('Carte supprimée avec succès.', 'success');
+                window.majUtilisateurs();
             }
 
         });
