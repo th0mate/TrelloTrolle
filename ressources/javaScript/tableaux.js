@@ -331,7 +331,6 @@ if (window.location.href.includes('tableau/')) {
 
     function supprimerToutesColonnesSansTitres() {
         document.querySelectorAll('.draggable').forEach(el => {
-            //si l'élément .main qui est dans .entete qui est dans .draggable n'a pas de texte, on supprime la colonne .draggable
             if (!el.querySelector('.main').textContent) {
                 el.remove();
             }
