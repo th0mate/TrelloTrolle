@@ -71,7 +71,7 @@ if (window.location.href.includes('tableau/')) {
      * Permet d'échanger le contenu de deux éléments `.draggable`
      * @param e
      */
-    function handleDrop(e) {
+    async function handleDrop(e) {
         if (sourceIsMainOrDraggable) {
             e.stopPropagation();
             for (let el of document.querySelectorAll('.draggable')) {
@@ -89,9 +89,33 @@ if (window.location.href.includes('tableau/')) {
                 addEventsBullets(dragSrcEl);
                 addEventsBullets(targetDraggable);
                 addEventsAdd();
+
+                document.querySelector('.waiting').style.display = 'block';
+
+                let response = await fetch(apiBase + '/colonne/inverser', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        idColonne1: dragSrcEl.getAttribute('data-columns'),
+                        idColonne2: targetDraggable.getAttribute('data-columns')
+                    })
+                });
+
+                if (response.status !== 200) {
+                    afficherMessageFlash('Erreur lors de l\'inversion des colonnes.', 'danger')
+                }
+                console.log(await response.json())
+
+                document.querySelector('.waiting').style.display = 'none';
+
             }
+
         }
     }
+
 
     /**
      * Permet de retirer la classe `over` à l'élément `.draggable` lorsque l'élément `.draggable` n'est plus survolé

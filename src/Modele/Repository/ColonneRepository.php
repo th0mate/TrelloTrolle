@@ -43,7 +43,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         if (!$objet) {
             return null;
         }
-        return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["idcolonne"]);
+        return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["ordre"]);
     }
 
     public function getNextIdColonne(): int
