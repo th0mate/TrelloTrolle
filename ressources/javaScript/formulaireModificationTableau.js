@@ -21,7 +21,7 @@ let formulaireModificationTableau = reactive({
      */
     modifierTableau: async function(idTableau){
         let response = await fetch(apiBase + "/tableau/modifier", {
-            method: "POST",
+            method: "PATCH",
             headers: {
                 "Content-Type": "application/json"
             },
