@@ -17,34 +17,9 @@ class ControleurGenerique {
     {
     }
 
-    protected function afficherVue(string $cheminVue, array $parametres = []): Response
-    {
-        extract($parametres);
-//        $messagesFlash = $_REQUEST["messagesFlash"] ?? [];
-        $messagesFlash = MessageFlash::lireTousMessages();
-        ob_start();
-        require __DIR__ . "/../vue/$cheminVue";
-        $corpsReponse = ob_get_clean();
-        return new Response($corpsReponse);
-    }
-
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
     protected function redirection(string $route = "accueil", array $parameters = []) : RedirectResponse
     {
-//        $queryString = [];
-//        if ($action != "") {
-//            $queryString[] = "action=$action";
-//        }c
-//        if ($controleur != "") {
-//            $queryString[] = "controleur=$controleur";
-//        }
-//        foreach ($query as $name => $value) {
-//            $name = rawurlencode($name);
-//            $value = rawurlencode($value);
-//            $queryString[] = "$name=$value";
-//        }
-//        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
-//        header($url);
         $generateurUrl= $this->container->get("url_generator");
         $url = $generateurUrl->generate($route, $parameters);
         var_dump($url);
@@ -58,24 +33,9 @@ class ControleurGenerique {
             $messageErreurVue .= " avec le contrôleur $controleur";
         if ($messageErreur !== "")
             $messageErreurVue .= " : $messageErreur";
-
-        /*return ControleurGenerique::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Problème",
-            "cheminVueBody" => "erreur.php",
-            "messageErreur" => $messageErreurVue
-        ]);*/
         return $this->afficherTwig('error.html.twig',["errorMessage" => $messageErreurVue]);
     }
-
-    public function issetAndNotNull(array $requestParams) : bool {
-        foreach ($requestParams as $param) {
-            if(!(isset($_REQUEST[$param]) && $_REQUEST[$param] != null)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
+    
     protected function redirectionConnectionFlash(ConnexionException $e): Response
     {
         MessageFlash::ajouter("info", $e->getMessage());
