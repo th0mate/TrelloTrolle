@@ -1,22 +1,28 @@
-
 {% extends "base.html.twig" %}
 
 {% block page_title %}Trollé{% endblock %}
 
 {% block page_content %}
-    <div><p>Bienvenue sur <strong>Trello-Trollé</strong>!</p></div>
-    <div>
-        {% if connexionUtilisateur.loginUtilisateurConnecte is not null %}
-        <span><a href="{{ route('afficherListeMesTableaux') }}">Consulter mes tableaux</a></span>
-        {% else %}
-        <p>
-            Pour créer des tableaux, commencez par vous
-            <a href="{{ route('afficherFormulaireConnexion') }}">connecter</a>
-            ou par <a href="{{ route('afficherFormulaireCreation') }}">créer un
-                compte</a>!
-        </p>
-        {% endif %}
-        <?php %} ?>
+
+    <div class="accueil">
+        <div class="bonjour">
+            <img src="{{ asset('../ressources/img/bonjour.png') }}" alt="">
+            <h2>Bienvenue sur Trello-Trollé !</h2>
+            <h4>Le site de gestion, de planification et d'organisation made in IUT !</h4>
+            <p>Travail réalisé par Maëlys BOISSEZON – Sascha LEVY – Thomas LOYE – Romain TOUZÉ – Lorick VEGNES </p>
+            <p>2023/2024 - RACDV - Q2</p>
+        </div>
+
+        <div class="interactions">
+            {% if connexionUtilisateur.loginUtilisateurConnecte is not null %}
+                <a class="goto" href="{{ route('afficherListeMesTableaux') }}"><h3>Consulter mes tableaux</h3><img class="fleche" src="{{ asset('../ressources/img/fleche.png') }}" alt=""> </a>
+                <a class="goto" href="{{ route('deconnexion') }}"><h3>Déconnexion</h3><img class="fleche" src="{{ asset('../ressources/img/fleche.png') }}" alt=""></a>
+            {% else %}
+                <a class="goto" href="{{ route('afficherFormulaireConnexion') }}"><h3>Connexion</h3><img class="fleche" src="{{ asset('../ressources/img/fleche.png') }}" alt=""></a>
+                <a class="goto" href="{{ route('afficherFormulaireCreation') }}"><h3>Créer un compte</h3><img class="fleche" src="{{ asset('../ressources/img/fleche.png') }}" alt=""></a>
+            {% endif %}
+        </div>
+
     </div>
 
 {% endblock %}
