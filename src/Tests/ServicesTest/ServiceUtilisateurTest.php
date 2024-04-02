@@ -556,7 +556,7 @@ class ServiceUtilisateurTest extends TestCase
 
     public function testRecupererAffectationsColonne()
     {
-        $fakeColonne=new Colonne(1,"titre",$this->createFakeTableau());
+        $fakeColonne=new Colonne(1,"titre",$this->createFakeTableau(),null);
         $this->carteRepository->method("recupererCartesColonne")->willReturn([$this->createFakeCarte()]);
         $this->carteRepository->method("getAffectationsCarte")->willReturn([$this->createFakeUser()]);
         $participants=$this->serviceUtilisateur->recupererAffectationsColonne($fakeColonne,"login");
