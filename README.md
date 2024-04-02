@@ -30,4 +30,4 @@ Rendu du projet de SAE4A.
 - **Romain TOUZÉ** : Passage à l'API/Routing/Conteneur/Tests/JWT/erreurs HTTP/Services
 - **Lorick VERGNES** : Refactor de la BD/DataObject/Repositories/MDP oubliés par mailer/sécurité
 - **Sascha LEVY** : Routing/PhpDoc
-- **Thomas LOYE** : Objets réactifs/Utilisation API/Drag and Drop/JavaScript Doc/Refonte Graphique/MessagesFlash JS
+- **Thomas LOYE** : Objets réactifs/Utilisation API/Drag and Drop/JavaScript Doc/Refonte Graphique/MessagesFlash JS/Responsive
