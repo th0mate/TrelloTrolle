@@ -75,4 +75,10 @@ interface ServiceUtilisateurInterface
     public function getProprietaireTableau(Tableau $tableau): Utilisateur;
     public function recupererAffectationsColonne($colonne, $login);
 
+    public function verifNonce($login,$nonce): void;
+
+    public function changerMotDePasse($login, $mdp, $mdp2): void;
+
+
+
 }

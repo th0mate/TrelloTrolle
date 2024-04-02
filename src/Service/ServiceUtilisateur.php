@@ -336,13 +336,11 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $participants;
     }
 
-    public function verifNonce(): void
+    public function verifNonce($login,$nonce): void
     {
-        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($_REQUEST["login"]);
-        if ($utilisateur->formatTableau()["nonceTag"] != $_REQUEST["nonce"]) {
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
+        if ($utilisateur->formatTableau()["nonceTag"] != $nonce) {
             throw new ServiceException("Le nonce est incorrect", Response::HTTP_FORBIDDEN);
-        } else {
-
         }
     }
 

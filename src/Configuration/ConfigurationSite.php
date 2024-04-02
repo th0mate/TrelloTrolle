@@ -7,6 +7,6 @@ class ConfigurationSite {
         return 36000;
     }
     public static function getAbsoluteURL():string{
-        return "https://webinfo.iutmontp.univ-montp2.fr/~loyet/sae22/web";
+        return "https://webinfo.iutmontp.univ-montp2.fr/~vergnesl/TrelloTrolle/trellotrolle/web";
     }
 }

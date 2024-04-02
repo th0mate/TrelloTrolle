@@ -256,10 +256,12 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperationMdp', name: 'changerMotDePasse', methods: "GET")]
     public function verifNonce(): Response
     {
+        $nonce=$_REQUEST["nonce"];
+        $login=$_REQUEST["login"];
         try {
             $this->serviceConnexion->dejaConnecte();
-            $this->serviceUtilisateur->verifNonce();
-            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig');
+            $this->serviceUtilisateur->verifNonce($login,$nonce);
+            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig',["login"=>$login]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection("afficherFormulaireConnexion");
@@ -272,7 +274,7 @@ class ControleurUtilisateur extends ControleurGenerique
      * @return Response
      * @throws ServiceException
      */
-    #[Route('/recuperation', name: 'validerMDP', methods: "POST")]
+    #[Route('/recuperationMdp', name: 'validerMDP', methods: "POST")]
     public function resetPassword(): Response
     {
         $login = $_REQUEST["login"];
@@ -282,7 +284,7 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
             MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
-            return self::redirection("utilisateur/formulaireConnexion.html.twig");
+            return self::redirection("connecter");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("accueil");

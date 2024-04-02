@@ -5,7 +5,7 @@
 
 {% block page_content %}
     <div>
-        <form method="post" action="{{ route("validerMDP") }}">
+        <form method="post" action="{{ route("validerMDP",{"login": login}) }}">
             <fieldset>
                 <h3>Réinitialisation du Mot de Passe</h3>
                 <p>
