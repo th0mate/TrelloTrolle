@@ -56,8 +56,6 @@ let formulaireAjoutColonne = reactive({
                 })
             });
 
-            console.log(await response.json());
-
             if (response.status !== 200) {
                 afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger");
             } else {
