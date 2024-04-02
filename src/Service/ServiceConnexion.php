@@ -38,7 +38,7 @@ class ServiceConnexion implements ServiceConnexionInterface
     /**
      * @throws ConnexionException
      */
-    public function dejaConnecter()
+    public function dejaConnecte()
     {
         if ($this->connexionUtilisateurJWT->estConnecte() && $this->connexionUtilisateurSession->estConnecte()) {
             throw new ConnexionException("Vous êtes déjà connecté",Response::HTTP_FORBIDDEN);

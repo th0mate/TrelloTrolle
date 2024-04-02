@@ -69,7 +69,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireCreation(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'un utilisateur",
                 "cheminVueBody" => "utilisateur/formulaireCreation.php"
@@ -92,7 +92,7 @@ class ControleurUtilisateur extends ControleurGenerique
             "mdp2" => $_REQUEST["mdp2"] ?? null,
         ];
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->creerUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
             return ControleurUtilisateur::redirection("afficherFormulaireConnexion");
@@ -171,7 +171,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireConnexion(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Formulaire de connexion",
                 "cheminVueBody" => "utilisateur/formulaireConnexion.php"
@@ -189,7 +189,7 @@ class ControleurUtilisateur extends ControleurGenerique
         $login = $_REQUEST["login"] ?? null;
         $mdp = $_REQUEST["mdp"] ?? null;
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceConnexion->connecter($login, $mdp);
             MessageFlash::ajouter("success", "Connexion effectuée.");
             return self::redirection("afficherListeMesTableaux");
@@ -218,7 +218,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireRecuperationCompte(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
                 "cheminVueBody" => "utilisateur/resetCompte.php"
@@ -235,7 +235,7 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         $mail = $_REQUEST["email"];
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->recupererCompte($mail);
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
@@ -257,7 +257,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function verifNonce(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->verifNonce();
             return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig');
         } catch (ServiceException $e) {
@@ -279,7 +279,7 @@ class ControleurUtilisateur extends ControleurGenerique
         $mdp = $_REQUEST["mdp"];
         $mdp2 = $_REQUEST["mdp2"];
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
             MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
             return self::redirection("utilisateur/formulaireConnexion.html.twig");

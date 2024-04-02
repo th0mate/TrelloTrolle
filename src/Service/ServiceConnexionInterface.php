@@ -15,7 +15,7 @@ interface ServiceConnexionInterface
     /**
      * @throws ConnexionException
      */
-    public function dejaConnecter();
+    public function dejaConnecte();
 
     /**
      * @throws ServiceException

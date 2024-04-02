@@ -46,7 +46,8 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     {
         $nomTable = $this->getNomTable();
         $attributsTexte = join(",", $attributs);
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query("SELECT DISTINCT {$this->formatNomsColonnes()} FROM $nomTable ORDER BY $attributsTexte $sens");
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare("SELECT DISTINCT {$this->formatNomsColonnes()} FROM $nomTable ORDER BY $attributsTexte $sens");
+        $pdoStatement->execute();
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
             $objets[] = $this->construireDepuisTableau($objetFormatTableau);
@@ -124,7 +125,8 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         $nomTable = $this->getNomTable();
         $nomClePrimaire = $this->getNomCle();
         $sql = "DELETE FROM $nomTable WHERE $nomClePrimaire='$valeurClePrimaire';";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPDO()->query($sql);
+        $pdoStatement = $this->connexionBaseDeDonnees->getPDO()->prepare($sql);
+        $pdoStatement->execute();
         $deleteCount = $pdoStatement->rowCount();
 
         return ($deleteCount > 0);
@@ -182,7 +184,6 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     protected function getNextId(string $type) : int {
         $nomTable = $this->getNomTable();
         $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM $nomTable");
-        $query->execute();
         $obj = $query->fetch();
         return $obj[0] === null ? 0 : $obj[0] + 1;
     }
