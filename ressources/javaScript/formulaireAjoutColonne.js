@@ -58,9 +58,9 @@ let formulaireAjoutColonne = reactive({
             });
 
             if (response.status !== 200) {
-                afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger")
+                afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger");
             } else {
-                afficherMessageFlash("Colonne créée avec succès", "success")
+                afficherMessageFlash("Colonne créée avec succès", "success");
             }
             document.querySelector('.input').value = '';
         }
