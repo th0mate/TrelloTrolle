@@ -11,9 +11,9 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     /**
      * @param ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees
      */
-    public function __construct(protected ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees)
-    {
-    }
+
+
+    public function __construct(protected ConnexionBaseDeDonneesInterface $connexionBaseDeDonnees){}
 
     /**
      * @return string
@@ -229,7 +229,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     protected function getNextId(string $type) : int {
         $nomTable = $this->getNomTable();
         $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM $nomTable");
-        $query->execute();
+        //$query->execute();
         $obj = $query->fetch();
         return $obj[0] === null ? 0 : $obj[0] + 1;
     }

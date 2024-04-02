@@ -45,20 +45,6 @@ class ControleurGenerique {
     // https://stackoverflow.com/questions/768431/how-do-i-make-a-redirect-in-php
     protected function redirection(string $route = "accueil", array $parameters = []) : RedirectResponse
     {
-//        $queryString = [];
-//        if ($action != "") {
-//            $queryString[] = "action=$action";
-//        }c
-//        if ($controleur != "") {
-//            $queryString[] = "controleur=$controleur";
-//        }
-//        foreach ($query as $name => $value) {
-//            $name = rawurlencode($name);
-//            $value = rawurlencode($value);
-//            $queryString[] = "$name=$value";
-//        }
-//        $url = "Location: ./controleurFrontal.php?" . join("&", $queryString);
-//        header($url);
         $generateurUrl= $this->container->get("url_generator");
         $url = $generateurUrl->generate($route, $parameters);
         var_dump($url);
@@ -80,14 +66,9 @@ class ControleurGenerique {
             $messageErreurVue .= " avec le contrôleur $controleur";
         if ($messageErreur !== "")
             $messageErreurVue .= " : $messageErreur";
-
-        /*return ControleurGenerique::afficherVue('vueGenerale.php', [
-            "pagetitle" => "Problème",
-            "cheminVueBody" => "erreur.php",
-            "messageErreur" => $messageErreurVue
-        ]);*/
         return $this->afficherTwig('error.html.twig',["errorMessage" => $messageErreurVue]);
     }
+
 
     /**
      * @param array $requestParams

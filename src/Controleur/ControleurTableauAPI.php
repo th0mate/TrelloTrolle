@@ -18,6 +18,7 @@ use App\Trellotrolle\Service\ServiceUtilisateur;
 use App\Trellotrolle\Service\ServiceUtilisateurInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ControleurTableauAPI
@@ -50,7 +51,7 @@ class ControleurTableauAPI
      * fonction qui permet de creer un tableau avec l'API
      */
     #[Route("/api/tableau/membre/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
-    public function ajouterMembre(Request $request)
+    public function ajouterMembre(Request $request) :Response
     {
         {
             $jsondecode = json_decode($request->getContent());
@@ -74,7 +75,7 @@ class ControleurTableauAPI
      */
 
     #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
-    public function supprimerMembre(Request $request)
+    public function supprimerMembre(Request $request):Response
     {
         $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
@@ -98,7 +99,7 @@ class ControleurTableauAPI
      *  fonction qui permet de recuperer les membres d'un tableau avec l'API
      */
     #[Route('/api/tableau/membre/getPourTableau', name: 'getMembresTableau', methods: "POST")]
-    public function getMembresTableau(Request $request)
+    public function getMembresTableau(Request $request):Response
     {
         $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
@@ -121,7 +122,7 @@ class ControleurTableauAPI
 
 
     #[Route('/api/tableau/membre/getProprio', name: 'getProprietaireTableau', methods: "POST")]
-    public function getProprietaireTableau(Request $request)
+    public function getProprietaireTableau(Request $request):Response
     {
         $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
