@@ -25,7 +25,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
     protected function getNomsColonnes(): array
     {
         return [
-            "idcolonne", "titrecolonne", "idtableau"
+            "idcolonne", "titrecolonne", "idtableau", "ordre"
         ];
     }
 
