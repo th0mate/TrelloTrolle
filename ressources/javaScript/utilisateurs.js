@@ -278,6 +278,36 @@ window.ajouterCarteUtilisateur = function (idCarte, idUtilisateur, idColonne) {
     utilisateurs.ajouterCarteUtilisateur(idCarte, idUtilisateur, idColonne);
 };
 
+
+async function recupererUtilisateursDepuisLogin(logins) {
+    for (let login of logins) {
+        let response = await fetch(apiBase + '/utilisateur/get', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                login: login
+            })
+        });
+
+        if (response.status !== 200) {
+            afficherMessageFlash("Erreur lors de la récupération des utilisateurs", "danger");
+        } else {
+            let utilisateur = await response.json();
+            let utilisateurReac = reactive({
+                prenom: utilisateur.prenom,
+                nom: utilisateur.nom,
+                login: utilisateur.login,
+                colonnes: [],
+                drapeau: false
+            }, utilisateur.login);
+            utilisateursReactifs.push(utilisateurReac);
+        }
+    }
+}
+
 applyAndRegister({});
 
 startReactiveDom();
