@@ -99,8 +99,8 @@ if (window.location.href.includes('tableau/')) {
                         'Accept': 'application/json'
                     },
                     body: JSON.stringify({
-                        idColonne1: dragSrcEl.getAttribute('data-columns'),
-                        idColonne2: targetDraggable.getAttribute('data-columns')
+                        idColonne1: targetDraggable.getAttribute('data-columns'),
+                        idColonne2: dragSrcEl.getAttribute('data-columns')
                     })
                 });
 
