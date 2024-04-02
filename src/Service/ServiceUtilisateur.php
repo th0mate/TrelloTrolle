@@ -246,7 +246,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new MiseAJourException("Email non valide", "warning", 404);
         }
         $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
-        if($checkUtilisateur && $utilisateur->getLogin() != $login){
+        if($checkUtilisateur && $utilisateur->getEmail() != $checkUtilisateur->getEmail()){
             throw new MiseAJourException("L'email est déjà utilisé", "warning", 403);
         }
 

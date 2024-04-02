@@ -70,9 +70,7 @@ class ServiceUtilisateurTest extends TestCase
             "nom" => "nom",
             "prenom" => "prenom",
             "email" => "email@email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp",
-            "mdpAncien" => "email"
+
         ];
         $this->expectException(MiseAJourException::class);
         $this->expectExceptionCode(404);
@@ -88,9 +86,7 @@ class ServiceUtilisateurTest extends TestCase
             "nom" => "nom",
             "prenom" => "prenom",
             "email" => "email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp",
-            "mdpAncien" => "mdpAncien",
+
 
         ];
         $this->expectException(MiseAJourException::class);
@@ -100,59 +96,20 @@ class ServiceUtilisateurTest extends TestCase
         $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
     }
 
-    public function testMettreAJourUtilisateurMdpAncienErronne()
-    {
-        $attributs = [
-            "login" => "test",
-            "nom" => "nom",
-            "prenom" => "prenom",
-            "email" => "email@email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp",
-            "mdpAncien" => "mdpAncien",
-
-        ];
-        $this->expectException(MiseAJourException::class);
-        $this->expectExceptionCode(409);
-        $this->expectExceptionMessage("Ancien mot de passe erroné.");
-        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
-        $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
-    }
-
-    public function testMettreAJourUtilisateurMdpsDistincs()
-    {
-        $attributs = [
-            "login" => "test",
-            "nom" => "nom",
-            "prenom" => "prenom",
-            "email" => "email@email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp2",
-            "mdpAncien" => "test",
-
-        ];
-        $this->expectException(MiseAJourException::class);
-        $this->expectExceptionCode(409);
-        $this->expectExceptionMessage("Mots de passe distincts");
-        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
-        $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
-    }
     public function testMettreAJourUtilisateurEmailPris()
     {
         $attributs = [
             "login" => "test",
             "nom" => "nom",
             "prenom" => "prenom",
-            "email" => "email@email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp2",
-            "mdpAncien" => "test",
+            "email" => "email@oui.com",
 
         ];
         $this->expectException(MiseAJourException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage("L'email est déjà utilisé");
-        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
+        $fakeUser = new Utilisateur("test", "nom", "prenom", "test@test.com","", null);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
         $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($this->createFakeUser());
         $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
     }
@@ -164,9 +121,7 @@ class ServiceUtilisateurTest extends TestCase
             "nom" => "nom",
             "prenom" => "prenom",
             "email" => "email@email.com",
-            "mdp" => "mdp",
-            "mdp2" => "mdp",
-            "mdpAncien" => "test",
+
 
         ];
         $fakeUser = $this->createFakeUser();
@@ -176,7 +131,6 @@ class ServiceUtilisateurTest extends TestCase
             self::assertEquals("nom", $utilisateur->getNom());
             self::assertEquals("prenom", $utilisateur->getPrenom());
             self::assertEquals("email@email.com", $utilisateur->getEmail());
-            self::assertEquals(MotDePasse::hacher("mdp"), $utilisateur->getMdpHache());
         });
         $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
     }
