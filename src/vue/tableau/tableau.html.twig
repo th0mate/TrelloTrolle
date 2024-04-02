@@ -38,7 +38,8 @@
         <div class="infos">
             <div class="titre">
                 <h3 class="titreTableau">{{ tableau.titreTableau|capitalize }}</h3>
-                <img src="{{ asset('../ressources/img/bullets.png') }}" alt="" class="bullets" data-onclick="formulaireModificationTableau.afficherFormulaireModificationTableau">
+                <img src="{{ asset('../ressources/img/bullets.png') }}" alt="" class="bullets"
+                     data-onclick="formulaireModificationTableau.afficherFormulaireModificationTableau">
             </div>
             <div class="allUsers">
                 <h4>Collaborateurs :</h4>
@@ -218,7 +219,9 @@
                    class="inputModificationTableau" data-reactiveInput="formulaireModificationTableau.titreTableau"
                    placeholder="Entrez le nouveau titre">
         </div>
-        <div class="boutonModification" data-onclick="formulaireModificationTableau.modifierTableau({{ tableau.idTableau }})">Modifier</div>
+        <div class="boutonModification"
+             data-onclick="formulaireModificationTableau.modifierTableau({{ tableau.idTableau }})">Modifier
+        </div>
     </div>
 
 
