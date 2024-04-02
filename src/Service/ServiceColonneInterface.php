@@ -78,5 +78,7 @@ interface ServiceColonneInterface
      * @param $idColonne2 , L'id de la deuxième colonne
      * @return void
      */
+    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void;
+
 
 }

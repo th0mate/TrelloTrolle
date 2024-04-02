@@ -107,6 +107,7 @@ if (window.location.href.includes('tableau/')) {
                 if (response.status !== 200) {
                     afficherMessageFlash('Erreur lors de l\'inversion des colonnes.', 'danger')
                 }
+                console.log(await response.json());
 
                 document.querySelector('.waiting').style.display = 'none';
 

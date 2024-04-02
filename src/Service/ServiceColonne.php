@@ -144,5 +144,13 @@ class ServiceColonne implements ServiceColonneInterface
         return $this->colonneRepository->getNextIdColonne();
     }
 
+    /**
+     * Inverse l'ordre de deux colonnes d'un même tableau
+     */
+    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
+    {
+        $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);
+    }
+
 
 }
