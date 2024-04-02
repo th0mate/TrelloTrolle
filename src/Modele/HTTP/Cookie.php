@@ -6,17 +6,19 @@ class Cookie
 {
 
     /**
-     * @param $cle
-     * @return bool
+     * Fonction permettant de savoir si un cookie contient la clé donnée
+     * @param $cle , La clé
+     * @return bool Vrai si le cookie contient la clé, faux sinon
      */
     public static function contient($cle) : bool {
         return isset($_COOKIE[$cle]);
     }
 
     /**
-     * @param string $cle
-     * @param mixed $valeur
-     * @param int|null $dureeExpiration
+     * Fonction permettant d'enregistrer un cookie
+     * @param string $cle la clé du cookie
+     * @param mixed $valeur la valeur du cookie
+     * @param int|null $dureeExpiration la durée d'expiration du cookie (facultatif)
      * @return void
      */
     public static function enregistrer(string $cle, mixed $valeur, ?int $dureeExpiration = null): void
@@ -29,8 +31,9 @@ class Cookie
     }
 
     /**
-     * @param string $cle
-     * @return mixed
+     * Fonction permettant de lire un cookie
+     * @param string $cle la clé du cookie
+     * @return mixed le contenu du cookie
      */
     public static function lire(string $cle): mixed
     {
@@ -38,7 +41,8 @@ class Cookie
     }
 
     /**
-     * @param $cle
+     * Fonction permettant de supprimer un cookie
+     * @param $cle ,la clé du cookie
      * @return void
      */
     public static function supprimer($cle) : void
@@ -51,6 +55,7 @@ class Cookie
      * @param string $n
      * @return void
      */
+    /** TODO: vérifier cette fonction */
     public static function fun(string $n)
     {
         if($n == 0) {

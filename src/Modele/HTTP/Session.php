@@ -9,12 +9,14 @@ use Exception;
 class Session
 {
     /**
-     * @var Session|null
+     * @var Session|null $instance L'instance de la session
      */
     private static ?Session $instance = null;
 
+
     /**
-     * @throws Exception
+     * Session constructor.
+     * @throws Exception Si la session n'a pas réussi à démarrer
      */
     private function __construct()
     {
@@ -24,7 +26,8 @@ class Session
     }
 
     /**
-     * @param int $dureeExpiration
+     * Fonction permettant de vérifier la dernière activité
+     * @param int $dureeExpiration La durée d'expiration
      * @return void
      */
     public function verifierDerniereActivite(int $dureeExpiration) : void
@@ -40,7 +43,8 @@ class Session
     }
 
     /**
-     * @return Session
+     * Fonction permettant de récupérer l'instance de la session
+     * @return Session L'instance de la session
      */
     public static function getInstance(): Session
     {
@@ -55,8 +59,9 @@ class Session
     }
 
     /**
-     * @param $nom
-     * @return bool
+     * Fonction permettant de vérifier si la session contient la clé donnée
+     * @param $nom , La clé
+     * @return bool Vrai si la session contient la clé, faux sinon
      */
     public function contient($nom): bool
     {
@@ -64,8 +69,9 @@ class Session
     }
 
     /**
-     * @param string $nom
-     * @param mixed $valeur
+     * Fonction permettant d'enregistrer une valeur dans la session
+     * @param string $nom La clé
+     * @param mixed $valeur La valeur
      * @return void
      */
     public function enregistrer(string $nom, mixed $valeur): void
@@ -74,8 +80,9 @@ class Session
     }
 
     /**
-     * @param string $nom
-     * @return mixed
+     * Fonction permettant de lire une valeur de la session
+     * @param string $nom La clé
+     * @return mixed La valeur de la session
      */
     public function lire(string $nom): mixed
     {
@@ -83,7 +90,8 @@ class Session
     }
 
     /**
-     * @param $nom
+     * Fonction permettant de supprimer une valeur de la session
+     * @param $nom ,la clé de la valeur à supprimer
      * @return void
      */
     public function supprimer($nom): void
@@ -92,6 +100,7 @@ class Session
     }
 
     /**
+     * Fonction permettant de détruire la session
      * @return void
      */
     public function detruire() : void

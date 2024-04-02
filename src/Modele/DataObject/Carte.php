@@ -6,11 +6,12 @@ class Carte extends AbstractDataObject implements \JsonSerializable
 {
 
     /**
-     * @param int $idCarte
-     * @param string $titreCarte
-     * @param string $descriptifCarte
-     * @param string $couleurCarte
-     * @param Colonne $colonne
+     * Carte constructor.
+     * @param int $idCarte L'id de la carte
+     * @param string $titreCarte Le titre de la carte
+     * @param string $descriptifCarte Le descriptif de la carte
+     * @param string $couleurCarte La couleur de la carte
+     * @param Colonne $colonne La colonne où se trouve la carte
      */
     public function __construct(
         private int     $idCarte,
@@ -23,8 +24,9 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param array $objetFormatTableau
-     * @return Carte
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return Carte L'objet construit
      */
     public static function construireDepuisTableau(array $objetFormatTableau): Carte
     {
@@ -38,7 +40,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return Colonne
+     * Fonction permettant de récupérer la colonne de la carte
+     * @return Colonne La colonne
      */
     public function getColonne(): Colonne
     {
@@ -46,7 +49,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param Colonne $colonne
+     * Fonction permettant de définir la colonne de la carte
+     * @param Colonne $colonne La colonne de la carte
      * @return void
      */
     public function setColonne(Colonne $colonne): void
@@ -55,7 +59,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return int|null
+     * Fonction permettant de récupérer l'id de la carte
+     * @return int|null L'id de la carte
      */
     public function getIdCarte(): ?int
     {
@@ -63,7 +68,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param int|null $idCarte
+     * Fonction permettant de définir l'id de la carte
+     * @param int|null $idCarte L'id de la carte
      * @return void
      */
     public function setIdCarte(?int $idCarte): void
@@ -72,7 +78,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le titre de la carte
+     * @return string|null Le titre de la carte
      */
     public function getTitreCarte(): ?string
     {
@@ -80,7 +87,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $titreCarte
+     * Fonction permettant de définir le titre de la carte
+     * @param string|null $titreCarte Le titre de la carte
      * @return void
      */
     public function setTitreCarte(?string $titreCarte): void
@@ -89,7 +97,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le descriptif de la carte
+     * @return string|null Le descriptif de la carte
      */
     public function getDescriptifCarte(): ?string
     {
@@ -97,7 +106,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $descriptifCarte
+     * Fonction permettant de définir le descriptif de la carte
+     * @param string|null $descriptifCarte Le descriptif de la carte
      * @return void
      */
     public function setDescriptifCarte(?string $descriptifCarte): void
@@ -106,7 +116,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer la couleur de la carte
+     * @return string|null La couleur de la carte
      */
     public function getCouleurCarte(): ?string
     {
@@ -114,7 +125,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $couleurCarte
+     * Fonction permettant de définir la couleur de la carte
+     * @param string|null $couleurCarte La couleur de la carte
      * @return void
      */
     public function setCouleurCarte(?string $couleurCarte): void
@@ -123,7 +135,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * Fonction permettant de formater un objet en tableau
+     * @return array L'objet formaté en tableau
      */
     public function formatTableau(): array
     {
@@ -138,7 +151,8 @@ class Carte extends AbstractDataObject implements \JsonSerializable
 
 
     /**
-     * @return mixed
+     * Fonction permettant de sérialiser un objet en JSON
+     * @return mixed L'objet sérialisé
      */
     public function jsonSerialize(): mixed
     {

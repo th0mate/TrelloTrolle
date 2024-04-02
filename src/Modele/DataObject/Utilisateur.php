@@ -5,11 +5,12 @@ namespace App\Trellotrolle\Modele\DataObject;
 class Utilisateur extends AbstractDataObject implements \JsonSerializable
 {
     /**
-     * @param string|null $login
-     * @param string|null $nom
-     * @param string|null $prenom
-     * @param string|null $email
-     * @param string|null $mdpHache
+     * Utilisateur constructor.
+     * @param string|null $login L'identifiant de l'utilisateur
+     * @param string|null $nom Le nom de l'utilisateur
+     * @param string|null $prenom Le prénom de l'utilisateur
+     * @param string|null $email L'email de l'utilisateur
+     * @param string|null $mdpHache Le mot de passe haché de l'utilisateur
      */
     public function __construct(
         private ?string $login ,
@@ -21,8 +22,9 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     {}
 
     /**
-     * @param array $objetFormatTableau
-     * @return Utilisateur
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return Utilisateur L'objet construit
      */
     public static function construireDepuisTableau(array $objetFormatTableau) : Utilisateur {
 
@@ -36,7 +38,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer l'identifiant de l'utilisateur
+     * @return string|null L'identifiant de l'utilisateur
      */
     public function getLogin(): ?string
     {
@@ -44,7 +47,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $login
+     * Fonction permettant de définir l'identifiant de l'utilisateur
+     * @param string|null $login L'identifiant de l'utilisateur
      * @return void
      */
     public function setLogin(?string $login): void
@@ -53,7 +57,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le nom de l'utilisateur
+     * @return string|null Le nom de l'utilisateur
      */
     public function getNom(): ?string
     {
@@ -61,7 +66,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $nom
+     * Fonction permettant de définir le nom de l'utilisateur
+     * @param string|null $nom Le nom de l'utilisateur
      * @return void
      */
     public function setNom(?string $nom): void
@@ -70,7 +76,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le prénom de l'utilisateur
+     * @return string|null Le prénom de l'utilisateur
      */
     public function getPrenom(): ?string
     {
@@ -78,7 +85,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $prenom
+     * Fonction permettant de définir le prénom de l'utilisateur
+     * @param string|null $prenom Le prénom de l'utilisateur
      * @return void
      */
     public function setPrenom(?string $prenom): void
@@ -87,7 +95,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le mot de passe haché de l'utilisateur
+     * @return string|null Le mot de passe haché de l'utilisateur
      */
     public function getMdpHache(): ?string
     {
@@ -95,7 +104,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $mdpHache
+     * Fonction permettant de définir le mot de passe haché de l'utilisateur
+     * @param string|null $mdpHache Le mot de passe haché de l'utilisateur
      * @return void
      */
     public function setMdpHache(?string $mdpHache): void
@@ -104,7 +114,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer l'email de l'utilisateur
+     * @return string|null L'email de l'utilisateur
      */
     public function getEmail(): ?string
     {
@@ -112,7 +123,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @param string|null $email
+     * Fonction permettant de définir l'email de l'utilisateur
+     * @param string|null $email L'email de l'utilisateur
      * @return void
      */
     public function setEmail(?string $email): void
@@ -121,7 +133,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return array
+     * Fonction permettant de formater l'objet en tableau
+     * @return array L'objet formaté en tableau
      */
     public function formatTableau(): array
     {
@@ -135,7 +148,8 @@ class Utilisateur extends AbstractDataObject implements \JsonSerializable
     }
 
     /**
-     * @return mixed
+     * Fonction permettant de sérialiser l'objet en JSON
+     * @return mixed L'objet sérialisé
      */
     public function jsonSerialize() :mixed
     {

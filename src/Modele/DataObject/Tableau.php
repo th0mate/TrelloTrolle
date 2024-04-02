@@ -7,10 +7,11 @@ use App\Trellotrolle\Modele\Repository\TableauRepository;
 class Tableau extends AbstractDataObject
 {
     /**
-     * @param int|null $idTableau
-     * @param string|null $codeTableau
-     * @param string|null $titreTableau
-     * @param Utilisateur|null $utilisateur
+     * Tableau constructor.
+     * @param int|null $idTableau L'id du tableau
+     * @param string|null $codeTableau Le code du tableau
+     * @param string|null $titreTableau Le titre du tableau
+     * @param Utilisateur|null $utilisateur L'utilisateur propriétaire du tableau
      */
     public function __construct(
         private ?int         $idTableau,
@@ -22,8 +23,9 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @param array $objetFormatTableau
-     * @return Tableau
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return Tableau L'objet construit
      */
     public static function construireDepuisTableau(array $objetFormatTableau): Tableau
     {
@@ -38,7 +40,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @return Utilisateur|null
+     * Fonction permettant de récupérer l'utilisateur propriétaire du tableau
+     * @return Utilisateur|null L'utilisateur propriétaire du tableau
      */
     public function getUtilisateur(): ?Utilisateur
     {
@@ -46,7 +49,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @param Utilisateur $utilisateur
+     * Fonction permettant de définir l'utilisateur propriétaire du tableau
+     * @param Utilisateur $utilisateur L'utilisateur propriétaire du tableau
      * @return void
      */
     public function setUtilisateur(Utilisateur $utilisateur): void
@@ -55,7 +59,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @return int|null
+     * Fonction permettant de récupérer l'id du tableau
+     * @return int|null L'id du tableau
      */
     public function getIdTableau(): ?int
     {
@@ -63,7 +68,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @param int|null $idTableau
+     * Fonction permettant de définir l'id du tableau
+     * @param int|null $idTableau L'id du tableau
      * @return void
      */
     public function setIdTableau(?int $idTableau): void
@@ -72,7 +78,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le titre du tableau
+     * @return string|null Le titre du tableau
      */
     public function getTitreTableau(): ?string
     {
@@ -80,7 +87,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @param string|null $titreTableau
+     * Fonction permettant de définir le titre du tableau
+     * @param string|null $titreTableau Le titre du tableau
      * @return void
      */
     public function setTitreTableau(?string $titreTableau): void
@@ -89,7 +97,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @return string|null
+     * Fonction permettant de récupérer le code du tableau
+     * @return string|null Le code du tableau
      */
     public function getCodeTableau(): ?string
     {
@@ -97,7 +106,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @param string|null $codeTableau
+     * Fonction permettant de définir le code du tableau
+     * @param string|null $codeTableau Le code du tableau
      * @return void
      */
     public function setCodeTableau(?string $codeTableau): void
@@ -106,7 +116,8 @@ class Tableau extends AbstractDataObject
     }
 
     /**
-     * @return array
+     * Fonction permettant de formater l'objet en tableau
+     * @return array L'objet formaté en tableau
      */
     public function formatTableau(): array
     {
