@@ -213,7 +213,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         });
 
         if (empty($filtredUtilisateurs)) {
-            //TODO le message flash est censé était en warning de base mais c'est maintenant un danger
             throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.", $tableau, Response::HTTP_CONFLICT);
         }
         return $filtredUtilisateurs;
@@ -264,29 +263,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $utilisateur->setMdpHache(MotDePasse::hacher($attributs["mdp"]));
 
         $this->utilisateurRepository->mettreAJour($utilisateur);
-        /*
-        $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
-        foreach ($cartes as $carte) {
-            $participants = $this->carteRepository->getAffectationsCarte($carte);
-            $participants = array_filter($participants, function ($u) use ($login) {
-                return $u->getLogin() !== $login;
-            });
-            $participants[] = $utilisateur;
-            $this->carteRepository->setAffectationsCarte($participants, $carte);
-            $this->carteRepository->mettreAJour($carte);
-        }
 
-        $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
-        foreach ($tableaux as $tableau) {
-            $participants = $this->tableauRepository->getParticipants($tableau);
-            $participants = array_filter($participants, function ($u) use ($login) {
-                return $u->getLogin() !== $login;
-            });
-            $participants[] = $utilisateur;
-            $this->tableauRepository->setParticipants($participants, $tableau);
-            $this->tableauRepository->mettreAJour($tableau);
-        }
-        */
 
 
     }
