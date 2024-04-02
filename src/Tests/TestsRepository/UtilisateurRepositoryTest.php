@@ -50,11 +50,11 @@ class UtilisateurRepositoryTest extends TestCase
     public function testRecupererUtilisateursParEmailExistant(){
         $fakeUtilisateur= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $array = [$fakeUtilisateur];
-        $this->assertEquals($array, self::$utilisateurRepository->recupererUtilisateursParEmail('bob.bobby@bob.com'));
+        $this->assertEquals($fakeUtilisateur, self::$utilisateurRepository->recupererUtilisateursParEmail('bob.bobby@bob.com'));
     }
 
     public function testRecupererUtilisateursParEmailNonExistant(){
-        $this->assertEquals([], self::$utilisateurRepository->recupererUtilisateursParEmail('george.george@george.com'));
+        $this->assertEquals(null, self::$utilisateurRepository->recupererUtilisateursParEmail('george.george@george.com'));
     }
 
     /**Test recupererUtilisateursOrderedPrenomNom retourne array*/
