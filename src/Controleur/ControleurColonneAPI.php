@@ -47,7 +47,7 @@ class ControleurColonneAPI
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceColonne->isSetNomColonne($nomColonne);
             $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
-            $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
+            $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne,$ordre);
             //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             return new JsonResponse($colonne, 200);
         } catch (ServiceException $e) {
