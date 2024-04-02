@@ -178,7 +178,8 @@ class ServiceTableau implements ServiceTableauInterface
         $colonne = new Colonne(
             $idColonne1,
             $nomColonne1,
-            $tableau
+            $tableau,
+            0
         );
 
         $carte1 = new Carte(
