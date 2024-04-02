@@ -185,6 +185,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
             throw new MiseAJourException("Email non valide", "warning", 404);
         }
+        $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
+        if($checkUtilisateur){
+            throw new MiseAJourException("L'email est déjà utilisé", "warning", Response::HTTP_CONFLICT);
+        }
 
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
             throw new MiseAJourException("Ancien mot de passe erroné.", "warning", Response::HTTP_CONFLICT);
@@ -278,6 +282,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $checkUtilisateur = $this->utilisateurRepository->recupererParClePrimaire($attributs["login"]);
         if ($checkUtilisateur) {
             throw new ServiceException("Le login est déjà pris", Response::HTTP_FORBIDDEN);
+        }
+        $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
+        if ($checkUtilisateur) {
+            throw new ServiceException("L'email est déjà utilisé", Response::HTTP_FORBIDDEN);
         }
 
         $mdpHache = MotDePasse::hacher($attributs["mdp"]);
