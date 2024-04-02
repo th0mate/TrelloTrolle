@@ -334,6 +334,10 @@ class ControleurUtilisateur extends ControleurGenerique
             if (!$this->connexionUtilisateur->estConnecte()) {
                 $this->serviceUtilisateur->verifNonce($login, $nonce);
             }
+            if ($this->connexionUtilisateur->getLoginUtilisateurConnecte()!=$login){
+                MessageFlash::ajouter("warning","Ce login n'est pas le votre" );
+                return self::redirection("afficherFormulaireConnexion");
+            }
             return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig', ["login" => $login]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());

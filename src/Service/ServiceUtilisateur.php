@@ -111,7 +111,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      * @return AbstractDataObject L'utilisateur
      * @throws TableauException Erreur si l'utilisateur n'existe pas
      */
-    public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject
+    public function utilisateurExistant($login, ?Tableau $tableau): AbstractDataObject
     {
         $utilisateur = $this->recupererUtilisateurParCle($login);
         if (!$utilisateur) {
