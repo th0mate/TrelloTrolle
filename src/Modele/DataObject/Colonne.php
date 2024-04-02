@@ -115,6 +115,7 @@ class Colonne extends AbstractDataObject implements \JsonSerializable
             "idcolonneTag" => $this->idColonne,
             "titrecolonneTag" => $this->titreColonne,
             "idtableauTag" => $this->tableau->getIdTableau(),
+            "ordreTag" => $this->ordre,
         );
     }
 

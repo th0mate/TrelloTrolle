@@ -33,8 +33,8 @@ let formulaireAjoutColonne = reactive({
             newElement.setAttribute('draggable', 'true');
             newElement.setAttribute('data-columns', this.idColonne);
 
-            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${escapeHtml(this.titre)}</h5><div class="bullets"><img src="${encodeURIComponent(bulletsImageUrl)}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
-                <img src="${encodeURIComponent(plusImageUrl)}" alt="">
+            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${escapeHtml(this.titre)}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
+                <img src="${plusImageUrl}" alt="">
                 Ajouter une carte
             </div>`;
             let ul = document.querySelector('.ul');
@@ -55,6 +55,8 @@ let formulaireAjoutColonne = reactive({
                     nomColonne: escapeHtml(this.titre)
                 })
             });
+
+            console.log(await response.json());
 
             if (response.status !== 200) {
                 afficherMessageFlash("Erreur lors de la création de la colonne dans l'API", "danger");
