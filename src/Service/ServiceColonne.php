@@ -21,7 +21,8 @@ class ServiceColonne implements ServiceColonneInterface
 
 
     /**
-     * @param ColonneRepositoryInterface $colonneRepository
+     * ServiceColonne constructor.
+     * @param ColonneRepositoryInterface $colonneRepository Repository des colonnes
      */
     public function __construct(private ColonneRepositoryInterface $colonneRepository)
     {
@@ -29,9 +30,10 @@ class ServiceColonne implements ServiceColonneInterface
 
 
     /**
-     * @param $idColonne
-     * @return Colonne
-     * @throws ServiceException
+     * Fonction permettant de récupérer une colonne par son id
+     * @param $idColonne L'id de la colonne à récupérer
+     * @return Colonne La colonne récupérée
+     * @throws ServiceException Si l'identifiant de la colonne est manquant ou si la colonne est inexistante
      */
     public function recupererColonne($idColonne): Colonne
     {
@@ -50,8 +52,9 @@ class ServiceColonne implements ServiceColonneInterface
     }
 
     /**
-     * @param $idTableau
-     * @return array
+     * Fonction permettant de récupérer les colonnes d'un tableau
+     * @param $idTableau L'id du tableau dont on veut récupérer les colonnes
+     * @return array Les colonnes du tableau
      */
     public function recupererColonnesTableau($idTableau): array
     {
@@ -60,9 +63,10 @@ class ServiceColonne implements ServiceColonneInterface
 
 
     /**
-     * @param Tableau $tableau
-     * @param $idColonne
-     * @return array
+     * Fonction permettant de supprimer une colonne
+     * @param Tableau $tableau Le tableau dont on veut supprimer la colonne
+     * @param $idColonne L'id de la colonne à supprimer
+     * @return array Les colonnes du tableau après suppression de la colonne donnée
      */
     public function supprimerColonne(Tableau $tableau, $idColonne): array
     {
@@ -73,9 +77,10 @@ class ServiceColonne implements ServiceColonneInterface
 
 
     /**
-     * @param $nomColonne
+     * Fonction permettant de vérifier si une colonne est null via son nom
+     * @param $nomColonne, Le nom de la colonne à vérifier
      * @return void
-     * @throws CreationException
+     * @throws CreationException Si le nom de la colonne est manquant
      */
     public function isSetNomColonne($nomColonne): void
     {
@@ -86,11 +91,12 @@ class ServiceColonne implements ServiceColonneInterface
 
 
     /**
-     * @param $idColonne
-     * @param $nomColonne
-     * @return Colonne
-     * @throws CreationException
-     * @throws ServiceException
+     * Fonction permettant de récupérer une colonne par son id et son nom
+     * @param $idColonne L'id de la colonne à récupérer
+     * @param $nomColonne, Le nom de la colonne à récupérer
+     * @return Colonne La colonne récupérée
+     * @throws CreationException Si le nom de la colonne est manquant
+     * @throws ServiceException Si l'identifiant de la colonne est manquant ou si la colonne est inexistante
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne
     {
@@ -100,9 +106,10 @@ class ServiceColonne implements ServiceColonneInterface
     }
 
     /**
-     * @param Tableau $tableau
-     * @param $nomColonne
-     * @return Colonne
+     * Fonction permettant de créer une colonne
+     * @param Tableau $tableau Le tableau sur lequel on veut créer la colonne
+     * @param $nomColonne, Le nom de la colonne à créer
+     * @return Colonne La colonne créée
      */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
@@ -116,8 +123,9 @@ class ServiceColonne implements ServiceColonneInterface
     }
 
     /**
-     * @param Colonne $colonne
-     * @return Colonne
+     * Fonction permettant de mettre à jour une colonne
+     * @param Colonne $colonne La colonne à mettre à jour
+     * @return Colonne La colonne mise à jour
      */
     public function miseAJourColonne(Colonne $colonne): Colonne
     {
@@ -126,7 +134,8 @@ class ServiceColonne implements ServiceColonneInterface
     }
 
     /**
-     * @return int
+     * Fonction permettant de récupérer le prochain identifiant de colonne
+     * @return int L'identifiant de la prochaine colonne
      */
     public function getNextIdColonne(): int
     {
@@ -134,8 +143,9 @@ class ServiceColonne implements ServiceColonneInterface
     }
 
     /**
-     * @param $idColonne1
-     * @param $idColonne2
+     * Fonction permettant d'inverser l'ordre de deux colonnes
+     * @param $idColonne1 L'id de la première colonne
+     * @param $idColonne2 L'id de la deuxième colonne
      * @return void
      */
     public function inverserOrdreColonnes($idColonne1, $idColonne2): void

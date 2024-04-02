@@ -7,14 +7,16 @@ use Exception;
 class TableauException extends ServiceException
 {
     /**
+     * Variable contenant le tableau
      * @var Tableau
      */
     private Tableau $tableau;
 
     /**
-     * @param $message
-     * @param $tableau
-     * @param $code
+     * TableauException constructor.
+     * @param $message, Le message d'erreur
+     * @param $tableau, Le tableau
+     * @param $code, Le code d'erreur
      */
     public function __construct($message, $tableau, $code)
     {
@@ -24,7 +26,8 @@ class TableauException extends ServiceException
 
 
     /**
-     * @return Tableau
+     * Fonction permettant de récupérer le tableau
+     * @return Tableau Le tableau récupéré
      */
     public function getTableau(): Tableau
     {

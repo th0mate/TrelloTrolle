@@ -18,76 +18,81 @@ use App\Trellotrolle\Service\Exception\TableauException;
 interface ServiceCarteInterface
 {
     /**
-     * récupére une carte grâce à l'id passé en paramètre
-     * @param int|null $idCarte l'id de la carte à récuperer
-     * @return Carte La carte récupéré <code>non null</code> grâce à l'id
-     * @throws ServiceException si l'id de la carte est<code>null</code> ou si elle ne correspond à aucune carte existante
+     * Fonction permettant de récupérer une carte par son id
+     * @param int|null $idCarte L'id de la carte à récupérer
+     * @return Carte La carte récupérée
+     * @throws ServiceException
      */
 
     public function recupererCarte(?int $idCarte): Carte;
 
     /**
-     * Supprime la carte dont l'id est donné en paramètre
-     * @param int $idCarte l'id de la carte à supprimer
-     * @return array
+     * Fonction permettant de supprimer une carte d'un tableau
+     * @param int $idCarte  L'id de la carte à supprimer
+     * @return array  Les cartes du tableau après suppression de la carte donnée
      */
     public function supprimerCarte(Tableau $tableau, int $idCarte): array;
 
     /**
-     * Créer une carte
-     * @param Tableau $tableau le tableau dans lequel la carte est créer
-     * @param array $attributs les attributs de la carte à creer (titreCarte,descriptifCarte,couleurCarte,affectationsCarte)
-     * @param Colonne $colonne la colonne dans laquel la carte est créer
-     * @return Carte la carte créé
-     * @throws CreationException si un membre à affecter n'existe pas ou s'il n'est pas collaborateur du tableau
+     * Fonction permettant de créer une carte
+     * @param Tableau $tableau Le tableau sur lequel on veut créer la carte
+     * @param array $attributs Les attributs de la carte
+     * @param Colonne $colonne La colonne dans laquelle on veut créer la carte
+     * @return Carte La carte créée
+     * @throws CreationException
      */
     public function creerCarte(Tableau $tableau, array $attributs, Colonne $colonne): Carte;
 
 
     /**
-     * Vérifie qu'il n'y ai pas un attribut qui soit <code>null</code>
-     * @param array $attributs un tableau contenant les attributs à vérifier
+     * Fonction permettant de récupérer les attributs d'une carte
+     * @param array $attributs Les attributs de la carte à récupérer
      * @return void
-     * @throws CreationException si l'un des attributs est <code>null</code>
+     * @throws CreationException
      */
     public function recupererAttributs(array $attributs): void;
 
 
     /**
-     * @param Tableau $tableau
-     * @param $attributs
-     * @param Carte $carte
-     * @param Colonne $colonne
-     * @return Carte
+     * Fonction permettant de mettre à jour une carte
+     * @param Tableau $tableau Le tableau sur lequel on veut mettre à jour la carte
+     * @param $attributs, Les attributs de la carte
+     * @param Carte $carte La carte à mettre à jour
+     * @param Colonne $colonne La colonne dans laquelle on veut mettre à jour la carte
+     * @return Carte La carte mise à jour
      */
     public function miseAJourCarte(Tableau $tableau, $attributs, Carte $carte, Colonne $colonne): Carte;
 
 
 
     /**
-     * @param $idCarte
-     * @param Colonne $colonne
-     * @param $attributs
-     * @return Carte
+     * Fonction permettant de vérifier si une carte peut être mise à jour
+     * @param $idCarte L'id de la carte à mettre à jour
+     * @param Colonne $colonne La colonne dans laquelle on veut mettre à jour la carte
+     * @param $attributs, Les attributs de la carte
+     * @return Carte La carte pouvant être mise à jour
      */
     public function verificationsMiseAJourCarte(int $idCarte, Colonne $colonne, $attributs): Carte;
 
     /**
-     * @param $tableau
-     * @param $utilisateur
+     * Fonction permettant de mettre à jour les membres d'une carte
+     * @param Tableau $tableau  Le tableau sur lequel on veut mettre à jour les membres de la carte
+     * @param AbstractDataObject $utilisateur  L'utilisateur à mettre à jour
      * @return mixed
      */
     public function miseAJourCarteMembre(Tableau $tableau, AbstractDataObject $utilisateur): void;
 
     /**
+     * Fonction permettant de récupérer les membres d'une carte
      * @return mixed
      */
     public function getNextIdCarte(): int;
 
 
     /**
-     * @param Carte $carte
-     * @param Colonne $colonne
+     * Fonction permettant de déplacer une carte d'une colonne à une autre
+     * @param Carte $carte La carte à déplacer
+     * @param Colonne $colonne La colonne dans laquelle on veut déplacer la carte
      * @return void
      */
     public function deplacerCarte(Carte $carte,Colonne $colonne): void;

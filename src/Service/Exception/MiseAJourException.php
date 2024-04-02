@@ -6,14 +6,16 @@ class MiseAJourException extends ServiceException
 {
 
     /**
+     * Le type de message flash
      * @var
      */
     private $typeMessageFlash;
 
     /**
-     * @param string $message
-     * @param $typeMessageFlash
-     * @param $code
+     * MiseAJourException constructor.
+     * @param string $message Le message d'erreur
+     * @param $typeMessageFlash, Le type de message flash
+     * @param $code, Le code d'erreur
      */
     public function __construct(string $message, $typeMessageFlash, $code)
     {
@@ -22,6 +24,7 @@ class MiseAJourException extends ServiceException
     }
 
     /**
+     * Fonction permettant de récupérer le type de message flash
      * @return mixed
      */
     public function getTypeMessageFlash()

@@ -20,9 +20,10 @@ class ServiceConnexion implements ServiceConnexionInterface
 
 
     /**
-     * @param UtilisateurRepositoryInterface $utilisateurRepository
-     * @param ConnexionUtilisateurInterface $connexionUtilisateurJWT
-     * @param ConnexionUtilisateurInterface $connexionUtilisateurSession
+     * ServiceConnexion constructor.
+     * @param UtilisateurRepositoryInterface $utilisateurRepository Repository des utilisateurs
+     * @param ConnexionUtilisateurInterface $connexionUtilisateurJWT Connexion utilisateur côté JWT
+     * @param ConnexionUtilisateurInterface $connexionUtilisateurSession Connexion utilisateur côté session
      */
     public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
                                 private ConnexionUtilisateurInterface  $connexionUtilisateurJWT,
@@ -32,8 +33,9 @@ class ServiceConnexion implements ServiceConnexionInterface
 
 
     /**
+     * Fonction permettant de vérifier si l'utilisateur n'est pas connecté
      * @return void
-     * @throws ConnexionException
+     * @throws ConnexionException Si l'utilisateur n'est pas connecté
      */
     public function pasConnecter()
     {
@@ -44,8 +46,9 @@ class ServiceConnexion implements ServiceConnexionInterface
 
 
     /**
+     * Fonction permettant de vérifier si l'utilisateur est déjà connecté
      * @return void
-     * @throws ConnexionException
+     * @throws ConnexionException Si l'utilisateur est déjà connecté
      */
     public function dejaConnecter()
     {
@@ -56,8 +59,9 @@ class ServiceConnexion implements ServiceConnexionInterface
 
 
     /**
+     * Fonction permettant de déconnecter un utilisateur
      * @return void
-     * @throws ConnexionException
+     * @throws ConnexionException Si l'utilisateur n'est pas déjà connecté
      */
     public function deconnecter()
     {
@@ -70,10 +74,12 @@ class ServiceConnexion implements ServiceConnexionInterface
 
 
     /**
-     * @param $login
-     * @param $mdp
+     * Fonction permettant de connecter un utilisateur
+     * @param $login, Le login de l'utilisateur
+     * @param $mdp, Le mot de passe de l'utilisateur
      * @return void
-     * @throws ServiceException
+     * @throws ServiceException Si le login ou le mot de passe est manquant
+     * ou si le login est inconnu ou si le mot de passe est incorrect
      */
     public function connecter($login, $mdp)
     {
