@@ -58,7 +58,7 @@ class ColonneRepositoryTest extends TestCase
                                                               VALUES (2, 'colonne2', 1,1)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                               colonne (idcolonne,titrecolonne,idtableau,ordre) 
-                                                              VALUES (3, 'colonne3', 3,2)");
+                                                              VALUES (3, 'colonne3', 3,0)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                               participant (login, idTableau)
                                                               VALUES ('bob69',3)");
@@ -115,17 +115,15 @@ class ColonneRepositoryTest extends TestCase
 
     /**Test inverserOrdreColonnes prends : idColonne, idColonne  */
 
-    /*public function testInverserOrdreColonnes2(){
+    public function testInverserOrdreColonnes2(){
         self::$colonneRepository->inverserOrdreColonnes(1,2);
             $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
             $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-            $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
-            $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
-        $this->assertEqualsCanonicalizing([$fakeColonne2,$fakeColonne1],self::$colonneRepository->recupererColonnesTableau(1));
+            $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,1);
+            $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,0);
+        $this->assertEqualsCanonicalizing([$fakeColonne1,$fakeColonne2],self::$colonneRepository->recupererColonnesTableau(1));
     }
-    public function testInverserOrdreColonnesPasMemeTableau(){
-        //TODO
-    }*/
+
 
     /**Test getAllFromColonne prends idColonne retourne array*/
 
@@ -146,7 +144,7 @@ class ColonneRepositoryTest extends TestCase
         $fakeTab2 = new Tableau(3, 'test3', 'test3',$fakeUser2);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1,0);
         $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1,1);
-        $fakeColonne3= new Colonne(3, 'colonne3',$fakeTab2,2);
+        $fakeColonne3= new Colonne(3, 'colonne3',$fakeTab2,0);
         $this->assertEquals([$fakeColonne1,$fakeColonne2,$fakeColonne3], self::$colonneRepository->recuperer());
     }
 

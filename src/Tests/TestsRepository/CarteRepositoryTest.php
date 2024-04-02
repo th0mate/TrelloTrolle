@@ -40,8 +40,8 @@ class CarteRepositoryTest extends TestCase
                                                               tableau (idtableau,codetableau,titretableau,login) 
                                                               VALUES (1, 'test', 'test','bob69')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              colonne (idcolonne,titrecolonne,idtableau) 
-                                                              VALUES (2, 'test2', 1)");
+                                                              colonne (idcolonne,titrecolonne,idtableau,ordre) 
+                                                              VALUES (2, 'test2', 1,0)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                               carte (idcarte,titrecarte,descriptifcarte,couleurcarte,idcolonne) 
                                                               VALUES (3, 'carte1', 'carte1', 'c est une carte1', 2)");
