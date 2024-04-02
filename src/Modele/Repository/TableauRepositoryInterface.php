@@ -57,7 +57,7 @@ interface TableauRepositoryInterface
 
     /**
      * Fonction permettant de vérifier si un utilisateur est propriétaire d'un tableau
-     * @param $login Le login de l'utilisateur
+     * @param $login ,Le login de l'utilisateur
      * @param Tableau $tableau Le tableau
      * @return bool Vrai si l'utilisateur est propriétaire, faux sinon
      */

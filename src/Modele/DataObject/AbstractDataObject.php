@@ -7,7 +7,7 @@ abstract class AbstractDataObject
 
     /**
      * Fonction permettant de construire un objet depuis un tableau de paramètres
-     * @return array
+     * @return array Le tableau de paramètres
      */
     public abstract function formatTableau(): array;
 
