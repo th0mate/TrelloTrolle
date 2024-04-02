@@ -226,10 +226,6 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecter();
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Formulaire de connexion",
-                "cheminVueBody" => "utilisateur/formulaireConnexion.php"
-            ]);*/
             return $this->afficherTwig("utilisateur/formulaireConnexion.html.twig");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
@@ -291,10 +287,6 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecter();
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Récupérer mon compte",
-                "cheminVueBody" => "utilisateur/resetCompte.php"
-            ]);*/
             return $this->afficherTwig('utilisateur/resetCompte.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());

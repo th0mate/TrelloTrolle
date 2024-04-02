@@ -201,7 +201,7 @@ class ServiceCarteTest extends TestCase
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
         $fakeColonne=new Colonne(1,"titre",$fakeTableau);
         $fakeCarte=new Carte(1,"titre","desc","couleur",new Colonne(2,"titre",new Tableau(2,"code","titre",$fakeUser)));
-        $this->carteRepository->method("getAllFromCartes")->willReturn($fakeCarte);
+        $this->carteRepository->method("getAllFromTable")->willReturn($fakeCarte);
         $this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
     }
 
@@ -217,7 +217,7 @@ class ServiceCarteTest extends TestCase
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
         $fakeColonne=new Colonne(1,"titre",$fakeTableau);
         $fakeCarte=new Carte(1,"titre","desc","couleur",$fakeColonne);
-        $this->carteRepository->method("getAllFromCartes")->willReturn($fakeCarte);
+        $this->carteRepository->method("getAllFromTable")->willReturn($fakeCarte);
         $carte=$this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
         self::assertEquals($fakeCarte,$carte);
 
@@ -312,6 +312,16 @@ class ServiceCarteTest extends TestCase
             self::assertEquals($fakeCarte->getTitreCarte(), $carte->getTitreCarte());
         });
         $this->serviceCarte->deplacerCarte($fakeCarte, $fakeColonne);
+    }
+
+    /** getAffectations */
+
+    public function testGetAffectations()
+    {
+        $fakeCarte=$this->createFakeCarte();
+        $this->carteRepository->method("getAffectationsCarte")->willReturn([$fakeCarte]);
+        $affectations=$this->serviceCarte->getAffectations($fakeCarte);
+        self::assertEquals([$fakeCarte],$affectations);
     }
 
     /** FONCTIONX UTILITAIRES */

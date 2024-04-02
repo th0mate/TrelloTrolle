@@ -285,7 +285,6 @@ class ServiceUtilisateurTest extends TestCase
     }
 
     /** EST PARTICIPANT */
-    //TODO utilise connexionUtilisateur
     public function testEstPasParticipant()
     {
         $this->expectException(TableauException::class);

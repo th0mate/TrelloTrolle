@@ -75,24 +75,10 @@ let utilisateurs = reactive({
         });
 
         if (response.status !== 200) {
-            console.error("Erreur lors de la suppression de l'utilisateur");
+            afficherMessageFlash("Erreur lors de la suppression de l'utilisateur du tableau", "danger")
+        } else {
+            afficherMessageFlash("Utilisateur supprimé du tableau avec succès", "success")
         }
-    },
-
-
-    /**
-     * Ajoute un utilisateur à un tableau (l'appel à la BD a déjà été fait au préalable)
-     * @param user l'utilisateur à ajouter
-     */
-    ajouterUtilisateur: function (user) {
-        let utilisateur = {};
-        utilisateur.prenom = user.prenom;
-        utilisateur.nom = user.nom;
-        utilisateur.login = user.login;
-        utilisateur.colonnes = [];
-        utilisateur.drapeau = false;
-        utilisateur = reactive(utilisateur, user.login);
-        utilisateursReactifs.push(utilisateur);
     },
 
 
@@ -138,6 +124,7 @@ let utilisateurs = reactive({
         div.style.display = 'flex';
         div.style.top = `${event.clientY}px`;
         div.style.left = `((${event.clientX})-50)px`;
+        document.querySelector('body').addEventListener('click', () => div.style.display = 'none');
         div.querySelector('span').setAttribute('data-onclick', `utilisateur.supprimerUtilisateur(${loginUtilisateur})`);
         startReactiveDom();
     },
@@ -200,7 +187,7 @@ let utilisateurs = reactive({
         });
 
         if (membresTableau.status !== 200 || proprioTableau.status !== 200) {
-            console.error("Erreur lors de la récupération des membres du tableau");
+            afficherMessageFlash("Erreur lors de la récupération des membres du tableau", "danger");
 
         } else {
             let membres = await membresTableau.json();
@@ -223,7 +210,7 @@ let utilisateurs = reactive({
                 });
 
                 if (nbCartes.status !== 200) {
-                    console.error(nbCartes.json());
+                    afficherMessageFlash("Erreur lors de la récupération des affectations de colonnes", "danger");
                 } else {
                     let nbCartesJson = await nbCartes.json();
                     listeAffectationsColonnes.push(nbCartesJson);
@@ -237,6 +224,21 @@ let utilisateurs = reactive({
                 utilisateur.login = membre.login;
                 utilisateur.colonnes = [];
                 utilisateur.drapeau = false;
+
+                if (!document.querySelector(`[data-user="${membre.login}"]`)) {
+                    if (estProprio) {
+                        document.querySelector('.invite').remove();
+                    }
+                    let html = `<span class="user" data-onhover="utilisateur.afficherContenuUtilisateur(${membre.login})" data-onrightclick="utilisateur.afficherSupprimer(${membre.login})" data-onleave="utilisateur.cacherContenuUtilisateur(${membre.login})" data-user="${membre.login}">${membre.prenom[0].toUpperCase()}${membre.nom[0].toUpperCase()}</span><div class="contenuUtilisateur ${membre.login}"></div>`;
+                    document.querySelector('.allUsers').innerHTML += html;
+
+                    if (estProprio) {
+                        document.querySelector('.allUsers').innerHTML += `<div class="invite">Partager <img src="${inviterImageUrl}" alt=""></div>`;
+                    }
+
+                    randomColorsPourUsersDifferents();
+                    startReactiveDom();
+                }
 
                 for (let affectation of listeAffectationsColonnes) {
                     if (affectation[membre.login] !== undefined) {

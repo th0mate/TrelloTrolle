@@ -184,4 +184,20 @@ class ControleurCarteAPI
         }
     }
 
+    #[Route("/api/carte/getCarte", name: "getCarteAPI", methods: "POST")]
+    public function getCarte(Request $request): Response
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idCarte = $jsondecode->idCarte ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $carte = $this->serviceCarte->recupererCarte($idCarte);
+            return new JsonResponse($carte, 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
+    }
+
+
+
 }

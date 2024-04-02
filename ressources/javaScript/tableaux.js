@@ -219,6 +219,7 @@ if (window.location.href.includes('tableau/')) {
         }
     }
 
+
     /**
      * Permet de prévenir le comportement par défaut de l'événement `dragover` et `drop` pour permettre le drop
      * @param e
@@ -330,29 +331,33 @@ if (window.location.href.includes('tableau/')) {
     /**
      * Evenement permettant de supprimer une colonne
      */
-    document.querySelector('.deleteColumn').addEventListener('click', async function () {
-        const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
-        const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
-        if (draggableElement) {
-            draggableElement.remove();
-        }
-        document.querySelector('.menuColonnes').style.display = "none";
+    if (estProprio) {
+        document.querySelector('.deleteColumn').addEventListener('click', async function () {
+            const id = document.querySelector('.menuColonnes').getAttribute('data-columns');
+            const draggableElement = document.querySelector(`.draggable[data-columns="${id}"]`);
+            if (draggableElement) {
+                draggableElement.remove();
+            }
+            document.querySelector('.menuColonnes').style.display = "none";
 
-        let response = await fetch(apiBase + '/colonne/supprimer', {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify({
-                idColonne: id
-            })
+            let response = await fetch(apiBase + '/colonne/supprimer', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    idColonne: id
+                })
+            });
+
+            if (response.status !== 200) {
+                afficherMessageFlash('Erreur lors de la suppression de la colonne.', 'danger');
+            } else {
+                afficherMessageFlash('Colonne supprimée.', 'success');
+            }
         });
-
-        if (response.status !== 200) {
-            console.error(response.error);
-        }
-    });
+    }
 
     /**
      * Evenement permettant d'afficher le formulaire de mise à jour d'une colonne
@@ -699,12 +704,14 @@ if (window.location.href.includes('tableau/')) {
     /**
      * Défini l'événement de clic pour ajouter des participants à un tableau
      */
-    document.querySelector('.invite').addEventListener('click', function () {
-        document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
-        document.querySelectorAll('.all').forEach(el => {
-            el.style.opacity = '0.5';
+    if (estProprio) {
+        document.querySelector('.invite').addEventListener('click', function () {
+            document.querySelector('.formulaireAjoutMembreTableau').style.display = "flex";
+            document.querySelectorAll('.all').forEach(el => {
+                el.style.opacity = '0.5';
+            });
         });
-    });
+    }
 
     /**
      * Défini l'événement de clic pour fermer le formulaire d'ajout de membre

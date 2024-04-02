@@ -48,7 +48,6 @@ class ControleurTableau extends ControleurGenerique
                                 private ServiceTableauInterface       $serviceTableau,
                                 private ServiceConnexionInterface     $serviceConnexion,
                                 private ServiceUtilisateurInterface   $serviceUtilisateur,
-                                private ServiceCarteInterface         $serviceCarte,
                                 private ConnexionUtilisateurInterface $connexionUtilisateur
     )
   {
@@ -79,22 +78,11 @@ class ControleurTableau extends ControleurGenerique
     #[Route('/tableau/monTableau/{codeTableau}', name: 'afficherTableau', methods: "GET")]
     public function afficherTableau($codeTableau): Response
     {
-
-        //$codeTableau = $_REQUEST["codeTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParCode($codeTableau);
             $donnes = $this->serviceTableau->recupererCartesColonnes($tableau);
             $colaborateurs = $this->serviceUtilisateur->getParticipants($tableau);
-
-            /*return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "{$tableau->getTitreTableau()}",
-                "cheminVueBody" => "tableau/tableau.php",
-                "tableau" => $tableau,
-                "colonnes" => $donnes["colonnes"],
-                "participants" => $donnes["participants"],
-                "data" => $donnes["data"],
-            ]);*/
             return $this->afficherTwig('tableau/tableau.html.twig', ["tableau" => $tableau,
                 "colonnes" => $donnes["colonnes"],
                 "participants" => $donnes["participants"],
@@ -104,8 +92,6 @@ class ControleurTableau extends ControleurGenerique
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection('accueil');
         }
-
-
     }
 
     /**
@@ -114,20 +100,13 @@ class ControleurTableau extends ControleurGenerique
      * fonction qui permet d'afficher un formulaire de mise à jour d'un tableau
      */
 
-    #[Route('/tableau/mettreAJour', name: 'afficherFormulaireMiseAJourTableau', methods: "GET")]
-    public function afficherFormulaireMiseAJourTableau(): Response
+    #[Route('/tableau/mettreAJour/{idTableau}', name: 'afficherFormulaireMiseAJourTableau', methods: "GET")]
+    public function afficherFormulaireMiseAJourTableau($idTableau): Response
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
-            /*return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Modification d'un tableau",
-                "cheminVueBody" => "tableau/formulaireMiseAJourTableau.php",
-                "idTableau" => $_REQUEST["idTableau"],
-                "nomTableau" => $tableau->getTitreTableau()
-            ]);*/
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             return $this->afficherTwig('tableau/formulaireMiseAJourTableau.html.twig', [
                 "nomTableau" => $tableau->getTitreTableau()
             ]);
@@ -152,10 +131,6 @@ class ControleurTableau extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->pasConnecter();
-            /*return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Ajout d'un tableau",
-                "cheminVueBody" => "tableau/formulaireCreationTableau.php",
-            ]);*/
             return $this->afficherTwig('tableau/formulaireCreationTableau.html.twig');
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -175,7 +150,6 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->creerTableau($nomTableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             return ControleurTableau::redirection("afficherTableau", ["codeTableau" => $tableau->getCodeTableau()]);
-
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
         } catch (ServiceException $e) {
@@ -189,16 +163,15 @@ class ControleurTableau extends ControleurGenerique
      *
      * fonction qui permet de mettre à jour un tableau
      */
-    #[Route('/tableau/mettreAJour', name: 'mettreAJourTableau', methods: "POST")]
-    public function mettreAJourTableau(): Response
+    #[Route('/tableau/mettreAJour/{idTableau}', name: 'mettreAJourTableau', methods: "POST")]
+    public function mettreAJourTableau($idTableau): Response
     {
-        $idTableau = $_REQUEST["idTableau"] ?? null;
         $nomTableau = $_REQUEST["nomTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceTableau->isNotNullNomTableau($nomTableau, $tableau);
-            $estProprio = $this->serviceTableau->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $estProprio = $this->serviceTableau->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             if (!$estProprio) {
                 MessageFlash::ajouter("danger", "Vous n'avez pas de droits d'éditions sur ce tableau");
             } else {
@@ -312,16 +285,12 @@ class ControleurTableau extends ControleurGenerique
      */
 
     #[Route('/tableau', name: 'afficherListeMesTableaux', methods: "GET")]
+    #[Route('/tableaux', name: 'afficherListeMesTableaux', methods: "GET")]
     public function afficherListeMesTableaux(): Response
     {
         try {
             $this->serviceConnexion->pasConnecter();
             $tableaux = $this->serviceTableau->recupererTableauEstMembre($this->connexionUtilisateur->getLoginUtilisateurConnecte());
-            /*return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Liste des tableaux de $login",
-                "cheminVueBody" => "tableau/listeTableauxUtilisateur.php",
-                "tableaux" => $tableaux
-            ]);*/
             return $this->afficherTwig('tableau/listeTableauxUtilisateur.html.twig', ["tableaux" => $tableaux]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -335,10 +304,9 @@ class ControleurTableau extends ControleurGenerique
      * fonction qui permet de quitter un tableau via son id
      */
 
-    #[Route('/{idTableau}/quitter', name: 'quitterTableau', methods: "GET")]
+    #[Route('tableau/quitter/{idTableau}', name: 'quitterTableau', methods: "GET")]
     public function quitterTableau($idTableau): Response
     {
-        //$idTableau = $_REQUEST["idTableau"] ?? null;
         try {
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
@@ -360,7 +328,7 @@ class ControleurTableau extends ControleurGenerique
      *
      * fonction qui permet de supprimer un tableau via son id
      */
-    #[Route('/{idTableau}/suppression', name: 'supprimerTableau', methods: "GET")]
+    #[Route('tableau/suppression/{idTableau}', name: 'supprimerTableau', methods: "GET")]
     public function supprimerTableau($idTableau): Response
     {
         try {
