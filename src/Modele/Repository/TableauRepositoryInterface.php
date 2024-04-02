@@ -9,81 +9,94 @@ use App\Trellotrolle\Modele\DataObject\Utilisateur;
 interface TableauRepositoryInterface
 {
     /**
-     * @param string $login
-     * @return array
+     * Fonction permettant de récupérer tous les tableaux d'un utilisateur
+     * @param string $login   Le login de l'utilisateur
+     * @return array Les tableaux récupérés
      */
     public function recupererTableauxUtilisateur(string $login): array;
 
     /**
-     * @param string $codeTableau
-     * @return AbstractDataObject|null
+     * Fonction permettant de récupérer un tableau en fonction de son code
+     * @param string $codeTableau Le code du tableau
+     * @return AbstractDataObject|null Le tableau récupéré
      */
     public function recupererParCodeTableau(string $codeTableau): ?AbstractDataObject;
 
     /**
-     * @return Tableau[]
+     * Fonction permettant de récupérer tous les tableaux où un utilisateur est membre
+     * @return Tableau[]  Les tableaux récupérés
      */
     public function recupererTableauxOuUtilisateurEstMembre(string $login): array;
 
     /**
-     * @return Tableau[]
+     * Fonction permettant de récupérer le prochain id de tableau
+     * @return Tableau[] Les tableaux récupérés
      */
     public function recupererTableauxParticipeUtilisateur(string $login): array;
 
     /**
-     * @return int
+     * Fonction permettant de récupérer le prochain id de tableau
+     * @return int L'id du prochain tableau
      */
     public function getNextIdTableau(): int;
 
     /**
-     * @param string $login
-     * @return int
+     * Fonction permettant de récupérer le nombre de tableaux total d'un utilisateur
+     * @param string $login Le login de l'utilisateur
+     * @return int Le nombre de tableaux total de l'utilisateur
      */
     public function getNombreTableauxTotalUtilisateur(string $login): int;
 
     /**
-     * @param string $login
-     * @param Tableau $tableau
-     * @return bool
+     * Fonction permettant de vérifier si un utilisateur est participant à un tableau
+     * @param string $login Le login de l'utilisateur
+     * @param Tableau $tableau Le tableau
+     * @return bool Vrai si l'utilisateur est participant, faux sinon
      */
     public function estParticipant(string $login, Tableau $tableau): bool;
 
     /**
-     * @param $login
-     * @param Tableau $tableau
-     * @return bool
+     * Fonction permettant de vérifier si un utilisateur est propriétaire d'un tableau
+     * @param $login Le login de l'utilisateur
+     * @param Tableau $tableau Le tableau
+     * @return bool Vrai si l'utilisateur est propriétaire, faux sinon
      */
     public function estProprietaire($login, Tableau $tableau): bool;
 
     /**
-     * @param string $login
-     * @param Tableau $tableau
-     * @return bool
+     * Fonction permettant de vérifier si un utilisateur est participant ou propriétaire d'un tableau
+     * @param string $login Le login de l'utilisateur
+     * @param Tableau $tableau Le tableau
+     * @return bool Vrai si l'utilisateur est participant ou propriétaire, faux sinon
      */
     public function estParticipantOuProprietaire(string $login, Tableau $tableau): bool;
 
     /**
-     * @param Tableau $tableau
-     * @return array|null
+     * Fonction permettant de récupérer les participants d'un tableau
+     * @param Tableau $tableau Le tableau
+     * @return array|null Les participants du tableau
      */
     public function getParticipants(Tableau $tableau): ?array;
 
     /**
-     * @param array|null $participants
-     * @param Tableau $tableau
+     * Fonction permettant de mettre à jour les participants d'un tableau
+     * @param array|null $participants Les participants du tableau
+     * @param Tableau $tableau Le tableau
      * @return void
      */
     public function setParticipants(?array $participants, Tableau $tableau): void;
 
     /**
-     * @param Tableau $tableau
-     * @return Utilisateur
+     * Fonction permettant de récupérer le propriétaire d'un tableau
+     * @param Tableau $tableau Le tableau
+     * @return Utilisateur Le propriétaire du tableau
      */
     public function getProprietaire(Tableau $tableau) : Utilisateur;
 
     /**
-     * @param int $idTableau
-     * @return array
+     * FOnction permettant d'avoir les attributs d'un tableau
+     * @param int $idTableau L'id du tableau
+     * @return array Les attributs du tableau
      */
     public function getAllFromTableau(int $idTableau): array;
 

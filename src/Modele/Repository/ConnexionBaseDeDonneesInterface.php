@@ -7,7 +7,8 @@ use PDO;
 interface ConnexionBaseDeDonneesInterface
 {
     /**
-     * @return PDO
+     * Fonction permettant de récupérer le PDO
+     * @return PDO le PDO
      */
     public function getPdo(): PDO;
 }

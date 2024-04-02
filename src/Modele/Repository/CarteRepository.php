@@ -12,7 +12,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
 {
 
     /**
-     * @return string
+     * Fonction permettant de récupérer le nom de la table
+     * @return string Le nom de la table
      */
     protected function getNomTable(): string
     {
@@ -20,7 +21,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @return string
+     * Fonction permettant de récupérer le nom de la clé primaire
+     * @return string  Le nom de la clé primaire
      */
     protected function getNomCle(): string
     {
@@ -28,7 +30,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @return string[]
+     * Fonction permettant de récupérer les noms des colonnes
+     * @return string[] Les noms des colonnes
      */
     protected function getNomsColonnes(): array
     {
@@ -38,7 +41,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param array $objetFormatTableau
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
      * @return Carte
      */
     protected function construireDepuisTableau(array $objetFormatTableau): Carte
@@ -47,7 +51,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param int $idcolonne
+     * Fonction permettant de récupérer toutes les cartes d'une colonne
+     * @param int $idcolonne L'id de la colonne
      * @return array
      */
     public function recupererCartesColonne(int $idcolonne): array {
@@ -55,8 +60,9 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param int $idTableau
-     * @return array
+     * Fonction permettant de récupérer toutes les cartes d'un tableau
+     * @param int $idTableau L'id du tableau
+     * @return array Les cartes récupérées
      */
     public function recupererCartesTableau(int $idTableau): array {
         $sql = "SELECT {$this->getNomCle()}
@@ -73,7 +79,8 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @return Carte[]
+     * Fonction permettant de récupérer toutes les cartes d'un utilisateur
+     * @return Carte[] Les cartes récupérées
      */
     public function recupererCartesUtilisateur(string $login): array
     {
@@ -91,8 +98,9 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param string $login
-     * @return int
+     * Fonction permettant de récupérer le nombre de cartes total d'un utilisateur
+     * @param string $login Le login de l'utilisateur
+     * @return int Le nombre de cartes de l'utilisateur
      */
     public function getNombreCartesTotalUtilisateur(string $login) : int {
         $query = "SELECT COUNT(*) FROM {$this->getNomTable()} c 
@@ -105,15 +113,17 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @return int
+     *  Fonction permettant de récupérer l'id de la prochaine carte
+     * @return int L'id de la prochaine carte
      */
     public function getNextIdCarte() : int {
         return $this->getNextId("idcarte");
     }
 
     /**
-     * @param Carte $carte
-     * @return array|null
+     * Fonction permettant de récupérer les affectations d'une carte
+     * @param Carte $carte La carte
+     * @return array|null Les affectations récupérées
      */
     public function getAffectationsCarte(Carte $carte): ?array
     {
@@ -135,8 +145,9 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param array|null $affectationsCarte
-     * @param Carte $carte
+     * Fonction permettant de mettre à jour les affectations d'une carte
+     * @param array|null $affectationsCarte Les affectations
+     * @param Carte $carte La carte
      * @return void
      */
     public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void
@@ -152,8 +163,9 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
     }
 
     /**
-     * @param int $idCarte
-     * @return Carte
+     * Fonction permettant de récupérer une carte en fonction de son id
+     * @param int $idCarte L'id de la carte
+     * @return Carte|null La carte récupérée
      */
     public function getAllFromTable(int|string $idCle): ?Carte
    {

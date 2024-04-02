@@ -10,6 +10,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
 {
 
     /**
+     * Fonction permettant de récupérer le nom de la table
      * @return string
      */
     protected function getNomTable(): string
@@ -18,6 +19,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
     /**
+     * Fonction permettant de récupérer le nom de la clé primaire
      * @return string
      */
     protected function getNomCle(): string
@@ -26,7 +28,8 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
     /**
-     * @return string[]
+     * Fonction permettant de récupérer les noms des colonnes
+     * @return string[] Les noms des colonnes
      */
     protected function getNomsColonnes(): array
     {
@@ -34,8 +37,9 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
     /**
-     * @param array $objetFormatTableau
-     * @return AbstractDataObject
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return AbstractDataObject L'objet construit
      */
     protected function construireDepuisTableau(array $objetFormatTableau): Utilisateur
      {
@@ -44,8 +48,9 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
 
 
     /**
-     * @param string $email
-     * @return array
+     * Fonction permettant de récupérer un utilisateur en fonction de son email
+     * @param string $email L'email de l'utilisateur
+     * @return array Les utilisateurs récupérés
      */
     public function recupererUtilisateursParEmail(string $email): array
     {
@@ -53,7 +58,8 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
     /**
-     * @return array
+     * Fonction permettant de récupérer un utilisateur en fonction prenom et nom
+     * @return array Les utilisateurs récupérés
      */
     public function recupererUtilisateursOrderedPrenomNom(): array
     {
@@ -61,8 +67,9 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
     /**
-     * @param $recherche
-     * @return array
+     * Fonction permettant de récupérer un utilisateur en fonction d'une recherche
+     * @param $recherche , La recherche
+     * @return array Les utilisateurs récupérés
      */
     public function recherche($recherche): array
     {
@@ -79,6 +86,11 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction de sa clé primaire
+     * @param int|string $idCle La clé primaire
+     * @return Utilisateur|null L'utilisateur récupéré
+     */
     public function getAllFromTable(int|string $idCle): ?Utilisateur
     {
         $query = "SELECT * FROM {$this->getNomTable()}
