@@ -5,21 +5,11 @@
 html {
     height: 100%;
     overflow-x: hidden;
-    /*Image only BG fallback*/
-
-    /*background = gradient + image pattern combo*/
-    background: rgb(238, 174, 202);
-    background: -moz-radial-gradient(circle, rgba(238, 174, 202, 0.8814119397759104) 0%, rgba(148, 187, 233, 1) 100%);
-    background: -webkit-radial-gradient(circle, rgba(238, 174, 202, 0.8814119397759104) 0%, rgba(148, 187, 233, 1) 100%);
-    background: radial-gradient(circle, rgba(238, 174, 202, 0.8814119397759104) 0%, rgba(148, 187, 233, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#eeaeca", endColorstr="#94bbe9", GradientType=1);
 }
 
 body {
-    /*  background-color: #f7f7f7;*/
     margin: 0;
     font-family: Roboto, sans-serif;
-    /*font-size: 14px;*/
 
 }
 
@@ -219,6 +209,7 @@ article {
 
 main {
     width: 100%;
+    padding: 1%;
     min-height: 90vh;
     display: flex;
     /*justify-content: center;*/
@@ -229,10 +220,12 @@ main {
 
 /* Style des formulaires */
 form {
-    width: 100%;
+    width: 650px;
     margin: 0;
     text-align: center;
     position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
 
 }
 
