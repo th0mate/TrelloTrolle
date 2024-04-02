@@ -37,14 +37,14 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
     protected function getNomsColonnes(): array
     {
         return [
-            "idcolonne", "titrecolonne", "idtableau"
+            "idcolonne", "titrecolonne", "idtableau","ordre"
         ];
     }
 
     /**
      * Fonction permettant de construire une colonne depuis un tableau de paramètres
      * @param array $objetFormatTableau Le tableau de paramètres
-     * @return AbstractDataObject La colonne construite
+     * @return Colonne La colonne construite
      */
     protected function construireDepuisTableau(array $objetFormatTableau): Colonne
     {
@@ -54,7 +54,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
     /**
      * Fonction permettant de récupérer toutes les colonnes d'un tableau
      * @param int $idTableau L'id du tableau
-     * @return array La liste des colonnes du tableau
+     * @return array|null La liste des colonnes du tableau
      */
     public function recupererColonnesTableau(int $idTableau): ?array {
         $query = "SELECT idtableau FROM tableau WHERE idtableau=:idTableau";
