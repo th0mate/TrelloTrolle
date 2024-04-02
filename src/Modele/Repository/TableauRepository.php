@@ -65,7 +65,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
      */
     public function recupererParCodeTableau(string $codeTableau): ?AbstractDataObject
     {
-        $query = "SELECT idtableau,codetableau,titretableau,t.login, nom,prenom,email,mdphache FROM {$this->getNomTable()} t
+        $query = "SELECT idtableau,codetableau,titretableau,t.login, nom,prenom,email,mdphache, nonce FROM {$this->getNomTable()} t
         JOIN utilisateur u ON t.login=u.login
         WHERE codetableau=:codetableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
@@ -192,7 +192,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
      */
     public function getParticipants(Tableau $tableau): ?array
     {
-        $query = "SELECT u.login,nom,prenom,email,mdphache
+        $query = "SELECT u.login,nom,prenom,email,mdphache, nonce
         FROM {$this->getNomTable()} t 
         JOIN participant p ON t.idtableau=p.idtableau
         JOIN utilisateur u ON u.login=p.login WHERE p.{$this->getNomCle()} =:idtableau";
@@ -230,7 +230,7 @@ class TableauRepository extends AbstractRepository implements TableauRepositoryI
      */
     public function getProprietaire(Tableau $tableau) : Utilisateur
     {
-        $query = "SELECT u.login,nom,prenom,email,mdphache
+        $query = "SELECT u.login,nom,prenom,email,mdphache, nonce
         FROM {$this->getNomTable()} t
         JOIN utilisateur u ON t.login=u.login
         WHERE t.{$this->getNomCle()}=:idtableau";

@@ -19,7 +19,7 @@ interface ServiceConnexionInterface
      * Fonction permettant de vérifier si l'utilisateur est déjà connecté
      * @throws ConnexionException Si l'utilisateur est déjà connecté
      */
-    public function dejaConnecter();
+    public function dejaConnecte();
 
     /**
      * Fonction permettant de déconnecter un utilisateur

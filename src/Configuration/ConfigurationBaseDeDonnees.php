@@ -43,4 +43,5 @@ class ConfigurationBaseDeDonnees implements ConfigurationBaseDeDonneesInterface
     {
         return [];
     }
+
 }

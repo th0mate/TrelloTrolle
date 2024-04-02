@@ -50,7 +50,7 @@ class ServiceConnexion implements ServiceConnexionInterface
      * @return void
      * @throws ConnexionException Si l'utilisateur est déjà connecté
      */
-    public function dejaConnecter()
+    public function dejaConnecte()
     {
         if ($this->connexionUtilisateurJWT->estConnecte() && $this->connexionUtilisateurSession->estConnecte()) {
             throw new ConnexionException("Vous êtes déjà connecté",Response::HTTP_FORBIDDEN);

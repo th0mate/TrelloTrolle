@@ -130,7 +130,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
         if(!$this->getAllFromTable($carte->getIdCarte())) {
             return null;
         }
-        $query = "SELECT u.login, nom, prenom, email, mdphache
+        $query = "SELECT u.login, nom, prenom, email, mdphache, nonce
         FROM {$this->getNomTable()} c JOIN affectationcarte a
         ON c.idcarte=a.idcarte
         JOIN utilisateur u ON u.login=a.login 

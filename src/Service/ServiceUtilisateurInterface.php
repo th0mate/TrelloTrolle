@@ -83,7 +83,7 @@ interface ServiceUtilisateurInterface
      * @param $mail, Le mail de l'utilisateur
      * @return array Le compte utilisateur
      */
-    public function recupererCompte($mail): array;
+    public function recupererCompte(String $mail): void;
 
 
     /**
@@ -144,5 +144,11 @@ interface ServiceUtilisateurInterface
      */
     public function getProprietaireTableau(Tableau $tableau): Utilisateur;
     public function recupererAffectationsColonne($colonne, $login);
+
+    public function verifNonce($login,$nonce): void;
+
+    public function changerMotDePasse($login, $mdp, $mdp2): void;
+
+
 
 }

@@ -2,12 +2,14 @@
 
 namespace App\Trellotrolle\Service;
 
+use App\SAE\Model\Repository\EntrepriseRepository;
 use App\Trellotrolle\Controleur\ControleurCarte;
 use App\Trellotrolle\Controleur\ControleurTableau;
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
 use App\Trellotrolle\Lib\ConnexionUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Lib\MotDePasse;
+use App\Trellotrolle\Lib\VerificationEmail;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use \App\Trellotrolle\Modele\DataObject\AbstractDataObject;
@@ -39,7 +41,8 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
                                 private TableauRepositoryInterface     $tableauRepository,
-                                private CarteRepositoryInterface       $carteRepository)
+                                private CarteRepositoryInterface       $carteRepository,
+                                private VerificationEmail              $verificationEmail)
     {
     }
 
@@ -55,7 +58,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
 
         if (!$this->tableauRepository->estParticipantOuProprietaire($loginConnecte, $tableau)) {
-            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau,Response::HTTP_FORBIDDEN);
+            throw new TableauException("Vous n'avez pas de droits d'éditions sur ce tableau", $tableau, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -80,7 +83,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function estProprietaire(Tableau $tableau, $login): void
     {
         if (!$this->tableauRepository->estProprietaire($login, $tableau)) {
-            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau,Response::HTTP_FORBIDDEN);
+            throw new TableauException("Vous n'êtes pas propriétaire de ce tableau", $tableau, Response::HTTP_FORBIDDEN);
         }
     }
 
@@ -126,16 +129,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      * @return void
      * @throws TableauException Erreur si le membre est déjà membre du tableau
      */
-
-    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter,$loginConnecte): void
+    public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter, $loginConnecte): void
     {
         $this->estProprietaire($tableau, $loginConnecte);
         $this->isNotNullLogin($membresAAjouter, $tableau, "ajouter");
-        $utilisateurs=[];
+        $utilisateurs = [];
         foreach ($membresAAjouter as $user) {
             $utilisateur = $this->utilisateurExistant($user, $tableau);
             if ($this->tableauRepository->estParticipantOuProprietaire($utilisateur->getLogin(), $tableau)) {
-                throw new TableauException("Ce membre est déjà membre du tableau", $tableau,Response::HTTP_CONFLICT);
+                throw new TableauException("Ce membre est déjà membre du tableau", $tableau, Response::HTTP_CONFLICT);
             }
             $utilisateurs[] = $utilisateur;
         }
@@ -156,14 +158,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function supprimerMembre(Tableau $tableau, $login, $loginConnecte): AbstractDataObject
     {
-        $this->estProprietaire($tableau,$loginConnecte);
+        $this->estProprietaire($tableau, $loginConnecte);
         $this->isNotNullLogin($login, $tableau, "supprimer");
         $utilisateur = $this->utilisateurExistant($login, $tableau);
-        if ($login==$loginConnecte) {
-            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau,403);
+        if ($login == $loginConnecte) {
+            throw new TableauException("Vous ne pouvez pas vous supprimer du tableau.", $tableau, 403);
         }
         if (!$this->tableauRepository->estParticipant($utilisateur->getLogin(), $tableau)) {
-            throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau,Response::HTTP_FORBIDDEN);
+            throw new TableauException("Cet utilisateur n'est pas membre du tableau", $tableau, Response::HTTP_FORBIDDEN);
         }
         $participants = array_filter($this->tableauRepository->getParticipants($tableau), function ($u) use ($utilisateur) {
             return $u->getLogin() !== $utilisateur->getLogin();
@@ -179,7 +181,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      * @return array Le compte utilisateur
      * @throws ServiceException Erreur si l'adresse mail est manquante ou si aucun compte n'est associé à cette adresse mail
      */
-    public function recupererCompte($mail): array
+    public function recupererCompte(?String $mail): void
     {
         if (is_null($mail)) {
             throw new ServiceException("Adresse email manquante", 404);
@@ -188,7 +190,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         if (empty($utilisateurs)) {
             throw new ServiceException("Aucun compte associé à cette adresse email", 404);
         }
-        return $utilisateurs;
+        $utilisateurs->setNonce(MotDePasse::genererChaineAleatoire());
+        $this->utilisateurRepository->mettreAJour($utilisateurs);
+        $this->verificationEmail->envoiEmailChangementPassword($utilisateurs);
+
     }
 
 
@@ -239,6 +244,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
         if (!filter_var($attributs["email"], FILTER_VALIDATE_EMAIL)) {
             throw new MiseAJourException("Email non valide", "warning", 404);
+        }
+        $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
+        if($checkUtilisateur){
+            throw new MiseAJourException("L'email est déjà utilisé", "warning", 403);
         }
 
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
@@ -292,7 +301,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function supprimerUtilisateur($login): void
     {
         if (is_null($login)) {
-            throw new ServiceException("Login manquant",404);
+            throw new ServiceException("Login manquant", 404);
         }
         $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
         foreach ($cartes as $carte) {
@@ -343,6 +352,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         if ($checkUtilisateur) {
             throw new ServiceException("Le login est déjà pris", Response::HTTP_FORBIDDEN);
         }
+        $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
+        if ($checkUtilisateur) {
+            throw new ServiceException("L'email est déjà utilisé", 409);
+        }
 
         $mdpHache = MotDePasse::hacher($attributs["mdp"]);
 
@@ -352,10 +365,11 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             $attributs["prenom"],
             $attributs["email"],
             $mdpHache,
+            ""
         );
-        $succesSauvegarde=$this->utilisateurRepository->ajouter($utilisateur);
+        $succesSauvegarde = $this->utilisateurRepository->ajouter($utilisateur);
         if (!$succesSauvegarde) {
-            throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.",Response::HTTP_BAD_REQUEST);
+            throw new ServiceException("Une erreur est survenue lors de la création de l'utilisateur.", Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -409,15 +423,49 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $cartes = $this->carteRepository->recupererCartesColonne($colonne->getIdColonne());
         foreach ($cartes as $carte) {
             foreach ($this->carteRepository->getAffectationsCarte($carte) as $utilisateur) {
-                    if (!isset($participants[$utilisateur->getLogin()])) {
-                        $participants[$utilisateur->getLogin()] = ["colonnes" => []];
-                    }
-                    if (!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
-                        $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()] = [$colonne->getTitreColonne(), 0];
-                    }
-                    $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()][1]++;
+                if (!isset($participants[$utilisateur->getLogin()])) {
+                    $participants[$utilisateur->getLogin()] = ["colonnes" => []];
                 }
+                if (!isset($participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()])) {
+                    $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()] = [$colonne->getTitreColonne(), 0];
+                }
+                $participants[$utilisateur->getLogin()]["colonnes"][$colonne->getIdColonne()][1]++;
+            }
         }
         return $participants;
+    }
+
+    /**
+     * @throws ServiceException
+     */
+    public function verifNonce($login, $nonce): void
+    {
+        if (is_null($login) || is_null($nonce)){
+            throw new ServiceException("Informations manquantes",404);
+        }
+        $utilisateur=$this->recupererUtilisateurParCle($login);
+        if (!$utilisateur) {
+            throw new ServiceException("Utilisateur inexistante",404);
+        }
+        if ($utilisateur->formatTableau()["nonceTag"] != $nonce) {
+            throw new ServiceException("Le nonce est incorrect", Response::HTTP_FORBIDDEN);
+        }
+    }
+
+    public function changerMotDePasse($login, $mdp, $mdp2): void
+    {
+        if (is_null($login) ||is_null($mdp) || is_null($mdp2)) {
+            throw new ServiceException("Informations manquantes", 404);
+        }
+        if ($mdp !== $mdp2) {
+            throw new ServiceException("Mot de passe différent", Response::HTTP_CONFLICT);
+        }
+        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
+        if (is_null($utilisateur)) {
+            throw new ServiceException("Utilisateur inexistant", Response::HTTP_NOT_FOUND);
+        }
+        $utilisateur->setMdpHache(MotDePasse::hacher($mdp));
+        $utilisateur->setNonce("");
+        $this->utilisateurRepository->mettreAJour($utilisateur);
     }
 }

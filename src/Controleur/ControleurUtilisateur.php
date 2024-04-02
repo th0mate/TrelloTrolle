@@ -2,6 +2,8 @@
 
 namespace App\Trellotrolle\Controleur;
 
+use App\SAE\Lib\ConnexionUtilisateur;
+use App\SAE\Model\Repository\EntrepriseRepository;
 use App\Trellotrolle\Lib\ConnexionUtilisateurInterface;
 use App\Trellotrolle\Lib\ConnexionUtilisateurSession;
 use App\Trellotrolle\Lib\MessageFlash;
@@ -95,7 +97,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireCreation(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Création d'un utilisateur",
                 "cheminVueBody" => "utilisateur/formulaireCreation.php"
@@ -124,7 +126,7 @@ class ControleurUtilisateur extends ControleurGenerique
             "mdp2" => $_REQUEST["mdp2"] ?? null,
         ];
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->creerUtilisateur($attributs);
             MessageFlash::ajouter("success", "L'utilisateur a bien été créé !");
             return ControleurUtilisateur::redirection("afficherFormulaireConnexion");
@@ -225,7 +227,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireConnexion(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             return $this->afficherTwig("utilisateur/formulaireConnexion.html.twig");
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
@@ -245,7 +247,7 @@ class ControleurUtilisateur extends ControleurGenerique
         $login = $_REQUEST["login"] ?? null;
         $mdp = $_REQUEST["mdp"] ?? null;
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             $this->serviceConnexion->connecter($login, $mdp);
             MessageFlash::ajouter("success", "Connexion effectuée.");
             return self::redirection("afficherListeMesTableaux");
@@ -286,7 +288,7 @@ class ControleurUtilisateur extends ControleurGenerique
     public function afficherFormulaireRecuperationCompte(): Response
     {
         try {
-            $this->serviceConnexion->dejaConnecter();
+            $this->serviceConnexion->dejaConnecte();
             return $this->afficherTwig('utilisateur/resetCompte.html.twig');
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
@@ -303,16 +305,17 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperation', name: 'recupererCompte', methods: "POST")]
     public function recupererCompte(): Response
     {
-        $mail = $_REQUEST["email"] ?? null;
+        $mail = $_REQUEST["email"]??null;
         try {
-            $this->serviceConnexion->dejaConnecter();
-            $utilisateurs = $this->serviceUtilisateur->recupererCompte($mail);
+            $this->serviceConnexion->dejaConnecte();
+            $this->serviceUtilisateur->recupererCompte($mail);
             /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
                 "pagetitle" => "Récupérer mon compte",
                 "cheminVueBody" => "utilisateur/resultatResetCompte.php",
                 "utilisateurs" => $utilisateurs
             ]);*/
-            return $this->afficherTwig('utilisteur/resultatResetCompte.html.twig', ["utilisateurs" => $utilisateurs]);
+            MessageFlash::ajouter("success", "Un e-mail a été envoyé à l'adresse indiquée.");
+            return self::redirection();
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("afficherListeMesTableaux");
@@ -321,4 +324,45 @@ class ControleurUtilisateur extends ControleurGenerique
             return self::redirection("afficherFormulaireConnexion");
         }
     }
+
+    #[Route('/recuperationMdp', name: 'changerMotDePasse', methods: "GET")]
+    public function verifNonce(): Response
+    {
+        $nonce=$_REQUEST["nonce"] ??null;
+        $login=$_REQUEST["login"] ??null;
+        try {
+            $this->serviceConnexion->dejaConnecte();
+            $this->serviceUtilisateur->verifNonce($login,$nonce);
+            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig',["login"=>$login]);
+        } catch (ServiceException $e) {
+            MessageFlash::ajouter("warning", $e->getMessage());
+            return self::redirection("afficherFormulaireConnexion");
+        }
+    }
+
+    /**
+     * Réinitialise le mot de passe d'une entreprise.
+     *
+     * @return Response
+     * @throws ServiceException
+     */
+    #[Route('/recuperationMdp', name: 'validerMDP', methods: "POST")]
+    public function resetPassword(): Response
+    {
+        $login = $_REQUEST["login"] ??null;
+        $mdp = $_REQUEST["mdp"]??null;
+        $mdp2 = $_REQUEST["mdp2"]??null;
+        try {
+            $this->serviceConnexion->dejaConnecte();
+            $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
+            MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
+            return self::redirection("connecter");
+        } catch (ConnexionException $e) {
+            MessageFlash::ajouter("info", $e->getMessage());
+            return self::redirection("accueil");
+        }
+    }
+
+
+
 }

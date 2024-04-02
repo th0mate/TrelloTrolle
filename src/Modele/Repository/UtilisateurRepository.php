@@ -33,7 +33,7 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
      */
     protected function getNomsColonnes(): array
     {
-        return ["login", "nom", "prenom", "email", "mdphache"];
+        return ["login", "nom", "prenom", "email", "mdphache", "nonce"];
     }
 
     /**
@@ -52,9 +52,9 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
      * @param string $email L'email de l'utilisateur
      * @return array Les utilisateurs récupérés
      */
-    public function recupererUtilisateursParEmail(string $email): array
+    public function recupererUtilisateursParEmail(string $email): ?Utilisateur
     {
-        return $this->recupererPlusieursPar("email", $email);
+        return $this->recupererPlusieursPar("email", $email)[0];
     }
 
     /**

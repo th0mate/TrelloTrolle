@@ -2,6 +2,8 @@
 
 namespace App\Trellotrolle\Modele\Repository;
 
+use App\Trellotrolle\Modele\DataObject\Utilisateur;
+
 interface UtilisateurRepositoryInterface extends AbstractRepositoryInterface
 {
     /**
@@ -9,7 +11,7 @@ interface UtilisateurRepositoryInterface extends AbstractRepositoryInterface
      * @param string $email L'email de l'utilisateur
      * @return array Les utilisateurs récupérés
      */
-    public function recupererUtilisateursParEmail(string $email): array;
+    public function recupererUtilisateursParEmail(string $email): ?Utilisateur;
 
     /**
      * Fonction permettant de récupérer un utilisateur en fonction de son prénom et

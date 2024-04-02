@@ -37,7 +37,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
     protected function getNomsColonnes(): array
     {
         return [
-            "idcolonne", "titrecolonne", "idtableau", "ordre"
+            "idcolonne", "titrecolonne", "idtableau"
         ];
     }
 
@@ -64,7 +64,7 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         if (!$objet) {
             return null;
         }
-        return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["idcolonne"]);
+        return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["ordre"]);
     }
 
     /**
@@ -90,41 +90,6 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         return $obj[0];
     }
 
-    /**
-     * Fonction permettant d'inverser l'ordre de deux colonnes
-     * @param int $idColonne1 Id de la première colonne
-     * @param int $idColonne2 Id de la deuxième colonne
-     * @return void
-     */
-    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
-    {
-        $colonne1=$this->recupererParClePrimaire($idColonne1);
-        $colonne2=$this->recupererParClePrimaire($idColonne2);
-        $tabColonne1 = array(
-            "idcolonne"=>$colonne1->getIdColonne());
-        $tabColonne2 = array(
-            "idcolonne"=>$colonne2->getIdColonne());
-
-        $query = "UPDATE {$this->getNomTable()} SET idcolonne = :tempId WHERE idcolonne = :idColonne1";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["tempId" => $this->getNextIdColonne(), "idColonne1" => $tabColonne1["idcolonne"]]);
-
-        $query = "UPDATE {$this->getNomTable()} SET idcolonne = :idColonne1 
-        WHERE idcolonne = :idColonne2";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idColonne1" => $tabColonne1["idcolonne"], "idColonne2" => $tabColonne2["idcolonne"]]);
-
-        $query = "UPDATE {$this->getNomTable()} SET idcolonne = :idColonne2
-        WHERE idcolonne = :idColonne1";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
-        $pdoStatement->execute(["idColonne2" => $tabColonne2["idcolonne"], "idColonne1" => $tabColonne1["idcolonne"]]);
-    }
-
-    /**
-     * Fonction permettant de récupérer une colonne en fonction de la clé primaire
-     * @param int $idColonne La clé primaire
-     * @return Colonne|null La colonne récupérée
-     */
 
     public function getAllFromTable(int|string $idCle): ?Colonne
     {
@@ -139,6 +104,43 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
             return null;
         }
         return $this->construireDepuisTableau($objetFormatTableau);
+    }
+
+
+    /**
+     * Récupère le prochain ordre de colonne pour un tableau donné
+     * @param int $idTableau l'id du tableau en question
+     * @return int|mixed l'ordre suivant du tableau
+     */
+    public function getNextOrdreColonne(int $idTableau)
+    {
+        $query = "SELECT MAX(ordre) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
+        $pdoStatement->execute(["idTableau" => $idTableau]);
+        $obj = $pdoStatement->fetch();
+        return $obj[0] + 1;
+    }
+
+
+    /**
+     * Inverse l'ordre de deux colonnes
+     */
+    public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
+    {
+        $colonne1 = $this->recupererParClePrimaire($idColonne1);
+        $colonne2 = $this->recupererParClePrimaire($idColonne2);
+        $ordre1 = $colonne1->getOrdre();
+        $ordre2 = $colonne2->getOrdre();
+
+        $sql1 = "UPDATE {$this->getNomTable()} SET ordre=:ordre1 WHERE idcolonne=:idColonne1";
+        $sql2 = "UPDATE {$this->getNomTable()} SET ordre=:ordre2 WHERE idcolonne=:idColonne2";
+
+        $pdo = $this->connexionBaseDeDonnees->getPdo();
+        $pdoStatement1 = $pdo->prepare($sql1);
+        $pdoStatement1->execute(["ordre1" => $ordre2, "idColonne1" => $idColonne1]);
+
+        $pdoStatement2 = $pdo->prepare($sql2);
+        $pdoStatement2->execute(["ordre2" => $ordre1, "idColonne2" => $idColonne2]);
     }
 
 

@@ -80,7 +80,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test récupererColonnesTableau prends idTableau retourne array*/
 
     public function testRecupererColonnesTableauEnA(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
         $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
@@ -117,7 +117,7 @@ class ColonneRepositoryTest extends TestCase
 
     /*public function testInverserOrdreColonnes2(){
         self::$colonneRepository->inverserOrdreColonnes(1,2);
-            $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+            $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
             $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
             $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
             $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
@@ -130,7 +130,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test getAllFromColonne prends idColonne retourne array*/
 
     public function testGetAllFromColonne(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
         assertEquals($fakeColonne1,self::$colonneRepository->getAllFromTable(1));
@@ -140,8 +140,8 @@ class ColonneRepositoryTest extends TestCase
     /**Test récupérer*/
 
     public function testRecuperer(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
-        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeTab2 = new Tableau(3, 'test3', 'test3',$fakeUser2);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
@@ -153,7 +153,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test récupererParClePrimaire*/
 
     public function testRecupererParClePrimaireExistant(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
         self::assertEquals($fakeColonne1,self::$colonneRepository->recupererParClePrimaire(1));
@@ -167,7 +167,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test ajouter*/
 
     public function testAjouter(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakecolonneAADD = new Colonne(5,'colonne5',$fakeTab1);
         $fakeColonne1= new Colonne(1, 'colonne1',$fakeTab1);
@@ -179,7 +179,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test mettre a jour*/
 
     public function testMettreAJour(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne1= new Colonne(1, 'coloooooonne1',$fakeTab1);
         self::$colonneRepository->mettreAJour($fakeColonne1);
@@ -189,7 +189,7 @@ class ColonneRepositoryTest extends TestCase
     /**Test supprimer*/
 
     public function testSupprimer(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
+        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
         $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
         $fakeColonne2= new Colonne(2, 'colonne2',$fakeTab1);
         self::$colonneRepository->supprimer(1);

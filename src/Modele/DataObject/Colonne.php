@@ -14,7 +14,6 @@ class Colonne extends AbstractDataObject implements \JsonSerializable
         private ?int     $idColonne,
         private ?string  $titreColonne,
         private ?Tableau $tableau,
-        private ?int $ordre,
     )
     {
     }
@@ -30,7 +29,6 @@ class Colonne extends AbstractDataObject implements \JsonSerializable
             $objetFormatTableau["idcolonne"] ?? null,
             $objetFormatTableau["titrecolonne"] ?? null,
             Tableau::construireDepuisTableau($objetFormatTableau),
-            $objetFormatTableau["ordre"] ?? null,
         );
     }
 
@@ -92,25 +90,6 @@ class Colonne extends AbstractDataObject implements \JsonSerializable
         $this->titreColonne = $titreColonne;
     }
 
-    /**
-     * Fonction permettant de récupérer l'ordre de la colonne
-     * (sa position dans le tableau)
-     * @return int|null L'ordre de la colonne
-     */
-    public function getOrdre(): ?int
-    {
-        return $this->ordre;
-    }
-
-    /**
-     * Fonction permettant de définir l'ordre de la colonne
-     * @param int|null $ordre L'ordre de la colonne
-     * @return void
-     */
-    public function setOrdre(?int $ordre): void
-    {
-        $this->ordre = $ordre;
-    }
 
     /**
      * Fonction permettant de formater l'objet en tableau
@@ -122,7 +101,6 @@ class Colonne extends AbstractDataObject implements \JsonSerializable
             "idcolonneTag" => $this->idColonne,
             "titrecolonneTag" => $this->titreColonne,
             "idtableauTag" => $this->tableau->getIdTableau(),
-            "ordreTag" => $this->ordre,
         );
     }
 

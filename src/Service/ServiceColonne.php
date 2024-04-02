@@ -113,10 +113,12 @@ class ServiceColonne implements ServiceColonneInterface
      */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
+
         $colonne= new Colonne(
             $this->colonneRepository->getNextIdColonne(),
             $nomColonne,
-            $tableau
+            $tableau,
+            $this->colonneRepository->getNextOrdreColonne($tableau->getIdTableau())
         );
         $this->colonneRepository->ajouter($colonne);
         return $colonne;
@@ -142,14 +144,5 @@ class ServiceColonne implements ServiceColonneInterface
         return $this->colonneRepository->getNextIdColonne();
     }
 
-    /**
-     * Fonction permettant d'inverser l'ordre de deux colonnes
-     * @param $idColonne1 L'id de la première colonne
-     * @param $idColonne2 L'id de la deuxième colonne
-     * @return void
-     */
-    public function inverserOrdreColonnes($idColonne1, $idColonne2): void
-    {
-        $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);
-    }
+
 }

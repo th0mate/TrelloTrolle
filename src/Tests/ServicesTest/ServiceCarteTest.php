@@ -110,7 +110,7 @@ class ServiceCarteTest extends TestCase
 
     public function testMiseAJourCarteMembre()
     {
-        $fakeUser=new Utilisateur("login","nom","prenom","email@e.com","mdp");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@e.com","mdp",null);
         $fakeTableau=$this->createFakeTableau($fakeUser);
         $fakeCarte=$this->createFakeCarte();
         $this->carteRepository->method("recupererCartesTableau")->willReturn([$fakeCarte]);
@@ -152,7 +152,7 @@ class ServiceCarteTest extends TestCase
         $fakeTableau=$this->createFakeTableau();
         $fakeCarte=$this->createFakeCarte();
         $fakeColonne=$this->createFakeColonne();
-        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp",null);
         $this->expectExceptionCode(403);
         $this->expectException(MiseAJourException::class);
         $this->expectExceptionMessage("Un des membres affecté à la tâche n'est pas affecté au tableau");
@@ -171,7 +171,7 @@ class ServiceCarteTest extends TestCase
         $fakeTableau=$this->createFakeTableau();
         $fakeCarte=$this->createFakeCarte();
         $fakeColonne=$this->createFakeColonne();
-        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@email.com","mdp",null);
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUser);
         $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
         $this->carteRepository->method("mettreAJour")->willReturnCallback(function ($carte)use ($fakeCarte,$fakeColonne){
@@ -197,7 +197,7 @@ class ServiceCarteTest extends TestCase
         $this->expectExceptionCode(409);
         $this->expectException(CreationException::class);
         $this->expectExceptionMessage("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
-        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp",null);
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
         $fakeColonne=new Colonne(1,"titre",$fakeTableau);
         $fakeCarte=new Carte(1,"titre","desc","couleur",new Colonne(2,"titre",new Tableau(2,"code","titre",$fakeUser)));
@@ -213,7 +213,7 @@ class ServiceCarteTest extends TestCase
             "couleurCarte" => "coul",
             "affectationsCarte" => ["1","2"],
         ];
-        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
+        $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp",null);
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
         $fakeColonne=new Colonne(1,"titre",$fakeTableau);
         $fakeCarte=new Carte(1,"titre","desc","couleur",$fakeColonne);
@@ -252,7 +252,7 @@ class ServiceCarteTest extends TestCase
         ];
         $fakeTableau = $this->createFakeTableau();
         $fakeColonne = $this->createFakeColonne();
-        $fakeUtilisateur = new Utilisateur("1", "nom", "prenom", "email", "mdp");
+        $fakeUtilisateur = new Utilisateur("1", "nom", "prenom", "email", "mdp",null);
         $this->expectException(CreationException::class);
         $this->expectExceptionCode(403);
         $this->expectExceptionMessage("Un des membres affecté à la tâche n'est pas affecté au tableau");
@@ -271,7 +271,7 @@ class ServiceCarteTest extends TestCase
         ];
         $fakeTableau = $this->createFakeTableau();
         $fakeColonne = $this->createFakeColonne();
-        $fakeUtilisateur = new Utilisateur("1", "nom", "prenom", "email", "mdp");
+        $fakeUtilisateur = new Utilisateur("1", "nom", "prenom", "email", "mdp",null);
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($fakeUtilisateur);
         $this->tableauRepository->method("estParticipantOuProprietaire")->willReturn(true);
         $this->carteRepository->method("getNextIdCarte")->willReturn(3);

@@ -34,5 +34,6 @@ interface ColonneRepositoryInterface
      */
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void;
 
+    public function getNextOrdreColonne(int $idTableau);
 
 }
