@@ -122,7 +122,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     {
         $nomTable = $this->getNomTable();
         $attributsTexte = join(",", $attributs);
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare("SELECT DISTINCT {$this->getNomCle()} FROM $nomTable WHERE $nomAttribut=:valeur ORDER BY $attributsTexte $sens");
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare("SELECT DISTINCT {$this->getNomCle()},ordre FROM $nomTable WHERE $nomAttribut=:valeur ORDER BY $attributsTexte $sens");
         $values = array(
             "valeur" => $valeur,
         );

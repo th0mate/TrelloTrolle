@@ -113,10 +113,12 @@ class ServiceColonne implements ServiceColonneInterface
      */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
+
         $colonne= new Colonne(
             $this->colonneRepository->getNextIdColonne(),
             $nomColonne,
-            $tableau
+            $tableau,
+            $this->colonneRepository->getNextOrdreColonne($tableau->getIdTableau())
         );
         $this->colonneRepository->ajouter($colonne);
         return $colonne;

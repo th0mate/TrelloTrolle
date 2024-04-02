@@ -61,9 +61,8 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $this->serviceColonne->isSetNomColonne($nomColonne);
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne = $this->serviceColonne->creerColonne($tableau, $nomColonne);
-            //(new ServiceCarte())->newCarte($colonne,["Exemple","Exemple de carte","#FFFFFF",[]]);
             return new JsonResponse($colonne, 200);
         } catch (ServiceException $e) {
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
@@ -86,7 +85,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonne($idColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $this->serviceColonne->supprimerColonne($tableau, $idColonne);
             return new JsonResponse('', 200);
         } catch (ServiceException $e) {
@@ -111,7 +110,7 @@ class ControleurColonneAPI
             $this->serviceConnexion->pasConnecter();
             $colonne = $this->serviceColonne->recupererColonneAndNomColonne($idColonne, $nomColonne);
             $tableau = $colonne->getTableau();
-            $this->serviceUtilisateur->estParticipant($tableau,$this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
             $colonne->setTitreColonne($nomColonne);
             $colonne = $this->serviceColonne->miseAJourColonne($colonne);
             return new JsonResponse($colonne, 200);
@@ -132,5 +131,24 @@ class ControleurColonneAPI
     {
         $idColonne = $this->serviceColonne->getNextIdColonne();
         return new JsonResponse(["idColonne" => $idColonne], 200);
+    }
+
+    #[Route("/api/colonne/inverser", name: "inverserOrdreColonnesAPI", methods: "PATCH")]
+    public function inverserOrdreColonnes(Request $request): Response
+    {
+        $jsondecode = json_decode($request->getContent());
+        $idColonne1 = $jsondecode->idColonne1 ?? null;
+        $idColonne2 = $jsondecode->idColonne2 ?? null;
+        try {
+            $this->serviceConnexion->pasConnecter();
+            $colonne1 = $this->serviceColonne->recupererColonne($idColonne1);
+            $colonne2 = $this->serviceColonne->recupererColonne($idColonne2);
+            $tableau = $colonne1->getTableau();
+            $this->serviceUtilisateur->estParticipant($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
+            $this->serviceColonne->inverserOrdreColonnes($idColonne1, $idColonne2);
+            return new JsonResponse('', 200);
+        } catch (ServiceException $e) {
+            return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
+        }
     }
 }
