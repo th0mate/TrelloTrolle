@@ -6,12 +6,15 @@ use Exception;
 
 class MotDePasse
 {
-    /** @var string  */
+    /**
+     * @var string le poivre pour le hachage
+     */
     private static string $poivre = "5QcWU25xA5XriYkC4HzgVN";
 
     /**
-     * @param string $mdpClair
-     * @return string
+     * Fonction permettant de hacher un mot de passe
+     * @param string $mdpClair Le mot de passe en clair
+     * @return string Le mot de passe haché
      */
     public static function hacher(string $mdpClair): string
     {
@@ -19,9 +22,10 @@ class MotDePasse
     }
 
     /**
-     * @param string $mdpClair
-     * @param string $mdpHache
-     * @return bool
+     * Fonction permettant de vérifier un mot de passe
+     * @param string $mdpClair Le mot de passe en clair
+     * @param string $mdpHache Le mot de passe haché
+     * @return bool Vrai si le mot de passe haché correspond au mot de passe en clair, faux sinon
      */
     public static function verifier(string $mdpClair, string $mdpHache): bool
     {
@@ -29,10 +33,10 @@ class MotDePasse
     }
 
     /**
-     * @param int $nbCaracteres
-     * @throws Exception
-     * @return string
-     * fonction qui permet de generer une chaine aleatoire
+     * Fonction permettant de générer une chaine de caractères aléatoire
+     * @param int $nbCaracteres Le nombre de caractères de la chaine
+     * @throws Exception si la génération de la chaine aléatoire échoue
+     * @return string La chaine de caractères aléatoire
      */
     public static function genererChaineAleatoire(int $nbCaracteres = 22): string
     {

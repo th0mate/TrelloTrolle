@@ -10,10 +10,10 @@ class AttributeRouteControllerLoader extends AttributeClassLoader
     /**
      * Configures the _controller default parameter of a given Route instance.
      *
-     * @param Route $route
-     * @param \ReflectionClass $class
-     * @param \ReflectionMethod $method
-     * @param object $annot
+     * @param Route $route A route
+     * @param \ReflectionClass $class A class reflection
+     * @param \ReflectionMethod $method A method reflection
+     * @param object $annot The annotation instance
      *
      */
     protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, object $annot): void
@@ -22,8 +22,9 @@ class AttributeRouteControllerLoader extends AttributeClassLoader
     }
 
     /**
-     * @param $controllerName
-     * @return string
+     * Converts a camel case controller name to a snake case.
+     * @param $controllerName string
+     * @return string The controller name in snake case
      */
 
     private function toSnakeCase($controllerName) : string {
