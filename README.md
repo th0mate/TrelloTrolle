@@ -26,8 +26,8 @@ Rendu du projet de SAE4A.
 
 ## Répartition des tâches
 
-- **Maëlys BOISSEZON** : Passage au TWIG/Tests/échappement JS/Interfaces/Virtualisation
-- **Romain TOUZÉ** : Passage à l'API/Routing/Conteneur/Tests/JWT/erreurs HTML/Services
-- **Lorick VERGNES** : Refactor de la BD/DataObject/Repositories/MDP oubliés par mailer
+- **Maëlys BOISSEZON** : Passage au TWIG/Tests/échappement JS/Interfaces/Virtualisation/Mise en page Rapport
+- **Romain TOUZÉ** : Passage à l'API/Routing/Conteneur/Tests/JWT/erreurs HTTP/Services
+- **Lorick VERGNES** : Refactor de la BD/DataObject/Repositories/MDP oubliés par mailer/sécurité
 - **Sascha LEVY** : Routing/PhpDoc
-- **Thomas LOYE** : Objets réactifs/Utilisation API/Drag and Drop/JavaScript Doc/Refonte Graphique/MessagesFlash JS
+- **Thomas LOYE** : Objets réactifs/Utilisation API/Drag and Drop/JavaScript Doc/Refonte Graphique/MessagesFlash JS/Responsive

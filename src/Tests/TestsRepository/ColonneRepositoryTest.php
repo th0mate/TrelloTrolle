@@ -51,14 +51,14 @@ class ColonneRepositoryTest extends TestCase
                                                               tableau (idtableau,codetableau,titretableau,login) 
                                                               VALUES (3, 'test3', 'test3','bib420')");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              colonne (idcolonne,titrecolonne,idtableau) 
-                                                              VALUES (1, 'colonne1', 1)");
+                                                              colonne (idcolonne,titrecolonne,idtableau,ordre) 
+                                                              VALUES (1, 'colonne1', 1,0)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              colonne (idcolonne,titrecolonne,idtableau) 
-                                                              VALUES (2, 'colonne2', 1)");
+                                                              colonne (idcolonne,titrecolonne,idtableau,ordre) 
+                                                              VALUES (2, 'colonne2', 1,1)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
-                                                              colonne (idcolonne,titrecolonne,idtableau) 
-                                                              VALUES (3, 'colonne3', 3)");
+                                                              colonne (idcolonne,titrecolonne,idtableau,ordre) 
+                                                              VALUES (3, 'colonne3', 3,2)");
         self::$connexionBaseDeDonnees->getPdo()->query("INSERT INTO 
                                                               participant (login, idTableau)
                                                               VALUES ('bob69',3)");
