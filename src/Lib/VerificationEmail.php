@@ -14,9 +14,9 @@ use Symfony\Component\Routing\Generator\UrlGenerator;
 /**
  * La classe VerificationEmail gère l'envoi d'e-mails de changement de mot de passe.
  */
-class VerificationEmail
+class VerificationEmail implements VerificationEmailInterface
 {
-    public function __construct(private URLGenerator $absolutURL )
+    public function __construct()
     {
     }
 

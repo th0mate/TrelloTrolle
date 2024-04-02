@@ -3,6 +3,8 @@
 namespace App\Trellotrolle\Tests\ServicesTest;
 
 use App\Trellotrolle\Lib\MotDePasse;
+use App\Trellotrolle\Lib\VerificationEmail;
+use App\Trellotrolle\Lib\VerificationEmailInterface;
 use App\Trellotrolle\Modele\DataObject\Carte;
 use App\Trellotrolle\Modele\DataObject\Colonne;
 use App\Trellotrolle\Modele\DataObject\Tableau;
@@ -30,6 +32,7 @@ class ServiceUtilisateurTest extends TestCase
     private UtilisateurRepositoryInterface $utilisateurRepository;
     private TableauRepositoryInterface $tableauRepository;
     private CarteRepositoryInterface $carteRepository;
+    private VerificationEmailInterface $verificationEmail;
 
     protected function setUp(): void
     {
@@ -37,7 +40,8 @@ class ServiceUtilisateurTest extends TestCase
         $this->utilisateurRepository = $this->createMock(UtilisateurRepository::class);
         $this->tableauRepository = $this->createMock(TableauRepository::class);
         $this->carteRepository = $this->createMock(CarteRepository::class);
-        $this->serviceUtilisateur = new ServiceUtilisateur($this->utilisateurRepository, $this->tableauRepository, $this->carteRepository);
+        $this->verificationEmail=$this->createMock(VerificationEmail::class);
+        $this->serviceUtilisateur = new ServiceUtilisateur($this->utilisateurRepository, $this->tableauRepository, $this->carteRepository,$this->verificationEmail);
     }
 
     /**MISE A JOUR UTILISATEUR*/
@@ -133,6 +137,25 @@ class ServiceUtilisateurTest extends TestCase
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
         $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
     }
+    public function testMettreAJourUtilisateurEmailPris()
+    {
+        $attributs = [
+            "login" => "test",
+            "nom" => "nom",
+            "prenom" => "prenom",
+            "email" => "email@email.com",
+            "mdp" => "mdp",
+            "mdp2" => "mdp2",
+            "mdpAncien" => "test",
+
+        ];
+        $this->expectException(MiseAJourException::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage("L'email est déjà utilisé");
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($this->createFakeUser());
+        $this->serviceUtilisateur->mettreAJourUtilisateur($attributs);
+    }
 
     public function testMettreAJourUtilisateurValide()
     {
@@ -181,8 +204,10 @@ class ServiceUtilisateurTest extends TestCase
     {
         $fakeUtilisateur = $this->createFakeUser();
         $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($fakeUtilisateur);
-        $user = $this->serviceUtilisateur->recupererCompte("1");
-        assertEquals($fakeUtilisateur, $user);
+        $this->utilisateurRepository->method("mettreAJour")->willReturnCallback(function ($utilisateur){
+           self::assertNotEmpty($utilisateur->getNonce());
+        });
+        $this->serviceUtilisateur->recupererCompte("1");
     }
 
     /** IS NOT NULL LOGIN */
@@ -352,6 +377,19 @@ class ServiceUtilisateurTest extends TestCase
         $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
         $this->utilisateurRepository->method("ajouter")->willReturnCallback(function () {
             return false;
+        });
+        $this->serviceUtilisateur->creerUtilisateur($attributs);
+    }
+    public function testCreerUtilisateurEmailPris()
+    {
+        $this->expectException(ServiceException::class);
+        $this->expectExceptionCode(409);
+        $this->expectExceptionMessage("L'email est déjà utilisé");
+        $attributs = ["login" => "test", "nom" => "nom", "prenom" => "prenom", "mdp" => "ee", "mdp2" => "ee", "email" => "null@test.fr"];
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->utilisateurRepository->method("recupererUtilisateursParEmail")->willReturn($this->createFakeUser());
+        $this->utilisateurRepository->method("ajouter")->willReturnCallback(function () {
+            return true;
         });
         $this->serviceUtilisateur->creerUtilisateur($attributs);
     }
@@ -526,11 +564,106 @@ class ServiceUtilisateurTest extends TestCase
         self::assertEquals($results,$participants);
     }
 
+    /**  verifNonce */
+
+    public function testNonceLoginManquants()
+    {
+        $this->expectExceptionMessage("Informations manquantes");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+
+        $this->serviceUtilisateur->verifNonce(null,"null");
+    }
+    public function testNonceNonceManquants()
+    {
+        $this->expectExceptionMessage("Informations manquantes");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+
+        $this->serviceUtilisateur->verifNonce("null",null);
+    }
+    public function testNonceIncorrect()
+    {
+        $this->expectExceptionMessage("Le nonce est incorrect");
+        $this->expectExceptionCode(403);
+        $this->expectException(ServiceException::class);
+
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
+        $this->serviceUtilisateur->verifNonce("test","nulle");
+    }
+
+    public function testNonceUtilisateurInexistant()
+    {
+        $this->expectExceptionMessage("Utilisateur inexistant");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->serviceUtilisateur->verifNonce("test","nulle");
+    }
+    public function testNonceValide()
+    {
+        $this->expectNotToPerformAssertions();
+
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
+        $this->serviceUtilisateur->verifNonce("test","null");
+
+    }
+
+    /** changerMotDePasse */
+
+    public function testChangerMotDePasseLoginManquantes()
+    {
+        $this->expectExceptionMessage("Informations manquantes");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+       $this->serviceUtilisateur->changerMotDePasse(null,"","");
+    }
+    public function testChangerMotDePasseMdp1Manquantes()
+    {
+        $this->expectExceptionMessage("Informations manquantes");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->serviceUtilisateur->changerMotDePasse("null",null,"");
+    }
+    public function testChangerMotDePasseMdp2Manquantes()
+    {
+        $this->expectExceptionMessage("Informations manquantes");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->serviceUtilisateur->changerMotDePasse("null","",null);
+    }
+    public function testChangerMotDePasseMdpDifferents()
+    {
+        $this->expectExceptionMessage("Mot de passe différent");
+        $this->expectExceptionCode(409);
+        $this->expectException(ServiceException::class);
+        $this->serviceUtilisateur->changerMotDePasse("test","mdp","mdp2");
+    }
+    public function testChangerMotDePasseUtilisateurInconnu()
+    {
+        $this->expectExceptionMessage("Utilisateur inexistant");
+        $this->expectExceptionCode(404);
+        $this->expectException(ServiceException::class);
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn(null);
+        $this->serviceUtilisateur->changerMotDePasse("test","mdp","mdp");
+    }
+    public function testChangerMotDePasseValide()
+    {
+        $this->utilisateurRepository->method("recupererParClePrimaire")->willReturn($this->createFakeUser());
+        $this->utilisateurRepository->method("mettreAJour")->willReturnCallback(function ($utilisateur){
+            self::assertEquals("test",$utilisateur->getLogin());
+            self::assertEquals(MotDePasse::hacher("mdp"),$utilisateur->getMdpHache());
+            self::assertEquals("",$utilisateur->getNonce());
+        });
+        $this->serviceUtilisateur->changerMotDePasse("test","mdp","mdp");
+    }
+
     /** FONCTIONS UTILITAIRES */
 
     private function createFakeUser($login = "test"): Utilisateur
     {
-        return new Utilisateur($login, 'test', "test", 'test@t.t', MotDePasse::hacher("test"),null);
+        return new Utilisateur($login, 'test', "test", 'test@t.t', MotDePasse::hacher("test"),"null");
     }
 
     private function createFakeTableau($utilisateur = null, $idTableau = 1): Tableau

@@ -247,7 +247,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
         $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
         if($checkUtilisateur){
-            throw new MiseAJourException("L'email est déjà utilisé", "warning", Response::HTTP_CONFLICT);
+            throw new MiseAJourException("L'email est déjà utilisé", "warning", 403);
         }
 
         if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
@@ -354,7 +354,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
         $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
         if ($checkUtilisateur) {
-            throw new ServiceException("L'email est déjà utilisé", Response::HTTP_FORBIDDEN);
+            throw new ServiceException("L'email est déjà utilisé", 409);
         }
 
         $mdpHache = MotDePasse::hacher($attributs["mdp"]);
@@ -443,7 +443,10 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         if (is_null($login) || is_null($nonce)){
             throw new ServiceException("Informations manquantes",404);
         }
-        $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
+        $utilisateur=$this->recupererUtilisateurParCle($login);
+        if (!$utilisateur) {
+            throw new ServiceException("Utilisateur inexistante",404);
+        }
         if ($utilisateur->formatTableau()["nonceTag"] != $nonce) {
             throw new ServiceException("Le nonce est incorrect", Response::HTTP_FORBIDDEN);
         }
@@ -452,14 +455,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     public function changerMotDePasse($login, $mdp, $mdp2): void
     {
         if (is_null($login) ||is_null($mdp) || is_null($mdp2)) {
-            throw new ServiceException("Informations manquantes", Response::HTTP_BAD_REQUEST);
+            throw new ServiceException("Informations manquantes", 404);
         }
         if ($mdp !== $mdp2) {
             throw new ServiceException("Mot de passe différent", Response::HTTP_CONFLICT);
         }
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
         if (is_null($utilisateur)) {
-            throw new ServiceException("Utilisateur inconnu", Response::HTTP_NOT_FOUND);
+            throw new ServiceException("Utilisateur inexistant", Response::HTTP_NOT_FOUND);
         }
         $utilisateur->setMdpHache(MotDePasse::hacher($mdp));
         $utilisateur->setNonce("");

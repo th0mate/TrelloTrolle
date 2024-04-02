@@ -135,7 +135,7 @@ class TableauRepositoryTest extends TestCase
     /**  Test recupererTableauxParticipeUtilisateur prends : string $login retourne : array*/
 
     public function testRecupererTableauxParticipeUtilisateurEstParticipants(){
-        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
+        $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib',"aaa");
         $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
         $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxParticipeUtilisateur('bob69'));
     }
