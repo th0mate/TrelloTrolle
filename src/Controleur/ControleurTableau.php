@@ -49,8 +49,7 @@ class ControleurTableau extends ControleurGenerique
                                 private ServiceConnexionInterface     $serviceConnexion,
                                 private ServiceUtilisateurInterface   $serviceUtilisateur,
                                 private ConnexionUtilisateurInterface $connexionUtilisateur
-    )
-  {
+    )  {
         parent::__construct($container);
 
     }
@@ -203,12 +202,8 @@ class ControleurTableau extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $tableau = $this->serviceTableau->recupererTableauParId($idTableau);
             $filtredUtilisateurs = $this->serviceUtilisateur->verificationsMembre($tableau, $this->connexionUtilisateur->getLoginUtilisateurConnecte());
-            /*return ControleurTableau::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Ajout d'un membre",
-                "cheminVueBody" => "tableau/formulaireAjoutMembreTableau.php",
-                "tableau" => $tableau,
-                "utilisateurs" => $filtredUtilisateurs
-            ]);*/
+
+
             return $this->afficherTwig('tableau/formulaireAjoutMembreTableau.html.twig', [
                 "utilisateurs" => $filtredUtilisateurs
             ]);

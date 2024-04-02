@@ -76,11 +76,7 @@ class ControleurUtilisateur extends ControleurGenerique
             $this->serviceConnexion->pasConnecter();
             $login = $this->connexionUtilisateur->getLoginUtilisateurConnecte();
             $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($login);
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "utilisateur" => $utilisateur,
-                "pagetitle" => "Détail de l'utilisateur {$utilisateur->getLogin()}",
-                "cheminVueBody" => "utilisateur/detail.php"
-            ]);*/
+
             return $this->afficherTwig('utilisateur/detail.html.twig', ["utilisateur" => $utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -98,10 +94,7 @@ class ControleurUtilisateur extends ControleurGenerique
     {
         try {
             $this->serviceConnexion->dejaConnecte();
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Création d'un utilisateur",
-                "cheminVueBody" => "utilisateur/formulaireCreation.php"
-            ]);*/
+
             return $this->afficherTwig('utilisateur/formulaireCreation.html.twig');
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -153,11 +146,7 @@ class ControleurUtilisateur extends ControleurGenerique
         try {
             $this->serviceConnexion->pasConnecter();
             $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($this->connexionUtilisateur->getLoginUtilisateurConnecte());
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Mise à jour du profil",
-                "cheminVueBody" => "utilisateur/formulaireMiseAJour.php",
-                "utilisateur" => $utilisateur,
-            ]);*/
+
             return $this->afficherTwig('utilisateur/formulaireMiseAjour.html.twig', ["utilisateur" => $utilisateur]);
         } catch (ConnexionException $e) {
             return self::redirectionConnectionFlash($e);
@@ -306,11 +295,7 @@ class ControleurUtilisateur extends ControleurGenerique
         try {
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->recupererCompte($mail);
-            /*return ControleurUtilisateur::afficherVue('vueGenerale.php', [
-                "pagetitle" => "Récupérer mon compte",
-                "cheminVueBody" => "utilisateur/resultatResetCompte.php",
-                "utilisateurs" => $utilisateurs
-            ]);*/
+
             MessageFlash::ajouter("success", "Un e-mail a été envoyé à l'adresse indiquée.");
             return self::redirection();
         } catch (ConnexionException $e) {

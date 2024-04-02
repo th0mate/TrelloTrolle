@@ -74,24 +74,7 @@ class TableauRepositoryTest extends TestCase
 
     /**  Test recupererTableauxUtilisateur prends : string $login retourne : array*/
 
-    /*public function testRecupererTableauxUtilisateurExistantPlusieurs(){
-        $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob');
-        $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
-        $fakeTab2 = new Tableau(2, 'test2', 'test2',$fakeUser);
 
-        $this->assertEquals([$fakeTab1,$fakeTab2], self::$tableauRepository->recupererTableauxUtilisateur('bob69'));
-    }
-
-    public function testRecupererTableauxUtilisateurExistantSeul(){
-
-    }
-
-    public function testRecupererTableauxUtilisateurExistantPasProprietaire(){
-
-    }
-    public function testRecupererTableauxUtilisateurInexistant(){
-
-    }*/
 
     /**  Test recupererParCodeTableau prends :string $codeTableau retourne: ?AbstractDataObject*/
 
