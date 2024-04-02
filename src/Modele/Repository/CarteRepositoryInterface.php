@@ -55,10 +55,5 @@ interface CarteRepositoryInterface
      */
     public function setAffectationsCarte(?array $affectationsCarte, Carte $carte): void;
 
-    /**
-     * Fonction permettant de récupérer une carte en fonction de la clé primaire
-     * @param int $idCarte La clé primaire
-     * @return Carte La carte récupérée
-     */
-    public function getAllFromCartes(int $idCarte): Carte;
+
 }

@@ -93,11 +93,5 @@ interface TableauRepositoryInterface
      */
     public function getProprietaire(Tableau $tableau) : Utilisateur;
 
-    /**
-     * FOnction permettant d'avoir les attributs d'un tableau
-     * @param int $idTableau L'id du tableau
-     * @return array Les attributs du tableau
-     */
-    public function getAllFromTableau(int $idTableau): array;
 
 }

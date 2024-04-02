@@ -34,10 +34,5 @@ interface ColonneRepositoryInterface
      */
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void;
 
-    /**
-     * Fonction permettant de récupérer tous les attributs d'une colonne
-     * @param int $idColonne L'id de la colonne
-     * @return array Les attributs de la colonne
-     */
-    public function getAllFromColonne(int $idColonne): array;
+
 }

@@ -164,7 +164,7 @@ class CarteRepository extends AbstractRepository implements CarteRepositoryInter
 
     /**
      * Fonction permettant de récupérer une carte en fonction de son id
-     * @param int $idCarte L'id de la carte
+     * @param int|string $idCle  L'id de la carte
      * @return Carte|null La carte récupérée
      */
     public function getAllFromTable(int|string $idCle): ?Carte
