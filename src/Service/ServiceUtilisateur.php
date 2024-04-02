@@ -111,7 +111,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      * @return AbstractDataObject L'utilisateur
      * @throws TableauException Erreur si l'utilisateur n'existe pas
      */
-    public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject
+    public function utilisateurExistant($login, ?Tableau $tableau): AbstractDataObject
     {
         $utilisateur = $this->recupererUtilisateurParCle($login);
         if (!$utilisateur) {
@@ -213,7 +213,6 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         });
 
         if (empty($filtredUtilisateurs)) {
-            //TODO le message flash est censé était en warning de base mais c'est maintenant un danger
             throw new TableauException("Il n'est pas possible d'ajouter plus de membre à ce tableau.", $tableau, Response::HTTP_CONFLICT);
         }
         return $filtredUtilisateurs;
@@ -230,6 +229,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
      */
     public function mettreAJourUtilisateur($attributs): void
     {
+
         foreach ($attributs as $attribut) {
             if (is_null($attribut)) {
                 throw new MiseAJourException('Login, nom, prenom, email ou mot de passe manquant.', "danger", 404);
@@ -246,48 +246,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
             throw new MiseAJourException("Email non valide", "warning", 404);
         }
         $checkUtilisateur= $this->utilisateurRepository->recupererUtilisateursParEmail($attributs["email"]);
-        if($checkUtilisateur){
+        if($checkUtilisateur && $utilisateur->getEmail() != $checkUtilisateur->getEmail()){
             throw new MiseAJourException("L'email est déjà utilisé", "warning", 403);
-        }
-
-        if (!(MotDePasse::verifier($attributs["mdpAncien"], $utilisateur->getMdpHache()))) {
-            throw new MiseAJourException("Ancien mot de passe erroné.", "warning", Response::HTTP_CONFLICT);
-        }
-
-        if ($attributs["mdp"] !== $attributs["mdp2"]) {
-            throw new MiseAJourException("Mots de passe distincts", "warning", Response::HTTP_CONFLICT);
         }
 
         $utilisateur->setNom($attributs["nom"]);
         $utilisateur->setPrenom($attributs["prenom"]);
         $utilisateur->setEmail($attributs["email"]);
-        $utilisateur->setMdpHache(MotDePasse::hacher($attributs["mdp"]));
 
         $this->utilisateurRepository->mettreAJour($utilisateur);
-        /*
-        $cartes = $this->carteRepository->recupererCartesUtilisateur($login);
-        foreach ($cartes as $carte) {
-            $participants = $this->carteRepository->getAffectationsCarte($carte);
-            $participants = array_filter($participants, function ($u) use ($login) {
-                return $u->getLogin() !== $login;
-            });
-            $participants[] = $utilisateur;
-            $this->carteRepository->setAffectationsCarte($participants, $carte);
-            $this->carteRepository->mettreAJour($carte);
-        }
-
-        $tableaux = $this->tableauRepository->recupererTableauxParticipeUtilisateur($login);
-        foreach ($tableaux as $tableau) {
-            $participants = $this->tableauRepository->getParticipants($tableau);
-            $participants = array_filter($participants, function ($u) use ($login) {
-                return $u->getLogin() !== $login;
-            });
-            $participants[] = $utilisateur;
-            $this->tableauRepository->setParticipants($participants, $tableau);
-            $this->tableauRepository->mettreAJour($tableau);
-        }
-        */
-
 
     }
 

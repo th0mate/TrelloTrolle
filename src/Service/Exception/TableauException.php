@@ -10,7 +10,7 @@ class TableauException extends ServiceException
      * Variable contenant le tableau
      * @var Tableau
      */
-    private Tableau $tableau;
+    private ?Tableau $tableau;
 
     /**
      * TableauException constructor.
@@ -29,7 +29,7 @@ class TableauException extends ServiceException
      * Fonction permettant de récupérer le tableau
      * @return Tableau Le tableau récupéré
      */
-    public function getTableau(): Tableau
+    public function getTableau(): ?Tableau
     {
         return $this->tableau;
     }

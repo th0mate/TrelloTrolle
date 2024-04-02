@@ -47,7 +47,7 @@ class ControleurUtilisateur extends ControleurGenerique
                                 private ServiceUtilisateurInterface   $serviceUtilisateur,
                                 private ConnexionUtilisateurInterface $connexionUtilisateur
     )
-   {
+    {
         parent::__construct($container);
 
     }
@@ -177,9 +177,6 @@ class ControleurUtilisateur extends ControleurGenerique
             "nom" => $_REQUEST["nom"] ?? null,
             "prenom" => $_REQUEST["prenom"] ?? null,
             "email" => $_REQUEST["email"] ?? null,
-            "mdp" => $_REQUEST["mdp"] ?? null,
-            "mdp2" => $_REQUEST["mdp2"] ?? null,
-            "mdpAncien" => $_REQUEST["mdpAncien"] ?? null
         ];
         try {
             $this->serviceConnexion->pasConnecter();
@@ -305,7 +302,7 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperation', name: 'recupererCompte', methods: "POST")]
     public function recupererCompte(): Response
     {
-        $mail = $_REQUEST["email"]??null;
+        $mail = $_REQUEST["email"] ?? null;
         try {
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->recupererCompte($mail);
@@ -328,12 +325,17 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperationMdp', name: 'changerMotDePasse', methods: "GET")]
     public function verifNonce(): Response
     {
-        $nonce=$_REQUEST["nonce"] ??null;
-        $login=$_REQUEST["login"] ??null;
+        $nonce = $_REQUEST["nonce"] ?? null;
+        $login = $_REQUEST["login"] ?? null;
         try {
-            $this->serviceConnexion->dejaConnecte();
-            $this->serviceUtilisateur->verifNonce($login,$nonce);
-            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig',["login"=>$login]);
+            if (!$this->connexionUtilisateur->estConnecte()) {
+                $this->serviceUtilisateur->verifNonce($login, $nonce);
+            }
+            if ($this->connexionUtilisateur->getLoginUtilisateurConnecte()!=$login){
+                MessageFlash::ajouter("warning","Ce login n'est pas le votre" );
+                return self::redirection("afficherFormulaireConnexion");
+            }
+            return $this->afficherTwig('utilisateur/resultatResetCompte.html.twig', ["login" => $login]);
         } catch (ServiceException $e) {
             MessageFlash::ajouter("warning", $e->getMessage());
             return self::redirection("afficherFormulaireConnexion");
@@ -341,28 +343,42 @@ class ControleurUtilisateur extends ControleurGenerique
     }
 
     /**
-     * Réinitialise le mot de passe d'une entreprise.
+     * Réinitialise le mot de passe d'un utilisateur.
      *
      * @return Response
-     * @throws ServiceException
      */
     #[Route('/recuperationMdp', name: 'validerMDP', methods: "POST")]
     public function resetPassword(): Response
     {
-        $login = $_REQUEST["login"] ??null;
-        $mdp = $_REQUEST["mdp"]??null;
-        $mdp2 = $_REQUEST["mdp2"]??null;
+        $login = $_REQUEST["login"] ?? null;
+        $mdp = $_REQUEST["mdp"] ?? null;
+        $mdp2 = $_REQUEST["mdp2"] ?? null;
+        $oldmdp = $_REQUEST["mdpAncien"] ?? null;
         try {
-            $this->serviceConnexion->dejaConnecte();
+            if ($this->connexionUtilisateur->getLoginUtilisateurConnecte()!=$login){
+                MessageFlash::ajouter("warning","Ce login n'est pas le votre" );
+                return self::redirection("afficherFormulaireConnexion");
+            }
+            $utilisateur = $this->serviceUtilisateur->recupererUtilisateurParCle($login);
+            if (!(MotDePasse::verifier($oldmdp, $utilisateur->getMdpHache()))) {
+                MessageFlash::ajouter("warning","l'ancien mot de passe est erroné" );
+                return self::redirection("changerMotDePasse",["login"=>$login]);
+            }
             $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);
             MessageFlash::ajouter("success", "Le mot de passe a bien été modifié !");
+            if($this->connexionUtilisateur->estConnecte()) {
+                return self::redirection("afficherListeMesTableaux");
+            }
             return self::redirection("connecter");
+
         } catch (ConnexionException $e) {
             MessageFlash::ajouter("info", $e->getMessage());
             return self::redirection("accueil");
+        } catch (ServiceException $e){
+            MessageFlash::ajouter("warning", $e->getMessage());
+            return self::redirection("changerMotDePasse",["login"=>$login]);
         }
     }
-
 
 
 }
