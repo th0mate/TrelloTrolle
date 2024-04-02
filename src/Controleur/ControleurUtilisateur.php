@@ -233,7 +233,7 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperation', name: 'recupererCompte', methods: "POST")]
     public function recupererCompte(): Response
     {
-        $mail = $_REQUEST["email"];
+        $mail = $_REQUEST["email"]??null;
         try {
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->recupererCompte($mail);
@@ -256,8 +256,8 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperationMdp', name: 'changerMotDePasse', methods: "GET")]
     public function verifNonce(): Response
     {
-        $nonce=$_REQUEST["nonce"];
-        $login=$_REQUEST["login"];
+        $nonce=$_REQUEST["nonce"] ??null;
+        $login=$_REQUEST["login"] ??null;
         try {
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->verifNonce($login,$nonce);
@@ -277,9 +277,9 @@ class ControleurUtilisateur extends ControleurGenerique
     #[Route('/recuperationMdp', name: 'validerMDP', methods: "POST")]
     public function resetPassword(): Response
     {
-        $login = $_REQUEST["login"];
-        $mdp = $_REQUEST["mdp"];
-        $mdp2 = $_REQUEST["mdp2"];
+        $login = $_REQUEST["login"] ??null;
+        $mdp = $_REQUEST["mdp"]??null;
+        $mdp2 = $_REQUEST["mdp2"]??null;
         try {
             $this->serviceConnexion->dejaConnecte();
             $this->serviceUtilisateur->changerMotDePasse($login, $mdp, $mdp2);

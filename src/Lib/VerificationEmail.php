@@ -32,7 +32,6 @@ class VerificationEmail
         $loginURL = rawurlencode($utilisateur->getLogin());
         $nonceURL = rawurlencode($utilisateur->getNonce());
         $lienChangementPassword =ConfigurationSite::getAbsoluteURL()."/recuperationMdp?login=$loginURL&nonce=$nonceURL";
-        MessageFlash::ajouter("success",$lienChangementPassword);
         $message = '
 <!DOCTYPE html>
 <html lang="fr">

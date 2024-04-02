@@ -132,7 +132,7 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     /**
      * @throws ServiceException
      */
-    public function recupererCompte(String $mail): void
+    public function recupererCompte(?String $mail): void
     {
         if (is_null($mail)) {
             throw new ServiceException("Adresse email manquante", 404);
@@ -336,8 +336,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $participants;
     }
 
-    public function verifNonce($login,$nonce): void
+    /**
+     * @throws ServiceException
+     */
+    public function verifNonce($login, $nonce): void
     {
+        if (is_null($login) || is_null($nonce)){
+            throw new ServiceException("Informations manquantes",404);
+        }
         $utilisateur = $this->utilisateurRepository->recupererParClePrimaire($login);
         if ($utilisateur->formatTableau()["nonceTag"] != $nonce) {
             throw new ServiceException("Le nonce est incorrect", Response::HTTP_FORBIDDEN);
@@ -346,8 +352,8 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
     public function changerMotDePasse($login, $mdp, $mdp2): void
     {
-        if (!isset($login, $mdp, $mdp2)) {
-            throw new ServiceException("Variable non remplit", Response::HTTP_BAD_REQUEST);
+        if (is_null($login) ||is_null($mdp) || is_null($mdp2)) {
+            throw new ServiceException("Informations manquantes", Response::HTTP_BAD_REQUEST);
         }
         if ($mdp !== $mdp2) {
             throw new ServiceException("Mot de passe différent", Response::HTTP_CONFLICT);
