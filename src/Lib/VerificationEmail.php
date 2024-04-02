@@ -3,6 +3,7 @@
 namespace App\Trellotrolle\Lib;
 
 use App\Trellotrolle\Configuration\ConfigurationBaseDeDonnees;
+use App\Trellotrolle\Configuration\ConfigurationSite;
 use App\Trellotrolle\Controleur\ControleurUtilisateur;
 use App\Trellotrolle\Lib\MessageFlash;
 use App\Trellotrolle\Modele\DataObject\AbstractDataObject;
@@ -30,7 +31,8 @@ class VerificationEmail
     public function envoiEmailChangementPassword(Utilisateur $utilisateur): void{
         $loginURL = rawurlencode($utilisateur->getLogin());
         $nonceURL = rawurlencode($utilisateur->getNonce());
-        $lienChangementPassword = $this->absolutURL->generate('changerMotDePasse', ['login' => $loginURL, 'nonce' => $nonceURL]);
+        $lienChangementPassword =ConfigurationSite::getAbsoluteURL()."/recuperationMdp?login=$loginURL&nonce=$nonceURL";
+        MessageFlash::ajouter("success",$lienChangementPassword);
         $message = '
 <!DOCTYPE html>
 <html lang="fr">
