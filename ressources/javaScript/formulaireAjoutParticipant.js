@@ -1,4 +1,5 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {escapeHtml} from "./escape.js";
 
 let formulaireAjoutParticipant = reactive({
     idTableau: "",
@@ -20,7 +21,7 @@ let formulaireAjoutParticipant = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    recherche: this.adresseMailARechercher,
+                    recherche: escapeHtml(this.adresseMailARechercher),
                 })
             });
 
@@ -30,7 +31,7 @@ let formulaireAjoutParticipant = reactive({
                 let collaborateurs = await response.json();
                 document.querySelector('.listeAjouter').innerHTML = '';
                 for (let collaborateur of collaborateurs) {
-                    document.querySelector('.listeAjouter').innerHTML += `<p data-login="${collaborateur.login}" data-onclick="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur(${collaborateur.login}, ${collaborateur.prenom[0]}${collaborateur.nom[0]}, true)">${collaborateur.prenom} ${collaborateur.nom}</p>`;
+                    document.querySelector('.listeAjouter').innerHTML += `<p data-login="${escapeHtml(collaborateur.login)}" data-onclick="formulaireAjoutParticipant.ajouterCheckboxPourUtilisateur(${escapeHtml(collaborateur.login)}, ${escapeHtml(collaborateur.prenom[0])}${escapeHtml(collaborateur.nom[0])}, true)">${escapeHtml(collaborateur.prenom)} ${escapeHtml(collaborateur.nom)}</p>`;
                 }
                 startReactiveDom();
             }
@@ -73,8 +74,8 @@ let formulaireAjoutParticipant = reactive({
                     randomColorsNewUsers();
                 }, 100);
 
-                return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${value}">
-        <label for="participant${idUtilisateur}" data-participant="${idUtilisateur}"><span class="user">${value}</span></label>`;
+                return document.querySelector('.checkBoxCollaborateurs').innerHTML += `<input data-onUncheck="formulaireAjoutParticipant.supprimerParticipant(${idUtilisateur})" type="checkbox" data-participant="${idUtilisateur}" checked id="participant${idUtilisateur}" name="participant${idUtilisateur}" value="${escapeHtml(value)}">
+        <label for="participant${idUtilisateur}" data-participant="${idUtilisateur}"><span class="user">${escapeHtml(value)}</span></label>`;
 
             } else {
 

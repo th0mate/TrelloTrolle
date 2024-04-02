@@ -1,4 +1,5 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import{escapeHtml} from "./escape.js";
 
 let formulaireAjoutColonne = reactive({
     idTableau: "",
@@ -34,8 +35,8 @@ let formulaireAjoutColonne = reactive({
             newElement.setAttribute('draggable', 'true');
             newElement.setAttribute('data-columns', this.idColonne);
 
-            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${this.titre}</h5><div class="bullets"><img src="${bulletsImageUrl}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
-                <img src="${plusImageUrl}" alt="">
+            newElement.innerHTML = `<div class="entete"><h5 draggable="true" class="main">${escapeHtml(this.titre)}</h5><div class="bullets"><img src="${encodeURIComponent(bulletsImageUrl)}" alt=""></div></div><div data-columns="${this.idColonne}" class="stockage"></div><div class="add" data-columns="${this.idColonne}">
+                <img src="${encodeURIComponent(plusImageUrl)}" alt="">
                 Ajouter une carte
             </div>`;
             let ul = document.querySelector('.ul');
@@ -52,8 +53,8 @@ let formulaireAjoutColonne = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    idTableau: this.idTableau,
-                    nomColonne: this.titre
+                    idTableau: escapeHtml(this.idTableau),
+                    nomColonne: escapeHtml(this.titre)
                 })
             });
 

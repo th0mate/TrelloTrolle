@@ -1,4 +1,5 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {escapeHtml} from "./escape.js";
 
 /**
  * Objet réactif formulaireAjoutCarte
@@ -22,7 +23,7 @@ let formulaireAjoutCarte = reactive({
             return;
         }
         this.estEnvoye = true;
-        this.idColonne = document.querySelector('.idColonne').value;
+        this.idColonne = escapeHtml(document.querySelector('.idColonne').value);
 
         if (this.idColonne !== '') {
             this.ajouterCarte(this.idColonne)
@@ -38,9 +39,9 @@ let formulaireAjoutCarte = reactive({
                 },
                 body: JSON.stringify({
                     idColonne: this.idColonne,
-                    titreCarte: this.titre,
-                    descriptifCarte: this.description,
-                    couleurCarte: this.couleur,
+                    titreCarte: escapeHtml(this.titre),
+                    descriptifCarte: escapeHtml(this.description),
+                    couleurCarte: escapeHtml(this.couleur),
                     affectationsCarte: this.participants
                 })
             });
@@ -104,13 +105,13 @@ let formulaireAjoutCarte = reactive({
             const id = await getNextIdCarte();
 
             let html = `<div class="card" draggable="true" data-onrightclick="formulaireAjoutCarte.supprimerCarte(${id})" data-card="${id}" data-colmuns="${idColonne}">
-            <span class="color" style="border: 5px solid ${this.couleur}"></span>
-            ${this.titre}
+            <span class="color" style="border: 5px solid ${escapeHtml(this.couleur)}"></span>
+            ${escapeHtml(this.titre)}
             <div class="features">`;
 
             for (let participant of tousMembres) {
                 if (this.participants.includes(participant.login)) {
-                    html += `<span class="user" data-user="${participant.login}">${participant.prenom[0]}${participant.nom[0]}</span>`;
+                    html += `<span class="user" data-user="${escapeHtml(participant.login)}">${escapeHtml(participant.prenom[0])}${escapeHtml(participant.nom[0])}</span>`;
                 }
             }
 
@@ -130,7 +131,7 @@ let formulaireAjoutCarte = reactive({
      */
     afficherCheckBoxParticipants: async function () {
         const idTableau = document.querySelector('.adder').getAttribute('data-tableau');
-        const estModif = document.querySelector('.formulaireCreationCarte').getAttribute('data-modif');
+        const estModif = escapeHtml(document.querySelector('.formulaireCreationCarte').getAttribute('data-modif'));
 
 
         if (estModif === 'true') {
@@ -173,8 +174,8 @@ let formulaireAjoutCarte = reactive({
 
                     const proprio = await response2.json();
                     let membres = await response.json();
-                    document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${proprio.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${proprio.login})" type="checkbox" data-participant="${proprio.login}" id="participant${proprio.login}" name="participant${proprio.login}" value="${proprio.login}">
-                <label for="participant${proprio.login}" data-participant="${proprio.login}"><span class="user">${proprio.prenom[0]}${proprio.nom[0]}</span></label>`;
+                    document.querySelector('.listeParticipants').innerHTML = `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${escapeHtml(proprio.login)})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${escapeHtml(proprio.login)})" type="checkbox" data-participant="${escapeHtml(proprio.login)}" id="participant${escapeHtml(proprio.login)}" name="participant${escapeHtml(proprio.login)}" value="${escapeHtml(proprio.login)}">
+                <label for="participant${escapeHtml(proprio.login)}" data-participant="${escapeHtml(proprio.login)}"><span class="user">${escapeHtml(proprio.prenom[0])}${escapeHtml(proprio.nom[0])}</span></label>`;
 
                     setTimeout(() => {
                         startReactiveDom();
@@ -184,8 +185,8 @@ let formulaireAjoutCarte = reactive({
                         return '<p>Il n\'y a pas de collaborateurs pour le moment</p><span class="addCollborateurs">Ajouter des collaborateurs</span>\n';
                     } else {
                         membres.forEach(membre => {
-                            return document.querySelector('.listeParticipants').innerHTML += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${membre.login})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${membre.login})" type="checkbox" data-participant="${membre.login}" id="participant${membre.login}" name="participant${membre.login}" value="${membre.login}">
-                <label for="participant${membre.login}" data-participant="${membre.login}"><span class="user">${membre.prenom[0]}${membre.nom[0]}</span></label>`;
+                            return document.querySelector('.listeParticipants').innerHTML += `<input data-onUncheck="formulaireAjoutCarte.supprimerParticipantCarte(${escapeHtml(membre.login)})" data-oncheck="formulaireAjoutCarte.ajouterParticipantCarte(${escapeHtml(membre.login)})" type="checkbox" data-participant="${escapeHtml(membre.login)}" id="participant${escapeHtml(membre.login)}" name="participant${escapeHtml(membre.login)}" value="${escapeHtml(membre.login)}">
+                <label for="participant${escapeHtml(membre.login)}" data-participant="${escapeHtml(membre.login)}"><span class="user">${escapeHtml(membre.prenom[0])}${escapeHtml(membre.nom[0])}</span></label>`;
                         });
                     }
                 }
@@ -222,7 +223,7 @@ let formulaireAjoutCarte = reactive({
 
             for (let participant of tousMembres) {
                 if (this.participants.includes(participant.login)) {
-                    html += `<span class="user" data-user="${participant.login}">${participant.prenom[0]}${participant.nom[0]}</span>`;
+                    html += `<span class="user" data-user="${escapeHtml(participant.login)}">${escapeHtml(participant.prenom[0])}${escapeHtml(participant.nom[0])}</span>`;
                 }
             }
 
@@ -241,11 +242,11 @@ let formulaireAjoutCarte = reactive({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    idCarte: this.idCarte,
-                    idColonne: this.idColonne,
-                    titreCarte: this.titre,
-                    descriptifCarte: this.description,
-                    couleurCarte: this.couleur,
+                    idCarte: escapeHtml(this.idCarte),
+                    idColonne: escapeHtml(this.idColonne),
+                    titreCarte: escapeHtml(this.titre),
+                    descriptifCarte: escapeHtml(this.description),
+                    couleurCarte: escapeHtml(this.couleur),
                     affectationsCarte: this.participants
                 })
             });
@@ -271,7 +272,7 @@ let formulaireAjoutCarte = reactive({
         if (this && this.participants && !this.participants.includes(idUtilisateur)) {
             this.participants.push(idUtilisateur);
             if (this.idColonne === '') {
-                this.idColonne = document.querySelector('.idColonne').value;
+                this.idColonne = escapeHtml(document.querySelector('.idColonne').value);
             }
             window.ajouterCarteUtilisateur(this.idCarte, idUtilisateur, this.idColonne);
         }
@@ -304,7 +305,7 @@ async function getTousMembresTableaux(idTableau) {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            idTableau: idTableau
+            idTableau: escapeHtml(idTableau)
         })
     });
 
@@ -315,7 +316,7 @@ async function getTousMembresTableaux(idTableau) {
             'Accept': 'application/json'
         },
         body: JSON.stringify({
-            idTableau: idTableau
+            idTableau: escapeHtml(idTableau)
         })
     });
 

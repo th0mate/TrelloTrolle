@@ -1,4 +1,5 @@
 import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import {escapeHtml} from "./escape";
 
 let formulaireModificationTableau = reactive({
     titreTableau: "",
@@ -8,7 +9,7 @@ let formulaireModificationTableau = reactive({
      * Affiche le formulaire de modification du tableau
      */
     afficherFormulaireModificationTableau: function () {
-        document.querySelector('.inputModificationTableau').value = document.querySelector('.titreTableau').textContent;
+        document.querySelector('.inputModificationTableau').value = escapeHtml(document.querySelector('.titreTableau').textContent);
         document.querySelector('.formulaireModificationTableau').style.display = "flex";
         document.querySelector('.all').style.opacity = "0.5";
     },
@@ -20,6 +21,7 @@ let formulaireModificationTableau = reactive({
      * @returns {Promise<void>} La promesse habituelle
      */
     modifierTableau: async function(idTableau){
+        this.titreTableau = escapeHtml(this.titreTableau);
         let response = await fetch(apiBase + "/tableau/modifier", {
             method: "PATCH",
             headers: {

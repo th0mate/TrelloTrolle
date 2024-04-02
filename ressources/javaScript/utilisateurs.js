@@ -1,4 +1,5 @@
 import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
+import{escapeHtml} from "./escape.js";
 
 let utilisateursReactifs = [];
 
@@ -46,7 +47,7 @@ let utilisateurs = reactive({
         } else {
             utilisateur.colonnes.push({
                 idColonne: idColonne,
-                titreColonne: colonne.querySelector('.main').innerText,
+                titreColonne: escapeHtml(colonne.querySelector('.main').innerText),
                 nbCartes: 1
             });
         }
@@ -137,9 +138,9 @@ let utilisateurs = reactive({
      */
     afficherElements: function (idUtilisateur) {
         const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
-        let html = `<h4>${utilisateur.prenom} ${utilisateur.nom}</h4><ul>`;
+        let html = `<h4>${escapeHtml(utilisateur.prenom)} ${escapeHtml(utilisateur.nom)}</h4><ul>`;
         for (let colonne of utilisateur.colonnes) {
-            html += `<li>${colonne.titreColonne} : ${colonne.nbCartes}</li>`;
+            html += `<li>${escapeHtml(colonne.titreColonne)} : ${escapeHtml(colonne.nbCartes)}</li>`;
         }
         html += '</ul>';
         return html;
@@ -245,7 +246,7 @@ let utilisateurs = reactive({
                         for (let [idColonne, [titreColonne, nbCartes]] of Object.entries(affectation[membre.login].colonnes)) {
                             utilisateur.colonnes.push({
                                 idColonne: idColonne,
-                                titreColonne: titreColonne,
+                                titreColonne: escapeHtml(titreColonne),
                                 nbCartes: nbCartes
                             });
                         }
