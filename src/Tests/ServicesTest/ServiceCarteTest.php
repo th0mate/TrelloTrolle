@@ -199,8 +199,8 @@ class ServiceCarteTest extends TestCase
         $this->expectExceptionMessage("Le tableau de cette colonne n'est pas le même que celui de la colonne d'origine de la carte!");
         $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
-        $fakeColonne=new Colonne(1,"titre",$fakeTableau);
-        $fakeCarte=new Carte(1,"titre","desc","couleur",new Colonne(2,"titre",new Tableau(2,"code","titre",$fakeUser)));
+        $fakeColonne=new Colonne(1,"titre",$fakeTableau,null);
+        $fakeCarte=new Carte(1,"titre","desc","couleur",new Colonne(2,"titre",new Tableau(2,"code","titre",$fakeUser),null));
         $this->carteRepository->method("getAllFromTable")->willReturn($fakeCarte);
         $this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
     }
@@ -215,7 +215,7 @@ class ServiceCarteTest extends TestCase
         ];
         $fakeUser=new Utilisateur("login","nom","prenom","email@l.com","mdp");
         $fakeTableau=new Tableau(1,"code","titre",$fakeUser);
-        $fakeColonne=new Colonne(1,"titre",$fakeTableau);
+        $fakeColonne=new Colonne(1,"titre",$fakeTableau,null);
         $fakeCarte=new Carte(1,"titre","desc","couleur",$fakeColonne);
         $this->carteRepository->method("getAllFromTable")->willReturn($fakeCarte);
         $carte=$this->serviceCarte->verificationsMiseAJourCarte(1,$fakeColonne,$attributs);
@@ -328,12 +328,12 @@ class ServiceCarteTest extends TestCase
 
     private function createFakeCarte($idCarte = 1): Carte
     {
-        return new Carte($idCarte, "titre", "desc", "couleur", new Colonne(2, "titre", null));
+        return new Carte($idCarte, "titre", "desc", "couleur", new Colonne(2, "titre", null,2));
     }
 
     private function createFakeColonne($idColonne = 1): Colonne
     {
-        return new Colonne($idColonne, "titre", null);
+        return new Colonne($idColonne, "titre", null,1);
     }
 
     private function createFakeTableau($utilisateur = null, $idTableau = 1): Tableau
