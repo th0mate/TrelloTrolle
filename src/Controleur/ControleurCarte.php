@@ -26,6 +26,17 @@ use Symfony\Component\HttpFoundation\Request;
 class ControleurCarte extends ControleurGenerique
 {
 
+    /**
+     * ControleurCarte constructor.
+     * @param ContainerInterface $container le conteneur de dépendances
+     * @param ServiceConnexionInterface $serviceConnexion le service de connexion
+     * @param ServiceCarteInterface $serviceCarte le service de carte
+     * @param ServiceUtilisateurInterface $serviceUtilisateur le service d'utilisateur
+     * @param ServiceColonneInterface $serviceColonne le service de colonne
+     *
+     * fonction qui permet de construire le controleur de carte
+     */
+
     public function __construct(ContainerInterface         $container,
                                 private ServiceConnexionInterface   $serviceConnexion,
                                 private ServiceCarteInterface      $serviceCarte,
@@ -36,10 +47,23 @@ class ControleurCarte extends ControleurGenerique
         parent::__construct($container);
     }
 
+    /**
+     * @param string $messageErreur le message d'erreur
+     * @param string $controleur le controleur
+     * @return Response l'affichage de l'erreur
+     *
+     * fonction permettant d'afficher une erreur avec un message et un controleur donné
+     */
     public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         return parent::afficherErreur($messageErreur, "carte");
     }
+
+    /**
+     * @return Response la redirection vers une route
+     *
+     * fonction permettant de supprimer une carte
+     */
 
     #[Route('/carte/suprression', name: 'supprimerCarte', methods: "GET")]
     //TODO supprimer cette fonction car elle est maintenant dans l'API
@@ -67,6 +91,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response la redirection vers une route
+     *
+     * fonction permettant d'afficher le formulaire de création d'une carte
+     */
 
     #[Route('/carte/nouveau', name: 'afficherFormulaireCreationCarte', methods: "GET")]
     public function afficherFormulaireCreationCarte(): Response
@@ -96,6 +126,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response la redirection vers une route
+     *
+     * fonction permettant de créer une carte
+     */
 
     #[Route('/carte/nouveau', name: 'creerCarte', methods: "POST")]
     public function creerCarte(): Response
@@ -129,6 +165,12 @@ class ControleurCarte extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response la redirection vers une route
+     *
+     * fonction permettant d'afficher le formulaire de mise à jour d'une carte
+     */
+
     #[Route('/carte/mettreAJour', name: 'afficherFormulaireMiseAJourCarte', methods: "GET")]
     public function afficherFormulaireMiseAJourCarte(): Response
     {
@@ -151,6 +193,12 @@ class ControleurCarte extends ControleurGenerique
             return self::redirection( "accueil");
         }
     }
+
+    /**
+     * @return Response la redirection vers une route
+     *
+     * fonction permettant de mettre à jour une carte
+     */
 
     #[Route('/carte/mettreAJour', name: 'mettreAJourCarte', methods: "POST")]
     public function mettreAJourCarte(): Response

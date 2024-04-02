@@ -56,17 +56,10 @@ services:
     arguments: ['@utilisateur_repository','@connexion_utilisateur_jwt','@connexion_utilisateur_session']
 
   #Controleurs
-  controleur_carte:
-    class: App\Trellotrolle\Controleur\ControleurCarte
-    arguments: ['@container','@service_connexion','@service_carte','@service_utilisateur','@service_colonne','@connexion_utilisateur_session']
-
-  controleur_colonne:
-    class: App\Trellotrolle\Controleur\ControleurColonne
-    arguments: ['@container','@service_connexion','@service_colonne','@service_utilisateur','@service_tableau','@connexion_utilisateur_session']
 
   controleur_tableau:
     class: App\Trellotrolle\Controleur\ControleurTableau
-    arguments: ['@container','@service_tableau','@service_connexion','@service_utilisateur','@service_carte','@connexion_utilisateur_session']
+    arguments: ['@container','@service_tableau','@service_connexion','@service_utilisateur','@connexion_utilisateur_session']
 
   controleur_utilisateur:
     class: App\Trellotrolle\Controleur\ControleurUtilisateur

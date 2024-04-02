@@ -20,12 +20,20 @@ class ServiceColonne implements ServiceColonneInterface
 {
 
 
+    /**
+     * ServiceColonne constructor.
+     * @param ColonneRepositoryInterface $colonneRepository Repository des colonnes
+     */
     public function __construct(private ColonneRepositoryInterface $colonneRepository)
     {
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de récupérer une colonne par son id
+     * @param $idColonne L'id de la colonne à récupérer
+     * @return Colonne La colonne récupérée
+     * @throws ServiceException Si l'identifiant de la colonne est manquant ou si la colonne est inexistante
      */
     public function recupererColonne($idColonne): Colonne
     {
@@ -43,13 +51,22 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * Fonction permettant de récupérer les colonnes d'un tableau
+     * @param $idTableau L'id du tableau dont on veut récupérer les colonnes
+     * @return array Les colonnes du tableau
+     */
     public function recupererColonnesTableau($idTableau): array
     {
         return $this->colonneRepository->recupererColonnesTableau($idTableau);
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction permettant de supprimer une colonne
+     * @param Tableau $tableau Le tableau dont on veut supprimer la colonne
+     * @param $idColonne L'id de la colonne à supprimer
+     * @return array Les colonnes du tableau après suppression de la colonne donnée
      */
     public function supprimerColonne(Tableau $tableau, $idColonne): array
     {
@@ -58,8 +75,12 @@ class ServiceColonne implements ServiceColonneInterface
 
     }
 
+
     /**
-     * @throws CreationException
+     * Fonction permettant de vérifier si une colonne est null via son nom
+     * @param $nomColonne, Le nom de la colonne à vérifier
+     * @return void
+     * @throws CreationException Si le nom de la colonne est manquant
      */
     public function isSetNomColonne($nomColonne): void
     {
@@ -68,9 +89,14 @@ class ServiceColonne implements ServiceColonneInterface
         }
     }
 
+
     /**
-     * @throws CreationException
-     * @throws ServiceException
+     * Fonction permettant de récupérer une colonne par son id et son nom
+     * @param $idColonne L'id de la colonne à récupérer
+     * @param $nomColonne, Le nom de la colonne à récupérer
+     * @return Colonne La colonne récupérée
+     * @throws CreationException Si le nom de la colonne est manquant
+     * @throws ServiceException Si l'identifiant de la colonne est manquant ou si la colonne est inexistante
      */
     public function recupererColonneAndNomColonne($idColonne, $nomColonne): Colonne
     {
@@ -79,6 +105,12 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * Fonction permettant de créer une colonne
+     * @param Tableau $tableau Le tableau sur lequel on veut créer la colonne
+     * @param $nomColonne, Le nom de la colonne à créer
+     * @return Colonne La colonne créée
+     */
     public function creerColonne(Tableau $tableau, $nomColonne): Colonne
     {
         $colonne= new Colonne(
@@ -90,18 +122,25 @@ class ServiceColonne implements ServiceColonneInterface
         return $colonne;
     }
 
+    /**
+     * Fonction permettant de mettre à jour une colonne
+     * @param Colonne $colonne La colonne à mettre à jour
+     * @return Colonne La colonne mise à jour
+     */
     public function miseAJourColonne(Colonne $colonne): Colonne
     {
         $this->colonneRepository->mettreAJour($colonne);
         return $colonne;
     }
+
+    /**
+     * Fonction permettant de récupérer le prochain identifiant de colonne
+     * @return int L'identifiant de la prochaine colonne
+     */
     public function getNextIdColonne(): int
     {
         return $this->colonneRepository->getNextIdColonne();
     }
 
-    public function inverserOrdreColonnes($idColonne1, $idColonne2): void
-    {
-        $this->colonneRepository->inverserOrdreColonnes($idColonne1, $idColonne2);
-    }
+
 }

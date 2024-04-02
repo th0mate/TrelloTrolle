@@ -27,6 +27,13 @@ class ServiceTableau implements ServiceTableauInterface
 {
 
 
+    /**
+     * ServiceTableau constructor.
+     * @param TableauRepositoryInterface $tableauRepository Repository des tableaux
+     * @param ColonneRepositoryInterface $colonneRepository Repository des colonnes
+     * @param CarteRepositoryInterface $carteRepository Repository des cartes
+     * @param UtilisateurRepositoryInterface $utilisateurRepository Repository des utilisateurs
+     */
     public function __construct(private TableauRepositoryInterface     $tableauRepository,
                                 private ColonneRepositoryInterface     $colonneRepository,
                                 private CarteRepositoryInterface       $carteRepository,
@@ -34,8 +41,13 @@ class ServiceTableau implements ServiceTableauInterface
     {
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de récupérer un tableau par son id
+     * @param $idTableau L'id du tableau à récupérer
+     * @return Tableau Le tableau récupéré
+     * @throws ServiceException Si l'identifiant du tableau est manquant
+     * ou si le tableau est inexistant
      */
     public function recupererTableauParId($idTableau): Tableau
     {
@@ -52,8 +64,12 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de récupérer un tableau par son code
+     * @param $codeTableau, Le code du tableau à récupérer
+     * @return Tableau Le tableau récupéré
+     * @throws ServiceException Si le code du tableau est manquant ou si le tableau est inexistant
      */
     public function recupererTableauParCode($codeTableau): Tableau
     {
@@ -71,6 +87,11 @@ class ServiceTableau implements ServiceTableauInterface
 
     }
 
+    /**
+     * Fonction permettant de récupérer les cartes des colonnes d'un tableau
+     * @param Tableau $tableau Le tableau dont on veut récupérer les cartes
+     * @return array Les cartes des colonnes du tableau
+     */
     public function recupererCartesColonnes(Tableau $tableau): array
     {
         /**
@@ -94,13 +115,23 @@ class ServiceTableau implements ServiceTableauInterface
         return ["data" => $data, "colonnes" => $colonnes, "participants" => $participants];
     }
 
+    /**
+     * Fonction permettant de récupérer les tableaux où un utilisateur est membre
+     * @param $login, Le login de l'utilisateur
+     * @return array Les tableaux où l'utilisateur est présent
+     */
     public function recupererTableauEstMembre($login): array
     {
         return $this->tableauRepository->recupererTableauxOuUtilisateurEstMembre($login);
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction permettant de vérifier si un tableau est null via son nom
+     * @param $nomTableau, Le nom du tableau à vérifier
+     * @param Tableau $tableau Le tableau à vérifier
+     * @return void
+     * @throws TableauException Si le nom du tableau est manquant
      */
     public function isNotNullNomTableau($nomTableau, Tableau $tableau): void
     {
@@ -109,21 +140,35 @@ class ServiceTableau implements ServiceTableauInterface
         }
     }
 
+    /**
+     * Fonction permettant de mettre à jour un tableau
+     * @param Tableau $tableau Le tableau à mettre à jour
+     * @return void
+     */
     public function mettreAJourTableau(Tableau $tableau): void
     {
         $this->tableauRepository->mettreAJour($tableau);
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de supprimer un tableau
+     * @param $idTableau L'id du tableau à supprimer
+     * @return void
      */
     public function supprimerTableau($idTableau): void
     {
         $this->tableauRepository->supprimer($idTableau);
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de quitter un tableau
+     * @param Tableau $tableau Le tableau à quitter
+     * @param AbstractDataObject $utilisateur L'utilisateur qui quitte le tableau
+     * @return void
+     * @throws ServiceException Si l'utilisateur n'appartient pas au tableau ou
+     * s'il est propriétaire du tableau
      */
     public function quitterTableau(Tableau $tableau, AbstractDataObject $utilisateur): void
     {
@@ -148,8 +193,13 @@ class ServiceTableau implements ServiceTableauInterface
         }
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction permettant de créer un tableau
+     * @param $nomTableau, Le nom du tableau à créer
+     * @param $login, Le login de l'utilisateur qui crée le tableau
+     * @return Tableau Le tableau créé
+     * @throws ServiceException Si le nom du tableau est manquant
      */
     public function creerTableau($nomTableau, $login)
     {
@@ -195,7 +245,14 @@ class ServiceTableau implements ServiceTableauInterface
         return $tableau;
     }
 
-    public function estParticipant(Tableau $tableau,$login): bool
+    /**
+     * Fonction permettant de vérifier si un utilisateur est participant à un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si
+     * l'utilisateur est participant
+     * @param $login, Le login de l'utilisateur à vérifier
+     * @return bool Vrai si l'utilisateur est participant, faux sinon
+     */
+    public function estParticipant(Tableau $tableau, $login): bool
     {
         return $this->tableauRepository->estParticipantOuProprietaire($login, $tableau);
     }

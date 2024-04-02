@@ -134,11 +134,19 @@ class TableauRepositoryTest extends TestCase
 
     /**  Test recupererTableauxParticipeUtilisateur prends : string $login retourne : array*/
 
-    /*public function testRecupererTableauxParticipeUtilisateur(){
+    public function testRecupererTableauxParticipeUtilisateurEstParticipants(){
         $fakeUser2 = new Utilisateur('bib420','bibby','bib','bib.bibby@bob.com','mdpBib');
         $fakeTab3 = new Tableau(3,'test3', 'test3',$fakeUser2);
-        $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxOuUtilisateurEstMembre('bob69'));
-    }*/
+        $this->assertEquals([ $fakeTab3], self::$tableauRepository->recupererTableauxParticipeUtilisateur('bob69'));
+    }
+
+    public function testRecupererTableauxParticiperUtilisateurEstPasParticipants(){
+        $this->assertEquals([], self::$tableauRepository->recupererTableauxParticipeUtilisateur('bib64'));
+    }
+
+    public function testRecupererTableauxParticiperUtilisateurInexistant(){
+        $this->assertEquals([ ],self::$tableauRepository->recupererTableauxParticipeUtilisateur('georges'));
+    }
 
     /**  Test getNextIdTableau retourne: int*/
 

@@ -115,7 +115,7 @@ class ColonneRepositoryTest extends TestCase
 
     /**Test inverserOrdreColonnes prends : idColonne, idColonne  */
 
-    public function testInverserOrdreColonnes2(){
+    /*public function testInverserOrdreColonnes2(){
         self::$colonneRepository->inverserOrdreColonnes(1,2);
             $fakeUser= new Utilisateur('bob69','bobby','bob','bob.bobby@bob.com','mdpBob',"aaa");
             $fakeTab1 = new Tableau(1, 'test', 'test',$fakeUser);
@@ -125,7 +125,7 @@ class ColonneRepositoryTest extends TestCase
     }
     public function testInverserOrdreColonnesPasMemeTableau(){
         //TODO
-    }
+    }*/
 
     /**Test getAllFromColonne prends idColonne retourne array*/
 

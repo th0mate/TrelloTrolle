@@ -33,6 +33,12 @@ use Symfony\Component\HttpFoundation\Response;
 class ServiceUtilisateur implements ServiceUtilisateurInterface
 {
 
+    /**
+     * ServiceUtilisateur constructor.
+     * @param UtilisateurRepositoryInterface $utilisateurRepository Repository des utilisateurs
+     * @param TableauRepositoryInterface $tableauRepository Repository des tableaux
+     * @param CarteRepositoryInterface $carteRepository Repository des cartes
+     */
     public function __construct(private UtilisateurRepositoryInterface $utilisateurRepository,
                                 private TableauRepositoryInterface     $tableauRepository,
                                 private CarteRepositoryInterface       $carteRepository,
@@ -40,8 +46,13 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
     {
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui vérifie si l'utilisateur est participant d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si l'utilisateur est participant
+     * @param $loginConnecte, Le login de l'utilisateur connecté
+     * @return void
+     * @throws TableauException Erreur si l'utilisateur n'est pas participant
      */
     public function estParticipant(Tableau $tableau, $loginConnecte): void
     {
@@ -51,13 +62,23 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
-    public function recupererUtilisateurParCle($login): AbstractDataObject|null
+    /**
+     * Fonction qui récupère un utilisateur par sa clé
+     * @param $login, La clé de l'utilisateur
+     * @return AbstractDataObject|null L'utilisateur
+     */
+    public function recupererUtilisateurParCle($login):AbstractDataObject|null
     {
         return $this->utilisateurRepository->recupererParClePrimaire($login);
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui vérifie si un utilisateur est le propriétaire d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si l'utilisateur est propriétaire
+     * @param $login, La clé de l'utilisateur
+     * @return void
+     * @throws TableauException Erreur si l'utilisateur n'est pas propriétaire
      */
     public function estProprietaire(Tableau $tableau, $login): void
     {
@@ -66,8 +87,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui vérifie si un utilisateur n'a pas un login null
+     * @param $login, Le login de l'utilisateur
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si l'utilisateur est présent
+     * @param $action L'action à réaliser
+     * @return void
+     * @throws TableauException Erreur si le login est null
      */
     public function isNotNullLogin($login, Tableau $tableau, $action): void
     {
@@ -76,8 +103,13 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui vérifie si un utilisateur existe
+     * @param $login, Le login de l'utilisateur
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si l'utilisateur est présent
+     * @return AbstractDataObject L'utilisateur
+     * @throws TableauException Erreur si l'utilisateur n'existe pas
      */
     public function utilisateurExistant($login, Tableau $tableau): AbstractDataObject
     {
@@ -88,8 +120,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $utilisateur;
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui ajoute un membre à un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut ajouter un membre
+     * @param mixed $login Le login de l'utilisateur à ajouter
+     * @param $loginConnecte, Le login de l'utilisateur connecté
+     * @return void
+     * @throws TableauException Erreur si le membre est déjà membre du tableau
      */
     public function ajouterMembre(Tableau $tableau, mixed $membresAAjouter, $loginConnecte): void
     {
@@ -108,8 +146,15 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->tableauRepository->setParticipants($participants, $tableau);
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui supprime un membre d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut supprimer un membre
+     * @param $login, Le login de l'utilisateur à supprimer
+     * @param $loginConnecte, Le login de l'utilisateur connecté
+     * @return AbstractDataObject L'utilisateur
+     * @throws TableauException Erreur si l'utilisateur n'est pas membre du tableau
+     * ou si l'utilisateur veut se supprimer lui-même
      */
     public function supprimerMembre(Tableau $tableau, $login, $loginConnecte): AbstractDataObject
     {
@@ -129,8 +174,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $utilisateur;
     }
 
+
     /**
-     * @throws ServiceException
+     * fonction qui récupère le compte d'un utilisateur par son mail
+     * @param $mail, Le mail de l'utilisateur
+     * @return array Le compte utilisateur
+     * @throws ServiceException Erreur si l'adresse mail est manquante ou si aucun compte n'est associé à cette adresse mail
      */
     public function recupererCompte(?String $mail): void
     {
@@ -147,8 +196,13 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
     }
 
+
     /**
-     * @throws TableauException
+     * Fonction qui vérifie si un utilisateur est un membre d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut vérifier si l'utilisateur est membre
+     * @param $login Le login de l'utilisateur
+     * @return array Les membres du tableau
+     * @throws TableauException Erreur si le nombre de participants maximum est déjà atteint
      */
     public function verificationsMembre(Tableau $tableau, $login): array
     {
@@ -165,8 +219,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $filtredUtilisateurs;
     }
 
+
     /**
-     * @throws MiseAJourException
+     * Fonction qui met à jour un utilisateur avec les attributs passés en paramètre
+     * @param $attributs, Les nouveaux attributs de l'utilisateur
+     * @return void
+     * @throws MiseAJourException Erreur si un des attributs est manquant,
+     * si l'email n'est pas valide, si l'ancien mot de passe est erroné,
+     * si l'utilisateur n'existe pas ou si les mots de passe sont distincts
      */
     public function mettreAJourUtilisateur($attributs): void
     {
@@ -231,8 +291,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
 
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction qui supprime un utilisateur
+     * @param $login, Le login de l'utilisateur à supprimer
+     * @return void
+     * @throws ServiceException Erreur si le login est manquant
      */
     public function supprimerUtilisateur($login): void
     {
@@ -259,9 +323,14 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         $this->utilisateurRepository->supprimer($login);
     }
 
+
     /**
-     * @throws ServiceException
-     * @throws \Exception
+     * @param $attributs, Les attributs de l'utilisateur à créer
+     * @return void
+     * @throws CreationException Erreur si un des attributs est manquant
+     * @throws ServiceException Erreur si le login est déjà pris,
+     * si les mots de passe sont distincts
+     * ou si l'email n'est pas valide.
      */
     public function creerUtilisateur($attributs): void
     {
@@ -304,8 +373,12 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         }
     }
 
+
     /**
-     * @throws ServiceException
+     * Fonction qui recherche un utilisateur
+     * @param string|null $recherche Le login de l'utilisateur à rechercher
+     * @return array Les utilisateurs trouvés
+     * @throws ServiceException Erreur si la recherche est nulle
      */
     public function rechercheUtilisateur(?string $recherche): array
     {
@@ -315,17 +388,35 @@ class ServiceUtilisateur implements ServiceUtilisateurInterface
         return $this->utilisateurRepository->recherche($recherche);
     }
 
+    /**
+     * Fonction qui récupère les participants d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut récupérer les participants
+     * @return array|null Les participants du tableau
+     */
     public function getParticipants(Tableau $tableau): ?array
     {
         return $this->tableauRepository->getParticipants($tableau);
     }
 
     //retourne le propriétaire du tableau
+
+    /**
+     * Fonction qui récupère le propriétaire d'un tableau
+     * @param Tableau $tableau Le tableau sur lequel on veut récupérer le propriétaire
+     * @return Utilisateur Le propriétaire du tableau
+     */
     public function getProprietaireTableau(Tableau $tableau): Utilisateur
     {
         return $this->tableauRepository->getProprietaire($tableau);
     }
 
+
+    /**
+     * Fonction qui récupère les affectations d'un utilisateur
+     * @param $colonne, La colonne sur laquelle on veut récupérer les affectations
+     * @param $login, Le login de l'utilisateur
+     * @return array Les affectations de l'utilisateur sur la colonne
+     */
     public function recupererAffectationsColonne($colonne, $login)
     {
         $participants = [];

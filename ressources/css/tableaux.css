@@ -2,7 +2,7 @@
 
 
 html {
-    min-height: 100vh;
+    max-height: 99.9vh;
     font-family: 'Raleway', sans-serif;
 }
 
@@ -19,6 +19,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 50px;
     display: flex;
 }
+
 
 
 body {
@@ -51,6 +52,31 @@ body {
             padding: 1%;
             margin-bottom: 10px;
             color: white;
+
+            .titre {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                min-width: 120px;
+
+                .bullets {
+                    margin-left: 10px;
+                    width: 30px;
+                    height: 30px;
+                    padding: 5px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.2s ease-in-out;
+                }
+
+                .bullets:hover {
+                    background-color: #23272b;
+                }
+
+            }
 
             .allUsers {
                 display: flex;
@@ -576,7 +602,7 @@ body {
 }
 
 .menuColonnes {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 180px;
@@ -938,15 +964,16 @@ body {
 }
 
 .divSupprimerUtilisateur {
+    z-index: 10;
     position: absolute;
-    height: 50px;
-    width: 100px;
+    height: 30px;
+    width: 150px;
     display: none;
     justify-content: center;
     align-items: center;
     border-radius: 5px;
     padding: 5px;
-    background-color: #23272b;
+    background-color: #3e474f;
 
     span {
         width: 98%;
@@ -957,13 +984,77 @@ body {
         justify-content: space-between;
         align-items: center;
         padding: 5px;
+        border-radius: 3px;
 
         img {
-            width: 20px;
+            width: 15px;
         }
     }
 
     span:hover {
-        background-color: #3e474f;
+        background-color: #626b73;
+    }
+}
+
+.divSupprimerCarte {
+    z-index: 10;
+    position: absolute;
+    color: white;
+    height: 30px;
+    width: 150px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    padding: 5px;
+    background-color: #3e474f;
+
+    span {
+        width: 98%;
+        height: 98%;
+        cursor: pointer;
+        transition: background-color 200ms ease-in-out;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+        border-radius: 3px;
+        font-weight: normal;
+
+        img {
+            width: 15px;
+        }
+    }
+
+    span:hover {
+        background-color: #626b73;
+    }
+}
+
+@media (max-width: 650px) {
+
+    .infos {
+        flex-direction: column;
+        min-height: 100px!important;
+        justify-content: space-between;
+        align-items: center;
+
+        .allUsers {
+            justify-content: center;
+            max-width: 98%!important;
+        }
+
+        .invite {
+            max-height: 30px;
+        }
+
+        *{
+            flex-shrink: 0;
+        }
+    }
+
+    .formulaireCreationCarte, .formulaireAjoutMembreTableau, .formulaireModificationColonne {
+        max-width: 90%;
+        min-height: 50%;
     }
 }

@@ -514,6 +514,18 @@ class ServiceUtilisateurTest extends TestCase
         self::assertEquals($fakeUser, $this->serviceUtilisateur->getProprietaireTableau($fakeTableau));
     }
 
+    /** recupererAffectationsColonne */
+
+    public function testRecupererAffectationsColonne()
+    {
+        $fakeColonne=new Colonne(1,"titre",$this->createFakeTableau());
+        $this->carteRepository->method("recupererCartesColonne")->willReturn([$this->createFakeCarte()]);
+        $this->carteRepository->method("getAffectationsCarte")->willReturn([$this->createFakeUser()]);
+        $participants=$this->serviceUtilisateur->recupererAffectationsColonne($fakeColonne,"login");
+        $results=["test"=>["colonnes"=>[1=>['titre',1]]]];
+        self::assertEquals($results,$participants);
+    }
+
     /** FONCTIONS UTILITAIRES */
 
     private function createFakeUser($login = "test"): Utilisateur
@@ -533,4 +545,6 @@ class ServiceUtilisateurTest extends TestCase
     {
         return new Carte($idCarte, "titre", "descriptif", "bleu", new Colonne(null, null, null));
     }
+
+
 }
