@@ -1,6 +1,4 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
-import {escapeHtml} from "./escape.js";
-
 /**
  * Objet réactif formulaireAjoutCarte
  * @type {*|Object|boolean} un objet réactif

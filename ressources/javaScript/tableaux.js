@@ -1,4 +1,3 @@
-import{escapeHtml} from "./escape.js";
 
 if (window.location.href.includes('tableau/')) {
 
@@ -442,6 +441,22 @@ if (window.location.href.includes('tableau/')) {
             console.error('Aucune colonne avec l\'id ' + id + ' n\'a été trouvée');
         }
     }
+
+    /**
+     * Echappe les caractères spéciaux pour le HTML
+     * @param text {string} Le texte à échapper
+     * @returns {*} Le texte échappé
+     */
+    function escapeHtml(text) {
+        // https://stackoverflow.com/questions/1787322/what-is-the-htmlspecialchars-equivalent-in-javascript
+        return text
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
 
     /**
      * Affiche le formulaire de création de carte/ ou de modification de carte pour la colonne avec l'id `id`

@@ -1,5 +1,4 @@
 import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
-import {escapeHtml} from "./escape";
 
 let formulaireModificationTableau = reactive({
     titreTableau: "",

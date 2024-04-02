@@ -1,5 +1,4 @@
 import {objectByName, applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
-import{escapeHtml} from "./escape.js";
 
 let utilisateursReactifs = [];
 
@@ -88,6 +87,7 @@ let utilisateurs = reactive({
      * @param loginUtilisateur le login de l'utilisateur
      */
     afficherContenuUtilisateur: function (loginUtilisateur) {
+        console.log('aaa');
         if (utilisateursReactifs.length > 0) {
             const utilisateur = objectByName.get(loginUtilisateur);
 
@@ -140,7 +140,7 @@ let utilisateurs = reactive({
         const utilisateur = utilisateursReactifs.find(utilisateur => utilisateur.login === idUtilisateur);
         let html = `<h4>${escapeHtml(utilisateur.prenom)} ${escapeHtml(utilisateur.nom)}</h4><ul>`;
         for (let colonne of utilisateur.colonnes) {
-            html += `<li>${escapeHtml(colonne.titreColonne)} : ${escapeHtml(colonne.nbCartes)}</li>`;
+            html += `<li>${escapeHtml(colonne.titreColonne)} : ${colonne.nbCartes}</li>`;
         }
         html += '</ul>';
         return html;

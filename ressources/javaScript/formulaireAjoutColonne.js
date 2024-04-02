@@ -1,5 +1,4 @@
 import {applyAndRegister, reactive, startReactiveDom} from "./reactive.js";
-import{escapeHtml} from "./escape.js";
 
 let formulaireAjoutColonne = reactive({
     idTableau: "",
