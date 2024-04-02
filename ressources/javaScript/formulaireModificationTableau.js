@@ -4,15 +4,30 @@ let formulaireModificationTableau = reactive({
     titreTableau: "",
 
 
+    /**
+     * Affiche le formulaire de modification du tableau
+     */
+    afficherFormulaireModificationTableau: function () {
+        document.querySelector('.inputModificationTableau').value = document.querySelector('.titreTableau').textContent;
+        document.querySelector('.formulaireModificationTableau').style.display = "flex";
+        document.querySelector('.all').style.opacity = "0.5";
+    },
+
+
+    /**
+     * Modifie le titre du tableau en front et via l'API
+     * @param idTableau l'id du tableau à modifier
+     * @returns {Promise<void>} La promesse habituelle
+     */
     modifierTableau: async function(idTableau){
-        let response = await fetch("/tableau/modifier", {
+        let response = await fetch(apiBase + "/tableau/modifier", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 idTableau: idTableau,
-                titreTableau: this.titreTableau
+                nomTableau: this.titreTableau
             })
         });
 
@@ -21,6 +36,10 @@ let formulaireModificationTableau = reactive({
         } else {
             afficherMessageFlash("Tableau modifié avec succès", "success")
         }
+        console.log(await response.json());
+        document.querySelector('.titreTableau').textContent = this.titreTableau;
+        document.querySelector('.formulaireModificationTableau').style.display = "none";
+        document.querySelector('.all').style.opacity = "1";
     }
 
 }, "formulaireModificationTableau");

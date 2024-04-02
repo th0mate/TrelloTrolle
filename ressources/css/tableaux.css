@@ -416,7 +416,7 @@ body {
 }
 
 
-/*animation de tremblement comme les IPhone */
+
 @keyframes shake {
     0% {
         transform: translate(1px, 1px) rotate(0deg);
@@ -654,7 +654,7 @@ body {
 }
 
 
-.formulaireModificationColonne {
+.formulaireModificationColonne, .formulaireModificationTableau {
     position: fixed;
     top: 50%;
     left: 50%;
