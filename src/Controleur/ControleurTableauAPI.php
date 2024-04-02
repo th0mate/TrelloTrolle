@@ -24,6 +24,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurTableauAPI
 {
 
+    /**
+     * ControleurTableauAPI constructor.
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceTableauInterface $serviceTableau Le service de tableau
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceCarteInterface $serviceCarte Le service de carte
+     *
+     * fonction qui permet de construire le controleur de tableau avec l'API
+     */
+
     public function __construct(
         private ServiceConnexionInterface     $serviceConnexion,
         private ServiceTableauInterface       $serviceTableau,
@@ -35,6 +45,11 @@ class ControleurTableauAPI
     {
     }
 
+    /**
+     * @return JsonResponse La réponse JSON
+     *
+     * fonction qui permet de creer un tableau avec l'API
+     */
     #[Route("/api/tableau/membre/ajouter", name: "ajouterMembreAPI", methods: "PATCH")]
     public function ajouterMembre(Request $request) :Response
     {
@@ -52,6 +67,12 @@ class ControleurTableauAPI
             }
         }
     }
+
+    /**
+     * @return JsonResponse La réponse JSON
+     *
+     * fonction qui permet de supprimer un membre avec l'API
+     */
 
     #[Route('/api/tableau/membre/supprimer', name: 'supprimerMembreAPI', methods: "PATCH")]
     public function supprimerMembre(Request $request):Response
@@ -71,6 +92,12 @@ class ControleurTableauAPI
         }
     }
 
+    /**
+     * @param Request $request la requête
+     * @return JsonResponse La réponse JSON
+     *
+     *  fonction qui permet de recuperer les membres d'un tableau avec l'API
+     */
     #[Route('/api/tableau/membre/getPourTableau', name: 'getMembresTableau', methods: "POST")]
     public function getMembresTableau(Request $request):Response
     {
@@ -85,6 +112,14 @@ class ControleurTableauAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+/**
+     * @param Request $request la requête
+     * @return JsonResponse La réponse JSON
+     *
+     *  fonction qui permet de recuperer le proprietaire d'un tableau avec l'API
+     */
+
 
     #[Route('/api/tableau/membre/getProprio', name: 'getProprietaireTableau', methods: "POST")]
     public function getProprietaireTableau(Request $request):Response

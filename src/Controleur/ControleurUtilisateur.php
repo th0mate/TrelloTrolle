@@ -30,20 +30,42 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurUtilisateur extends ControleurGenerique
 {
 
+    /**
+     * ControleurUtilisateur constructor.
+     * @param ContainerInterface $container le conteneur de dépendances
+     * @param ServiceConnexionInterface $serviceConnexion le service de connexion
+     * @param ServiceUtilisateurInterface $serviceUtilisateur le service utilisateur
+     *
+     * fonction qui permet de construire le controleur de l'utilisateur
+     */
+
+
     public function __construct(ContainerInterface                    $container,
                                 private ServiceConnexionInterface     $serviceConnexion,
                                 private ServiceUtilisateurInterface   $serviceUtilisateur,
                                 private ConnexionUtilisateurInterface $connexionUtilisateur
     )
-    {
+   {
         parent::__construct($container);
 
     }
 
+    /**
+     * @return Response l'affichage de l'erreur
+     *
+     * fonction qui permet d'afficher la page d'erreur
+     */
     public function afficherErreur($messageErreur = "", $controleur = ""): Response
     {
         return parent::afficherErreur($messageErreur, "utilisateur");
     }
+
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet d'afficher les détails de l'utilisateur
+     */
 
     #[Route('/profile', name: 'afficherDetail', methods: "GET")]
     public function afficherDetail(): Response
@@ -63,6 +85,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet d'afficher le formulaire d'incription
+     */
+
     #[Route('/inscription', name: 'afficherFormulaireCreation', methods: "GET")]
     public function afficherFormulaireCreation(): Response
     {
@@ -77,6 +105,12 @@ class ControleurUtilisateur extends ControleurGenerique
             return self::redirectionConnectionFlash($e);
         }
     }
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de creer un utilisateur grâce au formulaire
+     */
 
     #[Route('/inscription', name: 'creerDepuisFormulaire', methods: "POST")]
     public function creerDepuisFormulaire(): Response
@@ -106,6 +140,11 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet d'afficher le formulaire de mise à jour de l'utilisateur
+     */
     #[Route('/profile/miseAJour', name: 'afficherFormulaireMiseAJourUtilisateur', methods: "GET")]
     public function afficherFormulaireMiseAJour(): Response
     {
@@ -123,6 +162,11 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de mettre à jour l'utilisateur
+     */
     #[Route('/profile/miseAJour', name: 'mettreAJour', methods: "POST")]
     public function mettreAJour(): Response
     {
@@ -148,6 +192,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de supprimer l'utilisateur
+     */
+
     #[Route('/profile/supprimer/{login}', name: 'supprimer', methods: "GET")]
     public function supprimer($login): Response
     {
@@ -165,6 +215,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet d'afficher le formulaire de connexion
+     */
+
     #[Route('/connexion', name: 'afficherFormulaireConnexion', methods: "GET")]
     public function afficherFormulaireConnexion(): Response
     {
@@ -176,6 +232,12 @@ class ControleurUtilisateur extends ControleurGenerique
             return self::redirection("afficherListeMesTableaux");
         }
     }
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de se connecter
+     */
 
     #[Route('/connexion', name: 'connecter', methods: "POST")]
     public function connecter(): Response
@@ -195,6 +257,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de se deconnecter
+     */
     #[Route('/deconnexion', name: 'deconnexion', methods: "GET")]
     public function deconnecter(): Response
     {
@@ -208,6 +276,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet d'afficher le formulaire de recuperation de compte
+     */
     #[Route('/recuperation', name: 'utilisateurResetCompte', methods: "GET")]
     public function afficherFormulaireRecuperationCompte(): Response
     {
@@ -220,6 +294,12 @@ class ControleurUtilisateur extends ControleurGenerique
         }
     }
 
+
+    /**
+     * @return Response La redirection
+     *
+     * fonction qui permet de recuperer le compte
+     */
     #[Route('/recuperation', name: 'recupererCompte', methods: "POST")]
     public function recupererCompte(): Response
     {

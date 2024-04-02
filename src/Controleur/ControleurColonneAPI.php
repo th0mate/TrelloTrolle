@@ -25,6 +25,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class ControleurColonneAPI
 {
 
+    /**
+     * ControleurColonneAPI constructor.
+     * @param ServiceConnexionInterface $serviceConnexion Le service de connexion
+     * @param ServiceColonneInterface $serviceColonne Le service de colonne
+     * @param ServiceUtilisateurInterface $serviceUtilisateur Le service utilisateur
+     * @param ServiceTableauInterface $serviceTableau Le service de tableau
+     *
+     * fonction qui permet de construire le controleur de colonne avec l'API
+     */
+
     public function __construct(
         private ServiceConnexionInterface     $serviceConnexion,
         private ServiceColonneInterface       $serviceColonne,
@@ -36,9 +46,14 @@ class ControleurColonneAPI
     {
     }
 
+    /**
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de creer une colonne avec l'API
+     */
     #[Route("/api/colonne/creer", name: "creerColonneAPI", methods: "PUT")]
     public function creerColonne(Request $request): Response
-    {
+     {
         $jsondecode = json_decode($request->getContent());
         $idTableau = $jsondecode->idTableau ?? null;
         $nomColonne = $jsondecode->nomColonne ?? null;
@@ -55,9 +70,16 @@ class ControleurColonneAPI
         }
     }
 
+    /**
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de supprimer une colonne avec l'API
+     */
+
     #[Route("/api/colonne/supprimer", name: "supprimerColonneAPI", methods: "DELETE")]
     public function supprimerColonne(Request $request): Response
-    {
+     {
         $jsondecode = json_decode($request->getContent());
         $idColonne = $jsondecode->idColonne ?? null;
         try {
@@ -71,6 +93,13 @@ class ControleurColonneAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+    /**
+     * @param $idColonne l'id de la colonne
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de modifier une colonne avec l'API
+     */
 
     #[Route("/api/colonne/modifier", name: "modifierColonneAPI", methods: "PATCH")]
     public function modifierColonne(Request $request): Response
@@ -90,6 +119,13 @@ class ControleurColonneAPI
             return new JsonResponse(["error" => $e->getMessage()], $e->getCode());
         }
     }
+
+/**
+     * @return Response La réponse JSON
+     *
+     * fonction qui permet de recuperer le prochain id de colonne avec l'API
+     */
+
 
     #[Route("/api/colonne/nextid", name: "getNextIdColonneAPI", methods: "POST")]
     public function getNextIdColonne(): Response

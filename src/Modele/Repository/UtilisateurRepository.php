@@ -9,37 +9,68 @@ use Exception;
 class UtilisateurRepository extends AbstractRepository implements UtilisateurRepositoryInterface
 {
 
+    /**
+     * Fonction permettant de récupérer le nom de la table
+     * @return string
+     */
     protected function getNomTable(): string
     {
         return "Utilisateur";
     }
 
+    /**
+     * Fonction permettant de récupérer le nom de la clé primaire
+     * @return string
+     */
     protected function getNomCle(): string
     {
         return "login";
     }
 
+    /**
+     * Fonction permettant de récupérer les noms des colonnes
+     * @return string[] Les noms des colonnes
+     */
     protected function getNomsColonnes(): array
     {
         return ["login", "nom", "prenom", "email", "mdphache"];
     }
 
+    /**
+     * Fonction permettant de construire un objet depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return AbstractDataObject L'objet construit
+     */
     protected function construireDepuisTableau(array $objetFormatTableau): Utilisateur
-    {
+     {
         return Utilisateur::construireDepuisTableau($objetFormatTableau);
     }
 
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction de son email
+     * @param string $email L'email de l'utilisateur
+     * @return array Les utilisateurs récupérés
+     */
     public function recupererUtilisateursParEmail(string $email): array
     {
         return $this->recupererPlusieursPar("email", $email);
     }
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction prenom et nom
+     * @return array Les utilisateurs récupérés
+     */
     public function recupererUtilisateursOrderedPrenomNom(): array
     {
         return $this->recupererOrdonne(["prenom", "nom"]);
     }
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction d'une recherche
+     * @param $recherche , La recherche
+     * @return array Les utilisateurs récupérés
+     */
     public function recherche($recherche): array
     {
         $recherche = strtolower($recherche) . "%";
@@ -55,6 +86,11 @@ class UtilisateurRepository extends AbstractRepository implements UtilisateurRep
     }
 
 
+    /**
+     * Fonction permettant de récupérer un utilisateur en fonction de sa clé primaire
+     * @param int|string $idCle La clé primaire
+     * @return Utilisateur|null L'utilisateur récupéré
+     */
     public function getAllFromTable(int|string $idCle): ?Utilisateur
     {
         $query = "SELECT * FROM {$this->getNomTable()}

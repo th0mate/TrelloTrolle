@@ -12,16 +12,28 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
 {
 
 
+    /**
+     * Fonction permettant de récupérer le nom de la table
+     * @return string Le nom de la table
+     */
     protected function getNomTable(): string
     {
         return "colonne";
     }
 
+    /**
+     * Fonction permettant de récupérer l'id de la colonne
+     * @return string l'id de la colonne
+     */
     protected function getNomCle(): string
     {
         return "idcolonne";
     }
 
+    /**
+     * Fonction permettant de récupérer les noms des colonnes
+     * @return string[] Les noms des colonnes
+     */
     protected function getNomsColonnes(): array
     {
         return [
@@ -29,11 +41,21 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         ];
     }
 
+    /**
+     * Fonction permettant de construire une colonne depuis un tableau de paramètres
+     * @param array $objetFormatTableau Le tableau de paramètres
+     * @return AbstractDataObject La colonne construite
+     */
     protected function construireDepuisTableau(array $objetFormatTableau): Colonne
     {
         return Colonne::construireDepuisTableau($objetFormatTableau);
     }
 
+    /**
+     * Fonction permettant de récupérer toutes les colonnes d'un tableau
+     * @param int $idTableau L'id du tableau
+     * @return array La liste des colonnes du tableau
+     */
     public function recupererColonnesTableau(int $idTableau): ?array {
         $query = "SELECT idtableau FROM tableau WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
@@ -45,20 +67,35 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         return $this->recupererPlusieursParOrdonne("idtableau", $idTableau, ["idcolonne"]);
     }
 
+    /**
+     * Fonction permettant d'avoir le prochain id de colonne
+     * @return int L'id de la prochaine colonne
+     */
     public function getNextIdColonne(): int
     {
-        return $this->getNextId("idcolonne");
+       return $this->getNextId("idcolonne");
     }
 
+    /**
+     * Fonction permettant de récupérer le nombre de colonnes total d'un tableau
+     * @param int $idTableau L'id du tableau
+     * @return int Le nombre de colonnes total du tableau
+     */
     public function getNombreColonnesTotalTableau(int $idTableau): int
     {
-        $query = "SELECT COUNT(DISTINCT idcolonne) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
+       $query = "SELECT COUNT(DISTINCT idcolonne) FROM {$this->getNomTable()} WHERE idtableau=:idTableau";
         $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($query);
         $pdoStatement->execute(["idTableau" => $idTableau]);
         $obj = $pdoStatement->fetch();
         return $obj[0];
     }
 
+    /**
+     * Fonction permettant d'inverser l'ordre de deux colonnes
+     * @param int $idColonne1 Id de la première colonne
+     * @param int $idColonne2 Id de la deuxième colonne
+     * @return void
+     */
     public function inverserOrdreColonnes(int $idColonne1, int $idColonne2): void
     {
         $colonne1=$this->recupererParClePrimaire($idColonne1);
@@ -83,6 +120,11 @@ class ColonneRepository extends AbstractRepository implements ColonneRepositoryI
         $pdoStatement->execute(["idColonne2" => $tabColonne2["idcolonne"], "idColonne1" => $tabColonne1["idcolonne"]]);
     }
 
+    /**
+     * Fonction permettant de récupérer une colonne en fonction de la clé primaire
+     * @param int $idColonne La clé primaire
+     * @return Colonne|null La colonne récupérée
+     */
 
     public function getAllFromTable(int|string $idCle): ?Colonne
     {

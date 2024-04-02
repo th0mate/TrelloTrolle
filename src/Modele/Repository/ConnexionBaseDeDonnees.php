@@ -9,13 +9,25 @@ use PDO;
 
 class ConnexionBaseDeDonnees implements ConnexionBaseDeDonneesInterface
 {
+    /**
+     * ConnexionBaseDeDonnees constructor.
+     * @var PDO $pdo le PDO
+     */
     private PDO $pdo;
 
+    /**
+     * Fonction permettant de récupérer le PDO
+     * @return PDO le PDO
+     */
     public function getPdo(): PDO
     {
         return $this->pdo;
     }
 
+    /**
+     * ConnexionBaseDeDonnees constructor.
+     * @param ConfigurationBaseDeDonneesInterface $configurationBDD La configuration de la base de données
+     */
     public function __construct(ConfigurationBaseDeDonneesInterface $configurationBDD)
     {
 
