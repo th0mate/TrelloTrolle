@@ -102,8 +102,7 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     {
         $nomTable = $this->getNomTable();
         $sql = "SELECT DISTINCT {$this->getNomCle()} from $nomTable WHERE $nomAttribut='$valeur'";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
-        $pdoStatement->execute();
+        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->query($sql);
         $objets = [];
         foreach ($pdoStatement as $objetFormatTableau) {
             $objets[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
@@ -133,31 +132,6 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
         }
         return $objets;
     }
-
-    /**
-     * @param string $nomAttribut
-     * @param $valeur
-     * @return AbstractDataObject|null
-     */
-    //TODO: Disuter de l'utilité de cette fonction car c'est la même chose que recupererPlusieursPar sauf qu'a
-    // la base c'était une fonction qui devait retourner qu'un seul objet car on partait du principe qu'elle était appelé que
-    // par recupererParClePrimaire
-    /*protected function recupererPar(string $nomAttribut, $valeur): ?array
-    {
-        $nomTable = $this->getNomTable();
-        $sql = "SELECT DISTINCT {$this->getNomCle()} from $nomTable WHERE $nomAttribut='$valeur'";
-        $pdoStatement = $this->connexionBaseDeDonnees->getPdo()->prepare($sql);
-        $pdoStatement->execute();
-        $objets = [];
-        foreach ($pdoStatement as $objetFormatTableau) {
-            $objets[] = $this->getAllFromTable($objetFormatTableau[$this->getNomCle()]);
-        }
-        if ($objets) {
-            return $objets;
-        }
-        return null;
-    }*/
-
 
 
     /**
@@ -253,7 +227,6 @@ abstract class AbstractRepository implements AbstractRepositoryInterface
     protected function getNextId(string $type) : int {
         $nomTable = $this->getNomTable();
         $query = $this->connexionBaseDeDonnees->getPdo()->query("SELECT MAX($type) FROM $nomTable");
-        //$query->execute();
         $obj = $query->fetch();
         return $obj[0] === null ? 0 : $obj[0] + 1;
     }
